@@ -2,9 +2,7 @@
 
 read -r -d '' USAGE <<'EOF'
 Usage:
-
     gen.sh /path/to/TileDB-REST /path/to/output/[api]
-
 Note: api is expected to exist under target path. For accurate file removal,
       the directory should be removed and re-created empty, before running this
       script.
@@ -26,17 +24,17 @@ mkdir -p ${OUTPUT_PATH}/
 
 ################################################################################
 # minimize output to what we want
-cat <<EOF > ${OUTPUT_PATH}/.openapi-generator-ignore
-docs/*
-test/
-test/*
-git_push.sh
-tox.ini
-test-requirements.txt
-setup.py
-.gitignore
-.travis.yml
-EOF
+# docs/*
+# cat <<EOF > ${OUTPUT_PATH}/.openapi-generator-ignore
+# test/
+# test/*
+# git_push.sh
+# tox.ini
+# test-requirements.txt
+# setup.py
+# .gitignore
+# .travis.yml
+# EOF
 
 ################################################################################
 # openapi-generator config
@@ -49,27 +47,20 @@ cat <<EOF > ${OUTPUT_PATH}/openapi_config-api
   }
 EOF
 
-################################################################################
 docker run --rm  \
   -v ${REST_SRC}/:/dc_src \
   -v ${OUTPUT_PATH}:/gen \
   openapitools/openapi-generator-cli:v4.1.3 generate \
     -c /gen/openapi_config-api -o /gen \
-    -i /dc_src/openapi-v1.yaml -g javascript-axios
+    -i /dc_src/openapi-v1.yaml -g javascript
 
-# Needed because openapi generates everything as root user
-sudo chown -R `whoami` ${OUTPUT_PATH}
+docker run --rm \
+  -v ${OUTPUT_PATH}/:/js \
+  node:12.6.0 /bin/bash -c "cd /js && npm install && npm run build"
 
-# move generated files to TARGET_PATH
-#cp -r ${OUTPUT_PATH}/${PACKAGE_NAME} ${TARGET_PATH}/
-cp -r ${OUTPUT_PATH}/* ${TARGET_PATH}/
-
-#cp ${OUTPUT_PATH}/${PACKAGE_NAME}_README.md ${TARGET_PATH}/${PACKAGE_NAME}/README.md
-# The newer openapi-generator-cli doesn't produce a requirements.txt
-#cp ${OUTPUT_PATH}/requirements.txt ${TARGET_PATH}/${PACKAGE_NAME}
-#cp ${OUTPUT_PATH}/.openapi-generator-ignore ${TARGET_PATH}/${PACKAGE_NAME}/
-#cp ${OUTPUT_PATH}/openapi_config-api ${TARGET_PATH}/${PACKAGE_NAME}/
-#cp -r ${OUTPUT_PATH}/.openapi-generator/ ${TARGET_PATH}/${PACKAGE_NAME}/
+# Copy the built output to working our directory
+cp -r ${OUTPUT_PATH}/dist/ ${TARGET_PATH}/lib
+cp ${OUTPUT_PATH}/README.md ${TARGET_PATH}/
 
 echo
-echo "Output copied from '${OUTPUT_PATH}' to '${TARGET_PATH}/${PACKAGE_NAME}'"
+echo "Output copied from '${OUTPUT_PATH}' to '${TARGET_PATH}'"

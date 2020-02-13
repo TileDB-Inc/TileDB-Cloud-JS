@@ -1,0 +1,12 @@
+{
+  "name": "tiledb-cloud",
+  "version": "0.0.1",
+  "description": "",
+  "main": "lib/index.js",
+  "dependencies": {
+    "superagent": "^5.2.1"
+  },
+  "devDependencies": {},
+  "author": "",
+  "license": "MIT"
+}
