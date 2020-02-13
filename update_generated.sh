@@ -56,7 +56,7 @@ docker run --rm  \
 
 docker run --rm \
   -v ${OUTPUT_PATH}/:/js \
-  node:12.6.0 /bin/bash -c "cd /js && npm install && npm run build"
+  node:12.6.0 /bin/bash -c "cd /js && npm install && npm run build && npm i -g dts-gen && npm link && dts-gen --module tiledb-cloud -f dist/index.d.ts"
 
 # Copy the built output to working our directory
 cp -r ${OUTPUT_PATH}/dist/ ${TARGET_PATH}/lib
