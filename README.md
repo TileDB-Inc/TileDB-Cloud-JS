@@ -123,14 +123,12 @@ var opts = {
   'eventTypes': "eventTypes_example", // {String} Event values can be one or more of the following read, write, create, delete, register, deregister, comma separated
   'taskId': "taskId_example" // {String} Array task id To filter activity to
 };
-var callback = function(error, data, response) {
-  if (error) {
-    console.error(error);
-  } else {
-    console.log('API called successfully. Returned data: ' + data);
-  }
-};
-api.arrayActivityLog(namespace, _array, opts, callback);
+api.arrayActivityLog(namespace, _array, opts).then(function(data) {
+  console.log('API called successfully. Returned data: ' + data);
+}, function(error) {
+  console.error(error);
+});
+
 
 ```
 

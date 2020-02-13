@@ -52,7 +52,7 @@ docker run --rm  \
   -v ${OUTPUT_PATH}:/gen \
   openapitools/openapi-generator-cli:v4.1.3 generate \
     -c /gen/openapi_config-api -o /gen \
-    -i /dc_src/openapi-v1.yaml -g javascript
+    -i /dc_src/openapi-v1.yaml -g javascript --additional-properties usePromises=true,useES6=true
 
 docker run --rm \
   -v ${OUTPUT_PATH}/:/js \
