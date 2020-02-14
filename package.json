@@ -1,5 +1,5 @@
 {
-  "name": "tiledb-cloud",
+  "name": "@tiledb-inc/tiledb-cloud",
   "version": "0.0.1",
   "description": "",
   "main": "lib/api.js",
