@@ -2,11 +2,17 @@
   "name": "tiledb-cloud",
   "version": "0.0.1",
   "description": "",
-  "main": "lib/index.js",
+  "main": "lib/api.js",
   "dependencies": {
-    "superagent": "^5.2.1"
+    "bluebird": "^3.5.0",
+    "request": "^2.81.0",
+    "rewire": "^3.0.2"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@types/bluebird": "*",
+    "@types/request": "*",
+    "@types/node": "8.10.34"
+  },
   "author": "",
   "license": "MIT"
 }

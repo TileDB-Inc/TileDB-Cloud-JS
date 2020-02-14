@@ -1,0 +1,20 @@
+export declare enum Datatype {
+    INT32,
+    INT64,
+    FLOAT32,
+    FLOAT64,
+    CHAR,
+    INT8,
+    UINT8,
+    INT16,
+    UINT16,
+    UINT32,
+    UINT64,
+    STRINGASCII,
+    STRINGUTF8,
+    STRINGUTF16,
+    STRINGUTF32,
+    STRINGUCS2,
+    STRINGUCS4,
+    ANY
+}

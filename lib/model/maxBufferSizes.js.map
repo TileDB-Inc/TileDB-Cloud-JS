@@ -1,0 +1,1 @@
+{"version":3,"file":"maxBufferSizes.js","sourceRoot":"","sources":["../../model/maxBufferSizes.ts"],"names":[],"mappings":";;AAiBA;IAYI,MAAM,CAAC,mBAAmB;QACtB,OAAO,cAAc,CAAC,gBAAgB,CAAC;IAC3C,CAAC;;AAXM,4BAAa,GAAuB,SAAS,CAAC;AAE9C,+BAAgB,GAA0D;IAC7E;QACI,MAAM,EAAE,gBAAgB;QACxB,UAAU,EAAE,gBAAgB;QAC5B,MAAM,EAAE,4BAA4B;KACvC;CAAK,CAAC;AAVf,wCAeC"}
