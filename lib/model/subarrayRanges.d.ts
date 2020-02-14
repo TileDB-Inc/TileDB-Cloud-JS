@@ -1,0 +1,17 @@
+import { Datatype } from './datatype';
+export declare class SubarrayRanges {
+    'type'?: Datatype;
+    'hasDefaultRange'?: boolean;
+    'buffer'?: Array<number>;
+    static discriminator: string | undefined;
+    static attributeTypeMap: Array<{
+        name: string;
+        baseName: string;
+        type: string;
+    }>;
+    static getAttributeTypeMap(): {
+        name: string;
+        baseName: string;
+        type: string;
+    }[];
+}

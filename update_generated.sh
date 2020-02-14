@@ -52,11 +52,11 @@ docker run --rm  \
   -v ${OUTPUT_PATH}:/gen \
   openapitools/openapi-generator-cli:v4.1.3 generate \
     -c /gen/openapi_config-api -o /gen \
-    -i /dc_src/openapi-v1.yaml -g javascript --additional-properties usePromises=true,useES6=true
+    -i /dc_src/openapi-v1.yaml -g typescript-node -p npmName=tiledb-cloud -p supportsES6=true --type-mappings=Array=any
 
 docker run --rm \
   -v ${OUTPUT_PATH}/:/js \
-  node:12.6.0 /bin/bash -c "cd /js && npm install && npm run build && npm i -g dts-gen && npm link && dts-gen --module tiledb-cloud -f dist/index.d.ts"
+  node:12.6.0 /bin/bash -c "cd /js && npm install && npm run build"
 
 # Copy the built output to working our directory
 cp -r ${OUTPUT_PATH}/dist/ ${TARGET_PATH}/lib
