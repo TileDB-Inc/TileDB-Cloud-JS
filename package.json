@@ -1,18 +1,12 @@
 {
-  "name": "tiledb-cloud",
-  "version": "0.0.1",
-  "description": "",
-  "main": "lib/api.js",
+  "name": "@tiledb-inc/tiledb-cloud",
+  "version": "0.0.2",
+  "description": "JavaScript client for the TileDB Cloud Service.",
+  "main": "lib/index.js",
   "dependencies": {
-    "bluebird": "^3.5.0",
-    "request": "^2.81.0",
-    "rewire": "^3.0.2"
+    "axios": "^0.19.2"
   },
-  "devDependencies": {
-    "@types/bluebird": "*",
-    "@types/request": "*",
-    "@types/node": "8.10.34"
-  },
+  "devDependencies": {},
   "author": "",
   "license": "MIT"
 }

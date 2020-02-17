@@ -1,3 +1,5 @@
-.gitignore
-node_modules
-update_generated.sh
+*
+!lib/*
+!package.json
+!README.md
+!LICENSE
