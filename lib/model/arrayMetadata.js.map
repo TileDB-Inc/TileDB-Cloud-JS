@@ -1,1 +1,0 @@
-{"version":3,"file":"arrayMetadata.js","sourceRoot":"","sources":["../../model/arrayMetadata.ts"],"names":[],"mappings":";;AAiBA;IAeI,MAAM,CAAC,mBAAmB;QACtB,OAAO,aAAa,CAAC,gBAAgB,CAAC;IAC1C,CAAC;;AAXM,2BAAa,GAAuB,SAAS,CAAC;AAE9C,8BAAgB,GAA0D;IAC7E;QACI,MAAM,EAAE,QAAQ;QAChB,UAAU,EAAE,QAAQ;QACpB,MAAM,EAAE,2BAA2B;KACtC;CAAK,CAAC;AAbf,sCAkBC"}

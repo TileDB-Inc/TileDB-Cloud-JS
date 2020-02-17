@@ -1,12 +1,14 @@
 ### Usage
 
 ```javascript
-const tiledb = require('tiledb-cloud');
+const tiledb = require('@tiledb-inc/tiledb-cloud');
 
-const username = 'tiledb-username';
-const password = 'tiledb-password';
+const config = {
+  username: 'tiledb-username',
+  password: 'tiledb-password'
+};
 
-const arrayApi = new tiledb.ArrayApi(username, password);
+const arrayApi = new tiledb.ArrayApi(config);
 
 arrayApi.getArraysInNamespace('namespace').then((res) => {
   console.log(res);
