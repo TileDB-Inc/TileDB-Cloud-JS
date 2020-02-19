@@ -60,7 +60,6 @@ docker run --rm \
 
 # Copy the built output to working our directory
 cp -r ${OUTPUT_PATH}/dist/ ${TARGET_PATH}/lib
-cp ${OUTPUT_PATH}/README.md ${TARGET_PATH}/
 
 echo
 echo "Output copied from '${OUTPUT_PATH}' to '${TARGET_PATH}'"
