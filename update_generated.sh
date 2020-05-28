@@ -58,8 +58,9 @@ docker run --rm \
   -v ${OUTPUT_PATH}/:/js \
   node:12.6.0 /bin/bash -c "cd /js && npm install && npm run build"
 
-# Copy the built output to working our directory
-cp -r ${OUTPUT_PATH}/dist/ ${TARGET_PATH}/lib
+# Copy src to working our directory
+cp -r ${OUTPUT_PATH}/ ${TARGET_PATH}/src
+cp -r ${OUTPUT_PATH}/dist ${TARGET_PATH}/lib
 
 echo
 echo "Output copied from '${OUTPUT_PATH}' to '${TARGET_PATH}'"
