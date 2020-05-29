@@ -16,7 +16,12 @@ jobs:
       - script: |
           echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
           npm install
-        displayName: Install dependencies
+          cd ./src
+          npm install
+          npm run build
+          cp -r ./dist ../lib
+          cd ..
+        displayName: Install dependencies and build
         env:
           NPM_TOKEN: $(NPM_TOKEN)
       - script: >
