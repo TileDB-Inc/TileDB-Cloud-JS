@@ -26,7 +26,6 @@ trigger:
         echo $(./node_modules/.bin/git-tag-version)
         yarn publish --new-version $(./node_modules/.bin/git-tag-version) --no-git-tag-version --access public
       env:
-        GITHUB_TOKEN: $(GITHUB_TOKEN)
         NPM_TOKEN: $(NPM_TOKEN)
       displayName: 'Release'
       condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags'))
