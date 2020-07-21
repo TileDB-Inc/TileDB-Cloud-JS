@@ -1,12 +1,14 @@
 {
   "name": "@tiledb-inc/tiledb-cloud",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "JavaScript client for the TileDB Cloud Service.",
   "main": "lib/index.js",
   "dependencies": {
     "axios": "^0.19.2"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "git-tag-version": "^1.3.1"
+  },
   "author": "",
   "license": "MIT"
 }
