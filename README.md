@@ -1,6 +1,6 @@
 # TileDB Cloud library for NodeJS
 
-### TileDB-Cloud-JS is an axios-based NodeJS API for [TileDB Cloud](https://docs.tiledb.com/cloud/).
+### TileDB-Cloud-JS is a fetch-based NodeJS API for [TileDB Cloud](https://docs.tiledb.com/cloud/).
 
 > Note: This is an **experimental** package and aims to be similar to [TileDB-Cloud-Py](https://github.com/TileDB-Inc/TileDB-Cloud-Py).  
 
