@@ -1,6 +1,6 @@
 {
   "name": "@tiledb-inc/tiledb-cloud",
-  "version": "2.0.2",
+  "version": "2.0.13",
   "description": "OpenAPI client for @tiledb-inc/tiledb-cloud",
   "author": "OpenAPI-Generator Contributors",
   "keywords": [
