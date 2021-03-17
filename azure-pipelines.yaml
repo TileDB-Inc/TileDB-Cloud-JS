@@ -14,14 +14,12 @@ jobs:
         inputs:
           versionSpec: 12.x
       - script: |
+          npm install
+          npm run test
+        displayName: Install dependencies and run tests
+      - script: |
           echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
-          npm install
-          cd ./src
-          npm install
-          npm run build
-          cp -r ./dist ../lib
-          cd ..
-        displayName: Install dependencies and build
+        displayName: Write npm token to npmrc
         env:
           NPM_TOKEN: $(NPM_TOKEN)
       - script: >
@@ -35,4 +33,3 @@ jobs:
         condition: >-
           and(succeeded(), startsWith(variables['Build.SourceBranch'],
           'refs/tags'))
-  
