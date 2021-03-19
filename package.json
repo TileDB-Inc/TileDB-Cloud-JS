@@ -1,10 +1,10 @@
 {
   "name": "@tiledb-inc/tiledb-cloud",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "JavaScript client for the TileDB Cloud Service.",
   "main": "lib/index.js",
   "scripts": {
-    "generate-openapi": "openapi-generator-cli generate -i ../TileDB-Cloud-API-Spec/openapi-v1.yaml -o ./lib -g typescript-axios -t ./openapi-templates --reserved-words-mappings default=default",
+    "generate-openapi": "openapi-generator-cli generate -i ../TileDB-Cloud-API-Spec/openapi-v1.yaml -o ./lib -g typescript-axios -t ./openapi-templates --reserved-words-mappings default=default --type-mappings=Array=any",
     "build": "npm run generate-openapi && tsc lib/index.ts",
     "test": "jest"
   },
