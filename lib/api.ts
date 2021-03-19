@@ -2239,10 +2239,10 @@ export interface Query {
     reader?: QueryReader;
     /**
      * 
-     * @type {Array}
+     * @type {any}
      * @memberof Query
      */
-    array: Array;
+    array: any;
     /**
      * Total number of bytes in fixed size attribute buffers.
      * @type {number}
