@@ -6,10 +6,13 @@
   "scripts": {
     "generate-openapi": "openapi-generator-cli generate -i ../TileDB-Cloud-API-Spec/openapi-v1.yaml -o ./tmp -g typescript-axios -t ./openapi-templates --reserved-words-mappings default=default --type-mappings=Array=any",
     "build": "npm run generate-openapi && tsc tmp/index.ts --declaration --outDir ./lib",
-    "test": "jest"
+    "test": "jest",
+    "capnp": "capnpc -o ts capnp/arrayMetadata.capnp"
   },
   "dependencies": {
-    "axios": "^0.21.1"
+    "axios": "^0.21.1",
+    "capnp-ts": "^0.4.0",
+    "capnpc-ts": "^0.4.0"
   },
   "devDependencies": {
     "@openapitools/openapi-generator-cli": "^2.1.26",
