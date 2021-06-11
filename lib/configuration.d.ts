@@ -80,4 +80,12 @@ export declare class Configuration {
      * @return True if the given MIME is JSON, false otherwise.
      */
     isJsonMime?(mime: string): boolean;
+    /**
+     * Check if the given MIME is a capnp MIME.
+     * JSON MIME examples:
+     *   application/capnp
+     * @param mime - MIME (Multipurpose Internet Mail Extensions)
+     * @return True if the given MIME is capnp, false otherwise.
+     */
+    isCapnpMime?(mime: string): boolean;
 }
