@@ -85,6 +85,25 @@ sqlAPI.runSQL("<tiledb-cloud-username>", sqlDetails).then((res) => {
 
 ```
 
+### Development
+
+For capnproto encoding you need to [install capnproto](https://capnproto.org/install.html)
+
+Debian / Ubuntu: `apt-get install capnproto` <br/>
+Arch Linux: `sudo pacman -S capnproto` <br/>
+Homebrew (OSX): `brew install capnp`
+
+and the schema compiler
+
+```
+npm install -g capnpc-ts
+```
+
+Then run:
+```
+npm run capnp
+```
+
 ## Useful links
 [TileDB Cloud documentation](https://docs.tiledb.com/cloud/)  
 [TileDB Cloud console](https://console.tiledb.com)  
