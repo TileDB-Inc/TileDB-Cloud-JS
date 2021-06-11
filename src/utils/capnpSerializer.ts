@@ -1,5 +1,5 @@
 import { ArrayMetadata } from "../capnp/arrayMetadata.capnp";
-import capnp from "capnp-ts";
+import * as capnp from "capnp-ts";
 
 const capnpSerializer = (data: any) => {
   if (data && Array.isArray(data.entries)) {
