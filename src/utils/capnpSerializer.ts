@@ -16,10 +16,6 @@ const capnpSerializer = (data: any) => {
       const data = entry.initValue(entryData.value.length);
       const buffer = new Uint32Array(entryData.value).buffer;
       data.copyBuffer(buffer);
-      // const dataBox = new capnp.Message().initRoot(DataBox);
-      // dataBox.initValue(entryData.value.length);
-      // // dataBox.setValue(entryData.value);
-      // const a = dataBox.getValue()
       
       entry.setValue(data);
       entry.setDel(entryData.del);
