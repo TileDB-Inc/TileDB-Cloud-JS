@@ -427,7 +427,7 @@ export interface ArrayMetadata {
      * @type {Array<ArrayMetadataEntry>}
      * @memberof ArrayMetadata
      */
-    ranges?: Array<ArrayMetadataEntry>;
+    entries?: Array<ArrayMetadataEntry>;
 }
 /**
  * key/value pair representing an array metadata map entry
@@ -4232,6 +4232,50 @@ export const ArrayApiAxiosParamCreator = function (configuration?: Configuration
             };
         },
         /**
+         * get metadata on an array
+         * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
+         * @param {string} array name/uri of array that is url-encoded
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getArrayMetadataCap: async (namespace: string, array: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'namespace' is not null or undefined
+            assertParamExists('getArrayMetadataCap', 'namespace', namespace)
+            // verify required parameter 'array' is not null or undefined
+            assertParamExists('getArrayMetadataCap', 'array', array)
+            const localVarPath = `/arrays/{namespace}/{array}/array_metadata`
+                .replace(`{${"namespace"}}`, encodeURIComponent(String(namespace)))
+                .replace(`{${"array"}}`, encodeURIComponent(String(array)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+
+            // authentication BasicAuth required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * get the non empty domain of an array
          * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
          * @param {string} array name/uri of array that is url-encoded
@@ -4651,6 +4695,50 @@ export const ArrayApiAxiosParamCreator = function (configuration?: Configuration
             };
         },
         /**
+         * update metadata on an array
+         * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
+         * @param {string} array name/uri of array that is url-encoded
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateArrayMetadataCap: async (namespace: string, array: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'namespace' is not null or undefined
+            assertParamExists('updateArrayMetadataCap', 'namespace', namespace)
+            // verify required parameter 'array' is not null or undefined
+            assertParamExists('updateArrayMetadataCap', 'array', array)
+            const localVarPath = `/arrays/{namespace}/{array}/array_metadata`
+                .replace(`{${"namespace"}}`, encodeURIComponent(String(namespace)))
+                .replace(`{${"array"}}`, encodeURIComponent(String(array)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+
+            // authentication BasicAuth required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * vacuum an array at a specified URI
          * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
          * @param {string} array name/uri of array that is url-encoded
@@ -4919,6 +5007,17 @@ export const ArrayApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
+         * get metadata on an array
+         * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
+         * @param {string} array name/uri of array that is url-encoded
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getArrayMetadataCap(namespace: string, array: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArrayMetadata>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getArrayMetadataCap(namespace, array, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
          * get the non empty domain of an array
          * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
          * @param {string} array name/uri of array that is url-encoded
@@ -5018,6 +5117,17 @@ export const ArrayApiFp = function(configuration?: Configuration) {
          */
         async updateArrayMetadata(namespace: string, array: string, arrayMetadata: ArrayInfoUpdate, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.updateArrayMetadata(namespace, array, arrayMetadata, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * update metadata on an array
+         * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
+         * @param {string} array name/uri of array that is url-encoded
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async updateArrayMetadataCap(namespace: string, array: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArrayMetadata>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateArrayMetadataCap(namespace, array, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -5235,6 +5345,16 @@ export const ArrayApiFactory = function (configuration?: Configuration, basePath
             return localVarFp.getArrayMetadata(namespace, array, options).then((request) => request(axios, basePath));
         },
         /**
+         * get metadata on an array
+         * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
+         * @param {string} array name/uri of array that is url-encoded
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getArrayMetadataCap(namespace: string, array: string, options?: any): AxiosPromise<ArrayMetadata> {
+            return localVarFp.getArrayMetadataCap(namespace, array, options).then((request) => request(axios, basePath));
+        },
+        /**
          * get the non empty domain of an array
          * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
          * @param {string} array name/uri of array that is url-encoded
@@ -5326,6 +5446,16 @@ export const ArrayApiFactory = function (configuration?: Configuration, basePath
          */
         updateArrayMetadata(namespace: string, array: string, arrayMetadata: ArrayInfoUpdate, options?: any): AxiosPromise<void> {
             return localVarFp.updateArrayMetadata(namespace, array, arrayMetadata, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * update metadata on an array
+         * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
+         * @param {string} array name/uri of array that is url-encoded
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateArrayMetadataCap(namespace: string, array: string, options?: any): AxiosPromise<ArrayMetadata> {
+            return localVarFp.updateArrayMetadataCap(namespace, array, options).then((request) => request(axios, basePath));
         },
         /**
          * vacuum an array at a specified URI
@@ -5573,6 +5703,18 @@ export class ArrayApi extends BaseAPI {
     }
 
     /**
+     * get metadata on an array
+     * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
+     * @param {string} array name/uri of array that is url-encoded
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ArrayApi
+     */
+    public getArrayMetadataCap(namespace: string, array: string, options?: any) {
+        return ArrayApiFp(this.configuration).getArrayMetadataCap(namespace, array, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
      * get the non empty domain of an array
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
      * @param {string} array name/uri of array that is url-encoded
@@ -5681,6 +5823,18 @@ export class ArrayApi extends BaseAPI {
      */
     public updateArrayMetadata(namespace: string, array: string, arrayMetadata: ArrayInfoUpdate, options?: any) {
         return ArrayApiFp(this.configuration).updateArrayMetadata(namespace, array, arrayMetadata, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * update metadata on an array
+     * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
+     * @param {string} array name/uri of array that is url-encoded
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ArrayApi
+     */
+    public updateArrayMetadataCap(namespace: string, array: string, options?: any) {
+        return ArrayApiFp(this.configuration).updateArrayMetadataCap(namespace, array, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
