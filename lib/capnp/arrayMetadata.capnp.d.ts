@@ -42,3 +42,17 @@ export declare class ArrayMetadata extends __S {
     setEntries(value: capnp.List<ArrayMetadata_MetadataEntry>): void;
     toString(): string;
 }
+export declare class DataBox extends __S {
+    static readonly _capnp: {
+        displayName: string;
+        id: string;
+        size: capnp.ObjectSize;
+    };
+    adoptValue(value: capnp.Orphan<capnp.Data>): void;
+    disownValue(): capnp.Orphan<capnp.Data>;
+    getValue(): capnp.Data;
+    hasValue(): boolean;
+    initValue(length: number): capnp.Data;
+    setValue(value: capnp.Data): void;
+    toString(): string;
+}

@@ -37,4 +37,14 @@ export class ArrayMetadata extends __S {
     setEntries(value: capnp.List<ArrayMetadata_MetadataEntry>): void { __S.copyFrom(value, __S.getPointer(0, this)); }
     toString(): string { return "ArrayMetadata_" + super.toString(); }
 }
+export class DataBox extends __S {
+    static readonly _capnp = { displayName: "DataBox", id: "9983d93d37709d16", size: new __O(0, 1) };
+    adoptValue(value: capnp.Orphan<capnp.Data>): void { __S.adopt(value, __S.getPointer(0, this)); }
+    disownValue(): capnp.Orphan<capnp.Data> { return __S.disown(this.getValue()); }
+    getValue(): capnp.Data { return __S.getData(0, this); }
+    hasValue(): boolean { return !__S.isNull(__S.getPointer(0, this)); }
+    initValue(length: number): capnp.Data { return __S.initData(0, length, this); }
+    setValue(value: capnp.Data): void { __S.copyFrom(value, __S.getPointer(0, this)); }
+    toString(): string { return "DataBox_" + super.toString(); }
+}
 ArrayMetadata._Entries = capnp.CompositeList(ArrayMetadata_MetadataEntry);
