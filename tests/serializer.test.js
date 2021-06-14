@@ -13,15 +13,15 @@ test("serializer", () => {
       {
         key: "format",
         type: "STRING_UTF8",
-        valueNum: 14,
+        valueNum: 148,
         value: [106, 115, 111, 110],
         del: false,
       },
       {
         key: "type",
         type: "STRING_UTF8",
-        valueNum: 8,
-        value: [110, 111, 116, 101, 98, 111, 111, 107],
+        valueNum: 12,
+        value: [110, 111, 116, 101, 98, 111, 111, 107, 122, 136],
         del: false,
       },
     ],
