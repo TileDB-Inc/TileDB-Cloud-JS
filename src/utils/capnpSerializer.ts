@@ -13,15 +13,19 @@ const capnpSerializer = (data: any) => {
       entry.setKey(entryData.key);
       entry.setType(entryData.type);
       entry.setValueNum(entryData.valueNum);
-      const data = entry.initValue(entryData.value.length);
-      const buffer = new Uint32Array(entryData.value).buffer;
-      data.copyBuffer(buffer);
-      
+      const valueLength = entryData.value.length;
+      const data = entry.initValue(valueLength);
+      const arrBuffer = new ArrayBuffer(valueLength);
+      const view = new Uint8Array(arrBuffer);
+      entryData.value.forEach((num, i) => {
+        view[i] = num;
+      });
+      data.copyBuffer(view);
       entry.setValue(data);
       entry.setDel(entryData.del);
     });
 
-    return metadata;
+    return message;
   }
 };
 

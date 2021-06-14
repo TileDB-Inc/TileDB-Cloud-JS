@@ -1,0 +1,1 @@
+{"version":3,"file":"capnpDeSerializer.js","sourceRoot":"","sources":["../../src/utils/capnpDeSerializer.ts"],"names":[],"mappings":";;;;;;;;;;;;;;;;;;;;;AAAA,sEAA6D;AAC7D,gDAAkC;AAElC,MAAM,iBAAiB,GAAG,CAAC,MAAqC,EAAE,EAAE;IAChE,MAAM,OAAO,GAAG,IAAI,KAAK,CAAC,OAAO,CAAC,MAAM,CAAC,CAAC;IAC1C,OAAO,OAAO,CAAC,OAAO,CAAC,mCAAa,CAAC,CAAC;AAC1C,CAAC,CAAA;AAED,kBAAe,iBAAiB,CAAC"}
