@@ -14,3 +14,7 @@ struct ArrayMetadata {
   entries @0 :List(MetadataEntry);
   # list of metadata values
 }
+
+struct DataBox {
+  value @0 :Data;
+}
