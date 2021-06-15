@@ -1,9 +1,20 @@
 import { ArrayMetadata } from "../capnp/arrayMetadata.capnp";
 import * as capnp from "capnp-ts";
 
-const capnpDeSerializer = (buffer: ArrayBuffer | ArrayBufferLike) => {
-    const message = new capnp.Message(buffer);
-    return message.getRoot(ArrayMetadata);
-}
+export const capnpArrayMetadaDeSerializer = (buffer: ArrayBuffer | ArrayBufferLike) => {
+  const message = new capnp.Message(buffer, false);
+  const arrayMetadata = message.getRoot(ArrayMetadata);
+  const entries = arrayMetadata.getEntries().map((entry) => {
+    const value = entry.getValue().toArray();
 
-export default capnpDeSerializer;
+    return {
+      value,
+      del: entry.getDel(),
+      key: entry.getKey(),
+      type: entry.getType(),
+      valueNum: entry.getValueNum(),
+    };
+  });
+  return { entries };
+};
+

@@ -4698,14 +4698,17 @@ export const ArrayApiAxiosParamCreator = function (configuration?: Configuration
          * update metadata on an array
          * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
          * @param {string} array name/uri of array that is url-encoded
+         * @param {ArrayMetadata} arrayMetadataEntries List of metadata entries
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updateArrayMetadataCap: async (namespace: string, array: string, options: any = {}): Promise<RequestArgs> => {
+        updateArrayMetadataCap: async (namespace: string, array: string, arrayMetadataEntries: ArrayMetadata, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'namespace' is not null or undefined
             assertParamExists('updateArrayMetadataCap', 'namespace', namespace)
             // verify required parameter 'array' is not null or undefined
             assertParamExists('updateArrayMetadataCap', 'array', array)
+            // verify required parameter 'arrayMetadataEntries' is not null or undefined
+            assertParamExists('updateArrayMetadataCap', 'arrayMetadataEntries', arrayMetadataEntries)
             const localVarPath = `/arrays/{namespace}/{array}/array_metadata`
                 .replace(`{${"namespace"}}`, encodeURIComponent(String(namespace)))
                 .replace(`{${"array"}}`, encodeURIComponent(String(array)));
@@ -4729,9 +4732,12 @@ export const ArrayApiAxiosParamCreator = function (configuration?: Configuration
 
 
     
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(arrayMetadataEntries, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -5123,11 +5129,12 @@ export const ArrayApiFp = function(configuration?: Configuration) {
          * update metadata on an array
          * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
          * @param {string} array name/uri of array that is url-encoded
+         * @param {ArrayMetadata} arrayMetadataEntries List of metadata entries
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async updateArrayMetadataCap(namespace: string, array: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArrayMetadata>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.updateArrayMetadataCap(namespace, array, options);
+        async updateArrayMetadataCap(namespace: string, array: string, arrayMetadataEntries: ArrayMetadata, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateArrayMetadataCap(namespace, array, arrayMetadataEntries, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -5451,11 +5458,12 @@ export const ArrayApiFactory = function (configuration?: Configuration, basePath
          * update metadata on an array
          * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
          * @param {string} array name/uri of array that is url-encoded
+         * @param {ArrayMetadata} arrayMetadataEntries List of metadata entries
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updateArrayMetadataCap(namespace: string, array: string, options?: any): AxiosPromise<ArrayMetadata> {
-            return localVarFp.updateArrayMetadataCap(namespace, array, options).then((request) => request(axios, basePath));
+        updateArrayMetadataCap(namespace: string, array: string, arrayMetadataEntries: ArrayMetadata, options?: any): AxiosPromise<void> {
+            return localVarFp.updateArrayMetadataCap(namespace, array, arrayMetadataEntries, options).then((request) => request(axios, basePath));
         },
         /**
          * vacuum an array at a specified URI
@@ -5829,12 +5837,13 @@ export class ArrayApi extends BaseAPI {
      * update metadata on an array
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
      * @param {string} array name/uri of array that is url-encoded
+     * @param {ArrayMetadata} arrayMetadataEntries List of metadata entries
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ArrayApi
      */
-    public updateArrayMetadataCap(namespace: string, array: string, options?: any) {
-        return ArrayApiFp(this.configuration).updateArrayMetadataCap(namespace, array, options).then((request) => request(this.axios, this.basePath));
+    public updateArrayMetadataCap(namespace: string, array: string, arrayMetadataEntries: ArrayMetadata, options?: any) {
+        return ArrayApiFp(this.configuration).updateArrayMetadataCap(namespace, array, arrayMetadataEntries, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

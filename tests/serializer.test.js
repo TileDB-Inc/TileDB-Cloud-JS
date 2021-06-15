@@ -28,24 +28,15 @@ test("serializer", () => {
     ],
   };
   const serializedData = serializer.default(data);
-  expect(serializedData.toString()).toBe(
-    "Message_arena:SingleSegmentArena_len:0x1000"
+  expect(serializedData.byteLength).toBe(
+    224
   );
 
-  const deSerialized = deSerializer.default(
-    serializedData.toPackedArrayBuffer()
+  const deSerialized = deSerializer.capnpArrayMetadaDeSerializer(
+    serializedData
   );
 
-  expect(deSerialized.toString()).toBe(
-    "ArrayMetadata_Struct_Pointer_0@0x00000000,[00 00 00 00 00 00 01 00],limit:0x7fffffff"
+  expect(deSerialized).toEqual(
+    data
   );
-  deSerialized.getEntries().forEach((entry, i) => {
-    const value = entry.getValue().toArray();
-
-    expect(value).toEqual(data.entries[i].value);
-    expect(entry.getDel()).toBe(data.entries[i].del);
-    expect(entry.getKey()).toBe(data.entries[i].key);
-    expect(entry.getType()).toBe(data.entries[i].type);
-    expect(entry.getValueNum()).toBe(data.entries[i].valueNum);
-  });
 });
