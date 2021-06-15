@@ -3554,10 +3554,11 @@ export declare const ArrayApiAxiosParamCreator: (configuration?: Configuration) 
      * update metadata on an array
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
      * @param {string} array name/uri of array that is url-encoded
+     * @param {ArrayMetadata} arrayMetadataEntries List of metadata entries
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    updateArrayMetadataCap: (namespace: string, array: string, options?: any) => Promise<RequestArgs>;
+    updateArrayMetadataCap: (namespace: string, array: string, arrayMetadataEntries: ArrayMetadata, options?: any) => Promise<RequestArgs>;
     /**
      * vacuum an array at a specified URI
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
@@ -3820,10 +3821,11 @@ export declare const ArrayApiFp: (configuration?: Configuration) => {
      * update metadata on an array
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
      * @param {string} array name/uri of array that is url-encoded
+     * @param {ArrayMetadata} arrayMetadataEntries List of metadata entries
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    updateArrayMetadataCap(namespace: string, array: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArrayMetadata>>;
+    updateArrayMetadataCap(namespace: string, array: string, arrayMetadataEntries: ArrayMetadata, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
     /**
      * vacuum an array at a specified URI
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
@@ -4086,10 +4088,11 @@ export declare const ArrayApiFactory: (configuration?: Configuration, basePath?:
      * update metadata on an array
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
      * @param {string} array name/uri of array that is url-encoded
+     * @param {ArrayMetadata} arrayMetadataEntries List of metadata entries
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    updateArrayMetadataCap(namespace: string, array: string, options?: any): AxiosPromise<ArrayMetadata>;
+    updateArrayMetadataCap(namespace: string, array: string, arrayMetadataEntries: ArrayMetadata, options?: any): AxiosPromise<void>;
     /**
      * vacuum an array at a specified URI
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
@@ -4380,11 +4383,12 @@ export declare class ArrayApi extends BaseAPI {
      * update metadata on an array
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
      * @param {string} array name/uri of array that is url-encoded
+     * @param {ArrayMetadata} arrayMetadataEntries List of metadata entries
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ArrayApi
      */
-    updateArrayMetadataCap(namespace: string, array: string, options?: any): Promise<import("axios").AxiosResponse<ArrayMetadata>>;
+    updateArrayMetadataCap(namespace: string, array: string, arrayMetadataEntries: ArrayMetadata, options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**
      * vacuum an array at a specified URI
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)

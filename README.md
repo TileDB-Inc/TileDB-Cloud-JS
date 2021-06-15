@@ -15,9 +15,9 @@ npm install @tiledb-inc/tiledb-cloud
 const tiledb = require("@tiledb-inc/tiledb-cloud");
 
 // API tokens are the recommend way to access the cloud apis
-const config = {
+const config = new tiledb.Configuration({
   apiKey: "<insert token from setting page here>"
-};
+});
 
 // Username and passwords are also supported, uncomment below and comment out above to use username/password auth instead
 // const config = {
@@ -45,9 +45,9 @@ arrayApi.getArraysInNamespace('<tiledb-cloud-username>').then((res) => {
 const tiledb = require('@tiledb-inc/tiledb-cloud');
 
 // API tokens are the recommend way to access the cloud apis
-const config = {
+const config = new tiledb.Configuration({
   apiKey: "<insert token from setting page here>"
-};
+});
 
 // Username and passwords are also supported, uncomment below and comment out above to use username/password auth instead
 // const config = {

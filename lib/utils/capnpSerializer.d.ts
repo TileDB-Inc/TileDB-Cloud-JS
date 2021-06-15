@@ -1,3 +1,2 @@
-import * as capnp from "capnp-ts";
-declare const capnpSerializer: (data: any) => capnp.Message;
+declare const capnpSerializer: (data: any) => ArrayBuffer;
 export default capnpSerializer;
