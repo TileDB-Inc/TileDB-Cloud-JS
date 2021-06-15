@@ -20,7 +20,7 @@ const serializeArrayMetadata = (data: ArrayMetadataType) => {
     const entry = entries.get(i);
     entry.setKey(entryData.key);
     entry.setType(entryData.type);
-    entry.setValueNum((entryData as any).valueNum);
+    entry.setValueNum(entryData.valueNum);
     const valueLength = entryData.value.length;
     const data = entry.initValue(valueLength);
     const arrBuffer = new ArrayBuffer(valueLength);
