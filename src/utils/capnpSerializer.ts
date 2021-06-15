@@ -15,7 +15,7 @@ const serializeArrayMetadata = (data: ArrayMetadataType) => {
   const message = new capnp.Message();
   const metadata = message.initRoot(ArrayMetadata);
   const entries = metadata.initEntries(entriesLength);
-  console.log(data);
+
   data.entries.forEach((entryData, i) => {
     const entry = entries.get(i);
     entry.setKey(entryData.key);
