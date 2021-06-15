@@ -85,7 +85,56 @@ sqlAPI.runSQL("<tiledb-cloud-username>", sqlDetails).then((res) => {
 
 ```
 
-### Development
+
+## Cap'n Proto serialization
+
+Endpoints that support cap'n proto mime type user should set content-type to `application/capnp`.
+
+For `POST` requests library will automatically serialize data to cap'n proto.
+
+```
+const tiledb = require("@tiledb-inc/tiledb-cloud");
+
+const config = new tiledb.Configuration({
+  apiKey: "<insert token from setting page here>"
+});
+const arrayApi = new tiledb.ArrayApi(config);
+
+arrayApi
+  .updateArrayMetadataCap(
+    "ns",
+    "array_name",
+    data,
+    {
+      headers: {
+        "Content-Type": "application/capnp",
+      },
+    })
+```
+
+For `GET` requests library provides methods to deserialize data. In that case, **responseType** should be set to `arraybuffer` since helpers accept [ArrayBuffer](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer) to deserialize the response.
+
+```
+const tiledb = require("@tiledb-inc/tiledb-cloud");
+
+const config = new tiledb.Configuration({
+  apiKey: "<insert token from setting page here>"
+});
+const arrayApi = new tiledb.ArrayApi(config);
+
+arrayApi
+  .getArrayMetadataCap("ns", "array_name", {
+    headers: {
+      "Content-Type": "application/capnp",
+    },
+    responseType: "arraybuffer",
+  })
+  .then((data) => {
+    console.log(tiledb.capnpArrayMetadaDeSerializer(data.data));
+  })
+```
+
+## Development
 
 For capnproto encoding you need to [install capnproto](https://capnproto.org/install.html)
 
