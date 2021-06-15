@@ -153,6 +153,11 @@ Then run:
 npm run capnp
 ```
 
+
+## Known issues
+
+In the browser environment, `application/capnp` doesn't work for `GET` requests, since [Axios deletes content-type header](https://github.com/axios/axios/blob/master/lib/adapters/xhr.js#L140)
+
 ## Useful links
 [TileDB Cloud documentation](https://docs.tiledb.com/cloud/)  
 [TileDB Cloud console](https://console.tiledb.com)  
