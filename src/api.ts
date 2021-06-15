@@ -452,7 +452,7 @@ export interface ArrayMetadataEntry {
      * @type {number}
      * @memberof ArrayMetadataEntry
      */
-    value_num?: number;
+    valueNum?: number;
     /**
      * 
      * @type {Array<number>}
