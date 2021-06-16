@@ -88,7 +88,7 @@ sqlAPI.runSQL("<tiledb-cloud-username>", sqlDetails).then((res) => {
 
 ## Cap'n Proto serialization
 
-Endpoints that support cap'n proto mime type user should set content-type to `application/capnp`.
+Endpoints that support cap'n proto mime type user should set appropriate headers (Accept for GET requests and Content-Type for POST/PUT) to `application/capnp`.
 
 For `POST` requests library will automatically serialize data to cap'n proto.
 
@@ -112,7 +112,7 @@ arrayApi
     })
 ```
 
-For `GET` requests library provides methods to deserialize data. In that case, **responseType** should be set to `arraybuffer` since helpers accept [ArrayBuffer](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer) to deserialize the response.
+For `GET` requests library provides methods to deserialize data. If Accept header is set to "application/capnp", library will set `responseType` to `arraybuffer` since helpers accept [ArrayBuffer](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer) to deserialize the response (user can still override `responseType`).
 
 ```
 const tiledb = require("@tiledb-inc/tiledb-cloud");
@@ -125,11 +125,11 @@ const arrayApi = new tiledb.ArrayApi(config);
 arrayApi
   .getArrayMetadataCap("ns", "array_name", {
     headers: {
-      "Content-Type": "application/capnp",
+      "Accept": "application/capnp",
     },
-    responseType: "arraybuffer",
   })
   .then((data) => {
+    // data.data is an ArrayBuffer
     console.log(tiledb.capnpArrayMetadaDeSerializer(data.data));
   })
 ```
@@ -152,11 +152,6 @@ Then run:
 ```
 npm run capnp
 ```
-
-
-## Known issues
-
-In the browser environment, `application/capnp` doesn't work for `GET` requests, since [Axios deletes content-type header](https://github.com/axios/axios/blob/master/lib/adapters/xhr.js#L140)
 
 ## Useful links
 [TileDB Cloud documentation](https://docs.tiledb.com/cloud/)  

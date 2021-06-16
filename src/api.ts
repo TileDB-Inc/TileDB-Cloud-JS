@@ -3404,6 +3404,10 @@ export const ArrayApiAxiosParamCreator = function (configuration?: Configuration
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -3490,6 +3494,10 @@ export const ArrayApiAxiosParamCreator = function (configuration?: Configuration
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -3526,6 +3534,10 @@ export const ArrayApiAxiosParamCreator = function (configuration?: Configuration
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -3612,6 +3624,10 @@ export const ArrayApiAxiosParamCreator = function (configuration?: Configuration
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -3648,6 +3664,10 @@ export const ArrayApiAxiosParamCreator = function (configuration?: Configuration
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -3734,6 +3754,10 @@ export const ArrayApiAxiosParamCreator = function (configuration?: Configuration
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -3770,6 +3794,10 @@ export const ArrayApiAxiosParamCreator = function (configuration?: Configuration
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -3819,6 +3847,10 @@ export const ArrayApiAxiosParamCreator = function (configuration?: Configuration
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
             localVarRequestOptions.data = serializeDataIfNeeded(tiledbConfig, localVarRequestOptions, configuration)
 
             return {
@@ -3881,6 +3913,10 @@ export const ArrayApiAxiosParamCreator = function (configuration?: Configuration
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
             localVarRequestOptions.data = serializeDataIfNeeded(arraySchema, localVarRequestOptions, configuration)
 
             return {
@@ -3933,6 +3969,10 @@ export const ArrayApiAxiosParamCreator = function (configuration?: Configuration
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -3977,6 +4017,10 @@ export const ArrayApiAxiosParamCreator = function (configuration?: Configuration
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -4018,6 +4062,10 @@ export const ArrayApiAxiosParamCreator = function (configuration?: Configuration
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -4069,6 +4117,10 @@ export const ArrayApiAxiosParamCreator = function (configuration?: Configuration
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -4132,6 +4184,10 @@ export const ArrayApiAxiosParamCreator = function (configuration?: Configuration
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -4181,6 +4237,10 @@ export const ArrayApiAxiosParamCreator = function (configuration?: Configuration
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -4225,6 +4285,10 @@ export const ArrayApiAxiosParamCreator = function (configuration?: Configuration
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -4269,6 +4333,10 @@ export const ArrayApiAxiosParamCreator = function (configuration?: Configuration
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -4325,6 +4393,10 @@ export const ArrayApiAxiosParamCreator = function (configuration?: Configuration
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -4369,6 +4441,10 @@ export const ArrayApiAxiosParamCreator = function (configuration?: Configuration
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -4418,6 +4494,10 @@ export const ArrayApiAxiosParamCreator = function (configuration?: Configuration
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -4462,6 +4542,10 @@ export const ArrayApiAxiosParamCreator = function (configuration?: Configuration
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -4502,6 +4586,10 @@ export const ArrayApiAxiosParamCreator = function (configuration?: Configuration
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -4538,6 +4626,10 @@ export const ArrayApiAxiosParamCreator = function (configuration?: Configuration
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -4587,6 +4679,10 @@ export const ArrayApiAxiosParamCreator = function (configuration?: Configuration
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
             localVarRequestOptions.data = serializeDataIfNeeded(arrayMetadata, localVarRequestOptions, configuration)
 
             return {
@@ -4637,6 +4733,10 @@ export const ArrayApiAxiosParamCreator = function (configuration?: Configuration
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
             localVarRequestOptions.data = serializeDataIfNeeded(arraySharing, localVarRequestOptions, configuration)
 
             return {
@@ -4687,6 +4787,10 @@ export const ArrayApiAxiosParamCreator = function (configuration?: Configuration
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
             localVarRequestOptions.data = serializeDataIfNeeded(arrayMetadata, localVarRequestOptions, configuration)
 
             return {
@@ -4737,6 +4841,10 @@ export const ArrayApiAxiosParamCreator = function (configuration?: Configuration
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
             localVarRequestOptions.data = serializeDataIfNeeded(arrayMetadataEntries, localVarRequestOptions, configuration)
 
             return {
@@ -4787,6 +4895,10 @@ export const ArrayApiAxiosParamCreator = function (configuration?: Configuration
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
             localVarRequestOptions.data = serializeDataIfNeeded(tiledbConfig, localVarRequestOptions, configuration)
 
             return {
@@ -5907,6 +6019,10 @@ export const ArrayTasksApiAxiosParamCreator = function (configuration?: Configur
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -6018,6 +6134,10 @@ export const FavoritesApiAxiosParamCreator = function (configuration?: Configura
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -6058,6 +6178,10 @@ export const FavoritesApiAxiosParamCreator = function (configuration?: Configura
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -6099,6 +6223,10 @@ export const FavoritesApiAxiosParamCreator = function (configuration?: Configura
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -6138,6 +6266,10 @@ export const FavoritesApiAxiosParamCreator = function (configuration?: Configura
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
             localVarRequestOptions.data = serializeDataIfNeeded(body, localVarRequestOptions, configuration)
 
             return {
@@ -6337,6 +6469,10 @@ export const InvitationApiAxiosParamCreator = function (configuration?: Configur
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -6381,6 +6517,10 @@ export const InvitationApiAxiosParamCreator = function (configuration?: Configur
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -6429,6 +6569,10 @@ export const InvitationApiAxiosParamCreator = function (configuration?: Configur
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -6510,6 +6654,10 @@ export const InvitationApiAxiosParamCreator = function (configuration?: Configur
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -6555,6 +6703,10 @@ export const InvitationApiAxiosParamCreator = function (configuration?: Configur
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
             localVarRequestOptions.data = serializeDataIfNeeded(emailInvite, localVarRequestOptions, configuration)
 
             return {
@@ -6605,6 +6757,10 @@ export const InvitationApiAxiosParamCreator = function (configuration?: Configur
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
             localVarRequestOptions.data = serializeDataIfNeeded(emailInvite, localVarRequestOptions, configuration)
 
             return {
@@ -6906,6 +7062,10 @@ export const NotebookApiAxiosParamCreator = function (configuration?: Configurat
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -6946,6 +7106,10 @@ export const NotebookApiAxiosParamCreator = function (configuration?: Configurat
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -6995,6 +7159,10 @@ export const NotebookApiAxiosParamCreator = function (configuration?: Configurat
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
             localVarRequestOptions.data = serializeDataIfNeeded(notebookMetadata, localVarRequestOptions, configuration)
 
             return {
@@ -7174,6 +7342,10 @@ export const NotebooksApiAxiosParamCreator = function (configuration?: Configura
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -7290,6 +7462,10 @@ export const OrganizationApiAxiosParamCreator = function (configuration?: Config
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
             localVarRequestOptions.data = serializeDataIfNeeded(awsAccessCredentials, localVarRequestOptions, configuration)
 
             return {
@@ -7336,6 +7512,10 @@ export const OrganizationApiAxiosParamCreator = function (configuration?: Config
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
             localVarRequestOptions.data = serializeDataIfNeeded(user, localVarRequestOptions, configuration)
 
             return {
@@ -7377,6 +7557,10 @@ export const OrganizationApiAxiosParamCreator = function (configuration?: Config
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -7421,6 +7605,10 @@ export const OrganizationApiAxiosParamCreator = function (configuration?: Config
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -7462,6 +7650,10 @@ export const OrganizationApiAxiosParamCreator = function (configuration?: Config
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
             localVarRequestOptions.data = serializeDataIfNeeded(organization, localVarRequestOptions, configuration)
 
             return {
@@ -7507,6 +7699,10 @@ export const OrganizationApiAxiosParamCreator = function (configuration?: Config
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -7547,6 +7743,10 @@ export const OrganizationApiAxiosParamCreator = function (configuration?: Config
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -7591,6 +7791,10 @@ export const OrganizationApiAxiosParamCreator = function (configuration?: Config
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -7627,6 +7831,10 @@ export const OrganizationApiAxiosParamCreator = function (configuration?: Config
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -7667,6 +7875,10 @@ export const OrganizationApiAxiosParamCreator = function (configuration?: Config
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -7711,6 +7923,10 @@ export const OrganizationApiAxiosParamCreator = function (configuration?: Config
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -7760,6 +7976,10 @@ export const OrganizationApiAxiosParamCreator = function (configuration?: Config
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
             localVarRequestOptions.data = serializeDataIfNeeded(awsAccessCredentials, localVarRequestOptions, configuration)
 
             return {
@@ -7806,6 +8026,10 @@ export const OrganizationApiAxiosParamCreator = function (configuration?: Config
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
             localVarRequestOptions.data = serializeDataIfNeeded(organizationDetails, localVarRequestOptions, configuration)
 
             return {
@@ -7856,6 +8080,10 @@ export const OrganizationApiAxiosParamCreator = function (configuration?: Config
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
             localVarRequestOptions.data = serializeDataIfNeeded(user, localVarRequestOptions, configuration)
 
             return {
@@ -8418,6 +8646,10 @@ export const QueryApiAxiosParamCreator = function (configuration?: Configuration
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
             localVarRequestOptions.data = serializeDataIfNeeded(query, localVarRequestOptions, configuration)
 
             return {
@@ -8492,6 +8724,10 @@ export const QueryApiAxiosParamCreator = function (configuration?: Configuration
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
             localVarRequestOptions.data = serializeDataIfNeeded(query, localVarRequestOptions, configuration)
 
             return {
@@ -8549,6 +8785,10 @@ export const QueryApiAxiosParamCreator = function (configuration?: Configuration
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -8622,6 +8862,10 @@ export const QueryApiAxiosParamCreator = function (configuration?: Configuration
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
             localVarRequestOptions.data = serializeDataIfNeeded(query, localVarRequestOptions, configuration)
 
             return {
@@ -8684,6 +8928,10 @@ export const QueryApiAxiosParamCreator = function (configuration?: Configuration
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
             localVarRequestOptions.data = serializeDataIfNeeded(queryJson, localVarRequestOptions, configuration)
 
             return {
@@ -8998,6 +9246,10 @@ export const SqlApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
             localVarRequestOptions.data = serializeDataIfNeeded(sql, localVarRequestOptions, configuration)
 
             return {
@@ -9109,6 +9361,10 @@ export const StatsApiAxiosParamCreator = function (configuration?: Configuration
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -9224,6 +9480,10 @@ export const TasksApiAxiosParamCreator = function (configuration?: Configuration
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
             localVarRequestOptions.data = serializeDataIfNeeded(sql, localVarRequestOptions, configuration)
 
             return {
@@ -9265,6 +9525,10 @@ export const TasksApiAxiosParamCreator = function (configuration?: Configuration
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -9310,6 +9574,10 @@ export const TasksApiAxiosParamCreator = function (configuration?: Configuration
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -9416,6 +9684,10 @@ export const TasksApiAxiosParamCreator = function (configuration?: Configuration
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -9666,6 +9938,10 @@ export const UdfApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -9710,6 +9986,10 @@ export const UdfApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -9754,6 +10034,10 @@ export const UdfApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -9803,6 +10087,10 @@ export const UdfApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
             localVarRequestOptions.data = serializeDataIfNeeded(udf, localVarRequestOptions, configuration)
 
             return {
@@ -9853,6 +10141,10 @@ export const UdfApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
             localVarRequestOptions.data = serializeDataIfNeeded(udfSharing, localVarRequestOptions, configuration)
 
             return {
@@ -9904,6 +10196,10 @@ export const UdfApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
             localVarRequestOptions.data = serializeDataIfNeeded(udf, localVarRequestOptions, configuration)
 
             return {
@@ -9955,6 +10251,10 @@ export const UdfApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
             localVarRequestOptions.data = serializeDataIfNeeded(udf, localVarRequestOptions, configuration)
 
             return {
@@ -10020,6 +10320,10 @@ export const UdfApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
             localVarRequestOptions.data = serializeDataIfNeeded(udf, localVarRequestOptions, configuration)
 
             return {
@@ -10065,6 +10369,10 @@ export const UdfApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -10114,6 +10422,10 @@ export const UdfApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
             localVarRequestOptions.data = serializeDataIfNeeded(udf, localVarRequestOptions, configuration)
 
             return {
@@ -10555,6 +10867,10 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
             localVarRequestOptions.data = serializeDataIfNeeded(awsAccessCredentials, localVarRequestOptions, configuration)
 
             return {
@@ -10601,6 +10917,10 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
             localVarRequestOptions.data = serializeDataIfNeeded(user, localVarRequestOptions, configuration)
 
             return {
@@ -10642,6 +10962,10 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -10686,6 +11010,10 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -10722,6 +11050,10 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -10763,6 +11095,10 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
             localVarRequestOptions.data = serializeDataIfNeeded(user, localVarRequestOptions, configuration)
 
             return {
@@ -10808,6 +11144,10 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -10848,6 +11188,10 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -10892,6 +11236,10 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -10936,6 +11284,10 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -10977,6 +11329,10 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -11013,6 +11369,10 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -11053,6 +11413,10 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -11092,6 +11456,10 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
             localVarRequestOptions.data = serializeDataIfNeeded(tokenRequest, localVarRequestOptions, configuration)
 
             return {
@@ -11134,6 +11502,10 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
             localVarRequestOptions.data = serializeDataIfNeeded(user, localVarRequestOptions, configuration)
 
             return {
@@ -11175,6 +11547,10 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -11211,6 +11587,10 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -11247,6 +11627,10 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -11296,6 +11680,10 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
             localVarRequestOptions.data = serializeDataIfNeeded(awsAccessCredentials, localVarRequestOptions, configuration)
 
             return {
@@ -11342,6 +11730,10 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
             localVarRequestOptions.data = serializeDataIfNeeded(user, localVarRequestOptions, configuration)
 
             return {
@@ -11392,6 +11784,10 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
             localVarRequestOptions.data = serializeDataIfNeeded(user, localVarRequestOptions, configuration)
 
             return {

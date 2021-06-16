@@ -50,9 +50,8 @@ arrayApi
 arrayApi
   .getArrayMetadataCap("ns", "array_name", {
     headers: {
-      "Content-Type": "application/capnp",
+      "Accept": "application/capnp",
     },
-    responseType: "arraybuffer",
   })
   .then((data) => {
     console.log(tiledb.capnpArrayMetadaDeSerializer(data.data));
