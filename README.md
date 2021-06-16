@@ -92,7 +92,7 @@ Endpoints that support cap'n proto mime type user should set appropriate headers
 
 For `POST` requests library will automatically serialize data to cap'n proto.
 
-```
+```javascript
 const tiledb = require("@tiledb-inc/tiledb-cloud");
 
 const config = new tiledb.Configuration({
@@ -114,7 +114,7 @@ arrayApi
 
 For `GET` requests library provides methods to deserialize data. If Accept header is set to "application/capnp", library will set `responseType` to `arraybuffer` since helpers accept [ArrayBuffer](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer) to deserialize the response (user can still override `responseType`).
 
-```
+```javascript
 const tiledb = require("@tiledb-inc/tiledb-cloud");
 
 const config = new tiledb.Configuration({
