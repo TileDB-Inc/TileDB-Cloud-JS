@@ -54,7 +54,7 @@ arrayApi
     },
   })
   .then((data) => {
-    console.log(tiledb.capnpArrayMetadaDeSerializer(data.data));
+    console.log(tiledb.capnpDeserializer(data.data, "arrayMetadata"));
   })
   .catch((ex) => {
     console.log(ex);
