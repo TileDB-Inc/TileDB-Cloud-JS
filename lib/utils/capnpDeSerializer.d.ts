@@ -1,5 +1,5 @@
-import { ArrayMetadata as ArrayMetadataType } from './../api';
-export declare const capnpArrayMetadaDeSerializer: (buffer: ArrayBuffer | ArrayBufferLike | ArrayMetadataType) => {
+declare type DeserializableTypes = "arrayMetadata";
+export declare const capnpDeserializer: (data: any, type: DeserializableTypes) => {
     entries: {
         value: number[];
         del: boolean;
@@ -8,3 +8,4 @@ export declare const capnpArrayMetadaDeSerializer: (buffer: ArrayBuffer | ArrayB
         valueNum: number;
     }[];
 };
+export {};

@@ -1,11 +1,20 @@
-import { ArrayMetadata as ArrayMetadataType } from './../api';
 import { ArrayMetadata } from "../capnp/arrayMetadata.capnp";
 import * as capnp from "capnp-ts";
 
-export const capnpArrayMetadaDeSerializer = (buffer: ArrayBuffer | ArrayBufferLike | ArrayMetadataType) => {
-  if (!isArrayBuffer(buffer)) {
+
+type DeserializableTypes = "arrayMetadata";
+
+export const capnpDeserializer = (data: any, type: DeserializableTypes) => {
+  if (!isArrayBuffer(data)) {
     throw new Error(`Data is not of type ArrayBuffer`);
   }
+  if (type === 'arrayMetadata') {
+    return capnpArrayMetadaDeSerializer(data);
+  }
+}
+
+const capnpArrayMetadaDeSerializer = (buffer: ArrayBuffer | ArrayBufferLike) => {
+  
   const message = new capnp.Message(buffer, false);
   const arrayMetadata = message.getRoot(ArrayMetadata);
   const entries = arrayMetadata.getEntries().map((entry) => {
