@@ -48,13 +48,13 @@ arrayApi
   });
 
 arrayApi
-  .getArrayMetadataCap("ns", "array_name", {
+  .getArrayMetadataCap("demo", "test157", {
     headers: {
       "Accept": "application/capnp",
     },
   })
   .then((data) => {
-    console.log(tiledb.capnpDeserializer(data.data, "arrayMetadata"));
+    console.log(tiledb.capnpDeserializer(data.data, tiledb.DeserializableType.arrayMetadata));
   })
   .catch((ex) => {
     console.log(ex);

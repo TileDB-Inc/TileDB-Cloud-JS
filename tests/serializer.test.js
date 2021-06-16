@@ -32,8 +32,9 @@ test("serializer", () => {
     224
   );
 
-  const deSerialized = deSerializer.capnpArrayMetadaDeSerializer(
-    serializedData
+  const deSerialized = deSerializer.capnpDeserializer(
+    serializedData,
+    deSerializer.DeserializableType.arrayMetadata
   );
 
   expect(deSerialized).toEqual(
