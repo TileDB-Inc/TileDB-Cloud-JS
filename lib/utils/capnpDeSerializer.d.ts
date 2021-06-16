@@ -1,5 +1,7 @@
-declare type DeserializableTypes = "arrayMetadata";
-export declare const capnpDeserializer: (data: any, type: DeserializableTypes) => {
+export declare enum DeserializableType {
+    "arrayMetadata" = 0
+}
+export declare const capnpDeserializer: (data: any, type: DeserializableType) => {
     entries: {
         value: number[];
         del: boolean;
@@ -8,4 +10,3 @@ export declare const capnpDeserializer: (data: any, type: DeserializableTypes) =
         valueNum: number;
     }[];
 };
-export {};

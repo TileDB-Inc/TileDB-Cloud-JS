@@ -1,14 +1,15 @@
 import { ArrayMetadata } from "../capnp/arrayMetadata.capnp";
 import * as capnp from "capnp-ts";
 
+export enum DeserializableType {
+  "arrayMetadata"
+}
 
-type DeserializableTypes = "arrayMetadata";
-
-export const capnpDeserializer = (data: any, type: DeserializableTypes) => {
+export const capnpDeserializer = (data: any, type: DeserializableType) => {
   if (!isArrayBuffer(data)) {
     throw new Error(`Data is not of type ArrayBuffer`);
   }
-  if (type === 'arrayMetadata') {
+  if (type === DeserializableType.arrayMetadata) {
     return capnpArrayMetadaDeSerializer(data);
   }
 }
