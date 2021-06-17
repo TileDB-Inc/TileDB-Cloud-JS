@@ -4302,11 +4302,11 @@ export const ArrayApiAxiosParamCreator = function (configuration?: Configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getArrayMetadataCap: async (namespace: string, array: string, options: any = {}): Promise<RequestArgs> => {
+        getArrayMetadataCapnp: async (namespace: string, array: string, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'namespace' is not null or undefined
-            assertParamExists('getArrayMetadataCap', 'namespace', namespace)
+            assertParamExists('getArrayMetadataCapnp', 'namespace', namespace)
             // verify required parameter 'array' is not null or undefined
-            assertParamExists('getArrayMetadataCap', 'array', array)
+            assertParamExists('getArrayMetadataCapnp', 'array', array)
             const localVarPath = `/arrays/{namespace}/{array}/array_metadata`
                 .replace(`{${"namespace"}}`, encodeURIComponent(String(namespace)))
                 .replace(`{${"array"}}`, encodeURIComponent(String(array)));
@@ -4806,13 +4806,13 @@ export const ArrayApiAxiosParamCreator = function (configuration?: Configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updateArrayMetadataCap: async (namespace: string, array: string, arrayMetadataEntries: ArrayMetadata, options: any = {}): Promise<RequestArgs> => {
+        updateArrayMetadataCapnp: async (namespace: string, array: string, arrayMetadataEntries: ArrayMetadata, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'namespace' is not null or undefined
-            assertParamExists('updateArrayMetadataCap', 'namespace', namespace)
+            assertParamExists('updateArrayMetadataCapnp', 'namespace', namespace)
             // verify required parameter 'array' is not null or undefined
-            assertParamExists('updateArrayMetadataCap', 'array', array)
+            assertParamExists('updateArrayMetadataCapnp', 'array', array)
             // verify required parameter 'arrayMetadataEntries' is not null or undefined
-            assertParamExists('updateArrayMetadataCap', 'arrayMetadataEntries', arrayMetadataEntries)
+            assertParamExists('updateArrayMetadataCapnp', 'arrayMetadataEntries', arrayMetadataEntries)
             const localVarPath = `/arrays/{namespace}/{array}/array_metadata`
                 .replace(`{${"namespace"}}`, encodeURIComponent(String(namespace)))
                 .replace(`{${"array"}}`, encodeURIComponent(String(array)));
@@ -5131,8 +5131,8 @@ export const ArrayApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getArrayMetadataCap(namespace: string, array: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArrayMetadata>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getArrayMetadataCap(namespace, array, options);
+        async getArrayMetadataCapnp(namespace: string, array: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArrayMetadata>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getArrayMetadataCapnp(namespace, array, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -5245,8 +5245,8 @@ export const ArrayApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async updateArrayMetadataCap(namespace: string, array: string, arrayMetadataEntries: ArrayMetadata, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.updateArrayMetadataCap(namespace, array, arrayMetadataEntries, options);
+        async updateArrayMetadataCapnp(namespace: string, array: string, arrayMetadataEntries: ArrayMetadata, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateArrayMetadataCapnp(namespace, array, arrayMetadataEntries, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -5470,8 +5470,8 @@ export const ArrayApiFactory = function (configuration?: Configuration, basePath
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getArrayMetadataCap(namespace: string, array: string, options?: any): AxiosPromise<ArrayMetadata> {
-            return localVarFp.getArrayMetadataCap(namespace, array, options).then((request) => request(axios, basePath));
+        getArrayMetadataCapnp(namespace: string, array: string, options?: any): AxiosPromise<ArrayMetadata> {
+            return localVarFp.getArrayMetadataCapnp(namespace, array, options).then((request) => request(axios, basePath));
         },
         /**
          * get the non empty domain of an array
@@ -5574,8 +5574,8 @@ export const ArrayApiFactory = function (configuration?: Configuration, basePath
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updateArrayMetadataCap(namespace: string, array: string, arrayMetadataEntries: ArrayMetadata, options?: any): AxiosPromise<void> {
-            return localVarFp.updateArrayMetadataCap(namespace, array, arrayMetadataEntries, options).then((request) => request(axios, basePath));
+        updateArrayMetadataCapnp(namespace: string, array: string, arrayMetadataEntries: ArrayMetadata, options?: any): AxiosPromise<void> {
+            return localVarFp.updateArrayMetadataCapnp(namespace, array, arrayMetadataEntries, options).then((request) => request(axios, basePath));
         },
         /**
          * vacuum an array at a specified URI
@@ -5830,8 +5830,8 @@ export class ArrayApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ArrayApi
      */
-    public getArrayMetadataCap(namespace: string, array: string, options?: any) {
-        return ArrayApiFp(this.configuration).getArrayMetadataCap(namespace, array, options).then((request) => request(this.axios, this.basePath));
+    public getArrayMetadataCapnp(namespace: string, array: string, options?: any) {
+        return ArrayApiFp(this.configuration).getArrayMetadataCapnp(namespace, array, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -5954,8 +5954,8 @@ export class ArrayApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ArrayApi
      */
-    public updateArrayMetadataCap(namespace: string, array: string, arrayMetadataEntries: ArrayMetadata, options?: any) {
-        return ArrayApiFp(this.configuration).updateArrayMetadataCap(namespace, array, arrayMetadataEntries, options).then((request) => request(this.axios, this.basePath));
+    public updateArrayMetadataCapnp(namespace: string, array: string, arrayMetadataEntries: ArrayMetadata, options?: any) {
+        return ArrayApiFp(this.configuration).updateArrayMetadataCapnp(namespace, array, arrayMetadataEntries, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

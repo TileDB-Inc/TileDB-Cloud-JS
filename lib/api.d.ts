@@ -3474,7 +3474,7 @@ export declare const ArrayApiAxiosParamCreator: (configuration?: Configuration) 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getArrayMetadataCap: (namespace: string, array: string, options?: any) => Promise<RequestArgs>;
+    getArrayMetadataCapnp: (namespace: string, array: string, options?: any) => Promise<RequestArgs>;
     /**
      * get the non empty domain of an array
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
@@ -3558,7 +3558,7 @@ export declare const ArrayApiAxiosParamCreator: (configuration?: Configuration) 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    updateArrayMetadataCap: (namespace: string, array: string, arrayMetadataEntries: ArrayMetadata, options?: any) => Promise<RequestArgs>;
+    updateArrayMetadataCapnp: (namespace: string, array: string, arrayMetadataEntries: ArrayMetadata, options?: any) => Promise<RequestArgs>;
     /**
      * vacuum an array at a specified URI
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
@@ -3741,7 +3741,7 @@ export declare const ArrayApiFp: (configuration?: Configuration) => {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getArrayMetadataCap(namespace: string, array: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArrayMetadata>>;
+    getArrayMetadataCapnp(namespace: string, array: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArrayMetadata>>;
     /**
      * get the non empty domain of an array
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
@@ -3825,7 +3825,7 @@ export declare const ArrayApiFp: (configuration?: Configuration) => {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    updateArrayMetadataCap(namespace: string, array: string, arrayMetadataEntries: ArrayMetadata, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
+    updateArrayMetadataCapnp(namespace: string, array: string, arrayMetadataEntries: ArrayMetadata, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
     /**
      * vacuum an array at a specified URI
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
@@ -4008,7 +4008,7 @@ export declare const ArrayApiFactory: (configuration?: Configuration, basePath?:
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getArrayMetadataCap(namespace: string, array: string, options?: any): AxiosPromise<ArrayMetadata>;
+    getArrayMetadataCapnp(namespace: string, array: string, options?: any): AxiosPromise<ArrayMetadata>;
     /**
      * get the non empty domain of an array
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
@@ -4092,7 +4092,7 @@ export declare const ArrayApiFactory: (configuration?: Configuration, basePath?:
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    updateArrayMetadataCap(namespace: string, array: string, arrayMetadataEntries: ArrayMetadata, options?: any): AxiosPromise<void>;
+    updateArrayMetadataCapnp(namespace: string, array: string, arrayMetadataEntries: ArrayMetadata, options?: any): AxiosPromise<void>;
     /**
      * vacuum an array at a specified URI
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
@@ -4294,7 +4294,7 @@ export declare class ArrayApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ArrayApi
      */
-    getArrayMetadataCap(namespace: string, array: string, options?: any): Promise<import("axios").AxiosResponse<ArrayMetadata>>;
+    getArrayMetadataCapnp(namespace: string, array: string, options?: any): Promise<import("axios").AxiosResponse<ArrayMetadata>>;
     /**
      * get the non empty domain of an array
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
@@ -4388,7 +4388,7 @@ export declare class ArrayApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ArrayApi
      */
-    updateArrayMetadataCap(namespace: string, array: string, arrayMetadataEntries: ArrayMetadata, options?: any): Promise<import("axios").AxiosResponse<void>>;
+    updateArrayMetadataCapnp(namespace: string, array: string, arrayMetadataEntries: ArrayMetadata, options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**
      * vacuum an array at a specified URI
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
