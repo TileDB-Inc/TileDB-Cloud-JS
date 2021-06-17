@@ -5,7 +5,7 @@ export enum DeserializableType {
   "arrayMetadata"
 }
 
-export const capnpDeserializer = (data: any, type: DeserializableType) => {
+export const deserializeCapnp = (data: any, type: DeserializableType) => {
   if (!isArrayBuffer(data)) {
     throw new Error(`Data is not of type ArrayBuffer`);
   }
