@@ -6,7 +6,7 @@ const config = new tiledb.Configuration({
 const arrayApi = new tiledb.ArrayApi(config);
 
 arrayApi
-  .updateArrayMetadataCap(
+  .updateArrayMetadataCapnp(
     "ns",
     "array_name",
     {
@@ -48,7 +48,7 @@ arrayApi
   });
 
 arrayApi
-  .getArrayMetadataCap("demo", "test157", {
+  .getArrayMetadataCapnp("demo", "test157", {
     headers: {
       "Accept": "application/capnp",
     },
