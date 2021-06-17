@@ -32,7 +32,7 @@ test("serializer", () => {
     224
   );
 
-  const deSerialized = deSerializer.capnpDeserializer(
+  const deSerialized = deSerializer.deserializeCapnp(
     serializedData,
     deSerializer.DeserializableType.arrayMetadata
   );

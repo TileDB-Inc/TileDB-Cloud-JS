@@ -113,7 +113,7 @@ arrayApi
 ```
 
 For `GET` requests library provides methods to deserialize data. If Accept header is set to "application/capnp", library will set `responseType` to `arraybuffer` since helpers accept [ArrayBuffer](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer) to deserialize the response (user can still override `responseType`).
-`capnpDeserializer` helper function receives an `ArrayBuffer` and the type of the data expected. Library provides a `DeserializableType` enum for all the supported types.
+`deserializeCapnp` helper function receives an `ArrayBuffer` and the type of the data expected. Library provides a `DeserializableType` enum for all the supported types.
 
 ```javascript
 const tiledb = require("@tiledb-inc/tiledb-cloud");
@@ -131,7 +131,7 @@ arrayApi
   })
   .then((data) => {
     // data.data is an ArrayBuffer
-    console.log(tiledb.capnpDeserializer(data.data, tiledb.DeserializableType.arrayMetadata));
+    console.log(tiledb.deserializeCapnp(data.data, tiledb.DeserializableType.arrayMetadata));
   })
 ```
 
