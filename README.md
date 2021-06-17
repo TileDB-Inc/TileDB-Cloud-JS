@@ -15,9 +15,9 @@ npm install @tiledb-inc/tiledb-cloud
 const tiledb = require("@tiledb-inc/tiledb-cloud");
 
 // API tokens are the recommend way to access the cloud apis
-const config = {
+const config = new tiledb.Configuration({
   apiKey: "<insert token from setting page here>"
-};
+});
 
 // Username and passwords are also supported, uncomment below and comment out above to use username/password auth instead
 // const config = {
@@ -45,9 +45,9 @@ arrayApi.getArraysInNamespace('<tiledb-cloud-username>').then((res) => {
 const tiledb = require('@tiledb-inc/tiledb-cloud');
 
 // API tokens are the recommend way to access the cloud apis
-const config = {
+const config = new tiledb.Configuration({
   apiKey: "<insert token from setting page here>"
-};
+});
 
 // Username and passwords are also supported, uncomment below and comment out above to use username/password auth instead
 // const config = {
@@ -83,6 +83,75 @@ sqlAPI.runSQL("<tiledb-cloud-username>", sqlDetails).then((res) => {
 });
 
 
+```
+
+
+## Cap'n Proto serialization
+
+Endpoints that support cap'n proto mime type user should set appropriate headers (Accept for GET requests and Content-Type for POST/PUT) to `application/capnp`.
+
+For `POST` requests library will automatically serialize data to cap'n proto.
+
+```javascript
+const tiledb = require("@tiledb-inc/tiledb-cloud");
+
+const config = new tiledb.Configuration({
+  apiKey: "<insert token from setting page here>"
+});
+const arrayApi = new tiledb.ArrayApi(config);
+
+arrayApi
+  .updateArrayMetadataCapnp(
+    "ns",
+    "array_name",
+    data,
+    {
+      headers: {
+        "Content-Type": "application/capnp",
+      },
+    })
+```
+
+For `GET` requests library provides methods to deserialize data. If Accept header is set to "application/capnp", library will set `responseType` to `arraybuffer` since helpers accept [ArrayBuffer](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer) to deserialize the response (user can still override `responseType`).
+`deserializeCapnp` helper function receives an `ArrayBuffer` and the type of the data expected. Library provides a `DeserializableType` enum for all the supported types.
+
+```javascript
+const tiledb = require("@tiledb-inc/tiledb-cloud");
+
+const config = new tiledb.Configuration({
+  apiKey: "<insert token from setting page here>"
+});
+const arrayApi = new tiledb.ArrayApi(config);
+
+arrayApi
+  .getArrayMetadataCapnp("ns", "array_name", {
+    headers: {
+      "Accept": "application/capnp",
+    },
+  })
+  .then((data) => {
+    // data.data is an ArrayBuffer
+    console.log(tiledb.deserializeCapnp(data.data, tiledb.DeserializableType.arrayMetadata));
+  })
+```
+
+## Development
+
+For capnproto encoding you need to [install capnproto](https://capnproto.org/install.html)
+
+Debian / Ubuntu: `apt-get install capnproto` <br/>
+Arch Linux: `sudo pacman -S capnproto` <br/>
+Homebrew (OSX): `brew install capnp`
+
+and the schema compiler
+
+```
+npm install -g capnpc-ts
+```
+
+Then run:
+```
+npm run capnp
 ```
 
 ## Useful links

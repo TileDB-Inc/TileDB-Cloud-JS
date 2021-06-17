@@ -109,3 +109,8 @@ dist
 *.DS_Store
 .npmrc
 tmp/
+./src/.gitignore
+./src/.openapi-generator-ignore
+./src/git_push.sh
+./src/.openapi-generator
+.vscode
