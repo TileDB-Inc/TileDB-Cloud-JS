@@ -7,7 +7,7 @@
     "generate-openapi": "openapi-generator-cli generate -i ../TileDB-Cloud-API-Spec/openapi-v1.yaml -o ./src -g typescript-axios -t ./openapi-templates --reserved-words-mappings default=default --type-mappings=Array=any",
     "build": "npm run generate-openapi && tsc",
     "test": "jest",
-    "capnp": "capnpc -o ts src/capnp/arrayMetadata.capnp"
+    "capnp": "capnpc -o ts src/capnp/arrayMetadata.capnp && capnpc -o ts src/capnp/query.capnp"
   },
   "dependencies": {
     "axios": "^0.21.1",

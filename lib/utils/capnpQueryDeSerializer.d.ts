@@ -1,9 +1,6 @@
+import { Array, Config, DomainArray, MapFloat64, MapUInt64, Query, QueryReader, Stats, Subarray } from "../capnp/query.capnp";
 import * as capnp from "capnp-ts";
-export declare enum DeserializableType {
-    "arrayMetadata" = 0,
-    "query" = 1
-}
-export declare const deserializeCapnp: (data: any, type: DeserializableType) => {
+declare const capnpQueryDeSerializer: (buffer: ArrayBuffer | ArrayBufferLike) => {
     attributeBufferHeaders: {
         name: string;
         fixedLenBufferSizeInBytes: number;
@@ -166,12 +163,176 @@ export declare const deserializeCapnp: (data: any, type: DeserializableType) => 
             value: number;
         }[];
     };
-} | {
+};
+export default capnpQueryDeSerializer;
+export declare const deserializeArray: (arr: Array) => {
+    endTimestamp: number;
+    queryType: string;
+    uri: string;
+    startTimestamp: number;
+};
+export declare const deserializeConfig: (config: Config) => {
     entries: {
-        value: number[];
-        del: boolean;
         key: string;
-        type: string;
-        valueNum: number;
+        value: string;
     }[];
 };
+export declare const deserializeQueryReader: (reader: QueryReader) => {
+    layout: string;
+    subarray: {
+        type: string;
+        hasDefaultRange: boolean;
+        buffer: ArrayBuffer;
+        bufferSizes: number[];
+        bufferStartSizes: number[];
+    }[];
+    readState: {
+        overflowed: boolean;
+        unsplittable: boolean;
+        initialized: boolean;
+        subarrayPartitioner: {
+            subarray: {
+                type: string;
+                hasDefaultRange: boolean;
+                buffer: ArrayBuffer;
+                bufferSizes: number[];
+                bufferStartSizes: number[];
+            }[];
+            budget: {
+                attribute: string;
+            }[];
+            current: {
+                subarray: {
+                    type: string;
+                    hasDefaultRange: boolean;
+                    buffer: ArrayBuffer;
+                    bufferSizes: number[];
+                    bufferStartSizes: number[];
+                }[];
+                start: number;
+                end: number;
+                splitMultiRange: boolean;
+            };
+            state: {
+                start: number;
+                end: number;
+                singleRange: {
+                    type: string;
+                    hasDefaultRange: boolean;
+                    buffer: ArrayBuffer;
+                    bufferSizes: number[];
+                    bufferStartSizes: number[];
+                }[][];
+                multiRange: {
+                    type: string;
+                    hasDefaultRange: boolean;
+                    buffer: ArrayBuffer;
+                    bufferSizes: number[];
+                    bufferStartSizes: number[];
+                }[][];
+            };
+            memoryBudget: number;
+            memoryBudgetVar: number;
+            memoryBudgetValidity: number;
+            stats: {
+                timers: {
+                    key: string;
+                    value: number;
+                }[];
+                counters: {
+                    key: string;
+                    value: number;
+                }[];
+            };
+        };
+    };
+    condition: {
+        clauses: {
+            fieldName: string;
+            value: number[];
+            op: string;
+        }[];
+        clauseCombinationOps: string[];
+    };
+    stats: {
+        timers: {
+            key: string;
+            value: number;
+        }[];
+        counters: {
+            key: string;
+            value: number;
+        }[];
+    };
+};
+export declare const deserializeWrite: (query: Query) => {
+    checkCoordDups: boolean;
+    checkCoordOOB: boolean;
+    dedupCoords: boolean;
+    subarray: {
+        int8: number[];
+        uint8: number[];
+        int16: number[];
+        uint16: number[];
+        int32: number[];
+        uint32: number[];
+        int64: capnp.Int64[];
+        uint64: capnp.Uint64[];
+        float32: number[];
+        float64: number[];
+    };
+    subarrayRanges: {
+        type: string;
+        hasDefaultRange: boolean;
+        buffer: ArrayBuffer;
+        bufferSizes: number[];
+        bufferStartSizes: number[];
+    }[];
+    stats: {
+        timers: {
+            key: string;
+            value: number;
+        }[];
+        counters: {
+            key: string;
+            value: number;
+        }[];
+    };
+};
+export declare const deserializeSubArray: (domainArray: DomainArray) => {
+    int8: number[];
+    uint8: number[];
+    int16: number[];
+    uint16: number[];
+    int32: number[];
+    uint32: number[];
+    int64: capnp.Int64[];
+    uint64: capnp.Uint64[];
+    float32: number[];
+    float64: number[];
+};
+export declare const deserializeSubarrayRanges: (subArray: Subarray) => {
+    type: string;
+    hasDefaultRange: boolean;
+    buffer: ArrayBuffer;
+    bufferSizes: number[];
+    bufferStartSizes: number[];
+}[];
+export declare const deserializeStats: (stats: Stats) => {
+    timers: {
+        key: string;
+        value: number;
+    }[];
+    counters: {
+        key: string;
+        value: number;
+    }[];
+};
+export declare const deserializeMapFloat64: (mapFloat64: MapFloat64) => {
+    key: string;
+    value: number;
+}[];
+export declare const deserializeMapUInt64: (mapUint64: MapUInt64) => {
+    key: string;
+    value: number;
+}[];
