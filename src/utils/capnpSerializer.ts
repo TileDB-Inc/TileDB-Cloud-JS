@@ -36,6 +36,7 @@ const serializeArrayMetadata = (data: ArrayMetadataType) => {
   return message.toArrayBuffer();
 };
 
+
 const isArrayMetadata = (data: any): data is ArrayMetadataType => {
   if (data && Array.isArray(data.entries)) {
     return true;
