@@ -1,0 +1,333 @@
+
+@0xb57d9224b587d87e;
+
+struct Query {
+    attributeBufferHeaders @0 :List(AttributeBufferHeader);
+    # list of attribute buffer headers
+
+    layout @1 :Text;
+    # query write layout
+
+    status @2 :Text;
+    # query status
+
+    type @3 :Text;
+    # Type of query
+
+    writer @4 :Writer;
+    # writer contains data needed for continuation of global write order queries
+
+    reader @5 :QueryReader;
+    # reader contains data needed for continuation of incomplete reads
+
+    array @6 :Array;
+    # Represents an open array
+
+    totalFixedLengthBufferBytes @7: UInt64;
+    # Total number of bytes in fixed size attribute buffers
+
+    totalVarLenBufferBytes @8: UInt64;
+    # Total number of bytes in variable size attribute buffers
+
+    totalValidityBufferBytes @9: UInt64;
+    # Total number of bytes in validity buffers
+
+    varOffsetsMode @10 :Text;
+    # This field is not longer used, it is replaced by the config
+
+    varOffsetsAddExtraElement @11 :Bool;
+    # This field is not longer used, it is replaced by the config
+
+    varOffsetsBitsize @12 :Int32;
+    # This field is not longer used, it is replaced by the config
+
+    config @13 :Config;
+    # Config set on query
+
+    stats @14 :Stats;
+    # Stats object
+}
+
+
+struct AttributeBufferHeader {
+# Represents an attribute buffer header information
+
+    name @0 :Text;
+    # Attribute name
+
+    fixedLenBufferSizeInBytes @1 :UInt64;
+    # Number of bytes in the fixed-length attribute data buffer
+
+    varLenBufferSizeInBytes @2 :UInt64;
+    # Number of bytes in the var-length attribute data buffer
+
+    validityLenBufferSizeInBytes @3 :UInt64;
+    # Number of bytes in the validity data buffer
+
+    originalFixedLenBufferSizeInBytes @4 :UInt64;
+    # Original user set number of bytes in the fixed-length attribute data buffer
+
+    originalVarLenBufferSizeInBytes @5 :UInt64;
+    # Original user set number of bytes in the var-length attribute data buffer
+
+    originalValidityLenBufferSizeInBytes @6 :UInt64;
+    # Original user set number of bytes in the validity data buffer
+}
+
+struct Array {
+  endTimestamp @0 :UInt64;
+  # ending timestamp array was opened
+
+  queryType @1 :Text;
+  # Array opened for query type
+
+  uri @2 :Text;
+  # Array uri
+
+  startTimestamp @3 :UInt64;
+  # starting timestamp array was opened
+}
+
+struct FilterPipeline {
+  filters @0 :List(Filter);
+}
+
+struct Filter {
+  type @0 :Text;
+  # filter type
+
+  data :union {
+    text @1 :Text;
+    bytes @2 :Data;
+    int8 @3 :Int8;
+    uint8 @4 :UInt8;
+    int16 @5 :Int16;
+    uint16 @6 :UInt16;
+    int32 @7 :Int32;
+    uint32 @8 :UInt32;
+    int64 @9 :Int64;
+    uint64 @10 :UInt64;
+    float32 @11 :Float32;
+    float64 @12 :Float64;
+  }
+  # filter data
+}
+
+
+struct KV {
+  key @0 :Text;
+  value @1 :Text;
+}
+
+struct Config {
+# Represents a config object
+  entries @0 :List(KV);
+  # list of key-value settings
+}
+
+
+struct Stats {
+# Stats struct
+
+  timers @0 :MapFloat64;
+  # timer
+
+  counters @1 :MapUInt64;
+  # counters
+}
+
+struct Writer {
+  # Write struct
+  checkCoordDups @0 :Bool;
+
+  checkCoordOOB @1 :Bool;
+
+  dedupCoords @2 :Bool;
+
+  subarray @3 :DomainArray;
+  # Old-style (single-range) subarray for dense writes
+
+  subarrayRanges @4 :Subarray;
+  # The query subarray/ranges object, new style range object
+
+  stats @5 :Stats;
+  # Stats object
+}
+
+
+struct QueryReader {
+  # Read struct (can't be called reader due to class name conflict)
+
+  layout @0 :Text;
+  # The layout of the cells in the result of the subarray
+
+  subarray @1 :Subarray;
+  # The query subarray.
+
+  readState @2 :ReadState;
+  # Read state of reader
+
+  condition @3 :Condition;
+  # The query condition
+
+  stats @4 :Stats;
+  # Stats object
+}
+
+
+struct SubarrayRanges {
+  # A set of 1D ranges for a subarray
+
+  type @0 :Text;
+  # Datatype of the ranges
+
+  hasDefaultRange @1:Bool;
+  # True if the range is the default range
+
+  buffer @2 :Data;
+  # The bytes of the ranges
+
+  bufferSizes @3 :List(UInt64);
+  # The list of sizes per range
+
+  bufferStartSizes @4 :List(UInt64);
+  # The list of start sizes per range
+}
+
+struct Subarray {
+  # A Subarray
+
+  layout @0 :Text;
+  # The layout of the subarray
+
+  ranges @1 :List(SubarrayRanges);
+  # List of 1D ranges, one per dimension
+
+  stats @2 :Stats;
+  # Stats object
+}
+
+
+struct SubarrayPartitioner {
+  # The subarray partitioner
+
+  struct PartitionInfo {
+    subarray @0 :Subarray;
+    start @1 :UInt64;
+    end @2 :UInt64;
+    splitMultiRange @3 :Bool;
+  }
+
+  struct State {
+    start @0 :UInt64;
+    end @1 :UInt64;
+    singleRange @2 :List(Subarray);
+    multiRange @3 :List(Subarray);
+  }
+
+  subarray @0 :Subarray;
+  # The subarray the partitioner will iterate on to produce partitions.
+
+  budget @1 :List(AttributeBufferSize);
+  # Result size budget (in bytes) for all attributes.
+
+  current @2 :PartitionInfo;
+  # The current partition info
+
+  state @3 :State;
+  # The state information for the remaining partitions to be produced
+
+  memoryBudget @4 :UInt64;
+  # The memory budget for the fixed-sized attributes and the offsets of the var-sized attributes
+
+  memoryBudgetVar @5 :UInt64;
+  # The memory budget for the var-sized attributes
+
+  memoryBudgetValidity @6 :UInt64;
+  # The memory budget for the validity buffers
+
+  stats @7 :Stats;
+  # Stats object
+}
+
+struct ReadState {
+  overflowed @0 :Bool;
+  # `True` if the query produced results that could not fit in some buffer.
+
+  unsplittable @1 :Bool;
+  # True if the current subarray partition is unsplittable.
+
+  initialized @2 :Bool;
+  # True if the reader has been initialized
+
+  subarrayPartitioner @3 :SubarrayPartitioner;
+  # The subarray partitioner
+}
+
+struct ConditionClause {
+  # A clause within a condition
+
+  fieldName @0 :Text;
+  # The name of the field this clause applies to
+
+  value @1 :Data;
+  # The comparison value
+
+  op @2 :Text;
+  # The comparison operation
+}
+
+struct Condition {
+  # The query condition
+
+  clauses @0 :List(ConditionClause);
+  # All clauses in this condition
+
+  clauseCombinationOps @1 :List(Text);
+  # The operation that combines each condition
+}
+
+struct DomainArray {
+  int8 @0 :List(Int8);
+  uint8 @1 :List(UInt8);
+  int16 @2 :List(Int16);
+  uint16 @3 :List(UInt16);
+  int32 @4 :List(Int32);
+  uint32 @5 :List(UInt32);
+  int64 @6 :List(Int64);
+  uint64 @7 :List(UInt64);
+  float32 @8 :List(Float32);
+  float64 @9 :List(Float64);
+}
+
+struct MapFloat64 {
+  entries @0 :List(Entry);
+  struct Entry {
+    key @0 :Text;
+    value @1 :Float64;
+  }
+}
+
+struct MapUInt64 {
+  entries @0 :List(Entry);
+  struct Entry {
+    key @0 :Text;
+    value @1 :UInt64;
+  }
+}
+
+struct AttributeBufferSize {
+  # object representing a buffer size of an attribute
+
+  attribute @0: Text;
+  # name of attribute
+
+  offsetBytes @1: UInt64;
+  # size (in bytes) of offset buffer
+
+  dataBytes @2: UInt64;
+  # size (in bytes) of data buffer
+
+  validityBytes @3: UInt64;
+  # size (in bytes) of data buffer
+}
