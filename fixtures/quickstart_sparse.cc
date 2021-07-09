@@ -135,7 +135,10 @@ void write_array() {
   // Write some simple data to cells (1, 1), (2, 4) and (2, 3).
   std::vector<int> coords_rows = {1, 2, 2};
   std::vector<int> coords_cols = {1, 4, 3};
-  std::vector<int> data = {1, 2, 3};
+  std::vector<int> data = {12, 28, 33};
+  // NOTE: cell (1, 1) has data 1
+  // cell (2, 4) has data 2
+  // cell (2, 3) has data 3
 
   // Open the array for writing and create the query.
   Array array(ctx, array_uri, TILEDB_WRITE);
@@ -156,12 +159,16 @@ void read_array() {
   // Prepare the array for reading
   Array array(ctx, array_uri, TILEDB_READ);
 
-  // Slice only rows 1, 2 and cols 2, 3, 4
+  // NOTE: Slice only rows 1, 2 and cols 2, 3, 4
   const std::vector<int> subarray = {1, 2, 2, 4};
 
   // Prepare the vector that will hold the result.
   // We take an upper bound on the result size, as we do not
   // know a priori how big it is (since the array is sparse)
+  /**
+   * NOTE: 3 * 4 bytes (int32 = 4 bytes) = 12bytes that's the "originalFixedLenBufferSizeInBytes" of the attribute
+   * 
+  */ 
   std::vector<int> data(3);
   std::vector<int> coords_rows(3);
   std::vector<int> coords_cols(3);
