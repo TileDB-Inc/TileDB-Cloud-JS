@@ -176,9 +176,9 @@ void read_array() {
 
   // This mimics the body posted to the server
   std::vector<uint8_t> serialized_body;
-  serialize_query(ctx, query, &serialized_body, true);
+  serialize_query(ctx, query, &serialized_body, false);
   std::ofstream body_file;
-  body_file.open("body2.raw", std::ios::out | std::ios::binary);
+  body_file.open("body.raw", std::ios::out | std::ios::binary);
   for (const auto &d : serialized_body)
     body_file << d;
   body_file.close();
@@ -188,9 +188,9 @@ void read_array() {
 
   // this mimics the response from the server
   std::vector<uint8_t> serialized_response;
-  serialize_query(ctx, query, &serialized_response, true);
+  serialize_query(ctx, query, &serialized_response, false);
   std::ofstream response_file;
-  response_file.open("response2.raw", std::ios::out | std::ios::binary);
+  response_file.open("response.raw", std::ios::out | std::ios::binary);
   for (const auto &d : serialized_response)
     response_file << d;
   response_file.close();
