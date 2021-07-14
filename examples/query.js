@@ -7,7 +7,7 @@ fs.readFile(
   (__, data) => {
     const arrayBuffer = toArrayBuffer(data);
     const result = deserializer.default(arrayBuffer);
-    console.log(result);
+    console.log(result.attributeBufferHeaders);
     const numberOfResultsInBytes = getResultSizeInBytes(
       result.attributeBufferHeaders
     );
@@ -16,18 +16,22 @@ fs.readFile(
 
     // getFixedLengthVariables(result.attributeBufferHeaders, resultsBuffer);
     // getVarLengthVariables(result.attributeBufferHeaders, resultsBuffer);
-
-
-    console.log(new Int32Array(arrayBuffer.slice(-12))) // a0 (12, 234, 17)
-    console.log(new Int32Array(arrayBuffer.slice(-24, -12))) // a3 (12, 23, 44)
-    const typedUint8Array = new Uint8Array(arrayBuffer.slice(-32, -24));
+    
+    
+    console.log(new Int32Array(arrayBuffer.slice(-12))) // a0 (12, 234, 17)   FIXED
+    console.log(new BigUint64Array(arrayBuffer.slice(-44, -12))) // a2  [ 20, 311, 27, 82 ]  VAR + 24 bytes tail
+    console.log(new Int8Array(arrayBuffer.slice(-71, -68))); // a6 validity buffers
+    console.log(new Int32Array(arrayBuffer.slice(-87, -71))) // a6  [ 12 NULL 21 NULL NULL NULL NULL NULL ]  3 BYTES (validityLenBufferSizeInBytes) + VAR + NULLABLE + 24 bytes tail
+    console.log(new Int32Array(arrayBuffer.slice(-123, -111))) // a3 (12, 23, 44)  FIXED
+    const typedUint8Array = new Uint8Array(arrayBuffer.slice(-131, -123));
     const utf8decoder = new TextDecoder();
-    console.log(utf8decoder.decode(typedUint8Array)) // a1 (bbcccddd)
+    console.log(utf8decoder.decode(typedUint8Array)) // a1 (bbcccddd)    VAR + 24 bytes tail
+    console.log(new Int32Array(arrayBuffer.slice(-171, -155))); // a4  [ 2, 19, 27, 81 ]    VAR
+    console.log(new Int8Array(arrayBuffer.slice(-198, -195))); // a5  [ 8 NULL 17 NULL ]    FIXED
+    console.log(new Int32Array(arrayBuffer.slice(-210, -198))); // a5  [ 8 NULL 17 NULL ]    FIXED
+    
 
-    console.log(new Int32Array(arrayBuffer.slice(-72, -56))) // a2  [ 20, 31, 27, 82 ]
-    console.log(new Int32Array(arrayBuffer.slice(-112, -96))) // a4  [ 2, 19, 27, 81 ]
-
-    // console.log(new BigInt64Array(arrayBuffer.slice(-56, -32))) // byte space???
+    // console.log(new BigInt64Array(arrayBuffer.slice(-96, -72))) // offset of VAR attributes???
   }
 );
 
@@ -38,6 +42,8 @@ fs.readFile(
  * a3: 12, 23, 44 (fixed)
  * a0: 12, 234, 17 (fixed)
  * a4: 20, 31, 27, 82 (var)
+ * a5: 8 NULL 17 NULL
+ * a6: 12 NULL 21 NULL NULL NULL NULL NULL
 */
 
 /** fixtures/response_fixed.raw
