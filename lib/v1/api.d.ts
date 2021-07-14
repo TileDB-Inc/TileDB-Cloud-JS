@@ -248,7 +248,7 @@ export interface ArrayInfo {
      * @type {string}
      * @memberof ArrayInfo
      */
-    description?: string;
+    description?: string | null;
     /**
      * name of array
      * @type {string}
@@ -351,7 +351,7 @@ export interface ArrayInfoUpdate {
      * @type {string}
      * @memberof ArrayInfoUpdate
      */
-    description?: string;
+    description?: string | null;
     /**
      * description of array
      * @type {string}
@@ -1294,7 +1294,8 @@ export declare enum FilePropertyName {
  */
 export declare enum FileType {
     Notebook = "notebook",
-    UserDefinedFunction = "user_defined_function"
+    UserDefinedFunction = "user_defined_function",
+    MlModel = "ml_model"
 }
 /**
  * Filter
@@ -2832,6 +2833,22 @@ export interface TokenRequest {
      * @memberof TokenRequest
      */
     scope?: string;
+}
+/**
+ * An api token scope available for creation
+ * @export
+ * @enum {string}
+ */
+export declare enum TokenScope {
+    PasswordReset = "password_reset",
+    ConfirmEmail = "confirm_email",
+    Star = "*",
+    Userread = "user:read",
+    UserreadWrite = "user:read-write",
+    Useradmin = "user:admin",
+    Arrayread = "array:read",
+    ArrayreadWrite = "array:read-write",
+    Arrayadmin = "array:admin"
 }
 /**
  * actions a user can take on an udf
@@ -6580,6 +6597,12 @@ export declare const UserApiAxiosParamCreator: (configuration?: Configuration) =
      */
     getSession: (rememberMe?: string, options?: any) => Promise<RequestArgs>;
     /**
+     * retrieves available token scopes for a user
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getTokenScopes: (options?: any) => Promise<RequestArgs>;
+    /**
      * get a user
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -6740,6 +6763,12 @@ export declare const UserApiFp: (configuration?: Configuration) => {
      */
     getSession(rememberMe?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Token>>;
     /**
+     * retrieves available token scopes for a user
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getTokenScopes(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<TokenScope>>>;
+    /**
      * get a user
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -6899,6 +6928,12 @@ export declare const UserApiFactory: (configuration?: Configuration, basePath?: 
      * @throws {RequiredError}
      */
     getSession(rememberMe?: string, options?: any): AxiosPromise<Token>;
+    /**
+     * retrieves available token scopes for a user
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getTokenScopes(options?: any): AxiosPromise<Array<TokenScope>>;
     /**
      * get a user
      * @param {*} [options] Override http request option.
@@ -7072,6 +7107,13 @@ export declare class UserApi extends BaseAPI {
      * @memberof UserApi
      */
     getSession(rememberMe?: string, options?: any): Promise<import("axios").AxiosResponse<Token>>;
+    /**
+     * retrieves available token scopes for a user
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UserApi
+     */
+    getTokenScopes(options?: any): Promise<import("axios").AxiosResponse<TokenScope[]>>;
     /**
      * get a user
      * @param {*} [options] Override http request option.
