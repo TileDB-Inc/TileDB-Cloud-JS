@@ -82,11 +82,21 @@ void create_array()
     // Add two variable-length attributes "a1" and "a2", the first storing
     // strings and the second storing a variable number of integers.
     schema.add_attribute(Attribute::create<std::string>(ctx, "a1"));
-    schema.add_attribute(Attribute::create<std::vector<int>>(ctx, "a2"));
+    schema.add_attribute(Attribute::create<std::vector<uint64_t>>(ctx, "a2"));
     schema.add_attribute(Attribute::create<std::vector<int>>(ctx, "a4"));
     // Fixed length attribute
     schema.add_attribute(Attribute::create<int>(ctx, "a3"));
     schema.add_attribute(Attribute::create<int>(ctx, "a0"));
+
+    Attribute a5 = Attribute::create<int>(ctx, "a5");
+    Attribute a6 = Attribute::create<std::vector<int>>(ctx, "a6");
+
+    a5.set_nullable(true);
+    a6.set_nullable(true);
+
+    schema.add_attribute(a5);
+    schema.add_attribute(a6);
+
     // Create the (empty) array on disk.
     Array::create(array_name, schema);
 }
@@ -97,7 +107,7 @@ void write_array()
     std::string a1_data = "abbcccdddeeefghhhijjjkklmnoop";
     std::vector<uint64_t> a1_off = {
         0, 1, 3, 6, 9, 11, 12, 13, 16, 17, 20, 22, 23, 24, 25, 27};
-    std::vector<int> a2_data = {1, 1, 20, 31, 27, 82, 5, 6, 6, 7, 7, 8, 8,
+    std::vector<uint64_t> a2_data = {1, 1, 20, 311, 27, 82, 5, 6, 6, 7, 7, 8, 8,
                                 8, 9, 9, 10, 11, 12, 12, 13, 14, 14, 14, 15, 16};
     std::vector<uint64_t> a2_el_off = {
         0, 2, 4, 5, 6, 8, 10, 11, 14, 16, 17, 18, 20, 21, 24, 25};
@@ -108,7 +118,7 @@ void write_array()
     std::vector<uint64_t> a2_off;
     std::vector<uint64_t> a4_off;
     for (auto e : a2_el_off)
-        a2_off.push_back(e * sizeof(int));
+        a2_off.push_back(e * sizeof(uint64_t));
     for (auto e : a4_el_off)
         a4_off.push_back(e * sizeof(int));
     // Prepare some data for the fixed-length attribute a3
@@ -117,6 +127,19 @@ void write_array()
 
     std::vector<int> a0_data = {
         1, 12, 234, 17, 53, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
+
+
+
+    std::vector<int> a5_data = {1, 8, 223, 17, 59, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
+    std::vector<int> a6_data = {1, 12, 332, 21, 62, 11, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
+    std::vector<uint8_t> a5_validity_buf = {1, 1, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1};
+    std::vector<uint8_t> a6_validity_buf = {0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1};
+    std::vector<uint64_t> a6_el_off = {
+        0, 1, 2, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
+    std::vector<uint64_t> a6_off;
+    for (auto e : a6_el_off)
+        a6_off.push_back(e * sizeof(int));
+
     // Open the array for writing and create the query
     Array array(ctx, array_name, TILEDB_WRITE);
     Query query(ctx, array);
@@ -125,7 +148,9 @@ void write_array()
         .set_buffer("a1", a1_off, a1_data)
         .set_buffer("a2", a2_off, a2_data)
         .set_buffer("a4", a4_off, a4_data)
-        .set_buffer("a3", a3_data);
+        .set_buffer("a3", a3_data)
+        .set_buffer_nullable("a5", a5_data, a5_validity_buf)
+        .set_buffer_nullable("a6", a6_off, a6_data, a6_validity_buf);
     // Perform the write and close the array.
     query.submit();
     array.close();
@@ -142,21 +167,29 @@ void read_array()
     std::string a1_data;
     a1_data.resize(9);
     std::vector<uint64_t> a2_off(12);
-    std::vector<int> a2_data(32);
+    std::vector<uint64_t> a2_data(32);
     std::vector<uint64_t> a4_off(12);
     std::vector<int> a4_data(32);
     // Prepare the vector that will hold the result for ficed-length attribute (of size 6 elements)
     std::vector<int> a3_data(3);
     std::vector<int> a0_data(3);
+
+    std::vector<int> a5_data(4);
+    std::vector<uint8_t> a5_validity_buf(a5_data.size());
+    std::vector<int> a6_data(8);
+    std::vector<uint64_t> a6_off(4);
+    std::vector<uint8_t> a6_validity_buf(a6_data.size());
     // Prepare and submit the query, and close the array
     Query query(ctx, array);
     query.set_subarray(subarray)
         .set_layout(TILEDB_ROW_MAJOR)
         .set_buffer("a0", a0_data)
+        .set_buffer("a2", a2_off, a2_data)
         .set_buffer("a3", a3_data)
         .set_buffer("a1", a1_off, a1_data)
-        .set_buffer("a2", a2_off, a2_data)
-        .set_buffer("a4", a4_off, a4_data);
+        .set_buffer("a4", a4_off, a4_data)
+        .set_buffer_nullable("a5", a5_data, a5_validity_buf)
+        .set_buffer_nullable("a6", a6_off, a6_data, a6_validity_buf);
     query.submit();
     // this mimics the response from the server
     std::vector<uint8_t> serialized_response;
@@ -183,7 +216,7 @@ void read_array()
     std::vector<uint64_t> a2_el_off;
     auto result_el_a2_off = result_el_map["a2"].first;
     for (size_t i = 0; i < result_el_a2_off; ++i)
-        a2_el_off.push_back(a2_off[i] / sizeof(int));
+        a2_el_off.push_back(a2_off[i] / sizeof(uint64_t));
     // Get the number of elements per cell value
     std::vector<uint64_t> a2_cell_el;
     for (size_t i = 0; i < result_el_a2_off - 1; ++i)
@@ -223,6 +256,21 @@ void read_array()
     for (auto d : a0_data)
         std::cout << d << " ";
     std::cout << "\n";
+
+    // Print out the data we read for each nullable atttribute
+    unsigned long i = 0;
+    std::cout << "a5: " << std::endl;
+    for (i = 0; i < 4; ++i) {
+        std::cout << (a5_validity_buf[i] > 0 ? std::to_string(a5_data[i]) : "NULL");
+        std::cout << " ";
+    }
+    std::cout << std::endl;
+    std::cout << "a6: " << std::endl;
+    for (i = 0; i < 8; ++i) {
+        std::cout << (a6_validity_buf[i] > 0 ? std::to_string(a6_data[i]) : "NULL");
+        std::cout << " ";
+    }
+    
 }
 int main()
 {
