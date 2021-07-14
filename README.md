@@ -15,7 +15,7 @@ npm install @tiledb-inc/tiledb-cloud
 const tiledb = require("@tiledb-inc/tiledb-cloud");
 
 // API tokens are the recommend way to access the cloud apis
-const config = new tiledb.Configuration({
+const config = new tiledb.v1.Configuration({
   apiKey: "<insert token from setting page here>"
 });
 
@@ -27,7 +27,7 @@ const config = new tiledb.Configuration({
 
 // First we must create API objects.
 // In the future we will improve and simplify this interface
-const arrayApi = new tiledb.ArrayApi(config);
+const arrayApi = new tiledb.v1.ArrayApi(config);
 
 arrayApi.getArraysInNamespace('<tiledb-cloud-username>').then((res) => {
   console.log(res);
@@ -45,7 +45,7 @@ arrayApi.getArraysInNamespace('<tiledb-cloud-username>').then((res) => {
 const tiledb = require('@tiledb-inc/tiledb-cloud');
 
 // API tokens are the recommend way to access the cloud apis
-const config = new tiledb.Configuration({
+const config = new tiledb.v1.Configuration({
   apiKey: "<insert token from setting page here>"
 });
 
@@ -57,7 +57,7 @@ const config = new tiledb.Configuration({
 
 // First we must create API objects.
 // In the future we will improve and simplify this interface
-const sqlAPI = new tiledb.SqlApi(config);
+const sqlAPI = new tiledb.v1.SqlApi(config);
 
 // SQL query
 const sql = "select `rows`, AVG(a) as avg_a from `tiledb://TileDB-Inc/quickstart_dense` GROUP BY `rows`";
@@ -95,10 +95,10 @@ For `POST` requests library will automatically serialize data to cap'n proto.
 ```javascript
 const tiledb = require("@tiledb-inc/tiledb-cloud");
 
-const config = new tiledb.Configuration({
+const config = new tiledb.v1.Configuration({
   apiKey: "<insert token from setting page here>"
 });
-const arrayApi = new tiledb.ArrayApi(config);
+const arrayApi = new tiledb.v1.ArrayApi(config);
 
 arrayApi
   .updateArrayMetadataCapnp(
@@ -118,10 +118,10 @@ For `GET` requests library provides methods to deserialize data. If Accept heade
 ```javascript
 const tiledb = require("@tiledb-inc/tiledb-cloud");
 
-const config = new tiledb.Configuration({
+const config = new tiledb.v1.Configuration({
   apiKey: "<insert token from setting page here>"
 });
-const arrayApi = new tiledb.ArrayApi(config);
+const arrayApi = new tiledb.v1.ArrayApi(config);
 
 arrayApi
   .getArrayMetadataCapnp("ns", "array_name", {

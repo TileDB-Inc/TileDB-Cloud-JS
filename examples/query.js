@@ -17,7 +17,9 @@ fs.readFile(
     // getFixedLengthVariables(result.attributeBufferHeaders, resultsBuffer);
     // getVarLengthVariables(result.attributeBufferHeaders, resultsBuffer);
     
-    
+    /**
+     * They come as a5, a4, a1, a3, a6, a2, a0
+     */
     console.log(new Int32Array(arrayBuffer.slice(-12))) // a0 (12, 234, 17)   FIXED
     console.log(new BigUint64Array(arrayBuffer.slice(-44, -12))) // a2  [ 20, 311, 27, 82 ]  VAR + 24 bytes tail
     console.log(new Int8Array(arrayBuffer.slice(-71, -68))); // a6 validity buffers
@@ -31,7 +33,7 @@ fs.readFile(
     console.log(new Int32Array(arrayBuffer.slice(-210, -198))); // a5  [ 8 NULL 17 NULL ]    FIXED
     
 
-    // console.log(new BigInt64Array(arrayBuffer.slice(-96, -72))) // offset of VAR attributes???
+    // console.log(new Int32Array(arrayBuffer.slice(-195, -171))) // offset of VAR attributes???
   }
 );
 
