@@ -30,12 +30,25 @@ declare const capnpQueryDeSerializer: (buffer: ArrayBuffer | ArrayBufferLike) =>
             float64: number[];
         };
         subarrayRanges: {
-            type: string;
-            hasDefaultRange: boolean;
-            buffer: ArrayBuffer;
-            bufferSizes: number[];
-            bufferStartSizes: number[];
-        }[];
+            layout: string;
+            stats: {
+                timers: {
+                    key: string;
+                    value: number;
+                }[];
+                counters: {
+                    key: string;
+                    value: number;
+                }[];
+            };
+            ranges: {
+                type: string;
+                hasDefaultRange: boolean;
+                buffer: number[];
+                bufferSizes: number[];
+                bufferStartSizes: number[];
+            }[];
+        };
         stats: {
             timers: {
                 key: string;
@@ -50,35 +63,74 @@ declare const capnpQueryDeSerializer: (buffer: ArrayBuffer | ArrayBufferLike) =>
     reader: {
         layout: string;
         subarray: {
-            type: string;
-            hasDefaultRange: boolean;
-            buffer: ArrayBuffer;
-            bufferSizes: number[];
-            bufferStartSizes: number[];
-        }[];
+            layout: string;
+            stats: {
+                timers: {
+                    key: string;
+                    value: number;
+                }[];
+                counters: {
+                    key: string;
+                    value: number;
+                }[];
+            };
+            ranges: {
+                type: string;
+                hasDefaultRange: boolean;
+                buffer: number[];
+                bufferSizes: number[];
+                bufferStartSizes: number[];
+            }[];
+        };
         readState: {
             overflowed: boolean;
             unsplittable: boolean;
             initialized: boolean;
             subarrayPartitioner: {
                 subarray: {
-                    type: string;
-                    hasDefaultRange: boolean;
-                    buffer: ArrayBuffer;
-                    bufferSizes: number[];
-                    bufferStartSizes: number[];
-                }[];
+                    layout: string;
+                    stats: {
+                        timers: {
+                            key: string;
+                            value: number;
+                        }[];
+                        counters: {
+                            key: string;
+                            value: number;
+                        }[];
+                    };
+                    ranges: {
+                        type: string;
+                        hasDefaultRange: boolean;
+                        buffer: number[];
+                        bufferSizes: number[];
+                        bufferStartSizes: number[];
+                    }[];
+                };
                 budget: {
                     attribute: string;
                 }[];
                 current: {
                     subarray: {
-                        type: string;
-                        hasDefaultRange: boolean;
-                        buffer: ArrayBuffer;
-                        bufferSizes: number[];
-                        bufferStartSizes: number[];
-                    }[];
+                        layout: string;
+                        stats: {
+                            timers: {
+                                key: string;
+                                value: number;
+                            }[];
+                            counters: {
+                                key: string;
+                                value: number;
+                            }[];
+                        };
+                        ranges: {
+                            type: string;
+                            hasDefaultRange: boolean;
+                            buffer: number[];
+                            bufferSizes: number[];
+                            bufferStartSizes: number[];
+                        }[];
+                    };
                     start: number;
                     end: number;
                     splitMultiRange: boolean;
@@ -87,19 +139,45 @@ declare const capnpQueryDeSerializer: (buffer: ArrayBuffer | ArrayBufferLike) =>
                     start: number;
                     end: number;
                     singleRange: {
-                        type: string;
-                        hasDefaultRange: boolean;
-                        buffer: ArrayBuffer;
-                        bufferSizes: number[];
-                        bufferStartSizes: number[];
-                    }[][];
+                        layout: string;
+                        stats: {
+                            timers: {
+                                key: string;
+                                value: number;
+                            }[];
+                            counters: {
+                                key: string;
+                                value: number;
+                            }[];
+                        };
+                        ranges: {
+                            type: string;
+                            hasDefaultRange: boolean;
+                            buffer: number[];
+                            bufferSizes: number[];
+                            bufferStartSizes: number[];
+                        }[];
+                    }[];
                     multiRange: {
-                        type: string;
-                        hasDefaultRange: boolean;
-                        buffer: ArrayBuffer;
-                        bufferSizes: number[];
-                        bufferStartSizes: number[];
-                    }[][];
+                        layout: string;
+                        stats: {
+                            timers: {
+                                key: string;
+                                value: number;
+                            }[];
+                            counters: {
+                                key: string;
+                                value: number;
+                            }[];
+                        };
+                        ranges: {
+                            type: string;
+                            hasDefaultRange: boolean;
+                            buffer: number[];
+                            bufferSizes: number[];
+                            bufferStartSizes: number[];
+                        }[];
+                    }[];
                 };
                 memoryBudget: number;
                 memoryBudgetVar: number;
@@ -180,35 +258,74 @@ export declare const deserializeConfig: (config: Config) => {
 export declare const deserializeQueryReader: (reader: QueryReader) => {
     layout: string;
     subarray: {
-        type: string;
-        hasDefaultRange: boolean;
-        buffer: ArrayBuffer;
-        bufferSizes: number[];
-        bufferStartSizes: number[];
-    }[];
+        layout: string;
+        stats: {
+            timers: {
+                key: string;
+                value: number;
+            }[];
+            counters: {
+                key: string;
+                value: number;
+            }[];
+        };
+        ranges: {
+            type: string;
+            hasDefaultRange: boolean;
+            buffer: number[];
+            bufferSizes: number[];
+            bufferStartSizes: number[];
+        }[];
+    };
     readState: {
         overflowed: boolean;
         unsplittable: boolean;
         initialized: boolean;
         subarrayPartitioner: {
             subarray: {
-                type: string;
-                hasDefaultRange: boolean;
-                buffer: ArrayBuffer;
-                bufferSizes: number[];
-                bufferStartSizes: number[];
-            }[];
+                layout: string;
+                stats: {
+                    timers: {
+                        key: string;
+                        value: number;
+                    }[];
+                    counters: {
+                        key: string;
+                        value: number;
+                    }[];
+                };
+                ranges: {
+                    type: string;
+                    hasDefaultRange: boolean;
+                    buffer: number[];
+                    bufferSizes: number[];
+                    bufferStartSizes: number[];
+                }[];
+            };
             budget: {
                 attribute: string;
             }[];
             current: {
                 subarray: {
-                    type: string;
-                    hasDefaultRange: boolean;
-                    buffer: ArrayBuffer;
-                    bufferSizes: number[];
-                    bufferStartSizes: number[];
-                }[];
+                    layout: string;
+                    stats: {
+                        timers: {
+                            key: string;
+                            value: number;
+                        }[];
+                        counters: {
+                            key: string;
+                            value: number;
+                        }[];
+                    };
+                    ranges: {
+                        type: string;
+                        hasDefaultRange: boolean;
+                        buffer: number[];
+                        bufferSizes: number[];
+                        bufferStartSizes: number[];
+                    }[];
+                };
                 start: number;
                 end: number;
                 splitMultiRange: boolean;
@@ -217,19 +334,45 @@ export declare const deserializeQueryReader: (reader: QueryReader) => {
                 start: number;
                 end: number;
                 singleRange: {
-                    type: string;
-                    hasDefaultRange: boolean;
-                    buffer: ArrayBuffer;
-                    bufferSizes: number[];
-                    bufferStartSizes: number[];
-                }[][];
+                    layout: string;
+                    stats: {
+                        timers: {
+                            key: string;
+                            value: number;
+                        }[];
+                        counters: {
+                            key: string;
+                            value: number;
+                        }[];
+                    };
+                    ranges: {
+                        type: string;
+                        hasDefaultRange: boolean;
+                        buffer: number[];
+                        bufferSizes: number[];
+                        bufferStartSizes: number[];
+                    }[];
+                }[];
                 multiRange: {
-                    type: string;
-                    hasDefaultRange: boolean;
-                    buffer: ArrayBuffer;
-                    bufferSizes: number[];
-                    bufferStartSizes: number[];
-                }[][];
+                    layout: string;
+                    stats: {
+                        timers: {
+                            key: string;
+                            value: number;
+                        }[];
+                        counters: {
+                            key: string;
+                            value: number;
+                        }[];
+                    };
+                    ranges: {
+                        type: string;
+                        hasDefaultRange: boolean;
+                        buffer: number[];
+                        bufferSizes: number[];
+                        bufferStartSizes: number[];
+                    }[];
+                }[];
             };
             memoryBudget: number;
             memoryBudgetVar: number;
@@ -282,12 +425,25 @@ export declare const deserializeWrite: (query: Query) => {
         float64: number[];
     };
     subarrayRanges: {
-        type: string;
-        hasDefaultRange: boolean;
-        buffer: ArrayBuffer;
-        bufferSizes: number[];
-        bufferStartSizes: number[];
-    }[];
+        layout: string;
+        stats: {
+            timers: {
+                key: string;
+                value: number;
+            }[];
+            counters: {
+                key: string;
+                value: number;
+            }[];
+        };
+        ranges: {
+            type: string;
+            hasDefaultRange: boolean;
+            buffer: number[];
+            bufferSizes: number[];
+            bufferStartSizes: number[];
+        }[];
+    };
     stats: {
         timers: {
             key: string;
@@ -312,12 +468,25 @@ export declare const deserializeSubArray: (domainArray: DomainArray) => {
     float64: number[];
 };
 export declare const deserializeSubarrayRanges: (subArray: Subarray) => {
-    type: string;
-    hasDefaultRange: boolean;
-    buffer: ArrayBuffer;
-    bufferSizes: number[];
-    bufferStartSizes: number[];
-}[];
+    layout: string;
+    stats: {
+        timers: {
+            key: string;
+            value: number;
+        }[];
+        counters: {
+            key: string;
+            value: number;
+        }[];
+    };
+    ranges: {
+        type: string;
+        hasDefaultRange: boolean;
+        buffer: number[];
+        bufferSizes: number[];
+        bufferStartSizes: number[];
+    }[];
+};
 export declare const deserializeStats: (stats: Stats) => {
     timers: {
         key: string;

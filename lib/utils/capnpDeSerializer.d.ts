@@ -33,12 +33,25 @@ export declare const deserializeCapnp: (data: any, type: DeserializableType) => 
             float64: number[];
         };
         subarrayRanges: {
-            type: string;
-            hasDefaultRange: boolean;
-            buffer: ArrayBuffer;
-            bufferSizes: number[];
-            bufferStartSizes: number[];
-        }[];
+            layout: string;
+            stats: {
+                timers: {
+                    key: string;
+                    value: number;
+                }[];
+                counters: {
+                    key: string;
+                    value: number;
+                }[];
+            };
+            ranges: {
+                type: string;
+                hasDefaultRange: boolean;
+                buffer: number[];
+                bufferSizes: number[];
+                bufferStartSizes: number[];
+            }[];
+        };
         stats: {
             timers: {
                 key: string;
@@ -53,35 +66,74 @@ export declare const deserializeCapnp: (data: any, type: DeserializableType) => 
     reader: {
         layout: string;
         subarray: {
-            type: string;
-            hasDefaultRange: boolean;
-            buffer: ArrayBuffer;
-            bufferSizes: number[];
-            bufferStartSizes: number[];
-        }[];
+            layout: string;
+            stats: {
+                timers: {
+                    key: string;
+                    value: number;
+                }[];
+                counters: {
+                    key: string;
+                    value: number;
+                }[];
+            };
+            ranges: {
+                type: string;
+                hasDefaultRange: boolean;
+                buffer: number[];
+                bufferSizes: number[];
+                bufferStartSizes: number[];
+            }[];
+        };
         readState: {
             overflowed: boolean;
             unsplittable: boolean;
             initialized: boolean;
             subarrayPartitioner: {
                 subarray: {
-                    type: string;
-                    hasDefaultRange: boolean;
-                    buffer: ArrayBuffer;
-                    bufferSizes: number[];
-                    bufferStartSizes: number[];
-                }[];
+                    layout: string;
+                    stats: {
+                        timers: {
+                            key: string;
+                            value: number;
+                        }[];
+                        counters: {
+                            key: string;
+                            value: number;
+                        }[];
+                    };
+                    ranges: {
+                        type: string;
+                        hasDefaultRange: boolean;
+                        buffer: number[];
+                        bufferSizes: number[];
+                        bufferStartSizes: number[];
+                    }[];
+                };
                 budget: {
                     attribute: string;
                 }[];
                 current: {
                     subarray: {
-                        type: string;
-                        hasDefaultRange: boolean;
-                        buffer: ArrayBuffer;
-                        bufferSizes: number[];
-                        bufferStartSizes: number[];
-                    }[];
+                        layout: string;
+                        stats: {
+                            timers: {
+                                key: string;
+                                value: number;
+                            }[];
+                            counters: {
+                                key: string;
+                                value: number;
+                            }[];
+                        };
+                        ranges: {
+                            type: string;
+                            hasDefaultRange: boolean;
+                            buffer: number[];
+                            bufferSizes: number[];
+                            bufferStartSizes: number[];
+                        }[];
+                    };
                     start: number;
                     end: number;
                     splitMultiRange: boolean;
@@ -90,19 +142,45 @@ export declare const deserializeCapnp: (data: any, type: DeserializableType) => 
                     start: number;
                     end: number;
                     singleRange: {
-                        type: string;
-                        hasDefaultRange: boolean;
-                        buffer: ArrayBuffer;
-                        bufferSizes: number[];
-                        bufferStartSizes: number[];
-                    }[][];
+                        layout: string;
+                        stats: {
+                            timers: {
+                                key: string;
+                                value: number;
+                            }[];
+                            counters: {
+                                key: string;
+                                value: number;
+                            }[];
+                        };
+                        ranges: {
+                            type: string;
+                            hasDefaultRange: boolean;
+                            buffer: number[];
+                            bufferSizes: number[];
+                            bufferStartSizes: number[];
+                        }[];
+                    }[];
                     multiRange: {
-                        type: string;
-                        hasDefaultRange: boolean;
-                        buffer: ArrayBuffer;
-                        bufferSizes: number[];
-                        bufferStartSizes: number[];
-                    }[][];
+                        layout: string;
+                        stats: {
+                            timers: {
+                                key: string;
+                                value: number;
+                            }[];
+                            counters: {
+                                key: string;
+                                value: number;
+                            }[];
+                        };
+                        ranges: {
+                            type: string;
+                            hasDefaultRange: boolean;
+                            buffer: number[];
+                            bufferSizes: number[];
+                            bufferStartSizes: number[];
+                        }[];
+                    }[];
                 };
                 memoryBudget: number;
                 memoryBudgetVar: number;

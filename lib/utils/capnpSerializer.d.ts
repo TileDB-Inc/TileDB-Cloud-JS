@@ -1,2 +1,2 @@
-declare const capnpSerializer: (data: any) => ArrayBuffer;
+declare const capnpSerializer: (data: any) => any;
 export default capnpSerializer;
