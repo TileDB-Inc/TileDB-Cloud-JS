@@ -6,6 +6,7 @@ import {
   Configuration,
   ConfigurationParameters,
   Datatype,
+  Query,
   QueryApi,
   Querytype,
 } from "../v2";
@@ -17,7 +18,7 @@ class TileDBQuery {
     this.configurationParams = params;
   }
   // TODO: Get Query javascript object instead of the array buffer and serialize it through the serializer
-  async SubmitQuery(namespace: string, arrayName: string, body: ArrayBuffer) {
+  async SubmitQuery(namespace: string, arrayName: string, body: Partial<Query>) {
     const config = new Configuration(this.configurationParams);
     // Add versioning if basePath exists
     const configV1 = new Configuration({
@@ -34,7 +35,7 @@ class TileDBQuery {
           arrayName,
           Querytype.Read,
           "application/capnp",
-          body as any,
+          body as Query,
           undefined,
           undefined,
           undefined,

@@ -1,4 +1,6 @@
 const TileDBQuery = require("../lib/TileDBQuery");
+const serializer = require("../lib/utils/capnpQuerySerializer")
+const deSerializer = require("../lib/utils/capnpQueryDeSerializer")
 
 const fs = require("fs");
 const path = require("path");
@@ -6,7 +8,7 @@ const path = require("path");
 fs.readFile(
   path.resolve(__dirname, "../fixtures/body.raw"),
   (__, data) => {
-    const arrayBuffer = toArrayBuffer(data);
+    // const arrayBuffer = toArrayBuffer(data);
 
 
     const QueryHelper = new TileDBQuery.default({
@@ -15,11 +17,58 @@ fs.readFile(
       basePath: "https://api.dev.tiledb.io/v2"
     });
 
-    QueryHelper.SubmitQuery("kostas", "quickstart_sparse_array", arrayBuffer).then((res) => {
-      console.log(res);
-    }).catch((e) => {
-      console.error(e);
-    })
+
+    const query = {
+      layout: 'row-major',
+      reader: {
+        layout: 'row-major',
+        subarray: {
+          layout: 'row-major',
+          ranges: [
+            {
+              type: 'INT32',
+              hasDefaultRange: false,
+              buffer: [
+                1, 0, 0, 0,
+                2, 0, 0, 0
+              ],
+            },
+            {
+              type: 'INT32',
+              hasDefaultRange: false,
+              buffer: [
+                2, 0, 0, 0,
+                4, 0, 0, 0
+              ]
+            }
+          ]
+        }
+      }
+    };
+
+    // const originalSubArray = deSerializer.default(data).reader.subarray;
+
+    // const newQuery = {
+    //   layout: 'row-major',
+    //   reader: {
+    //     layout: 'row-major',
+    //     subarray: originalSubArray,
+    //   }
+    // };
+
+    // console.log(newQuery)
+
+    // QueryHelper.SubmitQuery("kostas", "quickstart_sparse_array", query).then((res) => {
+    //   console.log(res);
+    // }).catch((e) => {
+    //   console.error(e);
+    // })
+
+    const buf = serializer.default(query);
+
+    const res = deSerializer.default(buf);
+    console.log(res.reader.subarray);
+    // console.log(deSerializer.default(data).reader.subarray);
 
 
 
