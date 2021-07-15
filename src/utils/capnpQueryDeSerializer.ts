@@ -232,18 +232,23 @@ export const deserializeSubArray = (domainArray: DomainArray) => {
 };
 
 export const deserializeSubarrayRanges = (subArray: Subarray) => {
-  return subArray.getRanges().map((range) => {
-    return {
-      type: range.getType(),
-      hasDefaultRange: range.getHasDefaultRange(),
-      buffer: range.getBuffer().toArrayBuffer(),
-      bufferSizes: range
-        .getBufferSizes()
-        .map((uint64) => uint64.toNumber()),
-      bufferStartSizes: range
-        .getBufferStartSizes()
-        .map((uint64) => uint64.toNumber()),
-    };
+  
+  return ({
+    layout: subArray.getLayout(),
+    stats: deserializeStats(subArray.getStats()),
+    ranges: subArray.getRanges().map((range) => {
+      return {
+        type: range.getType(),
+        hasDefaultRange: range.getHasDefaultRange(),
+        buffer: range.getBuffer().toArray(),
+        bufferSizes: range
+          .getBufferSizes()
+          .map((uint64) => uint64.toNumber()),
+        bufferStartSizes: range
+          .getBufferStartSizes()
+          .map((uint64) => uint64.toNumber()),
+      };
+    })
   });
 };
 

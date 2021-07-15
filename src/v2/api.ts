@@ -134,6 +134,12 @@ export interface AttributeBufferHeader {
      * @memberof AttributeBufferHeader
      */
     varLenBufferSizeInBytes: number;
+    /**
+     * Number of bytes for validity in case attribute is nullable
+     * @type {number}
+     * @memberof AttributeBufferHeader
+     */
+    validityLenBufferSizeInBytes?: number;
 }
 /**
  * object representing buffer size of an attribute
@@ -400,6 +406,12 @@ export interface Query {
      * @memberof Query
      */
     totalVarLenBufferBytes: number;
+    /**
+     * Total number of bytes in fixed size attribute buffers.
+     * @type {number}
+     * @memberof Query
+     */
+    totalValidityBufferBytes?: number;
 }
 /**
  * Read struct (can\'t be called reader due to class name conflict)
@@ -628,6 +640,18 @@ export interface SubarrayRanges {
      * @memberof SubarrayRanges
      */
     buffer?: Array<number>;
+    /**
+     * The list of sizes per range
+     * @type {Array<number>}
+     * @memberof SubarrayRanges
+     */
+    bufferSizes?: Array<number>;
+    /**
+     * The list of start sizes per range
+     * @type {Array<number>}
+     * @memberof SubarrayRanges
+     */
+    bufferStartSizes?: Array<number>;
 }
 /**
  * 
