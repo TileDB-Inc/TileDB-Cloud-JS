@@ -6,6 +6,8 @@ const capnpSerializer = (data: any) => {
   if (isArrayMetadata(data)) {
     return serializeArrayMetadata(data);
   }
+  
+  return data;
 };
 
 export default capnpSerializer;

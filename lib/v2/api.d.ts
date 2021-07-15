@@ -124,6 +124,12 @@ export interface AttributeBufferHeader {
      * @memberof AttributeBufferHeader
      */
     varLenBufferSizeInBytes: number;
+    /**
+     * Number of bytes for validity in case attribute is nullable
+     * @type {number}
+     * @memberof AttributeBufferHeader
+     */
+    validityLenBufferSizeInBytes?: number;
 }
 /**
  * object representing buffer size of an attribute
