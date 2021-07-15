@@ -1,6 +1,5 @@
-// import { AttributeBufferHeader } from './../v2/api';
 import capnpQueryDeSerializer from "../utils/capnpQueryDeSerializer";
-import { ArrayApi, Attribute } from "../v1";
+import { ArrayApi, Attribute, Dimension } from "../v1";
 import {
   AttributeBufferHeader,
   Configuration,
@@ -11,14 +10,84 @@ import {
   Querytype,
 } from "../v2";
 
+// const arraySchemaAttributes = [
+//     {
+//       cellValNum: 4294967295,
+//       name: "a1",
+//       type: "CHAR",
+//       filterPipeline: {},
+//       fillValue: [128],
+//       nullable: false,
+//       fillValueValidity: true,
+//     },
+//     {
+//       cellValNum: 4294967295,
+//       name: "a2",
+//       type: "UINT64",
+//       filterPipeline: {},
+//       fillValue: [255, 255, 255, 255, 255, 255, 255, 255],
+//       nullable: false,
+//       fillValueValidity: true,
+//     },
+//     {
+//       cellValNum: 4294967295,
+//       name: "a4",
+//       type: "INT32",
+//       filterPipeline: {},
+//       fillValue: [0, 0, 0, 128],
+//       nullable: false,
+//       fillValueValidity: true,
+//     },
+//     {
+//       cellValNum: 1,
+//       name: "a3",
+//       type: "INT32",
+//       filterPipeline: {},
+//       fillValue: [0, 0, 0, 128],
+//       nullable: false,
+//       fillValueValidity: true,
+//     },
+//     {
+//       cellValNum: 1,
+//       name: "a0",
+//       type: "INT32",
+//       filterPipeline: {},
+//       fillValue: [0, 0, 0, 128],
+//       nullable: false,
+//       fillValueValidity: true,
+//     },
+//     {
+//       cellValNum: 1,
+//       name: "a5",
+//       type: "INT32",
+//       filterPipeline: {},
+//       fillValue: [0, 0, 0, 128],
+//       nullable: true,
+//       fillValueValidity: false,
+//     },
+//     {
+//       cellValNum: 4294967295,
+//       name: "a6",
+//       type: "INT32",
+//       filterPipeline: {},
+//       fillValue: [0, 0, 0, 128],
+//       nullable: true,
+//       fillValueValidity: false,
+//     },
+//   ];
+
 class TileDBQuery {
   configurationParams: ConfigurationParameters;
 
   constructor(params: ConfigurationParameters) {
     this.configurationParams = params;
   }
-  
-  async SubmitQuery(namespace: string, arrayName: string, body: Partial<Query>) {
+
+  async SubmitQuery(
+    namespace: string,
+    arrayName: string,
+    body: Partial<Query>
+  ) {
     const config = new Configuration(this.configurationParams);
     // Add versioning if basePath exists
     const configV1 = new Configuration({
@@ -49,18 +118,25 @@ class TileDBQuery {
       ]);
 
       const arraySchema = arraySchemaResponse.data;
-      const queryData: any = queryResponse.data;
-      const queryObject = capnpQueryDeSerializer(queryData.slice(8));
+      const queryData = convertToArrayBufferIfNodeBuffer(queryResponse.data);
+      const bufferWithoutFirstEightBytes = queryData.slice(8);
 
+      const queryObject = capnpQueryDeSerializer(bufferWithoutFirstEightBytes);
       const attributeHeaders = queryObject.attributeBufferHeaders;
       const numberOfBytesOfResults =
         getSizeInBytesOfAllAttributes(attributeHeaders);
-      const resultsBuffer = queryData.slice(-1 * numberOfBytesOfResults);
+      const resultsBuffer = bufferWithoutFirstEightBytes.slice(
+        -1 * numberOfBytesOfResults
+      );
+      const mergeAttributesAndDimensions = [
+        ...arraySchema.domain.dimensions,
+        ...arraySchema.attributes,
+      ];
 
       const results = getResults(
         resultsBuffer,
         attributeHeaders,
-        arraySchema.attributes
+        mergeAttributesAndDimensions
       );
 
       return results;
@@ -71,6 +147,14 @@ class TileDBQuery {
 }
 
 export default TileDBQuery;
+
+function convertToArrayBufferIfNodeBuffer(buffer: any): ArrayBuffer {
+  if (buffer.buffer) {
+    return new Uint8Array(buffer).buffer;
+  }
+
+  return buffer;
+}
 
 const getAttributeSizeInBytes = (attr: AttributeBufferHeader) => {
   return (
@@ -86,7 +170,7 @@ const getSizeInBytesOfAllAttributes = (attributes: AttributeBufferHeader[]) =>
 export const getResults = (
   arrayBuffer: ArrayBuffer,
   attributes: AttributeBufferHeader[],
-  attributesSchema: Attribute[]
+  attributesSchema: Array<Dimension | Attribute>
 ) => {
   const data = {};
 
@@ -94,8 +178,11 @@ export const getResults = (
     const totalNumberOfBytesOfAttribute = getAttributeSizeInBytes(attribute);
     const isNullable = !!attribute.validityLenBufferSizeInBytes;
     const isVarLengthSized = !!attribute.varLenBufferSizeInBytes;
-    const selectedAttributeSchema = getAttributeSchema(attribute.name, attributesSchema);
-    
+    const selectedAttributeSchema = getAttributeSchema(
+      attribute.name,
+      attributesSchema
+    );
+
     const negativeOffset = -1 * offset;
     const start =
       negativeOffset -
@@ -112,11 +199,17 @@ export const getResults = (
     );
 
     if (isNullable) {
-        const nullableArrayBuffer = arrayBuffer.slice(ending, ending + attribute.validityLenBufferSizeInBytes)
-        const nullablesTypedArray = bufferToInt8(nullableArrayBuffer);
-        const nullablesArray = Array.from(nullablesTypedArray);
+      const nullableArrayBuffer = arrayBuffer.slice(
+        ending,
+        ending + attribute.validityLenBufferSizeInBytes
+      );
+      const nullablesTypedArray = bufferToInt8(nullableArrayBuffer);
+      const nullablesArray = Array.from(nullablesTypedArray);
 
-        result = setNullables(Array.from(result as Int32Array), nullablesArray) as any;
+      result = setNullables(
+        Array.from(result as Int32Array),
+        nullablesArray
+      ) as any;
     }
 
     data[attribute.name] = result;
@@ -127,13 +220,15 @@ export const getResults = (
   return data;
 };
 
-
 const setNullables = <T>(vals: T[], nullables: number[]) => {
-    return vals.map((val, i) => nullables[i] ? val : null);
-}
+  return vals.map((val, i) => (nullables[i] ? val : null));
+};
 
-const getAttributeSchema = (attrName: string, attributesSchema: Attribute[]) => {
-  return attributesSchema.find((attr) => (attr.name === attrName));
+const getAttributeSchema = (
+  attrName: string,
+  attributesSchema: Array<Dimension | Attribute>
+) => {
+  return attributesSchema.find((attr) => attr.name === attrName);
 };
 
 const getAttributeResult = (arrayBuffer: ArrayBuffer, type: Datatype) => {
@@ -167,7 +262,7 @@ const getAttributeResult = (arrayBuffer: ArrayBuffer, type: Datatype) => {
     return bufferToUTF16(arrayBuffer);
   } else if (type === Datatype.StringUtf32) {
     return bufferToUTF32(arrayBuffer);
-  }  else if (type === Datatype.StringUcs2) {
+  } else if (type === Datatype.StringUcs2) {
     return bufferToUTF16(arrayBuffer);
   } else if (type === Datatype.StringUcs4) {
     return bufferToUTF32(arrayBuffer);

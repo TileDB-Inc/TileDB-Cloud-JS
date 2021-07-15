@@ -1,4 +1,4 @@
-import { Attribute } from "../v1";
+import { Attribute, Dimension } from "../v1";
 import { AttributeBufferHeader, ConfigurationParameters, Query } from "../v2";
 declare class TileDBQuery {
     configurationParams: ConfigurationParameters;
@@ -6,4 +6,4 @@ declare class TileDBQuery {
     SubmitQuery(namespace: string, arrayName: string, body: Partial<Query>): Promise<{}>;
 }
 export default TileDBQuery;
-export declare const getResults: (arrayBuffer: ArrayBuffer, attributes: AttributeBufferHeader[], attributesSchema: Attribute[]) => {};
+export declare const getResults: (arrayBuffer: ArrayBuffer, attributes: AttributeBufferHeader[], attributesSchema: Array<Dimension | Attribute>) => {};
