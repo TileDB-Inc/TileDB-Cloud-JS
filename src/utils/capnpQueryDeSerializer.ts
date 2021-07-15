@@ -236,7 +236,7 @@ export const deserializeSubarrayRanges = (subArray: Subarray) => {
     return {
       type: range.getType(),
       hasDefaultRange: range.getHasDefaultRange(),
-      buffer: range.getBuffer().toArrayBuffer(),
+      buffer: range.getBuffer().toArray(),
       bufferSizes: range
         .getBufferSizes()
         .map((uint64) => uint64.toNumber()),

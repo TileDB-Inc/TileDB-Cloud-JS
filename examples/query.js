@@ -7,7 +7,7 @@ fs.readFile(
   (__, data) => {
     const arrayBuffer = toArrayBuffer(data);
     const result = deserializer.default(arrayBuffer);
-    console.log(result.attributeBufferHeaders);
+    // console.log(result.reader.subarray);
     const numberOfResultsInBytes = getResultSizeInBytes(
       result.attributeBufferHeaders
     );

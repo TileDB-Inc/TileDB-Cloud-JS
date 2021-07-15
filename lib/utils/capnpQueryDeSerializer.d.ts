@@ -32,7 +32,7 @@ declare const capnpQueryDeSerializer: (buffer: ArrayBuffer | ArrayBufferLike) =>
         subarrayRanges: {
             type: string;
             hasDefaultRange: boolean;
-            buffer: ArrayBuffer;
+            buffer: number[];
             bufferSizes: number[];
             bufferStartSizes: number[];
         }[];
@@ -52,7 +52,7 @@ declare const capnpQueryDeSerializer: (buffer: ArrayBuffer | ArrayBufferLike) =>
         subarray: {
             type: string;
             hasDefaultRange: boolean;
-            buffer: ArrayBuffer;
+            buffer: number[];
             bufferSizes: number[];
             bufferStartSizes: number[];
         }[];
@@ -64,7 +64,7 @@ declare const capnpQueryDeSerializer: (buffer: ArrayBuffer | ArrayBufferLike) =>
                 subarray: {
                     type: string;
                     hasDefaultRange: boolean;
-                    buffer: ArrayBuffer;
+                    buffer: number[];
                     bufferSizes: number[];
                     bufferStartSizes: number[];
                 }[];
@@ -75,7 +75,7 @@ declare const capnpQueryDeSerializer: (buffer: ArrayBuffer | ArrayBufferLike) =>
                     subarray: {
                         type: string;
                         hasDefaultRange: boolean;
-                        buffer: ArrayBuffer;
+                        buffer: number[];
                         bufferSizes: number[];
                         bufferStartSizes: number[];
                     }[];
@@ -89,14 +89,14 @@ declare const capnpQueryDeSerializer: (buffer: ArrayBuffer | ArrayBufferLike) =>
                     singleRange: {
                         type: string;
                         hasDefaultRange: boolean;
-                        buffer: ArrayBuffer;
+                        buffer: number[];
                         bufferSizes: number[];
                         bufferStartSizes: number[];
                     }[][];
                     multiRange: {
                         type: string;
                         hasDefaultRange: boolean;
-                        buffer: ArrayBuffer;
+                        buffer: number[];
                         bufferSizes: number[];
                         bufferStartSizes: number[];
                     }[][];
@@ -182,7 +182,7 @@ export declare const deserializeQueryReader: (reader: QueryReader) => {
     subarray: {
         type: string;
         hasDefaultRange: boolean;
-        buffer: ArrayBuffer;
+        buffer: number[];
         bufferSizes: number[];
         bufferStartSizes: number[];
     }[];
@@ -194,7 +194,7 @@ export declare const deserializeQueryReader: (reader: QueryReader) => {
             subarray: {
                 type: string;
                 hasDefaultRange: boolean;
-                buffer: ArrayBuffer;
+                buffer: number[];
                 bufferSizes: number[];
                 bufferStartSizes: number[];
             }[];
@@ -205,7 +205,7 @@ export declare const deserializeQueryReader: (reader: QueryReader) => {
                 subarray: {
                     type: string;
                     hasDefaultRange: boolean;
-                    buffer: ArrayBuffer;
+                    buffer: number[];
                     bufferSizes: number[];
                     bufferStartSizes: number[];
                 }[];
@@ -219,14 +219,14 @@ export declare const deserializeQueryReader: (reader: QueryReader) => {
                 singleRange: {
                     type: string;
                     hasDefaultRange: boolean;
-                    buffer: ArrayBuffer;
+                    buffer: number[];
                     bufferSizes: number[];
                     bufferStartSizes: number[];
                 }[][];
                 multiRange: {
                     type: string;
                     hasDefaultRange: boolean;
-                    buffer: ArrayBuffer;
+                    buffer: number[];
                     bufferSizes: number[];
                     bufferStartSizes: number[];
                 }[][];
@@ -284,7 +284,7 @@ export declare const deserializeWrite: (query: Query) => {
     subarrayRanges: {
         type: string;
         hasDefaultRange: boolean;
-        buffer: ArrayBuffer;
+        buffer: number[];
         bufferSizes: number[];
         bufferStartSizes: number[];
     }[];
@@ -314,7 +314,7 @@ export declare const deserializeSubArray: (domainArray: DomainArray) => {
 export declare const deserializeSubarrayRanges: (subArray: Subarray) => {
     type: string;
     hasDefaultRange: boolean;
-    buffer: ArrayBuffer;
+    buffer: number[];
     bufferSizes: number[];
     bufferStartSizes: number[];
 }[];

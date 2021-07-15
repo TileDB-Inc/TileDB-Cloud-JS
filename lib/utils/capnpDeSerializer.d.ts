@@ -35,7 +35,7 @@ export declare const deserializeCapnp: (data: any, type: DeserializableType) => 
         subarrayRanges: {
             type: string;
             hasDefaultRange: boolean;
-            buffer: ArrayBuffer;
+            buffer: number[];
             bufferSizes: number[];
             bufferStartSizes: number[];
         }[];
@@ -55,7 +55,7 @@ export declare const deserializeCapnp: (data: any, type: DeserializableType) => 
         subarray: {
             type: string;
             hasDefaultRange: boolean;
-            buffer: ArrayBuffer;
+            buffer: number[];
             bufferSizes: number[];
             bufferStartSizes: number[];
         }[];
@@ -67,7 +67,7 @@ export declare const deserializeCapnp: (data: any, type: DeserializableType) => 
                 subarray: {
                     type: string;
                     hasDefaultRange: boolean;
-                    buffer: ArrayBuffer;
+                    buffer: number[];
                     bufferSizes: number[];
                     bufferStartSizes: number[];
                 }[];
@@ -78,7 +78,7 @@ export declare const deserializeCapnp: (data: any, type: DeserializableType) => 
                     subarray: {
                         type: string;
                         hasDefaultRange: boolean;
-                        buffer: ArrayBuffer;
+                        buffer: number[];
                         bufferSizes: number[];
                         bufferStartSizes: number[];
                     }[];
@@ -92,14 +92,14 @@ export declare const deserializeCapnp: (data: any, type: DeserializableType) => 
                     singleRange: {
                         type: string;
                         hasDefaultRange: boolean;
-                        buffer: ArrayBuffer;
+                        buffer: number[];
                         bufferSizes: number[];
                         bufferStartSizes: number[];
                     }[][];
                     multiRange: {
                         type: string;
                         hasDefaultRange: boolean;
-                        buffer: ArrayBuffer;
+                        buffer: number[];
                         bufferSizes: number[];
                         bufferStartSizes: number[];
                     }[][];
