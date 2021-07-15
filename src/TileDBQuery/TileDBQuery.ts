@@ -17,7 +17,7 @@ class TileDBQuery {
   constructor(params: ConfigurationParameters) {
     this.configurationParams = params;
   }
-  // TODO: Get Query javascript object instead of the array buffer and serialize it through the serializer
+  
   async SubmitQuery(namespace: string, arrayName: string, body: Partial<Query>) {
     const config = new Configuration(this.configurationParams);
     // Add versioning if basePath exists
@@ -83,20 +83,19 @@ const getAttributeSizeInBytes = (attr: AttributeBufferHeader) => {
 const getSizeInBytesOfAllAttributes = (attributes: AttributeBufferHeader[]) =>
   attributes.reduce((accum, attr) => accum + getAttributeSizeInBytes(attr), 0);
 
-const getResults = (
+export const getResults = (
   arrayBuffer: ArrayBuffer,
   attributes: AttributeBufferHeader[],
   attributesSchema: Attribute[]
 ) => {
-  // Let's reverse attributes to start from the end
-  const attrs = attributes.reverse();
   const data = {};
 
-  attrs.reduce((offset, attribute) => {
+  attributes.reverse().reduce((offset, attribute) => {
     const totalNumberOfBytesOfAttribute = getAttributeSizeInBytes(attribute);
     const isNullable = !!attribute.validityLenBufferSizeInBytes;
     const isVarLengthSized = !!attribute.varLenBufferSizeInBytes;
-    const attributeType = getAttributeSchema(attribute.name, attributesSchema);
+    const selectedAttributeSchema = getAttributeSchema(attribute.name, attributesSchema);
+    
     const negativeOffset = -1 * offset;
     const start =
       negativeOffset -
@@ -106,12 +105,21 @@ const getResults = (
       negativeOffset -
       (isNullable ? attribute.validityLenBufferSizeInBytes : 0);
     const end = ending ? ending : undefined;
-    const retult = getAttributeResult(
+
+    let result = getAttributeResult(
       arrayBuffer.slice(start, end),
-      attributeType
+      selectedAttributeSchema.type
     );
 
-    data[attribute.name] = retult;
+    if (isNullable) {
+        const nullableArrayBuffer = arrayBuffer.slice(ending, ending + attribute.validityLenBufferSizeInBytes)
+        const nullablesTypedArray = bufferToInt8(nullableArrayBuffer);
+        const nullablesArray = Array.from(nullablesTypedArray);
+
+        result = setNullables(Array.from(result as Int32Array), nullablesArray) as any;
+    }
+
+    data[attribute.name] = result;
 
     return offset + totalNumberOfBytesOfAttribute;
   }, 0);
@@ -119,8 +127,13 @@ const getResults = (
   return data;
 };
 
-const getAttributeSchema = (name: string, attributesSchema: Attribute[]) => {
-  return attributesSchema.find((attr) => (attr.name = name)).type;
+
+const setNullables = <T>(vals: T[], nullables: number[]) => {
+    return vals.map((val, i) => nullables[i] ? val : null);
+}
+
+const getAttributeSchema = (attrName: string, attributesSchema: Attribute[]) => {
+  return attributesSchema.find((attr) => (attr.name === attrName));
 };
 
 const getAttributeResult = (arrayBuffer: ArrayBuffer, type: Datatype) => {

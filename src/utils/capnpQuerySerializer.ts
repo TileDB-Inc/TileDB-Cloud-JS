@@ -8,9 +8,10 @@ const capnpQuerySerializer = (data: Partial<QueryType>) => {
   const { reader } = data;
 
   queryData.setLayout(data.layout);
-  //   queryData.setStatus(data.status);
-  //   queryData.setType(data.type);
-  //   queryData.setTotalFixedLengthBufferBytes(data.totalFixedLengthBufferBytes);
+    queryData.setStatus(data.status || '');
+    queryData.setType(data.type || '');
+    queryData.setTotalFixedLengthBufferBytes(capnp.Uint64.fromNumber(data.totalFixedLengthBufferBytes));
+    queryData.setTotalVarLenBufferBytes(capnp.Uint64.fromNumber(data.totalVarLenBufferBytes));
 
   if (reader) {
     const queryReader = queryData.initReader();

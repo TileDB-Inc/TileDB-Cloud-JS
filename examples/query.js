@@ -1,14 +1,87 @@
 const TileDBQuery = require("../lib/TileDBQuery");
+const {getResults} = require("../lib/TileDBQuery/TileDBQuery");
 const serializer = require("../lib/utils/capnpQuerySerializer")
 const deSerializer = require("../lib/utils/capnpQueryDeSerializer")
 
 const fs = require("fs");
 const path = require("path");
 
+
+
+const arraySchemaAttributes = [
+  {
+    cellValNum: 4294967295,
+    name: 'a1',
+    type: 'CHAR',
+    filterPipeline: {},
+    fillValue: [ 128 ],
+    nullable: false,
+    fillValueValidity: true
+  },
+  {
+    cellValNum: 4294967295,
+    name: 'a2',
+    type: 'UINT64',
+    filterPipeline: {},
+    fillValue: [
+      255, 255, 255,
+      255, 255, 255,
+      255, 255
+    ],
+    nullable: false,
+    fillValueValidity: true
+  },
+  {
+    cellValNum: 4294967295,
+    name: 'a4',
+    type: 'INT32',
+    filterPipeline: {},
+    fillValue: [ 0, 0, 0, 128 ],
+    nullable: false,
+    fillValueValidity: true
+  },
+  {
+    cellValNum: 1,
+    name: 'a3',
+    type: 'INT32',
+    filterPipeline: {},
+    fillValue: [ 0, 0, 0, 128 ],
+    nullable: false,
+    fillValueValidity: true
+  },
+  {
+    cellValNum: 1,
+    name: 'a0',
+    type: 'INT32',
+    filterPipeline: {},
+    fillValue: [ 0, 0, 0, 128 ],
+    nullable: false,
+    fillValueValidity: true
+  },
+  {
+    cellValNum: 1,
+    name: 'a5',
+    type: 'INT32',
+    filterPipeline: {},
+    fillValue: [ 0, 0, 0, 128 ],
+    nullable: true,
+    fillValueValidity: false
+  },
+  {
+    cellValNum: 4294967295,
+    name: 'a6',
+    type: 'INT32',
+    filterPipeline: {},
+    fillValue: [ 0, 0, 0, 128 ],
+    nullable: true,
+    fillValueValidity: false
+  }
+]
+
 fs.readFile(
-  path.resolve(__dirname, "../fixtures/body.raw"),
+  path.resolve(__dirname, "../fixtures/response_mixed.raw"),
   (__, data) => {
-    // const arrayBuffer = toArrayBuffer(data);
+    const arrayBuffer = toArrayBuffer(data);
 
 
     const QueryHelper = new TileDBQuery.default({
@@ -18,33 +91,33 @@ fs.readFile(
     });
 
 
-    const query = {
-      layout: 'row-major',
-      reader: {
-        layout: 'row-major',
-        subarray: {
-          layout: 'row-major',
-          ranges: [
-            {
-              type: 'INT32',
-              hasDefaultRange: false,
-              buffer: [
-                1, 0, 0, 0,
-                2, 0, 0, 0
-              ],
-            },
-            {
-              type: 'INT32',
-              hasDefaultRange: false,
-              buffer: [
-                2, 0, 0, 0,
-                4, 0, 0, 0
-              ]
-            }
-          ]
-        }
-      }
-    };
+    // const query = {
+    //   layout: 'row-major',
+    //   reader: {
+    //     layout: 'row-major',
+    //     subarray: {
+    //       layout: 'row-major',
+    //       ranges: [
+    //         {
+    //           type: 'INT32',
+    //           hasDefaultRange: false,
+    //           buffer: [
+    //             1, 0, 0, 0,
+    //             2, 0, 0, 0
+    //           ],
+    //         },
+    //         {
+    //           type: 'INT32',
+    //           hasDefaultRange: false,
+    //           buffer: [
+    //             2, 0, 0, 0,
+    //             4, 0, 0, 0
+    //           ]
+    //         }
+    //       ]
+    //     }
+    //   }
+    // };
 
     // const originalSubArray = deSerializer.default(data).reader.subarray;
 
@@ -58,30 +131,33 @@ fs.readFile(
 
     // console.log(newQuery)
 
-    // QueryHelper.SubmitQuery("kostas", "quickstart_sparse_array", query).then((res) => {
+    // QueryHelper.SubmitQuery("kostas", "var_length", data).then((res) => {
     //   console.log(res);
     // }).catch((e) => {
     //   console.error(e);
     // })
 
-    const buf = serializer.default(query);
+    // const buf = serializer.default(query);
 
-    const res = deSerializer.default(buf);
-    console.log(res.reader.subarray);
+    // const res = deSerializer.default(buf);
+    // console.log(res);
     // console.log(deSerializer.default(data).reader.subarray);
 
 
 
-    // const result = deserializer.default(arrayBuffer);
-    // console.log(result.reader.subarray);
+    const result = deSerializer.default(arrayBuffer);
+
+    const endResults = getResults(arrayBuffer, result.attributeBufferHeaders, arraySchemaAttributes)
+
+    console.log(endResults);
+
+
     // const numberOfResultsInBytes = getResultSizeInBytes(
     //   result.attributeBufferHeaders
     // );
     // // get last X bytes where the results are
     // const resultsBuffer = arrayBuffer.slice(-1 * numberOfResultsInBytes);
 
-    // // getFixedLengthVariables(result.attributeBufferHeaders, resultsBuffer);
-    // // getVarLengthVariables(result.attributeBufferHeaders, resultsBuffer);
     
     // /**
     //  * They come as a5, a4, a1, a3, a6, a2, a0

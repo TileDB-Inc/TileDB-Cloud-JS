@@ -108,7 +108,7 @@ void write_array()
     std::vector<uint64_t> a1_off = {
         0, 1, 3, 6, 9, 11, 12, 13, 16, 17, 20, 22, 23, 24, 25, 27};
     std::vector<uint64_t> a2_data = {1, 1, 20, 311, 27, 82, 5, 6, 6, 7, 7, 8, 8,
-                                8, 9, 9, 10, 11, 12, 12, 13, 14, 14, 14, 15, 16};
+                                     8, 9, 9, 10, 11, 12, 12, 13, 14, 14, 14, 15, 16};
     std::vector<uint64_t> a2_el_off = {
         0, 2, 4, 5, 6, 8, 10, 11, 14, 16, 17, 18, 20, 21, 24, 25};
     std::vector<int> a4_data = {1, 1, 2, 19, 27, 81, 5, 6, 6, 7, 7, 8, 8,
@@ -127,8 +127,6 @@ void write_array()
 
     std::vector<int> a0_data = {
         1, 12, 234, 17, 53, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
-
-
 
     std::vector<int> a5_data = {1, 8, 223, 17, 59, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
     std::vector<int> a6_data = {1, 12, 332, 21, 62, 11, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
@@ -191,6 +189,16 @@ void read_array()
         .set_buffer_nullable("a5", a5_data, a5_validity_buf)
         .set_buffer_nullable("a6", a6_off, a6_data, a6_validity_buf);
     query.submit();
+
+    // This mimics the body posted to the server
+    std::vector<uint8_t> serialized_body;
+    serialize_query(ctx, query, &serialized_body, true);
+    std::ofstream body_file;
+    body_file.open("body_mixed.raw", std::ios::out | std::ios::binary);
+    for (const auto &d : serialized_body)
+        body_file << d;
+    body_file.close();
+
     // this mimics the response from the server
     std::vector<uint8_t> serialized_response;
     serialize_query(ctx, query, &serialized_response, false);
@@ -224,7 +232,6 @@ void read_array()
     auto result_el_a2_data = result_el_map["a2"].second;
     a2_cell_el.push_back(result_el_a2_data - a2_el_off.back());
 
-
     std::vector<uint64_t> a4_el_off;
     auto result_el_a4_off = result_el_map["a4"].first;
     for (size_t i = 0; i < result_el_a4_off; ++i)
@@ -235,7 +242,6 @@ void read_array()
         a4_cell_el.push_back(a4_el_off[i + 1] - a4_el_off[i]);
     auto result_el_a4_data = result_el_map["a4"].second;
     a4_cell_el.push_back(result_el_a4_data - a4_el_off.back());
-
 
     // Print the results
     for (size_t i = 0; i < result_el_a1_off; ++i)
@@ -260,17 +266,18 @@ void read_array()
     // Print out the data we read for each nullable atttribute
     unsigned long i = 0;
     std::cout << "a5: " << std::endl;
-    for (i = 0; i < 4; ++i) {
+    for (i = 0; i < 4; ++i)
+    {
         std::cout << (a5_validity_buf[i] > 0 ? std::to_string(a5_data[i]) : "NULL");
         std::cout << " ";
     }
     std::cout << std::endl;
     std::cout << "a6: " << std::endl;
-    for (i = 0; i < 8; ++i) {
+    for (i = 0; i < 8; ++i)
+    {
         std::cout << (a6_validity_buf[i] > 0 ? std::to_string(a6_data[i]) : "NULL");
         std::cout << " ";
     }
-    
 }
 int main()
 {
