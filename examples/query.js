@@ -2,37 +2,115 @@ const TileDBQuery = require("../lib/TileDBQuery");
 const { getResults } = require("../lib/TileDBQuery/TileDBQuery");
 const serializer = require("../lib/utils/capnpQuerySerializer");
 const deSerializer = require("../lib/utils/capnpQueryDeSerializer");
-
 const fs = require("fs");
 const path = require("path");
 
+// const basePathV2 = "http://rest-server:8181/v2"
+const basePathV2 = "https://api.dev.tiledb.io/v2";
+
+
 const query = {
-  layout: 'row-major',
+  attributeBufferHeaders: [
+    {
+      name: 'a5',
+      fixedLenBufferSizeInBytes: 12,
+      varLenBufferSizeInBytes: 0,
+      validityLenBufferSizeInBytes: 3,
+      originalFixedLenBufferSizeInBytes: 16,
+      originalVarLenBufferSizeInBytes: 0,
+      originalValidityLenBufferSizeInBytes: 4
+    },
+    {
+      name: 'a4',
+      fixedLenBufferSizeInBytes: 24,
+      varLenBufferSizeInBytes: 16,
+      validityLenBufferSizeInBytes: 0,
+      originalFixedLenBufferSizeInBytes: 96,
+      originalVarLenBufferSizeInBytes: 128,
+      originalValidityLenBufferSizeInBytes: 0
+    },
+    {
+      name: 'a1',
+      fixedLenBufferSizeInBytes: 24,
+      varLenBufferSizeInBytes: 8,
+      validityLenBufferSizeInBytes: 0,
+      originalFixedLenBufferSizeInBytes: 96,
+      originalVarLenBufferSizeInBytes: 9,
+      originalValidityLenBufferSizeInBytes: 0
+    },
+    {
+      name: 'a3',
+      fixedLenBufferSizeInBytes: 12,
+      varLenBufferSizeInBytes: 0,
+      validityLenBufferSizeInBytes: 0,
+      originalFixedLenBufferSizeInBytes: 12,
+      originalVarLenBufferSizeInBytes: 0,
+      originalValidityLenBufferSizeInBytes: 0
+    },
+    {
+      name: 'a6',
+      fixedLenBufferSizeInBytes: 24,
+      varLenBufferSizeInBytes: 16,
+      validityLenBufferSizeInBytes: 3,
+      originalFixedLenBufferSizeInBytes: 32,
+      originalVarLenBufferSizeInBytes: 32,
+      originalValidityLenBufferSizeInBytes: 8
+    },
+    {
+      name: 'a2',
+      fixedLenBufferSizeInBytes: 24,
+      varLenBufferSizeInBytes: 32,
+      validityLenBufferSizeInBytes: 0,
+      originalFixedLenBufferSizeInBytes: 96,
+      originalVarLenBufferSizeInBytes: 0,
+      originalValidityLenBufferSizeInBytes: 0
+    },
+    {
+      name: 'a0',
+      fixedLenBufferSizeInBytes: 12,
+      varLenBufferSizeInBytes: 0,
+      validityLenBufferSizeInBytes: 0,
+      originalFixedLenBufferSizeInBytes: 12,
+      originalVarLenBufferSizeInBytes: 0,
+      originalValidityLenBufferSizeInBytes: 0
+    }
+  ],
+  totalVarLenBufferBytes: 72,
+  totalFixedLengthBufferBytes: 132,
+  totalValidityBufferBytes: 6,
+  type: "READ",
+  status: "INCOMPLETE",
+  layout: "row-major",
   reader: {
-    layout: 'row-major',
+    layout: "row-major",
     subarray: {
-      layout: 'row-major',
+      layout: "row-major",
       ranges: [
         {
-          type: 'INT32',
+          type: "INT32",
           hasDefaultRange: false,
-          buffer: [
-            1, 0, 0, 0,
-            2, 0, 0, 0
-          ],
+          buffer: [1, 0, 0, 0, 2, 0, 0, 0],
+          bufferSizes: [ 8 ],
+          bufferStartSizes: [ 0 ]
         },
         {
-          type: 'INT32',
+          type: "INT32",
           hasDefaultRange: false,
-          buffer: [
-            2, 0, 0, 0,
-            4, 0, 0, 0
-          ]
-        }
-      ]
-    }
+          buffer: [2, 0, 0, 0, 4, 0, 0, 0],
+          bufferSizes: [ 8 ],
+          bufferStartSizes: [ 0 ]
+        },
+      ],
+    },
+  },
+  array: {
+    endTimestamp: Infinity,
+    queryType: '',
+    uri: 'file:///home/sgus/Development/Go/src/github.com/TileDB-Inc/TileDB-Cloud-JS/fixtures/variable_length_array',
+    startTimestamp: 0
   }
 };
+
 
 const arraySchemaAttributes = [
   {
@@ -100,52 +178,115 @@ const arraySchemaAttributes = [
   },
 ];
 
-readServerResponseFromFile();
+
+// readServerResponseFromFile();
+// callVarAndFixedSimpleArray();
+// saveResponseFromServerToFile();
 // makeCall();
-// makeSimpleCallFixedSizedAttributes();
+// readBodyFile();
+// serializeAndDeserializeBody();
+makeSimpleCallFixedSizedAttributes();
 
 
-function makeSimpleCallFixedSizedAttributes() {
+function serializeAndDeserializeBody() {
+  const serialized = serializer.default(query);
+  const deserialized = deSerializer.default(serialized);
+  console.log(deserialized);
+  console.log('------------------------------');
+
   fs.readFile(
-    path.resolve(__dirname, "../fixtures/body.raw"),
+    path.resolve(__dirname, "../fixtures/body_mixed.raw"),
+    (__, data) => {
+      const arrayBuffer = toArrayBuffer(data);
+      const deserializedFromBodyFile = deSerializer.default(arrayBuffer);
+      console.log(deserializedFromBodyFile);
+    }
+  );
+}
+
+function callVarAndFixedSimpleArray() {
+  fs.readFile(
+    path.resolve(__dirname, "../fixtures/body_a0_a1.raw"),
     (__, data) => {
       const arrayBuffer = toArrayBuffer(data);
       const QueryHelper = new TileDBQuery.default({
         username: "kostas",
         password: "password",
-        basePath: "https://api.dev.tiledb.io/v2"
+        basePath: basePathV2,
       });
-      QueryHelper.SubmitQuery("kostas", "quickstart_sparse_array", arrayBuffer).then((res) => {
-        console.log(res);
-
-      }).catch((e) => {
-        console.error(e);
-      })
+      QueryHelper.SubmitQuery(
+        "kostas",
+        "variable_fixed_char_array",
+        arrayBuffer
+      )
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((e) => {
+          console.error(e);
+        });
     }
   );
 }
 
+function makeSimpleCallFixedSizedAttributes() {
+  fs.readFile(path.resolve(__dirname, "../fixtures/body_mixed.raw"), (__, data) => {
+    const arrayBuffer = toArrayBuffer(data);
+    const QueryHelper = new TileDBQuery.default({
+      username: "kostas",
+      password: "password",
+      basePath: basePathV2,
+    });
+    QueryHelper.SubmitQuery("kostas", "var_length", query)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((e) => {
+        console.error(e);
+      });
+  });
+}
+
+function readBodyFile() {
+  const bodyFiles = [
+    "../fixtures/body.raw",
+    "../fixtures/body_mixed.raw",
+    "../fixtures/body_a0_a1.raw",
+  ];
+  fs.readFile(path.resolve(__dirname, bodyFiles[1]), (__, data) => {
+    const arrayBuffer = toArrayBuffer(data);
+    // console.log(arrayBuffer.byteLength);
+    const result = deSerializer.default(arrayBuffer);
+    console.log(result);
+  });
+}
+
 function readServerResponseFromFile() {
-  fs.readFile(
-    path.resolve(__dirname, "../fixtures/response_from_rest.raw"),
-    (__, data) => {
-      const arrayBuffer = toArrayBuffer(data);
-
-
-      const result = deSerializer.default(arrayBuffer);
-
-
-      console.log(getResults(arrayBuffer, result.attributeBufferHeaders, arraySchemaAttributes));
-
-    }
-  );
+  const responseFiles = [
+    "../fixtures/response_from_rest.raw",
+    "../fixtures/response_mixed.raw",
+    "../fixtures/response_a0_a1.raw",
+    "../fixtures/response_from_server_a0_a1.raw",
+  ];
+  fs.readFile(path.resolve(__dirname, responseFiles[1]), (__, data) => {
+    const arrayBuffer = toArrayBuffer(data);
+    // console.log(arrayBuffer.byteLength);
+    const result = deSerializer.default(arrayBuffer);
+    console.log(result);
+    console.log(
+      getResults(
+        arrayBuffer,
+        result.attributeBufferHeaders,
+        arraySchemaAttributes
+      )
+    );
+  });
 }
 
 function printDeserializedQueryObjectBuffer(arrayBuffer) {
   const res = deSerializer.default(arrayBuffer);
   console.log(res);
 }
-
 
 function makeCall() {
   fs.readFile(
@@ -156,14 +297,16 @@ function makeCall() {
       const QueryHelper = new TileDBQuery.default({
         username: "kostas",
         password: "password",
-        basePath: "https://api.dev.tiledb.io/v2",
+        basePath: basePathV2,
       });
 
-      QueryHelper.SubmitQuery("kostas", "var_length", arrayBuffer).then((res) => {
-        console.log(res);
-      }).catch((e) => {
-        console.error(e);
-      })
+      QueryHelper.SubmitQuery("kostas", "var_length", query)
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((e) => {
+          console.error(e);
+        });
 
       // /**
       //  * They come as a5, a4, a1, a3, a6, a2, a0
@@ -181,6 +324,41 @@ function makeCall() {
       // console.log(new Int32Array(arrayBuffer.slice(-210, -198))); // a5  [ 8 NULL 17 NULL ]    FIXED
 
       // console.log(new Int32Array(arrayBuffer.slice(-195, -171))) // offset of VAR attributes???
+    }
+  );
+}
+
+function saveResponseFromServerToFile() {
+  fs.readFile(
+    path.resolve(__dirname, "../fixtures/body_a0_a1.raw"),
+    (__, data) => {
+      const arrayBuffer = toArrayBuffer(data);
+      const QueryHelper = new TileDBQuery.default({
+        username: "kostas",
+        password: "password",
+        basePath: basePathV2,
+      });
+      QueryHelper.SubmitQuery(
+        "kostas",
+        "variable_fixed_char_array",
+        arrayBuffer
+      )
+        .then((res) => {
+          console.log(res);
+
+          fs.writeFile(
+            path.resolve(
+              __dirname,
+              "../fixtures/response_from_server_a0_a1.raw"
+            ),
+            res,
+            undefined,
+            () => null
+          );
+        })
+        .catch((e) => {
+          console.error(e);
+        });
     }
   );
 }
