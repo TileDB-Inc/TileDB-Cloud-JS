@@ -75,7 +75,7 @@ export const deserializeConfig = (config: Config) => {
 export const deserializeQueryReader = (reader: QueryReader) => {
   return {
     layout: reader.getLayout(),
-    subarray: deserializeSubarrayRanges(reader.getSubarray()),
+    subarray: deserializeSubarray(reader.getSubarray()),
     readState: deserializeReadState(reader.getReadState()),
     condition: deserializeCondition(reader.getCondition()),
     stats: deserializeStats(reader.getStats()),
@@ -115,7 +115,7 @@ const deserializeSubarrayPartitioner = (
   subArrayPartitioner: SubarrayPartitioner
 ) => {
   return {
-    subarray: deserializeSubarrayRanges(subArrayPartitioner.getSubarray()),
+    subarray: deserializeSubarray(subArrayPartitioner.getSubarray()),
     budget: deserializeAttributeBufferSize(subArrayPartitioner.getBudget()),
     current: deserializeSubarrayPartitionerPartitionInfo(
       subArrayPartitioner.getCurrent()
@@ -145,10 +145,10 @@ const deserializeSubarrayPartitionerState = (
     end: partitionerState.getEnd().toNumber(),
     singleRange: partitionerState
       .getSingleRange()
-      .map((singleRange) => deserializeSubarrayRanges(singleRange)),
+      .map((singleRange) => deserializeSubarray(singleRange)),
     multiRange: partitionerState
       .getMultiRange()
-      .map((singleRange) => deserializeSubarrayRanges(singleRange)),
+      .map((singleRange) => deserializeSubarray(singleRange)),
   };
 };
 
@@ -156,7 +156,7 @@ const deserializeSubarrayPartitionerPartitionInfo = (
   partitionInfo: SubarrayPartitioner_PartitionInfo
 ) => {
   return {
-    subarray: deserializeSubarrayRanges(partitionInfo.getSubarray()),
+    subarray: deserializeSubarray(partitionInfo.getSubarray()),
     start: partitionInfo.getStart().toNumber(),
     end: partitionInfo.getEnd().toNumber(),
     splitMultiRange: partitionInfo.getSplitMultiRange(),
@@ -210,13 +210,13 @@ export const deserializeWrite = (query: Query) => {
     checkCoordDups: writer.getCheckCoordDups(),
     checkCoordOOB: writer.getCheckCoordOOB(),
     dedupCoords: writer.getDedupCoords(),
-    subarray: deserializeSubArray(writer.getSubarray()),
-    subarrayRanges: deserializeSubarrayRanges(writer.getSubarrayRanges()),
+    subarray: deserializeDomainArray(writer.getSubarray()),
+    subarrayRanges: deserializeSubarray(writer.getSubarrayRanges()),
     stats: deserializeStats(writer.getStats()),
   };
 };
 
-export const deserializeSubArray = (domainArray: DomainArray) => {
+export const deserializeDomainArray = (domainArray: DomainArray) => {
   return {
     int8: domainArray.getInt8().map(identity),
     uint8: domainArray.getUint8().map(identity),
@@ -231,7 +231,7 @@ export const deserializeSubArray = (domainArray: DomainArray) => {
   };
 };
 
-export const deserializeSubarrayRanges = (subArray: Subarray) => {
+export const deserializeSubarray = (subArray: Subarray) => {
   
   return ({
     layout: subArray.getLayout(),
