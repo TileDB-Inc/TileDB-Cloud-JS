@@ -455,7 +455,7 @@ export declare const deserializeWrite: (query: Query) => {
         }[];
     };
 };
-export declare const deserializeSubArray: (domainArray: DomainArray) => {
+export declare const deserializeDomainArray: (domainArray: DomainArray) => {
     int8: number[];
     uint8: number[];
     int16: number[];
@@ -467,7 +467,7 @@ export declare const deserializeSubArray: (domainArray: DomainArray) => {
     float32: number[];
     float64: number[];
 };
-export declare const deserializeSubarrayRanges: (subArray: Subarray) => {
+export declare const deserializeSubarray: (subArray: Subarray) => {
     layout: string;
     stats: {
         timers: {
