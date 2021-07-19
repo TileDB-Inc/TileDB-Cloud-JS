@@ -188,7 +188,6 @@ void read_array()
         .set_buffer("a4", a4_off, a4_data)
         .set_buffer_nullable("a5", a5_data, a5_validity_buf)
         .set_buffer_nullable("a6", a6_off, a6_data, a6_validity_buf);
-    query.submit();
 
     // This mimics the body posted to the server
     std::vector<uint8_t> serialized_body;
@@ -199,6 +198,7 @@ void read_array()
         body_file << d;
     body_file.close();
 
+    query.submit();
     // this mimics the response from the server
     std::vector<uint8_t> serialized_response;
     serialize_query(ctx, query, &serialized_response, false);

@@ -48,7 +48,7 @@ class TileDBQuery {
             headers: {
               "Content-Type": "application/capnp",
             },
-            responseType: "arraybuffer",
+            // responseType: "arraybuffer",
           }
         ),
       ]);
@@ -135,9 +135,10 @@ export const getResults = (
     );
 
     if (isNullable) {
+      const nullableArrayEnd = ending + attribute.validityLenBufferSizeInBytes;
       const nullableArrayBuffer = arrayBuffer.slice(
         ending,
-        ending + attribute.validityLenBufferSizeInBytes
+        nullableArrayEnd ? nullableArrayEnd : undefined
       );
       const nullablesTypedArray = bufferToInt8(nullableArrayBuffer);
       const nullablesArray = Array.from(nullablesTypedArray);

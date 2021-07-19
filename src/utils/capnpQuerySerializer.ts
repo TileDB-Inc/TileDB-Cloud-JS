@@ -28,45 +28,70 @@ const capnpQuerySerializer = (data: Partial<QueryType>) => {
   if (reader) {
     const queryReader = queryData.initReader();
     const subArrayCap = queryReader.initSubarray();
-    const {subarray: subarrayData = {}} = reader;
+    const {subarray: subarrayData = {}, readState = {}} = reader;
     serializeSubArray(subArrayCap, subarrayData);
 
     queryReader.setLayout(reader.layout);
 
-    const {readState = {}} = reader;
     const readStateData = queryReader.initReadState();
 
     readStateData.setOverflowed(readState.overflowed);
     readStateData.setUnsplittable(readState.unsplittable);
     readStateData.setInitialized(readState.initialized);
 
+    // subarrayPartitioner
     const {subarrayPartitioner = {}} = readState;
-    const {budget = [], subarray, current = {}} = subarrayPartitioner;
+    const {budget = [], subarray, current = {}, state = {}, memoryBudget = 0, memoryBudgetVar = 0} = subarrayPartitioner;
     const subPartitioner = readStateData.initSubarrayPartitioner();
+    subPartitioner.setMemoryBudget(capnp.Uint64.fromNumber(memoryBudget));
+    subPartitioner.setMemoryBudgetVar(capnp.Uint64.fromNumber(memoryBudgetVar));
+    // TODO: fix type
+    subPartitioner.setMemoryBudgetValidity(capnp.Uint64.fromNumber(0));
     const budgetData = subPartitioner.initBudget(budget.length);
-
+    // subarrayPartitioner.Buget
     budget.forEach((b, i) => {
       const singleBudget = budgetData.get(i);
       singleBudget.setAttribute(b.attribute);
     });
-
+    // subarrayPartitioner.Subarray
     const subArrayData = subPartitioner.initSubarray();
     serializeSubArray(subArrayData, subarray);
 
-    // Current
+    // subarrayPartitioner.Current
     const currentData = subPartitioner.initCurrent();
     currentData.setSplitMultiRange(current.splitMultiRange);
     currentData.setStart(capnp.Uint64.fromNumber(current.start || 0))
     currentData.setEnd(capnp.Uint64.fromNumber(current.end || 0))
     const currentSubarray = currentData.initSubarray();
     serializeSubArray(currentSubarray, current.subarray || {});
+
+    // subarrayPartitioner.State
+    const capSubPartitionerState = subPartitioner.initState();
+    capSubPartitionerState.setStart(capnp.Uint64.fromNumber(state.start || 0));
+    capSubPartitionerState.setEnd(capnp.Uint64.fromNumber(state.end || 0));
+    const multiRange = state.multiRange || [];
+    const singleRange = state.singleRange || [];
+    const capSubPartitionerStateMultiRange = capSubPartitionerState.initMultiRange(multiRange.length);
+    const capSubPartitionerStateSingleRange = capSubPartitionerState.initSingleRange(singleRange.length);
+
+    multiRange.forEach((mRange, i) => {
+      const capMultiRange = capSubPartitionerStateMultiRange.get(i);
+      serializeSubArray(capMultiRange, mRange);
+    });
+
+    singleRange.forEach((sRange, i) => {
+      const capSingleRange = capSubPartitionerStateSingleRange.get(i);
+      serializeSubArray(capSingleRange, sRange);
+    });
   }
 
 
   if (array) {
     const queryArray = queryData.initArray();
-    queryArray.setEndTimestamp(capnp.Uint64.fromNumber(array.endTimestamp));
-    queryArray.setStartTimestamp(capnp.Uint64.fromNumber(array.startTimestamp));
+    const startTimeStamp = clamp(array.startTimestamp || 0, 0, Date.now());
+    queryArray.setStartTimestamp(capnp.Uint64.fromNumber(startTimeStamp));
+    const endTimeStamp = clamp(array.endTimestamp || Date.now(), 0, Date.now());
+    queryArray.setEndTimestamp(capnp.Uint64.fromNumber(endTimeStamp));
     queryArray.setQueryType(array.queryType);
     queryArray.setUri(array.uri);
   }
@@ -123,3 +148,5 @@ const serializeSubArray = (capSubArray: Subarray, subArray: SubarrayType) => {
       r.setBufferStartSizes(bufferStartSizes)
   })
 }
+
+const clamp = (num: number, min: number, max: number) => Math.min(Math.max(num, min), max);
