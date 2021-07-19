@@ -1,5 +1,5 @@
-import { Query as QueryType } from "../v2";
-import { Query } from "../capnp/query.capnp";
+import { Query as QueryType, Subarray as SubarrayType } from "../v2";
+import { Query, Subarray } from "../capnp/query.capnp";
 import * as capnp from "capnp-ts";
 
 const capnpQuerySerializer = (data: Partial<QueryType>) => {
@@ -27,50 +27,45 @@ const capnpQuerySerializer = (data: Partial<QueryType>) => {
 
   if (reader) {
     const queryReader = queryData.initReader();
-    const subArray = queryReader.initSubarray();
-    subArray.setLayout(reader.layout);
-    const subArrayRanges = reader.subarray?.ranges || [];
-    const numOfRanges = subArrayRanges.length;
-    const ranges = subArray.initRanges(numOfRanges);
-
-    subArrayRanges.forEach((subArrayRange, i) => {
-      const range = ranges.get(i);
-      range.setType(subArrayRange.type);
-      range.setHasDefaultRange(subArrayRange.hasDefaultRange);
-      const subArrayRangeBufferLength = subArrayRange.buffer.length;
-      const bufferData = range.initBuffer(subArrayRangeBufferLength);
-      const view = numbersToBuffer(
-        subArrayRange.buffer,
-        subArrayRangeBufferLength
-      );
-      bufferData.copyBuffer(view);
-      range.setBuffer(bufferData);
-
-      const bufferSizesArray = subArrayRange.bufferSizes || [];
-      const bufferSizes = range.initBufferSizes(bufferSizesArray.length)
-      bufferSizesArray.forEach((bsize, i) => {
-        bufferSizes.set(i, capnp.Uint64.fromNumber(bsize));
-      })
-      
-      range.setBufferSizes(bufferSizes)
-
-
-      const bufferStartSizesArray = subArrayRange.bufferStartSizes || [];
-      const bufferStartSizes = range.initBufferStartSizes(bufferStartSizesArray.length)
-      bufferStartSizesArray.forEach((bsize, i) => {
-        bufferStartSizes.set(i, capnp.Uint64.fromNumber(bsize));
-      })
-      
-      range.setBufferStartSizes(bufferStartSizes)
-    });
+    const subArrayCap = queryReader.initSubarray();
+    const {subarray: subarrayData = {}} = reader;
+    serializeSubArray(subArrayCap, subarrayData);
 
     queryReader.setLayout(reader.layout);
+
+    const {readState = {}} = reader;
+    const readStateData = queryReader.initReadState();
+
+    readStateData.setOverflowed(readState.overflowed);
+    readStateData.setUnsplittable(readState.unsplittable);
+    readStateData.setInitialized(readState.initialized);
+
+    const {subarrayPartitioner = {}} = readState;
+    const {budget = [], subarray, current = {}} = subarrayPartitioner;
+    const subPartitioner = readStateData.initSubarrayPartitioner();
+    const budgetData = subPartitioner.initBudget(budget.length);
+
+    budget.forEach((b, i) => {
+      const singleBudget = budgetData.get(i);
+      singleBudget.setAttribute(b.attribute);
+    });
+
+    const subArrayData = subPartitioner.initSubarray();
+    serializeSubArray(subArrayData, subarray);
+
+    // Current
+    const currentData = subPartitioner.initCurrent();
+    currentData.setSplitMultiRange(current.splitMultiRange);
+    currentData.setStart(capnp.Uint64.fromNumber(current.start || 0))
+    currentData.setEnd(capnp.Uint64.fromNumber(current.end || 0))
+    const currentSubarray = currentData.initSubarray();
+    serializeSubArray(currentSubarray, current.subarray || {});
   }
 
 
   if (array) {
     const queryArray = queryData.initArray();
-    queryArray.setEndTimestamp(capnp.Uint64.fromNumber(array.endTimestamp === Infinity ? 1626444398441 : array.endTimestamp));
+    queryArray.setEndTimestamp(capnp.Uint64.fromNumber(array.endTimestamp));
     queryArray.setStartTimestamp(capnp.Uint64.fromNumber(array.startTimestamp));
     queryArray.setQueryType(array.queryType);
     queryArray.setUri(array.uri);
@@ -90,3 +85,41 @@ const numbersToBuffer = (nums: number[], numsLength: number) => {
 
   return view;
 };
+
+const serializeSubArray = (capSubArray: Subarray, subArray: SubarrayType) => {
+  const {ranges = []} = subArray;
+  capSubArray.setLayout(subArray.layout);
+  const capRanges = capSubArray.initRanges(ranges.length);
+
+  ranges.forEach((range, i) => {
+    const r = capRanges.get(i);
+    r.setType(range.type);
+    r.setHasDefaultRange(range.hasDefaultRange);
+
+    const subArrayRangeBufferLength = range.buffer.length;
+      const bufferData = r.initBuffer(subArrayRangeBufferLength);
+      const view = numbersToBuffer(
+        range.buffer,
+        subArrayRangeBufferLength
+      );
+      bufferData.copyBuffer(view);
+      r.setBuffer(bufferData);
+
+      const bufferSizesArray = range.bufferSizes || [];
+      const bufferSizes = r.initBufferSizes(bufferSizesArray.length);
+      bufferSizesArray.forEach((bsize, i) => {
+        bufferSizes.set(i, capnp.Uint64.fromNumber(bsize));
+      });
+      
+      r.setBufferSizes(bufferSizes);
+
+
+      const bufferStartSizesArray = range.bufferStartSizes || [];
+      const bufferStartSizes = r.initBufferStartSizes(bufferStartSizesArray.length)
+      bufferStartSizesArray.forEach((bsize, i) => {
+        bufferStartSizes.set(i, capnp.Uint64.fromNumber(bsize));
+      });
+      
+      r.setBufferStartSizes(bufferStartSizes)
+  })
+}

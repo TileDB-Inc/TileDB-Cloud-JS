@@ -5,8 +5,8 @@ const deSerializer = require("../lib/utils/capnpQueryDeSerializer");
 const fs = require("fs");
 const path = require("path");
 
-// const basePathV2 = "http://rest-server:8181/v2"
-const basePathV2 = "https://api.dev.tiledb.io/v2";
+const basePathV2 = "http://rest-server:8181/v2"
+// const basePathV2 = "https://api.dev.tiledb.io/v2";
 
 
 const query = {
@@ -102,9 +102,124 @@ const query = {
         },
       ],
     },
+    readState: {
+      overflowed: false,
+      unsplittable: false,
+      initialized: true,
+      subarrayPartitioner: {
+        subarray: {
+          layout: 'row-major',
+          ranges: [
+            {
+              type: 'INT32',
+              hasDefaultRange: false,
+              buffer: [
+                1, 0, 0, 0,
+                2, 0, 0, 0
+              ],
+              bufferSizes: [ 8 ],
+              bufferStartSizes: [ 0 ]
+            },
+            {
+              type: 'INT32',
+              hasDefaultRange: false,
+              buffer: [
+                2, 0, 0, 0,
+                4, 0, 0, 0
+              ],
+              bufferSizes: [ 8 ],
+              bufferStartSizes: [ 0 ]
+            }
+          ]
+        },
+        budget: [
+          { attribute: 'a0' },
+          { attribute: 'a2' },
+          { attribute: 'a6' },
+          { attribute: 'a3' },
+          { attribute: 'a1' },
+          { attribute: 'a4' },
+          { attribute: 'a5' }
+        ],
+        current: {
+          subarray: {
+            layout: 'row-major',
+            ranges: [
+              {
+                type: 'INT32',
+                hasDefaultRange: false,
+                buffer: [
+                  1, 0, 0, 0,
+                  1, 0, 0, 0
+                ],
+                bufferSizes: [ 8 ],
+                bufferStartSizes: [ 0 ]
+              },
+              {
+                type: 'INT32',
+                hasDefaultRange: false,
+                buffer: [
+                  2, 0, 0, 0,
+                  4, 0, 0, 0
+                ],
+                bufferSizes: [ 8 ],
+                bufferStartSizes: [ 0 ]
+              }
+            ]            
+          },
+          start: 0,
+          end: 0,
+          splitMultiRange: true
+        },
+        state: {
+          overflowed: false,
+          unsplittable: false,
+          initialized: false,
+          subarrayPartitioner: {
+            subarray: [],
+            budget: [],
+            current: { subarray: [], start: 0, end: 0, splitMultiRange: false },
+            state: { start: 0, end: 0, singleRange: [], multiRange: [] },
+            memoryBudget: 0,
+            memoryBudgetVar: 0,
+            memoryBudgetValidity: 0,
+            stats: { timers: [], counters: [] }
+          }
+        },
+        memoryBudget: 0,
+        memoryBudgetVar: 0,
+        memoryBudgetValidity: 0,
+        stats: {
+          timers: [
+            {
+              key: 'Context.StorageManager.Query.Reader.SubarrayPartitioner.read_next_partition.max',
+              value: 0.000624393
+            },
+            {
+              key: 'Context.StorageManager.Query.Reader.SubarrayPartitioner.read_next_partition.sum',
+              value: 0.000624393
+            }
+          ],
+          counters: [
+            {
+              key: 'Context.StorageManager.Query.Reader.SubarrayPartitioner.read_next_partition.timer_count',
+              value: 1
+            },
+            {
+              key: 'Context.StorageManager.Query.Reader.SubarrayPartitioner.compute_current_start_end.not_found',
+              value: 1
+            },
+            {
+              key: 'Context.StorageManager.Query.Reader.SubarrayPartitioner.compute_current_start_end.fixed_result_size_overflow',
+              value: 1
+            }
+          ]
+        }
+      }
+    }
   },
   array: {
-    endTimestamp: Infinity,
+    endTimestamp: 1626444398441,
     queryType: '',
     uri: 'file:///home/sgus/Development/Go/src/github.com/TileDB-Inc/TileDB-Cloud-JS/fixtures/variable_length_array',
     startTimestamp: 0
@@ -191,7 +306,7 @@ makeSimpleCallFixedSizedAttributes();
 function serializeAndDeserializeBody() {
   const serialized = serializer.default(query);
   const deserialized = deSerializer.default(serialized);
-  console.log(deserialized);
+  console.log(deserialized.reader.readState.subarrayPartitioner.current.subarray.ranges);
   console.log('------------------------------');
 
   fs.readFile(
@@ -199,7 +314,7 @@ function serializeAndDeserializeBody() {
     (__, data) => {
       const arrayBuffer = toArrayBuffer(data);
       const deserializedFromBodyFile = deSerializer.default(arrayBuffer);
-      console.log(deserializedFromBodyFile);
+      console.log(deserializedFromBodyFile.reader.readState.subarrayPartitioner.current.subarray.ranges);
     }
   );
 }

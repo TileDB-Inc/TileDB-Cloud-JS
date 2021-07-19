@@ -23,10 +23,12 @@ class TileDBQuery {
     body: Partial<Query>
   ) {
     const config = new Configuration(this.configurationParams);
+    const baseV1 = config.basePath?.replace("v2", "v1");
     // Add versioning if basePath exists
     const configV1 = new Configuration({
       ...this.configurationParams,
-      basePath: "https://api.dev.tiledb.io/v1",
+      // Override basePath v2 for v1 to make calls to get ArraySchema (from v1 API)
+      ...(baseV1 ? { basePath: baseV1} : {}),
     });
     const queryAPI = new QueryApi(config);
     const arrayAPI = new ArrayApi(configV1);
