@@ -4,7 +4,7 @@ const serializer = require("../lib/utils/capnpQuerySerializer");
 const deSerializer = require("../lib/utils/capnpQueryDeSerializer");
 const fs = require("fs");
 const path = require("path");
-const { query, arraySchemaAttributes, queryFixed, queryFixedA0A3, queryVarLengthFromPreviousCommit, queryReady, queryWithUpdatedAttrBuffers } = require("./data");
+const { queryWithUpdatedAttrBuffers, queryFixedA0A3 } = require("./data");
 
 // const basePathV2 = "http://rest-server:8181/v2";
 const basePathV2 = "https://api.dev.tiledb.io/v2";
@@ -18,10 +18,9 @@ const password = process.env.TDB_PASS;
 // serializeAndDeserializeBody();
 // makeSimpleCallFixedSizedAttributes();
 // makeVarLengthCall();
-// callFixedA0A3();
-callVarAndFixedSimpleArray();
 // compareQueryObjects();
-
+callVarAndFixedSimpleArray();
+// callFixedA0A3();
 
 function compareQueryObjects() {
   console.log(JSON.stringify(query.attributeBufferHeaders) === JSON.stringify(queryVarLengthFromPreviousCommit.attributeBufferHeaders));
@@ -40,14 +39,9 @@ function callVarAndFixedSimpleArray() {
         basePath: basePathV2,
       });
       const deserializedFromBodyFile = deSerializer.default(arrayBuffer);
-      // console.log('---------')
-      // console.log(deserializedFromBodyFile);
-      // console.log('---------')
       QueryHelper.SubmitQuery("kostas", "var_length", queryWithUpdatedAttrBuffers)
         .then((res) => {
           console.log(res);
-          // const deserializedFromBodyFile = deSerializer.default(res);
-          // console.log(deserializedFromBodyFile);
         })
         .catch((e) => {
           console.error(e);
@@ -57,27 +51,12 @@ function callVarAndFixedSimpleArray() {
 }
 
 function serializeAndDeserializeBody() {
-  // const serialized = serializer.default(query);
-  // const deserialized = deSerializer.default(serialized);
-  // // console.log(deserialized);
-
-  console.log("------------------------------");
   fs.readFile(
     path.resolve(__dirname, "../fixtures/body_mixed.raw"),
     (__, data) => {
       const arrayBuffer = toArrayBuffer(data);
       const deserializedFromBodyFile = deSerializer.default(arrayBuffer);
       console.log(deserializedFromBodyFile);
-      // console.log("------------------------------");
-      // const serialized = serializer.default(deserializedFromBodyFile);
-      // const deserialized = deSerializer.default(serialized);
-      // console.log(deserialized.reader);
-      // console.log(JSON.stringify(deserialized.reader) === JSON.stringify(deserializedFromBodyFile.reader));
-
-      // console.log(
-      //   JSON.stringify(deserializedFromBodyFile) ===
-      //     JSON.stringify(deserialized)
-      // );
     }
   );
 }
@@ -139,13 +118,13 @@ function readBodyFile() {
     "../fixtures/body_a0_a1.raw",
     "../fixtures/body_fixed_new.raw",
   ];
-  fs.readFile(path.resolve(__dirname, bodyFiles[1]), (__, data) => {
+  fs.readFile(path.resolve(__dirname, bodyFiles[3]), (__, data) => {
     const arrayBuffer = toArrayBuffer(data);
     // const textDecoder = new TextDecoder();
     // console.log(textDecoder.decode(arrayBuffer));
     // console.log(arrayBuffer.byteLength);
     const result = deSerializer.default(arrayBuffer);
-    console.log(result.reader.readState.subarrayPartitioner);
+    console.log(JSON.stringify(result));
   });
 }
 
