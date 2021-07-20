@@ -10,7 +10,7 @@ import {
   Querytype,
 } from "../v2";
 
-class TileDBQuery {
+export class TileDBQuery {
   configurationParams: ConfigurationParameters;
 
   constructor(params: ConfigurationParameters) {
