@@ -48,7 +48,7 @@ class TileDBQuery {
             headers: {
               "Content-Type": "application/capnp",
             },
-            // responseType: "arraybuffer",
+            responseType: "arraybuffer",
           }
         ),
       ]);
@@ -56,6 +56,7 @@ class TileDBQuery {
       const arraySchema = arraySchemaResponse.data;
       const queryData = convertToArrayBufferIfNodeBuffer(queryResponse.data);
       const bufferWithoutFirstEightBytes = queryData.slice(8);
+      // return bufferWithoutFirstEightBytes;
 
       const queryObject = capnpQueryDeSerializer(bufferWithoutFirstEightBytes);
       const attributeHeaders = queryObject.attributeBufferHeaders;
