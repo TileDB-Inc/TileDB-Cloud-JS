@@ -44,7 +44,7 @@ const capnpQuerySerializer = (data: Partial<QueryType>) => {
     attrBufferHeader.setVarLenBufferSizeInBytes(
       capnp.Uint64.fromNumber(attrHeader.varLenBufferSizeInBytes)
     );
-    const {originalFixedLenBufferSizeInBytes = 0, originalVarLenBufferSizeInBytes = 0, originalValidityLenBufferSizeInBytes = 0} = attrHeader as any;
+    const {originalFixedLenBufferSizeInBytes = 0, originalVarLenBufferSizeInBytes = 0, originalValidityLenBufferSizeInBytes = 0} = attrHeader;
 
     attrBufferHeader.setOriginalFixedLenBufferSizeInBytes(
       capnp.Uint64.fromNumber(originalFixedLenBufferSizeInBytes)
