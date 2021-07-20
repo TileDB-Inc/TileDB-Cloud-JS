@@ -34,16 +34,13 @@ const capnpQueryDeSerializer = (buffer: ArrayBuffer | ArrayBufferLike) => {
     array: deserializeArray(query.getArray()),
     totalFixedLengthBufferBytes: query
       .getTotalFixedLengthBufferBytes()
-      .toDataView()
-      .getUint8(0),
+      .toNumber(),
     totalVarLenBufferBytes: query
       .getTotalVarLenBufferBytes()
-      .toDataView()
-      .getUint8(0),
+      .toNumber(),
     totalValidityBufferBytes: query
       .getTotalValidityBufferBytes()
-      .toDataView()
-      .getUint8(0),
+      .toNumber(),
     varOffsetsMode: query.getVarOffsetsMode(),
     varOffsetsAddExtraElement: query.getVarOffsetsAddExtraElement(),
     varOffsetsBitsize: query.getVarOffsetsBitsize(),
@@ -122,17 +119,11 @@ const deserializeSubarrayPartitioner = (
     ),
     state: deserializeSubarrayPartitionerState(subArrayPartitioner.getState()),
     memoryBudget: subArrayPartitioner
-      .getMemoryBudget()
-      .toDataView()
-      .getUint8(0),
+      .getMemoryBudget().toNumber(),
     memoryBudgetVar: subArrayPartitioner
-      .getMemoryBudgetVar()
-      .toDataView()
-      .getUint8(0),
+      .getMemoryBudgetVar().toNumber(),
     memoryBudgetValidity: subArrayPartitioner
-      .getMemoryBudgetValidity()
-      .toDataView()
-      .getUint8(0),
+      .getMemoryBudgetValidity().toNumber(),
     stats: deserializeStats(subArrayPartitioner.getStats()),
   };
 };
@@ -176,29 +167,17 @@ const deserializeAttributeBufferHeaders = (query: Query) => {
     return {
       name: attrBufferHeader.getName(),
       fixedLenBufferSizeInBytes: attrBufferHeader
-        .getFixedLenBufferSizeInBytes()
-        .toDataView()
-        .getUint8(0),
+        .getFixedLenBufferSizeInBytes().toNumber(),
       varLenBufferSizeInBytes: attrBufferHeader
-        .getVarLenBufferSizeInBytes()
-        .toDataView()
-        .getUint8(0),
+        .getVarLenBufferSizeInBytes().toNumber(),
       validityLenBufferSizeInBytes: attrBufferHeader
-        .getValidityLenBufferSizeInBytes()
-        .toDataView()
-        .getUint8(0),
+        .getValidityLenBufferSizeInBytes().toNumber(),
       originalFixedLenBufferSizeInBytes: attrBufferHeader
-        .getOriginalFixedLenBufferSizeInBytes()
-        .toDataView()
-        .getUint8(0),
+        .getOriginalFixedLenBufferSizeInBytes().toNumber(),
       originalVarLenBufferSizeInBytes: attrBufferHeader
-        .getOriginalVarLenBufferSizeInBytes()
-        .toDataView()
-        .getUint8(0),
+        .getOriginalVarLenBufferSizeInBytes().toNumber(),
       originalValidityLenBufferSizeInBytes: attrBufferHeader
-        .getOriginalValidityLenBufferSizeInBytes()
-        .toDataView()
-        .getUint8(0),
+        .getOriginalValidityLenBufferSizeInBytes().toNumber(),
     };
   });
 };
@@ -232,7 +211,6 @@ export const deserializeDomainArray = (domainArray: DomainArray) => {
 };
 
 export const deserializeSubarray = (subArray: Subarray) => {
-  
   return ({
     layout: subArray.getLayout(),
     stats: deserializeStats(subArray.getStats()),

@@ -1,3 +1,88 @@
+const queryReady = {
+  attributeBufferHeaders: [
+    {
+      name: "a5",
+      fixedLenBufferSizeInBytes: 12,
+      varLenBufferSizeInBytes: 0,
+      validityLenBufferSizeInBytes: 3,
+    },
+    {
+      name: "a4",
+      fixedLenBufferSizeInBytes: 24,
+      varLenBufferSizeInBytes: 16,
+      validityLenBufferSizeInBytes: 0,
+    },
+    {
+      name: "a1",
+      fixedLenBufferSizeInBytes: 24,
+      varLenBufferSizeInBytes: 8,
+      validityLenBufferSizeInBytes: 0,
+    },
+    {
+      name: "a3",
+      fixedLenBufferSizeInBytes: 12,
+      varLenBufferSizeInBytes: 0,
+      validityLenBufferSizeInBytes: 0,
+    },
+    {
+      name: "a6",
+      fixedLenBufferSizeInBytes: 24,
+      varLenBufferSizeInBytes: 16,
+      validityLenBufferSizeInBytes: 3,
+    },
+    {
+      name: "a2",
+      fixedLenBufferSizeInBytes: 24,
+      varLenBufferSizeInBytes: 32,
+      validityLenBufferSizeInBytes: 0,
+    },
+    {
+      name: "a0",
+      fixedLenBufferSizeInBytes: 12,
+      varLenBufferSizeInBytes: 0,
+      validityLenBufferSizeInBytes: 0,
+    },
+  ],
+  reader: {
+    layout: "row-major",
+    subarray: {
+      layout: "row-major",
+      ranges: [
+        {
+          type: "INT32",
+          hasDefaultRange: false,
+          buffer: [1, 0, 0, 0, 2, 0, 0, 0],
+          bufferSizes: [8],
+          bufferStartSizes: [0],
+        },
+        {
+          type: "INT32",
+          hasDefaultRange: false,
+          buffer: [2, 0, 0, 0, 4, 0, 0, 0],
+          bufferSizes: [8],
+          bufferStartSizes: [0],
+        },
+      ],
+    },
+    readState: {
+      overflowed: false,
+      unsplittable: false,
+      initialized: false,
+      subarrayPartitioner: {
+        subarray: {
+          layout: "row-major", // NOTE: We manually changed layout from empty string to "row-major"
+          ranges: [],
+        },
+      },
+    },
+  },
+  layout: "row-major",
+  status: "UNINITIALIZED",
+  type: "READ",
+};
+
+module.exports.queryReady = queryReady;
+
 const query = {
   attributeBufferHeaders: [
     {
@@ -118,7 +203,7 @@ const query = {
       initialized: false,
       subarrayPartitioner: {
         subarray: {
-          layout: "",
+          layout: "row-major", // NOTE: We manually changed layout from empty string to "row-major"
           stats: { timers: [], counters: [] },
           ranges: [],
         },
@@ -1210,9 +1295,339 @@ const queryFixedA0A3 = {
   stats: { timers: [], counters: [] },
 };
 
+const queryVarLengthFromPreviousCommit = {
+  attributeBufferHeaders: [
+    {
+      name: "a5",
+      fixedLenBufferSizeInBytes: 12,
+      varLenBufferSizeInBytes: 0,
+      validityLenBufferSizeInBytes: 3,
+      originalFixedLenBufferSizeInBytes: 16,
+      originalVarLenBufferSizeInBytes: 0,
+      originalValidityLenBufferSizeInBytes: 4,
+    },
+    {
+      name: "a4",
+      fixedLenBufferSizeInBytes: 24,
+      varLenBufferSizeInBytes: 16,
+      validityLenBufferSizeInBytes: 0,
+      originalFixedLenBufferSizeInBytes: 96,
+      originalVarLenBufferSizeInBytes: 128,
+      originalValidityLenBufferSizeInBytes: 0,
+    },
+    {
+      name: "a1",
+      fixedLenBufferSizeInBytes: 24,
+      varLenBufferSizeInBytes: 8,
+      validityLenBufferSizeInBytes: 0,
+      originalFixedLenBufferSizeInBytes: 96,
+      originalVarLenBufferSizeInBytes: 9,
+      originalValidityLenBufferSizeInBytes: 0,
+    },
+    {
+      name: "a3",
+      fixedLenBufferSizeInBytes: 12,
+      varLenBufferSizeInBytes: 0,
+      validityLenBufferSizeInBytes: 0,
+      originalFixedLenBufferSizeInBytes: 12,
+      originalVarLenBufferSizeInBytes: 0,
+      originalValidityLenBufferSizeInBytes: 0,
+    },
+    {
+      name: "a6",
+      fixedLenBufferSizeInBytes: 24,
+      varLenBufferSizeInBytes: 16,
+      validityLenBufferSizeInBytes: 3,
+      originalFixedLenBufferSizeInBytes: 32,
+      originalVarLenBufferSizeInBytes: 32,
+      originalValidityLenBufferSizeInBytes: 8,
+    },
+    {
+      name: "a2",
+      fixedLenBufferSizeInBytes: 24,
+      varLenBufferSizeInBytes: 32,
+      validityLenBufferSizeInBytes: 0,
+      originalFixedLenBufferSizeInBytes: 96,
+      originalVarLenBufferSizeInBytes: 0,
+      originalValidityLenBufferSizeInBytes: 0,
+    },
+    {
+      name: "a0",
+      fixedLenBufferSizeInBytes: 12,
+      varLenBufferSizeInBytes: 0,
+      validityLenBufferSizeInBytes: 0,
+      originalFixedLenBufferSizeInBytes: 12,
+      originalVarLenBufferSizeInBytes: 0,
+      originalValidityLenBufferSizeInBytes: 0,
+    },
+  ],
+  totalVarLenBufferBytes: 72,
+  totalFixedLengthBufferBytes: 132,
+  totalValidityBufferBytes: 6,
+  type: "READ",
+  status: "INCOMPLETE",
+  layout: "row-major",
+  reader: {
+    layout: "row-major",
+    subarray: {
+      layout: "row-major",
+      ranges: [
+        {
+          type: "INT32",
+          hasDefaultRange: false,
+          buffer: [1, 0, 0, 0, 2, 0, 0, 0],
+          bufferSizes: [8],
+          bufferStartSizes: [0],
+        },
+        {
+          type: "INT32",
+          hasDefaultRange: false,
+          buffer: [2, 0, 0, 0, 4, 0, 0, 0],
+          bufferSizes: [8],
+          bufferStartSizes: [0],
+        },
+      ],
+    },
+    readState: {
+      overflowed: false,
+      unsplittable: false,
+      initialized: true,
+      subarrayPartitioner: {
+        subarray: {
+          layout: "row-major",
+          ranges: [
+            {
+              type: "INT32",
+              hasDefaultRange: false,
+              buffer: [1, 0, 0, 0, 2, 0, 0, 0],
+              bufferSizes: [8],
+              bufferStartSizes: [0],
+            },
+            {
+              type: "INT32",
+              hasDefaultRange: false,
+              buffer: [2, 0, 0, 0, 4, 0, 0, 0],
+              bufferSizes: [8],
+              bufferStartSizes: [0],
+            },
+          ],
+        },
+        budget: [
+          { attribute: "a0" },
+          { attribute: "a2" },
+          { attribute: "a6" },
+          { attribute: "a3" },
+          { attribute: "a1" },
+          { attribute: "a4" },
+          { attribute: "a5" },
+        ],
+        current: {
+          subarray: {
+            layout: "row-major",
+            ranges: [
+              {
+                type: "INT32",
+                hasDefaultRange: false,
+                buffer: [1, 0, 0, 0, 1, 0, 0, 0],
+                bufferSizes: [8],
+                bufferStartSizes: [0],
+              },
+              {
+                type: "INT32",
+                hasDefaultRange: false,
+                buffer: [2, 0, 0, 0, 4, 0, 0, 0],
+                bufferSizes: [8],
+                bufferStartSizes: [0],
+              },
+            ],
+          },
+          start: 0,
+          end: 0,
+          splitMultiRange: true,
+        },
+        state: {
+          overflowed: false,
+          unsplittable: false,
+          initialized: false,
+          subarrayPartitioner: {
+            subarray: [],
+            budget: [],
+            current: { subarray: [], start: 0, end: 0, splitMultiRange: false },
+            state: { start: 0, end: 0, singleRange: [], multiRange: [] },
+            memoryBudget: 0,
+            memoryBudgetVar: 0,
+            memoryBudgetValidity: 0,
+            stats: { timers: [], counters: [] },
+          },
+        },
+        memoryBudget: 0,
+        memoryBudgetVar: 0,
+        memoryBudgetValidity: 0,
+        stats: {
+          timers: [
+            {
+              key: "Context.StorageManager.Query.Reader.SubarrayPartitioner.read_next_partition.max",
+              value: 0.000624393,
+            },
+            {
+              key: "Context.StorageManager.Query.Reader.SubarrayPartitioner.read_next_partition.sum",
+              value: 0.000624393,
+            },
+          ],
+          counters: [
+            {
+              key: "Context.StorageManager.Query.Reader.SubarrayPartitioner.read_next_partition.timer_count",
+              value: 1,
+            },
+            {
+              key: "Context.StorageManager.Query.Reader.SubarrayPartitioner.compute_current_start_end.not_found",
+              value: 1,
+            },
+            {
+              key: "Context.StorageManager.Query.Reader.SubarrayPartitioner.compute_current_start_end.fixed_result_size_overflow",
+              value: 1,
+            },
+          ],
+        },
+      },
+    },
+  },
+  array: {
+    endTimestamp: 1626444398441,
+    queryType: "",
+    uri: "file:///home/sgus/Development/Go/src/github.com/TileDB-Inc/TileDB-Cloud-JS/fixtures/variable_length_array",
+    startTimestamp: 0,
+  },
+};
+
+module.exports.queryVarLengthFromPreviousCommit =
+  queryVarLengthFromPreviousCommit;
 module.exports.queryFixedA0A3 = queryFixedA0A3;
 module.exports.arraySchemaAttributes = arraySchemaAttributes;
 
 module.exports.query = query;
 
 module.exports.queryFixed = queryFixed;
+
+const queryWithUpdatedAttrBuffers = {
+  attributeBufferHeaders: [
+    {
+      name: "a5",
+      fixedLenBufferSizeInBytes: 16,
+      varLenBufferSizeInBytes: 0,
+      validityLenBufferSizeInBytes: 4,
+      originalFixedLenBufferSizeInBytes: 16,
+      originalVarLenBufferSizeInBytes: 0,
+      originalValidityLenBufferSizeInBytes: 4,
+    },
+    {
+      name: "a4",
+      fixedLenBufferSizeInBytes: 96,
+      varLenBufferSizeInBytes: 128,
+      validityLenBufferSizeInBytes: 0,
+      originalFixedLenBufferSizeInBytes: 96,
+      originalVarLenBufferSizeInBytes: 128,
+      originalValidityLenBufferSizeInBytes: 0,
+    },
+    {
+      name: "a1",
+      fixedLenBufferSizeInBytes: 96,
+      varLenBufferSizeInBytes: 9,
+      validityLenBufferSizeInBytes: 0,
+      originalFixedLenBufferSizeInBytes: 96,
+      originalVarLenBufferSizeInBytes: 9,
+      originalValidityLenBufferSizeInBytes: 0,
+    },
+    {
+      name: "a3",
+      fixedLenBufferSizeInBytes: 12,
+      varLenBufferSizeInBytes: 0,
+      validityLenBufferSizeInBytes: 0,
+      originalFixedLenBufferSizeInBytes: 12,
+      originalVarLenBufferSizeInBytes: 0,
+      originalValidityLenBufferSizeInBytes: 0,
+    },
+    {
+      name: "a6",
+      fixedLenBufferSizeInBytes: 32,
+      varLenBufferSizeInBytes: 32,
+      validityLenBufferSizeInBytes: 8,
+      originalFixedLenBufferSizeInBytes: 32,
+      originalVarLenBufferSizeInBytes: 32,
+      originalValidityLenBufferSizeInBytes: 8,
+    },
+    {
+      name: "a2",
+      fixedLenBufferSizeInBytes: 96,
+      varLenBufferSizeInBytes: 256,
+      validityLenBufferSizeInBytes: 0,
+      originalFixedLenBufferSizeInBytes: 96,
+      originalVarLenBufferSizeInBytes: 256,
+      originalValidityLenBufferSizeInBytes: 0,
+    },
+    {
+      name: "a0",
+      fixedLenBufferSizeInBytes: 12,
+      varLenBufferSizeInBytes: 0,
+      validityLenBufferSizeInBytes: 0,
+      originalFixedLenBufferSizeInBytes: 12,
+      originalVarLenBufferSizeInBytes: 0,
+      originalValidityLenBufferSizeInBytes: 0,
+    },
+  ],
+  layout: "row-major",
+  status: "UNINITIALIZED",
+  type: "READ",
+  reader: {
+    layout: "row-major",
+    subarray: {
+      layout: "row-major",
+      stats: { timers: [], counters: [] },
+      ranges: [
+        {
+          type: "INT32",
+          hasDefaultRange: false,
+          buffer: [1, 0, 0, 0, 2, 0, 0, 0],
+          bufferSizes: [8],
+          bufferStartSizes: [0],
+        },
+        {
+          type: "INT32",
+          hasDefaultRange: false,
+          buffer: [2, 0, 0, 0, 4, 0, 0, 0],
+          bufferSizes: [8],
+          bufferStartSizes: [0],
+        },
+      ],
+    },
+    readState: {
+      overflowed: false,
+      unsplittable: false,
+      initialized: false,
+      subarrayPartitioner: {
+        subarray: {
+          layout: "row-major", // NOTE: manually changed
+          stats: { timers: [], counters: [] },
+          ranges: [],
+        },
+        budget: [],
+        current: {
+          subarray: {
+            layout: "",
+            stats: { timers: [], counters: [] },
+            ranges: [],
+          },
+          start: 0,
+          end: 0,
+          splitMultiRange: false,
+        },
+        state: { start: 0, end: 0, singleRange: [], multiRange: [] },
+        memoryBudget: 0,
+        memoryBudgetVar: 0,
+        memoryBudgetValidity: 0,
+      },
+    },
+  },
+};
+
+module.exports.queryWithUpdatedAttrBuffers = queryWithUpdatedAttrBuffers;

@@ -44,6 +44,19 @@ const capnpQuerySerializer = (data: Partial<QueryType>) => {
     attrBufferHeader.setVarLenBufferSizeInBytes(
       capnp.Uint64.fromNumber(attrHeader.varLenBufferSizeInBytes)
     );
+    const {originalFixedLenBufferSizeInBytes = 0, originalVarLenBufferSizeInBytes = 0, originalValidityLenBufferSizeInBytes = 0} = attrHeader as any;
+
+    attrBufferHeader.setOriginalFixedLenBufferSizeInBytes(
+      capnp.Uint64.fromNumber(originalFixedLenBufferSizeInBytes)
+    )
+
+    attrBufferHeader.setOriginalVarLenBufferSizeInBytes(
+      capnp.Uint64.fromNumber(originalVarLenBufferSizeInBytes)
+    )
+
+    attrBufferHeader.setOriginalValidityLenBufferSizeInBytes(
+      capnp.Uint64.fromNumber(originalValidityLenBufferSizeInBytes)
+    )
   });
 
   if (reader) {
@@ -74,7 +87,7 @@ const capnpQuerySerializer = (data: Partial<QueryType>) => {
     subPartitioner.setMemoryBudget(capnp.Uint64.fromNumber(memoryBudget));
     subPartitioner.setMemoryBudgetVar(capnp.Uint64.fromNumber(memoryBudgetVar));
     // TODO: fix type
-    subPartitioner.setMemoryBudgetValidity(capnp.Uint64.fromNumber(0));
+    // subPartitioner.setMemoryBudgetValidity(capnp.Uint64.fromNumber(0));
     const budgetData = subPartitioner.initBudget(budget.length);
     // subarrayPartitioner.Buget
     budget.forEach((b, i) => {
