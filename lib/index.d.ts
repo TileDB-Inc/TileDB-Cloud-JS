@@ -12,4 +12,4 @@
 export * as v1 from "./v1";
 export * as v2 from "./v2";
 export * from "./utils/capnpDeSerializer";
-export * from "./TileDBQuery";
+export * from "./TileDBQuery/TileDBQuery";
