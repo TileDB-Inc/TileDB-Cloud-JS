@@ -140,6 +140,24 @@ export interface AttributeBufferHeader {
      * @memberof AttributeBufferHeader
      */
     validityLenBufferSizeInBytes?: number;
+    /**
+     * Original user set number of bytes in the fixed-length attribute data buffer
+     * @type {number}
+     * @memberof AttributeBufferHeader
+     */
+    originalFixedLenBufferSizeInBytes?: number;
+    /**
+     * Original user set number of bytes in the var-length attribute data buffer
+     * @type {number}
+     * @memberof AttributeBufferHeader
+     */
+    originalVarLenBufferSizeInBytes?: number;
+    /**
+     * Original user set number of bytes in the validity data buffer
+     * @type {number}
+     * @memberof AttributeBufferHeader
+     */
+    originalValidityLenBufferSizeInBytes?: number;
 }
 /**
  * object representing buffer size of an attribute

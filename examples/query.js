@@ -57,9 +57,9 @@ function callVarAndFixedSimpleArray() {
 }
 
 function serializeAndDeserializeBody() {
-  const serialized = serializer.default(query);
-  const deserialized = deSerializer.default(serialized);
-  // console.log(deserialized);
+  // const serialized = serializer.default(query);
+  // const deserialized = deSerializer.default(serialized);
+  // // console.log(deserialized);
 
   console.log("------------------------------");
   fs.readFile(
@@ -67,7 +67,7 @@ function serializeAndDeserializeBody() {
     (__, data) => {
       const arrayBuffer = toArrayBuffer(data);
       const deserializedFromBodyFile = deSerializer.default(arrayBuffer);
-      console.log(JSON.stringify(deserializedFromBodyFile));
+      console.log(deserializedFromBodyFile);
       // console.log("------------------------------");
       // const serialized = serializer.default(deserializedFromBodyFile);
       // const deserialized = deSerializer.default(serialized);
