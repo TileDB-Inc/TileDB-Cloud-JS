@@ -19,8 +19,8 @@ const password = process.env.TDB_PASS;
 // makeSimpleCallFixedSizedAttributes();
 // makeVarLengthCall();
 // compareQueryObjects();
-callVarAndFixedSimpleArray();
-// callFixedA0A3();
+// callVarAndFixedSimpleArray();
+callFixedA0A3();
 
 function compareQueryObjects() {
   console.log(JSON.stringify(query.attributeBufferHeaders) === JSON.stringify(queryVarLengthFromPreviousCommit.attributeBufferHeaders));
@@ -44,7 +44,8 @@ function callVarAndFixedSimpleArray() {
           console.log(res);
         })
         .catch((e) => {
-          console.error(e);
+          console.log('error')
+          // console.error(e);
         });
     }
   );
@@ -56,7 +57,10 @@ function serializeAndDeserializeBody() {
     (__, data) => {
       const arrayBuffer = toArrayBuffer(data);
       const deserializedFromBodyFile = deSerializer.default(arrayBuffer);
-      console.log(deserializedFromBodyFile);
+      console.log(deserializedFromBodyFile.reader.subarray.ranges);
+      const serialized = serializer.default(deserializedFromBodyFile);
+      const endResult = deSerializer.default(serialized);
+      console.log(endResult.reader.subarray.ranges);
     }
   );
 }
@@ -124,7 +128,7 @@ function readBodyFile() {
     // console.log(textDecoder.decode(arrayBuffer));
     // console.log(arrayBuffer.byteLength);
     const result = deSerializer.default(arrayBuffer);
-    console.log(JSON.stringify(result));
+    console.log(result.reader.subarray.ranges);
   });
 }
 

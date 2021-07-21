@@ -1,5 +1,5 @@
 import {
-  Array,
+  Array as ArrayCapnp,
   AttributeBufferSize,
   Condition,
   ConditionClause,
@@ -51,7 +51,7 @@ const capnpQueryDeSerializer = (buffer: ArrayBuffer | ArrayBufferLike) => {
 
 export default capnpQueryDeSerializer;
 
-export const deserializeArray = (arr: Array) => {
+export const deserializeArray = (arr: ArrayCapnp) => {
   return {
     endTimestamp: arr.getEndTimestamp().toNumber(),
     queryType: arr.getQueryType(),
@@ -215,13 +215,16 @@ export const deserializeSubarray = (subArray: Subarray) => {
     layout: subArray.getLayout(),
     stats: deserializeStats(subArray.getStats()),
     ranges: subArray.getRanges().map((range) => {
+      const bufferSizes = range
+      .getBufferSizes()
+      .map((uint64) => uint64.toNumber());
+
       return {
         type: range.getType(),
         hasDefaultRange: range.getHasDefaultRange(),
-        buffer: range.getBuffer().toArray(),
-        bufferSizes: range
-          .getBufferSizes()
-          .map((uint64) => uint64.toNumber()),
+        // NOTE: Is this working?
+        buffer: range.getBuffer().toArray().filter(val => val),
+        bufferSizes: bufferSizes,
         bufferStartSizes: range
           .getBufferStartSizes()
           .map((uint64) => uint64.toNumber()),
@@ -254,3 +257,6 @@ export const deserializeMapUInt64 = (mapUint64: MapUInt64) => {
     };
   });
 };
+
+
+// const bufferToInt32 = (arrayBuffer: ArrayBuffer) => new Int32Array(arrayBuffer);
