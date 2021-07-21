@@ -1,4 +1,4 @@
-import { Array, Config, DomainArray, MapFloat64, MapUInt64, Query, QueryReader, Stats, Subarray } from "../capnp/query.capnp";
+import { Array as ArrayCapnp, Config, DomainArray, MapFloat64, MapUInt64, Query, QueryReader, Stats, Subarray } from "../capnp/query.capnp";
 import * as capnp from "capnp-ts";
 declare const capnpQueryDeSerializer: (buffer: ArrayBuffer | ArrayBufferLike) => {
     attributeBufferHeaders: {
@@ -243,7 +243,7 @@ declare const capnpQueryDeSerializer: (buffer: ArrayBuffer | ArrayBufferLike) =>
     };
 };
 export default capnpQueryDeSerializer;
-export declare const deserializeArray: (arr: Array) => {
+export declare const deserializeArray: (arr: ArrayCapnp) => {
     endTimestamp: number;
     queryType: string;
     uri: string;

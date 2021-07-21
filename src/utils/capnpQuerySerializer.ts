@@ -1,4 +1,4 @@
-import { Query as QueryType, Subarray as SubarrayType } from "../v2";
+import { Datatype, Query as QueryType, Subarray as SubarrayType } from "../v2";
 import { Query, Subarray } from "../capnp/query.capnp";
 import * as capnp from "capnp-ts";
 
@@ -44,25 +44,29 @@ const capnpQuerySerializer = (data: Partial<QueryType>) => {
     attrBufferHeader.setVarLenBufferSizeInBytes(
       capnp.Uint64.fromNumber(attrHeader.varLenBufferSizeInBytes)
     );
-    const {originalFixedLenBufferSizeInBytes = 0, originalVarLenBufferSizeInBytes = 0, originalValidityLenBufferSizeInBytes = 0} = attrHeader;
+    const {
+      originalFixedLenBufferSizeInBytes = 0,
+      originalVarLenBufferSizeInBytes = 0,
+      originalValidityLenBufferSizeInBytes = 0,
+    } = attrHeader;
 
     attrBufferHeader.setOriginalFixedLenBufferSizeInBytes(
       capnp.Uint64.fromNumber(originalFixedLenBufferSizeInBytes)
-    )
+    );
 
     attrBufferHeader.setOriginalVarLenBufferSizeInBytes(
       capnp.Uint64.fromNumber(originalVarLenBufferSizeInBytes)
-    )
+    );
 
     attrBufferHeader.setOriginalValidityLenBufferSizeInBytes(
       capnp.Uint64.fromNumber(originalValidityLenBufferSizeInBytes)
-    )
+    );
   });
 
   if (reader) {
     const queryReader = queryData.initReader();
     const subArrayCap = queryReader.initSubarray();
-    const { subarray: subarrayData = {}, readState = {}, layout = '' } = reader;
+    const { subarray: subarrayData = {}, readState = {}, layout = "" } = reader;
     serializeSubArray(subArrayCap, subarrayData);
 
     queryReader.setLayout(layout);
@@ -134,24 +138,14 @@ const capnpQuerySerializer = (data: Partial<QueryType>) => {
     queryArray.setStartTimestamp(capnp.Uint64.fromNumber(startTimeStamp));
     const endTimeStamp = clamp(array.endTimestamp || Date.now(), 0, Date.now());
     queryArray.setEndTimestamp(capnp.Uint64.fromNumber(endTimeStamp));
-    queryArray.setQueryType(array.queryType || '');
-    queryArray.setUri(array.uri || '');
+    queryArray.setQueryType(array.queryType || "");
+    queryArray.setUri(array.uri || "");
   }
 
   return message.toArrayBuffer();
 };
 
 export default capnpQuerySerializer;
-
-const numbersToBuffer = (nums: number[], numsLength: number) => {
-  const arrBuffer = new ArrayBuffer(numsLength);
-  const view = new Uint8Array(arrBuffer);
-  nums.forEach((num, i) => {
-    view[i] = num;
-  });
-
-  return view;
-};
 
 const serializeSubArray = (capSubArray: Subarray, subArray: SubarrayType) => {
   const { ranges = [], layout = "" } = subArray;
@@ -160,16 +154,18 @@ const serializeSubArray = (capSubArray: Subarray, subArray: SubarrayType) => {
 
   ranges.forEach((range, i) => {
     const r = capRanges.get(i);
+    const bufferSizesArray = range.bufferSizes || [];
     r.setType(range.type);
     r.setHasDefaultRange(range.hasDefaultRange);
 
-    const subArrayRangeBufferLength = range.buffer.length;
-    const bufferData = r.initBuffer(subArrayRangeBufferLength);
-    const view = numbersToBuffer(range.buffer, subArrayRangeBufferLength);
+    const [bufferSize] = bufferSizesArray;
+
+    // const subArrayRangeBufferLength = range.buffer.length;
+    const bufferData = r.initBuffer(bufferSize);
+    const view = numbersToBuffer(range.buffer, bufferSize, range.type);
     bufferData.copyBuffer(view);
     r.setBuffer(bufferData);
 
-    const bufferSizesArray = range.bufferSizes || [];
     const bufferSizes = r.initBufferSizes(bufferSizesArray.length);
     bufferSizesArray.forEach((bsize, i) => {
       bufferSizes.set(i, capnp.Uint64.fromNumber(bsize));
@@ -191,3 +187,45 @@ const serializeSubArray = (capSubArray: Subarray, subArray: SubarrayType) => {
 
 const clamp = (num: number, min: number, max: number) =>
   Math.min(Math.max(num, min), max);
+
+const numbersToBuffer = (
+  nums: number[],
+  bufferSize: number,
+  type: Datatype
+) => {
+  const arrBuffer = new ArrayBuffer(bufferSize);
+  const TypedArray = getTypedArrayFromDataType(type);
+  const BYTE_LENGTH = TypedArray.BYTES_PER_ELEMENT;
+  const view = new Uint8Array(arrBuffer);
+  nums.forEach((num, i) => {
+    view[i * BYTE_LENGTH] = num;
+  });
+  return view;
+};
+
+
+const getTypedArrayFromDataType = (type: Datatype) => {
+  if (type === Datatype.Int32) {
+    return Int32Array;
+  } else if (type === Datatype.Int16) {
+    return Int16Array;
+  } else if (type === Datatype.Int8) {
+    return Int8Array;
+  } else if (type === Datatype.Int64) {
+    return BigInt64Array;
+  } else if (type === Datatype.Uint16) {
+    return Uint16Array;
+  } else if (type === Datatype.Uint32) {
+    return Uint32Array;
+  } else if (type === Datatype.Uint8) {
+    return Uint8Array;
+  } else if (type === Datatype.Uint64) {
+    return BigUint64Array;
+  } else if (type === Datatype.Float32) {
+    return Float32Array;
+  } else if (type === Datatype.Float64) {
+    return Float64Array;
+  }
+
+  return Uint8Array;
+}

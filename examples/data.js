@@ -76,14 +76,14 @@ const queryWithUpdatedAttrBuffers = {
         {
           type: "INT32",
           hasDefaultRange: false,
-          buffer: [1, 0, 0, 0, 2, 0, 0, 0],
+          buffer: [1, 2],
           bufferSizes: [8],
           bufferStartSizes: [0],
         },
         {
           type: "INT32",
           hasDefaultRange: false,
-          buffer: [2, 0, 0, 0, 4, 0, 0, 0],
+          buffer: [2, 4],
           bufferSizes: [8],
           bufferStartSizes: [0],
         },
@@ -177,14 +177,14 @@ const queryFixedA0A3 = {
         {
           type: "INT32",
           hasDefaultRange: false,
-          buffer: [1, 0, 0, 0, 2, 0, 0, 0],
+          buffer: [1, 2],
           bufferSizes: [8],
           bufferStartSizes: [0],
         },
         {
           type: "INT32",
           hasDefaultRange: false,
-          buffer: [2, 0, 0, 0, 4, 0, 0, 0],
+          buffer: [2, 4],
           bufferSizes: [8],
           bufferStartSizes: [0],
         },
