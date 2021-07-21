@@ -1,10 +1,10 @@
+import getAttributeResult, { bufferToInt8 } from '../utils/bufferToData';
 import capnpQueryDeSerializer from "../utils/capnpQueryDeSerializer";
 import { ArrayApi, Attribute, Dimension } from "../v1";
 import {
   AttributeBufferHeader,
   Configuration,
   ConfigurationParameters,
-  Datatype,
   Query,
   QueryApi,
   Querytype,
@@ -167,83 +167,4 @@ const getAttributeSchema = (
   attributesSchema: Array<Dimension | Attribute>
 ) => {
   return attributesSchema.find((attr) => attr.name === attrName);
-};
-
-const getAttributeResult = (arrayBuffer: ArrayBuffer, type: Datatype) => {
-  if (type === Datatype.Int32) {
-    return bufferToInt32(arrayBuffer);
-  } else if (type === Datatype.Uint64) {
-    return bufferToUint64(arrayBuffer);
-  } else if (type === Datatype.Int64) {
-    return bufferToInt64(arrayBuffer);
-  } else if (type === Datatype.Float32) {
-    return bufferToFloat32(arrayBuffer);
-  } else if (type === Datatype.Float64) {
-    return bufferToFloat64(arrayBuffer);
-  } else if (type === Datatype.Char) {
-    return bufferToString(arrayBuffer);
-  } else if (type === Datatype.Int8) {
-    return bufferToInt8(arrayBuffer);
-  } else if (type === Datatype.Uint8) {
-    return bufferToUint8(arrayBuffer);
-  } else if (type === Datatype.Int16) {
-    return bufferToInt16(arrayBuffer);
-  } else if (type === Datatype.Uint16) {
-    return bufferToUint16(arrayBuffer);
-  } else if (type === Datatype.Uint32) {
-    return bufferToUint32(arrayBuffer);
-  } else if (type === Datatype.StringAscii) {
-    return bufferToAscii(arrayBuffer);
-  } else if (type === Datatype.StringUtf8) {
-    return bufferToString(arrayBuffer);
-  } else if (type === Datatype.StringUtf16) {
-    return bufferToUTF16(arrayBuffer);
-  } else if (type === Datatype.StringUtf32) {
-    return bufferToUTF32(arrayBuffer);
-  } else if (type === Datatype.StringUcs2) {
-    return bufferToUTF16(arrayBuffer);
-  } else if (type === Datatype.StringUcs4) {
-    return bufferToUTF32(arrayBuffer);
-  }
-
-  return arrayBuffer;
-};
-
-const bufferToInt8 = (arrayBuffer: ArrayBuffer) => new Int8Array(arrayBuffer);
-const bufferToUint8 = (arrayBuffer: ArrayBuffer) => new Uint8Array(arrayBuffer);
-const bufferToUint16 = (arrayBuffer: ArrayBuffer) =>
-  new Uint16Array(arrayBuffer);
-const bufferToUint32 = (arrayBuffer: ArrayBuffer) =>
-  new Uint32Array(arrayBuffer);
-const bufferToInt16 = (arrayBuffer: ArrayBuffer) => new Int16Array(arrayBuffer);
-const bufferToInt32 = (arrayBuffer: ArrayBuffer) => new Int32Array(arrayBuffer);
-const bufferToUint64 = (arrayBuffer: ArrayBuffer) =>
-  new BigUint64Array(arrayBuffer);
-const bufferToInt64 = (arrayBuffer: ArrayBuffer) =>
-  new BigInt64Array(arrayBuffer);
-const bufferToFloat32 = (arrayBuffer: ArrayBuffer) =>
-  new Float32Array(arrayBuffer);
-const bufferToFloat64 = (arrayBuffer: ArrayBuffer) =>
-  new Float64Array(arrayBuffer);
-const bufferToString = (arrayBuffer: ArrayBuffer) => {
-  const utf8decoder = new TextDecoder();
-  return utf8decoder.decode(arrayBuffer);
-};
-const bufferToAscii = (arrayBuffer: ArrayBuffer) => {
-  const utf8decoder = new TextDecoder("ascii");
-  return utf8decoder.decode(arrayBuffer);
-};
-const bufferToUTF16 = (arrayBuffer: ArrayBuffer) => {
-  const utf8decoder = new TextDecoder("utf-16");
-  return utf8decoder.decode(arrayBuffer);
-};
-const bufferToUTF32 = (arrayBuffer: ArrayBuffer) => {
-  const view = new DataView(arrayBuffer, 0, arrayBuffer.byteLength);
-  let result = "";
-
-  for (let i = 0; i < arrayBuffer.byteLength; i += 4) {
-    result += String.fromCodePoint(view.getInt32(i, true));
-  }
-
-  return result;
 };

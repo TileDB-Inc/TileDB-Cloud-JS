@@ -17,6 +17,9 @@ import {
   SubarrayPartitioner_State,
 } from "../capnp/query.capnp";
 import * as capnp from "capnp-ts";
+import { Datatype } from "../v2";
+import bufferToData from "./bufferToData";
+import typedArrayToArray from "./typedArrayToArray";
 
 const identity = <T>(x: T) => x;
 
@@ -215,15 +218,15 @@ export const deserializeSubarray = (subArray: Subarray) => {
     layout: subArray.getLayout(),
     stats: deserializeStats(subArray.getStats()),
     ranges: subArray.getRanges().map((range) => {
+      const type = range.getType();
       const bufferSizes = range
       .getBufferSizes()
       .map((uint64) => uint64.toNumber());
 
       return {
-        type: range.getType(),
+        type,
         hasDefaultRange: range.getHasDefaultRange(),
-        // NOTE: Is this working?
-        buffer: range.getBuffer().toArray().filter(val => val),
+        buffer: bufferToNumsArray(range.getBuffer().toArrayBuffer(), type as Datatype),
         bufferSizes: bufferSizes,
         bufferStartSizes: range
           .getBufferStartSizes()
@@ -258,5 +261,10 @@ export const deserializeMapUInt64 = (mapUint64: MapUInt64) => {
   });
 };
 
-
-// const bufferToInt32 = (arrayBuffer: ArrayBuffer) => new Int32Array(arrayBuffer);
+const bufferToNumsArray = (
+  buffer: ArrayBuffer,
+  type: Datatype
+) => {
+  const view = bufferToData(buffer, type) as Int32Array;
+  return typedArrayToArray(view);
+};

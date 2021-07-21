@@ -15,10 +15,10 @@ const password = process.env.TDB_PASS;
 // readServerResponseFromFile();
 // saveResponseFromServerToFile();
 // readBodyFile();
-// serializeAndDeserializeBody();
 // makeSimpleCallFixedSizedAttributes();
 // makeVarLengthCall();
 // compareQueryObjects();
+// serializeAndDeserializeBody();
 // callVarAndFixedSimpleArray();
 callFixedA0A3();
 
