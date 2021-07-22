@@ -4,16 +4,16 @@ const serializer = require("../lib/utils/capnpQuerySerializer");
 const deSerializer = require("../lib/utils/capnpQueryDeSerializer");
 const fs = require("fs");
 const path = require("path");
-const { mixedQueryData } = require("./data");
+const { mixedQueryData, arraySchemaAttributes } = require("./data");
 
-// const basePathV2 = "http://rest-server:8181/v2";
-const basePathV2 = "https://api.dev.tiledb.io/v2";
+const basePathV2 = "http://rest-server:8181/v2";
+// const basePathV2 = "https://api.dev.tiledb.io/v2";
 const username = process.env.TDB_USER;
 const password = process.env.TDB_PASS;
 
 
-// readServerResponseFromFile();
 // saveResponseFromServerToFile();
+// readServerResponseFromFile();
 // readBodyFile();
 // makeSimpleCallFixedSizedAttributes();
 // makeVarLengthCall();
@@ -30,7 +30,7 @@ function compareQueryObjects() {
 
 function callVarAndFixedSimpleArray() {
   fs.readFile(
-    path.resolve(__dirname, "../fixtures/body_mixed.raw"),
+    path.resolve(__dirname, "../fixtures/body_mixed_overlapped_range.raw"),
     (__, data) => {
       const arrayBuffer = toArrayBuffer(data);
       const QueryHelper = new TileDBQuery.default({
@@ -44,8 +44,7 @@ function callVarAndFixedSimpleArray() {
           console.log(res);
         })
         .catch((e) => {
-          console.log('error')
-          // console.error(e);
+          console.error(e);
         });
     }
   );
@@ -53,7 +52,7 @@ function callVarAndFixedSimpleArray() {
 
 function serializeAndDeserializeBody() {
   fs.readFile(
-    path.resolve(__dirname, "../fixtures/body_mixed.raw"),
+    path.resolve(__dirname, "../fixtures/body_mixed_overlapped_range.raw"),
     (__, data) => {
       const arrayBuffer = toArrayBuffer(data);
       const deserializedFromBodyFile = deSerializer.default(arrayBuffer);
@@ -121,8 +120,10 @@ function readBodyFile() {
     "../fixtures/body_mixed.raw",
     "../fixtures/body_a0_a1.raw",
     "../fixtures/body_fixed_new.raw",
+    "../fixtures/body_mixed_range.raw",
+    "../fixtures/body_mixed_overlapped_range.raw",
   ];
-  fs.readFile(path.resolve(__dirname, bodyFiles[3]), (__, data) => {
+  fs.readFile(path.resolve(__dirname, bodyFiles[5]), (__, data) => {
     const arrayBuffer = toArrayBuffer(data);
     // const textDecoder = new TextDecoder();
     // console.log(textDecoder.decode(arrayBuffer));
@@ -140,12 +141,13 @@ function readServerResponseFromFile() {
     "../fixtures/response_from_server_mixed.raw",
     "../fixtures/response_a0_a1.raw",
     "../fixtures/response_from_server_a0_a1.raw",
+    "../fixtures/response_mixed_overlapped_range.raw",
   ];
-  fs.readFile(path.resolve(__dirname, responseFiles[2]), (__, data) => {
+  fs.readFile(path.resolve(__dirname, responseFiles[6]), (__, data) => {
     const arrayBuffer = toArrayBuffer(data);
     // console.log(arrayBuffer.byteLength);
     const result = deSerializer.default(arrayBuffer);
-    console.log(result.reader.readState.subarrayPartitioner);
+    console.log(result.reader.subarray.ranges);
 
     console.log(
       getResults(

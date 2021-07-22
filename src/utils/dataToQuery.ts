@@ -1,23 +1,47 @@
 import { Attribute } from "../v1";
 import { Datatype, Query, Querystatus, Querytype } from "../v2";
+import flatten from "./flatten";
 
 export interface QueryData extends Pick<Query, "layout"> {
-  ranges: Array<number[]>;
+  ranges: Array<number[] | Array<number[]>>;
   bufferSize: number;
 }
 
+const getByteLengthOfInt32Array = (nums: number[]) =>
+  Int32Array.from(nums).byteLength;
+
+const int32ArrayToUint8 = (nums: number[]) => {
+  const BYTES_FOR_INT32 = Int32Array.BYTES_PER_ELEMENT;
+  const int8NumsArray = new Array(nums.length * BYTES_FOR_INT32).fill(0);
+  nums.forEach((num, i) => {
+    int8NumsArray[i * BYTES_FOR_INT32] = num;
+  });
+
+  return int8NumsArray;
+};
+
 const dataToQuery = (data: QueryData, attributes: Attribute[]): Query => {
+  if (!data.layout) {
+    return data as any;
+  }
   const { bufferSize } = data;
   //   TODO: Distribute buffer size depending on the data's type (e.g. INT64 needs more bytes than INT8)
   const AVERAGE_BUFFER_SIZE = Math.floor(bufferSize / (attributes.length * 3));
   const ranges = data.ranges.map((range) => {
-    const BYTE_LENGTH = Int32Array.BYTES_PER_ELEMENT * range.length;
+    const [firstRange] = range;
+    const isArrayOfArrays = Array.isArray(firstRange);
+
+    const bufferSizes = isArrayOfArrays
+      ? range.map((r) => getByteLengthOfInt32Array(r))
+      : [getByteLengthOfInt32Array(range as number[])];
+    const bufferStartSizes = isArrayOfArrays ? range.map(() => 0) : [0];
+
     return {
       type: Datatype.Int32,
       hasDefaultRange: false,
-      buffer: range,
-      bufferSizes: [BYTE_LENGTH],
-      bufferStartSizes: [0],
+      buffer: int32ArrayToUint8(flatten(range)),
+      bufferSizes,
+      bufferStartSizes,
     };
   });
   const attributeBufferHeaders = attributes.map((attr) => ({

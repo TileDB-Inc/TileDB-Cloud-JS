@@ -54,7 +54,6 @@ export class TileDBQuery {
       
       const queryData = convertToArrayBufferIfNodeBuffer(queryResponse.data);
       const bufferWithoutFirstEightBytes = queryData.slice(8);
-      // return bufferWithoutFirstEightBytes;
 
       const queryObject = capnpQueryDeSerializer(bufferWithoutFirstEightBytes);
       const attributeHeaders = queryObject.attributeBufferHeaders;
