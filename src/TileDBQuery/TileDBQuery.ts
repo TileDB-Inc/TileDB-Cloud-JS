@@ -1,3 +1,4 @@
+import dataToQuery, { QueryData } from '../utils/dataToQuery';
 import getAttributeResult, { bufferToInt8 } from '../utils/bufferToData';
 import capnpQueryDeSerializer from "../utils/capnpQueryDeSerializer";
 import { ArrayApi, Attribute, Dimension } from "../v1";
@@ -5,7 +6,6 @@ import {
   AttributeBufferHeader,
   Configuration,
   ConfigurationParameters,
-  Query,
   QueryApi,
   Querytype,
 } from "../v2";
@@ -20,7 +20,7 @@ export class TileDBQuery {
   async SubmitQuery(
     namespace: string,
     arrayName: string,
-    body: Partial<Query>
+    body: QueryData
   ) {
     const config = new Configuration(this.configurationParams);
     const baseV1 = config.basePath?.replace("v2", "v1");
@@ -33,27 +33,25 @@ export class TileDBQuery {
     const queryAPI = new QueryApi(config);
     const arrayAPI = new ArrayApi(configV1);
     try {
-      const [arraySchemaResponse, queryResponse] = await Promise.all([
-        arrayAPI.getArray(namespace, arrayName, "application/json"),
-        queryAPI.submitQuery(
-          namespace,
-          arrayName,
-          Querytype.Read,
-          "application/capnp",
-          body as Query,
-          undefined,
-          undefined,
-          undefined,
-          {
-            headers: {
-              "Content-Type": "application/capnp",
-            },
-            responseType: "arraybuffer",
-          }
-        ),
-      ]);
-
+      const arraySchemaResponse = await  arrayAPI.getArray(namespace, arrayName, "application/json");
       const arraySchema = arraySchemaResponse.data;
+      const queryResponse = await queryAPI.submitQuery(
+        namespace,
+        arrayName,
+        Querytype.Read,
+        "application/capnp",
+        dataToQuery(body, arraySchema.attributes),
+        undefined,
+        undefined,
+        undefined,
+        {
+          headers: {
+            "Content-Type": "application/capnp",
+          },
+          responseType: "arraybuffer",
+        }
+      )
+      
       const queryData = convertToArrayBufferIfNodeBuffer(queryResponse.data);
       const bufferWithoutFirstEightBytes = queryData.slice(8);
       // return bufferWithoutFirstEightBytes;

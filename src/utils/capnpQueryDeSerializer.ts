@@ -265,6 +265,6 @@ const bufferToNumsArray = (
   buffer: ArrayBuffer,
   type: Datatype
 ) => {
-  const view = bufferToData(buffer, type) as Int32Array;
+  const view = bufferToData(buffer, type) as Int16Array | Int32Array | Int8Array;
   return typedArrayToArray(view);
 };

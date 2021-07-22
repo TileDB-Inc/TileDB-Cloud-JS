@@ -4,7 +4,7 @@ const serializer = require("../lib/utils/capnpQuerySerializer");
 const deSerializer = require("../lib/utils/capnpQueryDeSerializer");
 const fs = require("fs");
 const path = require("path");
-const { queryWithUpdatedAttrBuffers, queryFixedA0A3 } = require("./data");
+const { mixedQueryData } = require("./data");
 
 // const basePathV2 = "http://rest-server:8181/v2";
 const basePathV2 = "https://api.dev.tiledb.io/v2";
@@ -19,8 +19,8 @@ const password = process.env.TDB_PASS;
 // makeVarLengthCall();
 // compareQueryObjects();
 // serializeAndDeserializeBody();
-// callVarAndFixedSimpleArray();
-callFixedA0A3();
+callVarAndFixedSimpleArray();
+// callFixedA0A3();
 
 function compareQueryObjects() {
   console.log(JSON.stringify(query.attributeBufferHeaders) === JSON.stringify(queryVarLengthFromPreviousCommit.attributeBufferHeaders));
@@ -39,7 +39,7 @@ function callVarAndFixedSimpleArray() {
         basePath: basePathV2,
       });
       const deserializedFromBodyFile = deSerializer.default(arrayBuffer);
-      QueryHelper.SubmitQuery("kostas", "var_length", queryWithUpdatedAttrBuffers)
+      QueryHelper.SubmitQuery("kostas", "var_length", mixedQueryData)
         .then((res) => {
           console.log(res);
         })
@@ -79,7 +79,7 @@ function callFixedA0A3() {
       const deserialized = deSerializer.default(arrayBuffer);
       const serialized = serializer.default(deserialized);
 
-      QueryHelper.SubmitQuery("kostas", "fixed_a0_a3", queryFixedA0A3)
+      QueryHelper.SubmitQuery("kostas", "fixed_a0_a3", mixedQueryData)
         .then((res) => {
           console.log(res);
         })
@@ -215,45 +215,6 @@ function makeVarLengthCall() {
     }
   );
 }
-
-// /**
-//  * They come as a5, a4, a1, a3, a6, a2, a0
-//  */
-// console.log(new Int32Array(arrayBuffer.slice(-12))) // a0 (12, 234, 17)   FIXED
-// console.log(new BigUint64Array(arrayBuffer.slice(-44, -12))) // a2  [ 20, 311, 27, 82 ]  VAR + 24 bytes tail
-// console.log(new Int8Array(arrayBuffer.slice(-71, -68))); // a6 validity buffers
-// console.log(new Int32Array(arrayBuffer.slice(-87, -71))) // a6  [ 12 NULL 21 NULL NULL NULL NULL NULL ]  3 BYTES (validityLenBufferSizeInBytes) + VAR + NULLABLE + 24 bytes tail
-// console.log(new Int32Array(arrayBuffer.slice(-123, -111))) // a3 (12, 23, 44)  FIXED
-// const typedUint8Array = new Uint8Array(arrayBuffer.slice(-131, -123));
-// const utf8decoder = new TextDecoder();
-// console.log(utf8decoder.decode(typedUint8Array)) // a1 (bbcccddd)    VAR + 24 bytes tail
-// console.log(new Int32Array(arrayBuffer.slice(-171, -155))); // a4  [ 2, 19, 27, 81 ]    VAR
-// console.log(new Int8Array(arrayBuffer.slice(-198, -195))); // a5  [ 8 NULL 17 NULL ]    FIXED
-// console.log(new Int32Array(arrayBuffer.slice(-210, -198))); // a5  [ 8 NULL 17 NULL ]    FIXED
-
-// console.log(new Int32Array(arrayBuffer.slice(-195, -171))) // offset of VAR attributes???
-
-/** fixtures/response_mixed.raw
- * a1: bb, a2: 20 31, a4: 2 19
- * a1: ccc, a2: 27, a4: 27
- * a1: dd, a2: 82, a4: 81
- * a3: 12, 23, 44 (fixed)
- * a0: 12, 234, 17 (fixed)
- * a4: 20, 31, 27, 82 (var)
- * a5: 8 NULL 17 NULL
- * a6: 12 NULL 21 NULL NULL NULL NULL NULL
- */
-
-/** fixtures/response_fixed.raw
- * Cell (2, 3) has data 33
- * Cell (2, 4) has data 28
- */
-
-/** fixtures/response_var.raw
- * a1: bb, a2: 2 2
- * a1: ccc, a2: 3
- * a1: dd, a2: 4
- */
 
 /**
  * Transform node buffer to ArrayBuffer
