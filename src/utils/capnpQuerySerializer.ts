@@ -1,7 +1,7 @@
-import { Datatype, Query as QueryType, Subarray as SubarrayType } from "../v2";
+import { Query as QueryType, Subarray as SubarrayType } from "../v2";
 import { Query, Subarray } from "../capnp/query.capnp";
 import * as capnp from "capnp-ts";
-import getTypedArrayFromDataType from './getTypedArrayFromDataType';
+// import getTypedArrayFromDataType from './getTypedArrayFromDataType';
 
 const capnpQuerySerializer = (data: Partial<QueryType>) => {
   const message = new capnp.Message();
@@ -146,6 +146,8 @@ const capnpQuerySerializer = (data: Partial<QueryType>) => {
   return message.toArrayBuffer();
 };
 
+const add = (a: number, b: number) => a + b;
+
 export default capnpQuerySerializer;
 
 const serializeSubArray = (capSubArray: Subarray, subArray: SubarrayType) => {
@@ -159,11 +161,10 @@ const serializeSubArray = (capSubArray: Subarray, subArray: SubarrayType) => {
     r.setType(range.type);
     r.setHasDefaultRange(range.hasDefaultRange);
 
-    const [bufferSize] = bufferSizesArray;
-
-    // const subArrayRangeBufferLength = range.buffer.length;
-    const bufferData = r.initBuffer(bufferSize);
-    const view = numbersToBuffer(range.buffer, bufferSize, range.type);
+    const totalBufferSize = bufferSizesArray.reduce(add);
+    const bufferData = r.initBuffer(totalBufferSize);
+    const view = Uint8Array.from(range.buffer);
+    
     bufferData.copyBuffer(view);
     r.setBuffer(bufferData);
 
@@ -188,18 +189,3 @@ const serializeSubArray = (capSubArray: Subarray, subArray: SubarrayType) => {
 
 const clamp = (num: number, min: number, max: number) =>
   Math.min(Math.max(num, min), max);
-
-const numbersToBuffer = (
-  nums: number[],
-  bufferSize: number,
-  type: Datatype
-) => {
-  const arrBuffer = new ArrayBuffer(bufferSize);
-  const TypedArray = getTypedArrayFromDataType(type);
-  const BYTE_LENGTH = TypedArray.BYTES_PER_ELEMENT;
-  const view = new Uint8Array(arrBuffer);
-  nums.forEach((num, i) => {
-    view[i * BYTE_LENGTH] = num;
-  });
-  return view;
-};

@@ -1,10 +1,79 @@
 const mixedQueryData = {
   layout: "row-major",
-  ranges: [[1,2], [2, 4]],
-  bufferSize: 500,
+  ranges: [[1,2], [[2, 4], [1, 3]]],
+  bufferSize: 15000,
 }
 
 module.exports.mixedQueryData = mixedQueryData;
+
+
+const arraySchemaAttributes = [
+  {
+    cellValNum: 4294967295,
+    name: "a1",
+    type: "CHAR",
+    filterPipeline: {},
+    fillValue: [128],
+    nullable: false,
+    fillValueValidity: true,
+  },
+  {
+    cellValNum: 4294967295,
+    name: "a2",
+    type: "UINT64",
+    filterPipeline: {},
+    fillValue: [255, 255, 255, 255, 255, 255, 255, 255],
+    nullable: false,
+    fillValueValidity: true,
+  },
+  {
+    cellValNum: 4294967295,
+    name: "a4",
+    type: "INT32",
+    filterPipeline: {},
+    fillValue: [0, 0, 0, 128],
+    nullable: false,
+    fillValueValidity: true,
+  },
+  {
+    cellValNum: 1,
+    name: "a3",
+    type: "INT32",
+    filterPipeline: {},
+    fillValue: [0, 0, 0, 128],
+    nullable: false,
+    fillValueValidity: true,
+  },
+  {
+    cellValNum: 1,
+    name: "a0",
+    type: "INT32",
+    filterPipeline: {},
+    fillValue: [0, 0, 0, 128],
+    nullable: false,
+    fillValueValidity: true,
+  },
+  {
+    cellValNum: 1,
+    name: "a5",
+    type: "INT32",
+    filterPipeline: {},
+    fillValue: [0, 0, 0, 128],
+    nullable: true,
+    fillValueValidity: false,
+  },
+  {
+    cellValNum: 4294967295,
+    name: "a6",
+    type: "INT32",
+    filterPipeline: {},
+    fillValue: [0, 0, 0, 128],
+    nullable: true,
+    fillValueValidity: false,
+  },
+];
+
+module.exports.arraySchemaAttributes = arraySchemaAttributes;
 
 const queryWithUpdatedAttrBuffers = {
   attributeBufferHeaders: [
