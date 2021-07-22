@@ -1,18 +1,26 @@
+const mixedQueryData = {
+  layout: "row-major",
+  ranges: [[1,2], [2, 4]],
+  bufferSize: 500,
+}
+
+module.exports.mixedQueryData = mixedQueryData;
+
 const queryWithUpdatedAttrBuffers = {
   attributeBufferHeaders: [
     {
       name: "a5",
-      fixedLenBufferSizeInBytes: 16,
+      fixedLenBufferSizeInBytes: 8,
       varLenBufferSizeInBytes: 0,
-      validityLenBufferSizeInBytes: 4,
+      validityLenBufferSizeInBytes: 0,
       originalFixedLenBufferSizeInBytes: 16,
       originalVarLenBufferSizeInBytes: 0,
       originalValidityLenBufferSizeInBytes: 4,
     },
     {
       name: "a4",
-      fixedLenBufferSizeInBytes: 96,
-      varLenBufferSizeInBytes: 128,
+      fixedLenBufferSizeInBytes: 0,
+      varLenBufferSizeInBytes: 0,
       validityLenBufferSizeInBytes: 0,
       originalFixedLenBufferSizeInBytes: 96,
       originalVarLenBufferSizeInBytes: 128,
@@ -71,7 +79,6 @@ const queryWithUpdatedAttrBuffers = {
     layout: "row-major",
     subarray: {
       layout: "row-major",
-      stats: { timers: [], counters: [] },
       ranges: [
         {
           type: "INT32",
@@ -90,36 +97,22 @@ const queryWithUpdatedAttrBuffers = {
       ],
     },
     readState: {
-      overflowed: false,
-      unsplittable: false,
-      initialized: false,
       subarrayPartitioner: {
         subarray: {
           layout: "row-major", // NOTE: manually changed
-          stats: { timers: [], counters: [] },
           ranges: [],
         },
         budget: [],
         current: {
           subarray: {
             layout: "",
-            stats: { timers: [], counters: [] },
             ranges: [],
           },
-          start: 0,
-          end: 0,
-          splitMultiRange: false,
         },
-        state: { start: 0, end: 0, singleRange: [], multiRange: [] },
-        memoryBudget: 0,
-        memoryBudgetVar: 0,
-        memoryBudgetValidity: 0,
       },
     },
   },
 };
-
-module.exports.queryWithUpdatedAttrBuffers = queryWithUpdatedAttrBuffers;
 
 const queryFixedA0A3 = {
   attributeBufferHeaders: [
@@ -333,5 +326,3 @@ const queryFixedA0A3 = {
   },
   stats: { timers: [], counters: [] },
 };
-
-module.exports.queryFixedA0A3 = queryFixedA0A3;
