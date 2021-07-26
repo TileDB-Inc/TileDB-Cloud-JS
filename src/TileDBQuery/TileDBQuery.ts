@@ -35,12 +35,13 @@ export class TileDBQuery {
     try {
       const arraySchemaResponse = await  arrayAPI.getArray(namespace, arrayName, "application/json");
       const arraySchema = arraySchemaResponse.data;
+      arraySchema.domain
       const queryResponse = await queryAPI.submitQuery(
         namespace,
         arrayName,
         Querytype.Read,
         "application/capnp",
-        dataToQuery(body, arraySchema.attributes),
+        dataToQuery(body, arraySchema.attributes, arraySchema.domain.dimensions),
         undefined,
         undefined,
         undefined,

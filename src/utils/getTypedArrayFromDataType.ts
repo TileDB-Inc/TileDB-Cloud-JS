@@ -22,8 +22,6 @@ const getTypedArrayFromDataType = (type: Datatype) => {
   } else if (type === Datatype.Float64) {
     return Float64Array;
   }
-
-  return Uint8Array;
 };
 
 export default getTypedArrayFromDataType;

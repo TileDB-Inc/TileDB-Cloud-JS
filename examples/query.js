@@ -4,10 +4,10 @@ const serializer = require("../lib/utils/capnpQuerySerializer");
 const deSerializer = require("../lib/utils/capnpQueryDeSerializer");
 const fs = require("fs");
 const path = require("path");
-const { mixedQueryData, arraySchemaAttributes } = require("./data");
+const { mixedQueryData, arraySchemaAttributes, stringQueryData } = require("./data");
 
-const basePathV2 = "http://rest-server:8181/v2";
-// const basePathV2 = "https://api.dev.tiledb.io/v2";
+// const basePathV2 = "http://rest-server:8181/v2";
+const basePathV2 = "https://api.dev.tiledb.io/v2";
 const username = process.env.TDB_USER;
 const password = process.env.TDB_PASS;
 
@@ -18,9 +18,33 @@ const password = process.env.TDB_PASS;
 // makeSimpleCallFixedSizedAttributes();
 // makeVarLengthCall();
 // compareQueryObjects();
-// serializeAndDeserializeBody();
 callVarAndFixedSimpleArray();
 // callFixedA0A3();
+// serializeAndDeserializeBody();
+// callSparseString();
+
+
+function callSparseString() {
+  fs.readFile(
+    path.resolve(__dirname, "../fixtures/body_sparse_string.raw"),
+    (__, data) => {
+      const arrayBuffer = toArrayBuffer(data);
+      const QueryHelper = new TileDBQuery.default({
+        username,
+        password,
+        basePath: basePathV2,
+      });
+      const deserializedFromBodyFile = deSerializer.default(arrayBuffer);
+      QueryHelper.SubmitQuery("kostas", "quickstart_sparse_string_array", stringQueryData)
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((e) => {
+          console.error(e);
+        });
+    }
+  );
+}
 
 function compareQueryObjects() {
   console.log(JSON.stringify(query.attributeBufferHeaders) === JSON.stringify(queryVarLengthFromPreviousCommit.attributeBufferHeaders));
@@ -52,7 +76,7 @@ function callVarAndFixedSimpleArray() {
 
 function serializeAndDeserializeBody() {
   fs.readFile(
-    path.resolve(__dirname, "../fixtures/body_mixed_overlapped_range.raw"),
+    path.resolve(__dirname, "../fixtures/body_sparse_string64.raw"),
     (__, data) => {
       const arrayBuffer = toArrayBuffer(data);
       const deserializedFromBodyFile = deSerializer.default(arrayBuffer);
@@ -122,12 +146,11 @@ function readBodyFile() {
     "../fixtures/body_fixed_new.raw",
     "../fixtures/body_mixed_range.raw",
     "../fixtures/body_mixed_overlapped_range.raw",
+    "../fixtures/body_sparse_string.raw",
+    "../fixtures/body_sparse_string64.raw",
   ];
-  fs.readFile(path.resolve(__dirname, bodyFiles[5]), (__, data) => {
+  fs.readFile(path.resolve(__dirname, bodyFiles[7]), (__, data) => {
     const arrayBuffer = toArrayBuffer(data);
-    // const textDecoder = new TextDecoder();
-    // console.log(textDecoder.decode(arrayBuffer));
-    // console.log(arrayBuffer.byteLength);
     const result = deSerializer.default(arrayBuffer);
     console.log(result.reader.subarray.ranges);
   });
