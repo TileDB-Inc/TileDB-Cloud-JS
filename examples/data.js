@@ -4,6 +4,13 @@ const mixedQueryData = {
   bufferSize: 15000,
 }
 
+const stringQueryData = {
+  layout: "row-major",
+  ranges: [[["a","c"], ["a","c"]], [[2, 4], [2, 4]]],
+  bufferSize: 15000,
+}
+
+module.exports.stringQueryData = stringQueryData;
 module.exports.mixedQueryData = mixedQueryData;
 
 

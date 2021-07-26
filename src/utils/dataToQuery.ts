@@ -1,45 +1,81 @@
-import { Attribute } from "../v1";
+import { Attribute, Dimension } from "../v1";
 import { Datatype, Query, Querystatus, Querytype } from "../v2";
 import flatten from "./flatten";
+import getTypedArrayFromDataType from "./getTypedArrayFromDataType";
+import rangesToBuffer from "./rangesToBuffer";
 
 export interface QueryData extends Pick<Query, "layout"> {
   ranges: Array<number[] | Array<number[]>>;
   bufferSize: number;
 }
 
-const getByteLengthOfInt32Array = (nums: number[]) =>
-  Int32Array.from(nums).byteLength;
+const getByteLengthOfDataType = (data: number[] | string[], type: Datatype) => { 
+  const TypedArray = getTypedArrayFromDataType(type);
+  // case 1: it's number of arrays
+  if (TypedArray) {
+    let nums: number[] | BigInt[] = data as number[];
+    // If datatype is Int64 or Uint64 we have to map numbers to BigInt
+    if ((type === Datatype.Int64 || type === Datatype.Uint64) && typeof nums[0] === 'number') {
+      nums = data.map(BigInt);
+    }
+    return (TypedArray as Int32ArrayConstructor).from(nums as number[]).byteLength;
+  }
+  // otherwise it's string
+  if (type === Datatype.Char || Datatype.StringAscii) {
+    return data.length * 1;
+  }
+  if (type === Datatype.StringUcs2) {
+    return data.length * 2;
+  }
+  if (type === Datatype.StringUcs4) {
+    return data.length * 4;
+  }
+  // TODO: get other types
+  if (type === Datatype.StringUtf8) {
+    const encoder = new TextEncoder()
+    const encodedStr = data.map((str) => encoder.encode(str))
+    return encodedStr.reduce((accum, encodedString) => {
+      return accum + encodedString.byteLength;
+    }, 0);
+  }
+}
 
-const int32ArrayToUint8 = (nums: number[]) => {
-  const BYTES_FOR_INT32 = Int32Array.BYTES_PER_ELEMENT;
-  const int8NumsArray = new Array(nums.length * BYTES_FOR_INT32).fill(0);
-  nums.forEach((num, i) => {
-    int8NumsArray[i * BYTES_FOR_INT32] = num;
-  });
+const isNumberArray = (data: any[]): data is number[] => {
+  return typeof data[0] === 'number';
+}
 
-  return int8NumsArray;
-};
 
-const dataToQuery = (data: QueryData, attributes: Attribute[]): Query => {
+const dataToQuery = (data: QueryData, attributes: Attribute[], dimensions: Dimension[]): Query => {
   if (!data.layout) {
     return data as any;
   }
   const { bufferSize } = data;
-  //   TODO: Distribute buffer size depending on the data's type (e.g. INT64 needs more bytes than INT8)
+  //   TODO: Distribute buffer size depending on the data's type (e.g. INT64 needs 8 times the bytes of an INT8)
   const AVERAGE_BUFFER_SIZE = Math.floor(bufferSize / (attributes.length * 3));
-  const ranges = data.ranges.map((range) => {
+  const ranges = data.ranges.map((range, i) => {
     const [firstRange] = range;
+    const type = dimensions[i].type;
     const isArrayOfArrays = Array.isArray(firstRange);
-
+    const isArrayOfInts = isNumberArray(flatten(range));
+    
     const bufferSizes = isArrayOfArrays
-      ? range.map((r) => getByteLengthOfInt32Array(r))
-      : [getByteLengthOfInt32Array(range as number[])];
-    const bufferStartSizes = isArrayOfArrays ? range.map(() => 0) : [0];
-
+    ? range.map((r) => getByteLengthOfDataType(r, type))
+    : [getByteLengthOfDataType(range as number[], type)];
+    
+    const startRanges = isArrayOfArrays ? range.map(r => r[0]) : [firstRange];
+    const bufferStartSizes = startRanges.map((startingRange) => getByteLengthOfDataType([startingRange], type));
+    /**
+     * bufferStartSizes is used only for var length string ascii dimensions,
+     * for ints is 0
+     */
+    if (isArrayOfInts) {
+      bufferStartSizes.fill(0);
+    }
+    
     return {
-      type: Datatype.Int32,
+      type,
       hasDefaultRange: false,
-      buffer: int32ArrayToUint8(flatten(range)),
+      buffer: rangesToBuffer(flatten(range), type),
       bufferSizes,
       bufferStartSizes,
     };
@@ -84,3 +120,4 @@ const dataToQuery = (data: QueryData, attributes: Attribute[]): Query => {
 };
 
 export default dataToQuery;
+
