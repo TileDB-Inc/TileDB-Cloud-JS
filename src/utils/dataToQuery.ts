@@ -3,6 +3,7 @@ import { Datatype, Query, Querystatus, Querytype } from "../v2";
 import flatten from "./flatten";
 import getTypedArrayFromDataType from "./getTypedArrayFromDataType";
 import rangesToBuffer from "./rangesToBuffer";
+import mapToBigIntIfNeeded from "./mapToBigIntIfNeeded";
 
 export interface QueryData extends Pick<Query, "layout"> {
   ranges: Array<number[] | Array<number[]>>;
@@ -13,11 +14,7 @@ const getByteLengthOfDataType = (data: number[] | string[], type: Datatype) => {
   const TypedArray = getTypedArrayFromDataType(type);
   // case 1: it's number of arrays
   if (TypedArray) {
-    let nums: number[] | BigInt[] = data as number[];
-    // If datatype is Int64 or Uint64 we have to map numbers to BigInt
-    if ((type === Datatype.Int64 || type === Datatype.Uint64) && typeof nums[0] === 'number') {
-      nums = data.map(BigInt);
-    }
+    const nums = mapToBigIntIfNeeded(data as number[], type);
     return (TypedArray as Int32ArrayConstructor).from(nums as number[]).byteLength;
   }
   // otherwise it's string

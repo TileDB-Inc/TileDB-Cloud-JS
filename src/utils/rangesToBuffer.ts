@@ -1,23 +1,18 @@
 import { Datatype } from "../v2";
 import getTypedArrayFromDataType from "./getTypedArrayFromDataType";
+import mapToBigIntIfNeeded from "./mapToBigIntIfNeeded";
 
 const rangesToBuffer = (ranges: any[], type: Datatype) => {
   const TypedArray = getTypedArrayFromDataType(type);
 
   if (TypedArray) {
-    return intToUint8(ranges, TypedArray.BYTES_PER_ELEMENT);
+    const nums = mapToBigIntIfNeeded(ranges as number[], type);
+    const dataview = (TypedArray as any).from(nums);
+    const uint8Array = new Uint8Array(dataview.buffer, 0, dataview.byteLength);
+    return Array.from(uint8Array);
   } else if (type === Datatype.StringAscii) {
     return (ranges as string[]).map((str) => str.charCodeAt(0));
   }
 };
 
 export default rangesToBuffer;
-
-const intToUint8 = (nums: number[], bytesPerElement: number) => {
-  const int8NumsArray = new Array(nums.length * bytesPerElement).fill(0);
-  nums.forEach((num, i) => {
-    int8NumsArray[i * bytesPerElement] = num;
-  });
-
-  return int8NumsArray;
-};

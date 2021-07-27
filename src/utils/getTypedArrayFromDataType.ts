@@ -21,6 +21,8 @@ const getTypedArrayFromDataType = (type: Datatype) => {
     return Float32Array;
   } else if (type === Datatype.Float64) {
     return Float64Array;
+  } else if (type === Datatype.DatetimeSec) {
+    return BigUint64Array;
   }
 };
 

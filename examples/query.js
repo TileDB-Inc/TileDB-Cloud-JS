@@ -4,7 +4,7 @@ const serializer = require("../lib/utils/capnpQuerySerializer");
 const deSerializer = require("../lib/utils/capnpQueryDeSerializer");
 const fs = require("fs");
 const path = require("path");
-const { mixedQueryData, arraySchemaAttributes, stringQueryData } = require("./data");
+const { mixedQueryData, arraySchemaAttributes, stringQueryData, dtQueryData } = require("./data");
 
 // const basePathV2 = "http://rest-server:8181/v2";
 const basePathV2 = "https://api.dev.tiledb.io/v2";
@@ -22,7 +22,31 @@ const password = process.env.TDB_PASS;
 // callFixedA0A3();
 // serializeAndDeserializeBody();
 // callSparseString();
+callSparseDt();
 
+
+function callSparseDt() {
+  fs.readFile(
+    path.resolve(__dirname, "../fixtures/body_dt.raw"),
+    (__, data) => {
+      const arrayBuffer = toArrayBuffer(data);
+      const QueryHelper = new TileDBQuery.default({
+        username,
+        password,
+        basePath: basePathV2,
+      });
+      
+      const deserializedFromBodyFile = deSerializer.default(arrayBuffer);
+      QueryHelper.SubmitQuery("kostas", "sparse_dt", dtQueryData)
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((e) => {
+          console.error(e);
+        });
+    }
+  );
+}
 
 function callSparseString() {
   fs.readFile(
@@ -76,7 +100,7 @@ function callVarAndFixedSimpleArray() {
 
 function serializeAndDeserializeBody() {
   fs.readFile(
-    path.resolve(__dirname, "../fixtures/body_sparse_string64.raw"),
+    path.resolve(__dirname, "../fixtures/body_dt.raw"),
     (__, data) => {
       const arrayBuffer = toArrayBuffer(data);
       const deserializedFromBodyFile = deSerializer.default(arrayBuffer);
@@ -148,8 +172,9 @@ function readBodyFile() {
     "../fixtures/body_mixed_overlapped_range.raw",
     "../fixtures/body_sparse_string.raw",
     "../fixtures/body_sparse_string64.raw",
+    "../fixtures/body_dt.raw",
   ];
-  fs.readFile(path.resolve(__dirname, bodyFiles[7]), (__, data) => {
+  fs.readFile(path.resolve(__dirname, bodyFiles[8]), (__, data) => {
     const arrayBuffer = toArrayBuffer(data);
     const result = deSerializer.default(arrayBuffer);
     console.log(result.reader.subarray.ranges);

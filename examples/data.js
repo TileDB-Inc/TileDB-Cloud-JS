@@ -10,6 +10,13 @@ const stringQueryData = {
   bufferSize: 15000,
 }
 
+const dtQueryData = {
+  layout: "row-major",
+  ranges: [[1, 3], [1577836800, 1588878856]],
+  bufferSize: 15000,
+}
+
+module.exports.dtQueryData = dtQueryData;
 module.exports.stringQueryData = stringQueryData;
 module.exports.mixedQueryData = mixedQueryData;
 
