@@ -207,6 +207,19 @@ export enum Datatype {
     StringUtf32 = 'STRING_UTF32',
     StringUcs2 = 'STRING_UCS2',
     StringUcs4 = 'STRING_UCS4',
+    DatetimeYear = 'DATETIME_YEAR',
+    DatetimeMonth = 'DATETIME_MONTH',
+    DatetimeWeek = 'DATETIME_WEEK',
+    DatetimeDay = 'DATETIME_DAY',
+    DatetimeHr = 'DATETIME_HR',
+    DatetimeMin = 'DATETIME_MIN',
+    DatetimeSec = 'DATETIME_SEC',
+    DatetimeMs = 'DATETIME_MS',
+    DatetimeUs = 'DATETIME_US',
+    DatetimeNs = 'DATETIME_NS',
+    DatetimePs = 'DATETIME_PS',
+    DatetimeFs = 'DATETIME_FS',
+    DatetimeAs = 'DATETIME_AS',
     Any = 'ANY'
 }
 

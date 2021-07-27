@@ -1,5 +1,5 @@
 const rangesToBuffer = require("../lib/utils/rangesToBuffer");
-const { Datatype } = require("../lib/v1");
+const { Datatype } = require("../lib/v2");
 
 
 describe("rangesToBuffer()", () => {
@@ -45,16 +45,21 @@ describe("rangesToBuffer()", () => {
 
     it('should convert Float64', () => {
         const res = rangesToBuffer.default([1,2,3], Datatype.Float64);
-        expect(res).toEqual([1, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0]);
+        expect(res).toEqual([0, 0, 0, 0, 0, 0, 240, 63, 0, 0, 0, 0, 0, 0, 0, 64, 0, 0, 0, 0, 0, 0, 8, 64]);
     });
 
     it('should convert Float32', () => {
         const res = rangesToBuffer.default([1,2,3], Datatype.Float32);
-        expect(res).toEqual([1, 0, 0, 0, 2, 0, 0, 0, 3, 0, 0, 0]);
+        expect(res).toEqual([0, 0, 128, 63, 0, 0, 0, 64, 0, 0, 64, 64]);
     });
 
     it('should convert StringAscii', () => {
         const res = rangesToBuffer.default(['a', 'c'], Datatype.StringAscii);
         expect(res).toEqual([97, 99]);
+    });
+
+    it('should convert DatetimeSec', () => {
+        const res = rangesToBuffer.default([1577836800, 1588878856], Datatype.DatetimeSec);
+        expect(res).toEqual([0, 225, 11, 94, 0, 0, 0, 0, 8, 94, 180, 94, 0, 0, 0, 0]);
     });
 })
