@@ -2,7 +2,6 @@ import { Datatype } from "../v2";
 import getTypedArrayFromDataType from "./getTypedArrayFromDataType";
 
 const rangesToBuffer = (ranges: any[], type: Datatype) => {
-  // TODO: add more types
   const TypedArray = getTypedArrayFromDataType(type);
 
   if (TypedArray) {

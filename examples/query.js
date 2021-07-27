@@ -18,7 +18,7 @@ const password = process.env.TDB_PASS;
 // makeSimpleCallFixedSizedAttributes();
 // makeVarLengthCall();
 // compareQueryObjects();
-callVarAndFixedSimpleArray();
+// callVarAndFixedSimpleArray();
 // callFixedA0A3();
 // serializeAndDeserializeBody();
 // callSparseString();
