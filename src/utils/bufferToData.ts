@@ -57,7 +57,8 @@ const bufferToData = (arrayBuffer: ArrayBuffer, type: Datatype) => {
   } else if (type === Datatype.Float64) {
     return typedArrayToArray(bufferToFloat64(arrayBuffer));
   } else if (type === Datatype.Char) {
-    return bufferToString(arrayBuffer);
+    const charCodes = typedArrayToArray(bufferToUint8(arrayBuffer));
+    return String.fromCharCode(...charCodes);
   } else if (type === Datatype.Int8) {
     return typedArrayToArray(bufferToInt8(arrayBuffer));
   } else if (type === Datatype.Uint8) {
