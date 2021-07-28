@@ -18,11 +18,11 @@ const password = process.env.TDB_PASS;
 // makeSimpleCallFixedSizedAttributes();
 // makeVarLengthCall();
 // compareQueryObjects();
-// callVarAndFixedSimpleArray();
+callVarAndFixedSimpleArray();
 // callFixedA0A3();
 // serializeAndDeserializeBody();
 // callSparseString();
-callSparseDt();
+// callSparseDt();
 
 
 function callSparseDt() {
@@ -35,7 +35,7 @@ function callSparseDt() {
         password,
         basePath: basePathV2,
       });
-      
+
       const deserializedFromBodyFile = deSerializer.default(arrayBuffer);
       QueryHelper.SubmitQuery("kostas", "sparse_dt", dtQueryData)
         .then((res) => {

@@ -1,4 +1,6 @@
 import { Datatype } from "../v2";
+import { int64Types } from './mapToBigIntIfNeeded';
+import typedArrayToArray from './typedArrayToArray';
 
 export const bufferToInt8 = (arrayBuffer: ArrayBuffer) =>
   new Int8Array(arrayBuffer);
@@ -45,27 +47,27 @@ export const bufferToUTF32 = (arrayBuffer: ArrayBuffer) => {
 
 const bufferToData = (arrayBuffer: ArrayBuffer, type: Datatype) => {
   if (type === Datatype.Int32) {
-    return bufferToInt32(arrayBuffer);
+    return typedArrayToArray(bufferToInt32(arrayBuffer));
   } else if (type === Datatype.Uint64) {
-    return bufferToUint64(arrayBuffer);
+    return typedArrayToArray(bufferToUint64(arrayBuffer));
   } else if (type === Datatype.Int64) {
-    return bufferToInt64(arrayBuffer);
+    return typedArrayToArray(bufferToInt64(arrayBuffer));
   } else if (type === Datatype.Float32) {
-    return bufferToFloat32(arrayBuffer);
+    return typedArrayToArray(bufferToFloat32(arrayBuffer));
   } else if (type === Datatype.Float64) {
-    return bufferToFloat64(arrayBuffer);
+    return typedArrayToArray(bufferToFloat64(arrayBuffer));
   } else if (type === Datatype.Char) {
     return bufferToString(arrayBuffer);
   } else if (type === Datatype.Int8) {
-    return bufferToInt8(arrayBuffer);
+    return typedArrayToArray(bufferToInt8(arrayBuffer));
   } else if (type === Datatype.Uint8) {
-    return bufferToUint8(arrayBuffer);
+    return typedArrayToArray(bufferToUint8(arrayBuffer));
   } else if (type === Datatype.Int16) {
-    return bufferToInt16(arrayBuffer);
+    return typedArrayToArray(bufferToInt16(arrayBuffer));
   } else if (type === Datatype.Uint16) {
-    return bufferToUint16(arrayBuffer);
+    return typedArrayToArray(bufferToUint16(arrayBuffer));
   } else if (type === Datatype.Uint32) {
-    return bufferToUint32(arrayBuffer);
+    return typedArrayToArray(bufferToUint32(arrayBuffer));
   } else if (type === Datatype.StringAscii) {
     return bufferToAscii(arrayBuffer);
   } else if (type === Datatype.StringUtf8) {
@@ -78,6 +80,8 @@ const bufferToData = (arrayBuffer: ArrayBuffer, type: Datatype) => {
     return bufferToUTF16(arrayBuffer);
   } else if (type === Datatype.StringUcs4) {
     return bufferToUTF32(arrayBuffer);
+  } else if (int64Types.includes(type)) {
+    return typedArrayToArray(bufferToInt64(arrayBuffer));
   }
 
   return arrayBuffer;

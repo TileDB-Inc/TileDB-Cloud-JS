@@ -1,4 +1,5 @@
 import { Datatype } from "../v2";
+import { int64Types } from './mapToBigIntIfNeeded';
 
 const getTypedArrayFromDataType = (type: Datatype) => {
   if (type === Datatype.Int32) {
@@ -21,8 +22,8 @@ const getTypedArrayFromDataType = (type: Datatype) => {
     return Float32Array;
   } else if (type === Datatype.Float64) {
     return Float64Array;
-  } else if (type === Datatype.DatetimeSec) {
-    return BigUint64Array;
+  } else if (int64Types.includes(type))  {
+    return BigInt64Array;
   }
 };
 
