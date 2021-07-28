@@ -4,7 +4,7 @@
 #include <fstream>
 using namespace tiledb;
 // Name of array.
-std::string array_name("variable_length_array_with_overlapped_ranged");
+std::string array_name("variable_length_array_char");
 /**
  * Helper function that serializes a query from the "client" or "server"
  * perspective. The flow being mimicked here is (for read queries):
@@ -81,7 +81,7 @@ void create_array()
     schema.set_domain(domain).set_order({{TILEDB_ROW_MAJOR, TILEDB_ROW_MAJOR}});
     // Add two variable-length attributes "a1" and "a2", the first storing
     // strings and the second storing a variable number of integers.
-    schema.add_attribute(Attribute::create<std::string>(ctx, "a1"));
+    schema.add_attribute(Attribute::create<char>(ctx, "a1"));
     schema.add_attribute(Attribute::create<std::vector<uint64_t>>(ctx, "a2"));
     schema.add_attribute(Attribute::create<std::vector<int>>(ctx, "a4"));
     // Fixed length attribute
@@ -104,7 +104,7 @@ void write_array()
 {
     Context ctx;
     // Prepare some data for the array
-    std::string a1_data = "abbcccdddeeefghhhijjjkklmnoop";
+    char a1_data = 'abbcccdddeeefghhhijjjkklmnoop';
     std::vector<uint64_t> a1_off = {
         0, 1, 3, 6, 9, 11, 12, 13, 16, 17, 20, 22, 23, 24, 25, 27};
     std::vector<uint64_t> a2_data = {1, 1, 20, 311, 27, 82, 5, 6, 6, 7, 7, 8, 8,
@@ -162,8 +162,8 @@ void read_array()
     const std::vector<int> subarray = {1, 2, 2, 4};
     // Prepare the vectors that will hold the result
     std::vector<uint64_t> a1_off(12);
-    std::string a1_data;
-    a1_data.resize(9);
+    char a1_data(9);
+    // a1_data.resize(9);
     std::vector<uint64_t> a2_off(12);
     std::vector<uint64_t> a2_data(32);
     std::vector<uint64_t> a4_off(12);
@@ -195,7 +195,7 @@ void read_array()
     std::vector<uint8_t> serialized_body;
     serialize_query(ctx, query, &serialized_body, true);
     std::ofstream body_file;
-    body_file.open("body_mixed_overlapped_range.raw", std::ios::out | std::ios::binary);
+    body_file.open("body_char.raw", std::ios::out | std::ios::binary);
     for (const auto &d : serialized_body)
         body_file << d;
     body_file.close();
@@ -205,7 +205,7 @@ void read_array()
     std::vector<uint8_t> serialized_response;
     serialize_query(ctx, query, &serialized_response, false);
     std::ofstream response_file;
-    response_file.open("response_mixed_overlapped_range.raw", std::ios::out | std::ios::binary);
+    response_file.open("response_char.raw", std::ios::out | std::ios::binary);
     for (const auto &d : serialized_response)
         response_file << d;
     response_file.close();
@@ -219,9 +219,9 @@ void read_array()
     auto result_a1_data_size = result_el_map["a1"].second * sizeof(char);
     a1_str_sizes.push_back(result_a1_data_size - a1_off[result_el_a1_off - 1]);
     // Get the strings
-    std::vector<std::string> a1_str;
+    std::vector<char> a1_str;
     for (size_t i = 0; i < result_el_a1_off; ++i)
-        a1_str.push_back(std::string(&a1_data[a1_off[i]], a1_str_sizes[i]));
+        a1_str.push_back(char(&a1_data[a1_off[i]], a1_str_sizes[i]));
     // Get the element offsets
     std::vector<uint64_t> a2_el_off;
     auto result_el_a2_off = result_el_map["a2"].first;

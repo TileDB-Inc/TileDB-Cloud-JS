@@ -219,8 +219,7 @@ export const deserializeSubarray = (subArray: Subarray) => {
       const bufferSizes = range
       .getBufferSizes()
       .map((uint64) => uint64.toNumber());
-      // console.log(new Uint32Array(range.getBuffer().toArrayBuffer()));
-      // console.log(range.getBuffer().toUint8Array());
+
       return {
         type,
         hasDefaultRange: range.getHasDefaultRange(),
