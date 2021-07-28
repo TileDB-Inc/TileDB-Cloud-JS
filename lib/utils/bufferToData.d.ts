@@ -13,5 +13,5 @@ export declare const bufferToString: (arrayBuffer: ArrayBuffer) => string;
 export declare const bufferToAscii: (arrayBuffer: ArrayBuffer) => string;
 export declare const bufferToUTF16: (arrayBuffer: ArrayBuffer) => string;
 export declare const bufferToUTF32: (arrayBuffer: ArrayBuffer) => string;
-declare const bufferToData: (arrayBuffer: ArrayBuffer, type: Datatype) => string | ArrayBuffer | Uint8Array | Float64Array | Int32Array | Int16Array | Int8Array | BigInt64Array | Uint16Array | Uint32Array | BigUint64Array | Float32Array;
+declare const bufferToData: (arrayBuffer: ArrayBuffer, type: Datatype) => string | ArrayBuffer | number[] | bigint[];
 export default bufferToData;

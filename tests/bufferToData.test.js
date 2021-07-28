@@ -7,7 +7,7 @@ describe("bufferToData()", () => {
         const res = bufferToData.default(nums.buffer, Datatype.Int16);
 
         expect(nums.byteLength).toBe(8);
-        expect(Array.from(res)).toEqual([2, 8, 32, 44]);
+        expect(res).toEqual([2, 8, 32, 44]);
     });
 
     it('should convert buffer uint16 arraybuffer', () => {
@@ -15,49 +15,49 @@ describe("bufferToData()", () => {
         const res = bufferToData.default(nums.buffer, Datatype.Uint16);
 
         expect(nums.byteLength).toBe(8);
-        expect(Array.from(res)).toEqual([2, 8, 32, 44]);
+        expect(res).toEqual([2, 8, 32, 44]);
     });
 
     it('should convert buffer int32 arraybuffer', () => {
         const nums = Int32Array.from([2, 8, 32 ,44])
         const res = bufferToData.default(nums.buffer, Datatype.Int32);
         expect(nums.byteLength).toBe(16);
-        expect(Array.from(res)).toEqual([2, 8, 32, 44]);
+        expect(res).toEqual([2, 8, 32, 44]);
     });
 
     it('should convert buffer uint32 arraybuffer', () => {
         const nums = Uint32Array.from([2, 8, 32 ,44])
         const res = bufferToData.default(nums.buffer, Datatype.Uint32);
         expect(nums.byteLength).toBe(16);
-        expect(Array.from(res)).toEqual([2, 8, 32, 44]);
+        expect(res).toEqual([2, 8, 32, 44]);
     });
 
     it('should convert buffer int64 arraybuffer', () => {
         const nums = BigInt64Array.from([BigInt(2), BigInt(322)])
         const res = bufferToData.default(nums.buffer, Datatype.Int64);
         expect(nums.byteLength).toBe(16);
-        expect(Array.from(res)).toEqual([BigInt(2), BigInt(322)]);
+        expect(res).toEqual([BigInt(2), BigInt(322)]);
     });
 
     it('should convert buffer uint64 arraybuffer', () => {
         const nums = BigUint64Array.from([BigInt(2), BigInt(322)])
         const res = bufferToData.default(nums.buffer, Datatype.Uint64);
         expect(nums.byteLength).toBe(16);
-        expect(Array.from(res)).toEqual([BigInt(2), BigInt(322)]);
+        expect(res).toEqual([BigInt(2), BigInt(322)]);
     });
 
     it('should convert buffer float32 arraybuffer', () => {
         const nums = Float32Array.from([2, 8, 32 ,44])
         const res = bufferToData.default(nums.buffer, Datatype.Float32);
         expect(nums.byteLength).toBe(16);
-        expect(Array.from(res)).toEqual([2, 8, 32, 44]);
+        expect(res).toEqual([2, 8, 32, 44]);
     });
 
     it('should convert buffer float64 arraybuffer', () => {
         const nums = Float64Array.from([2, 8, 32 ,44])
         const res = bufferToData.default(nums.buffer, Datatype.Float64);
         expect(nums.byteLength).toBe(32);
-        expect(Array.from(res)).toEqual([2, 8, 32, 44]);
+        expect(res).toEqual([2, 8, 32, 44]);
     });
 
     it('Should convert utf8 encoded to string', () => {
