@@ -82,7 +82,14 @@ export class TileDBQuery {
 
       return results;
     } catch (e) {
-      throw e;
+      const errorIsABuffer = e?.response?.data?.buffer || e?.response?.data?.length;
+      if (errorIsABuffer) {
+        const errorArrayBuffer = convertToArrayBufferIfNodeBuffer(e.response.data)
+        const decodedMessage = new TextDecoder().decode(errorArrayBuffer);
+        throw new Error(decodedMessage);
+      } else {
+        throw e;
+      }
     }
   }
 }
@@ -160,7 +167,7 @@ export const getResults = (
         );
         const byteOffsets = Array.from(new BigUint64Array(offsetsBuffer));
 
-        offsets = byteOffsets.map((o) => Number(o) / BYTE_PER_ELEMENT);
+        offsets = byteOffsets.map((o) => o / BigInt(BYTE_PER_ELEMENT));
       }
 
       result = setNullables(
