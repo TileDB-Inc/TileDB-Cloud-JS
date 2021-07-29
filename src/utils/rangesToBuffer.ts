@@ -2,6 +2,9 @@ import { Datatype } from "../v2";
 import getTypedArrayFromDataType from "./getTypedArrayFromDataType";
 import mapToBigIntIfNeeded from "./mapToBigIntIfNeeded";
 
+/**
+ * Convert user defined ranges to a Uint8Array
+ */
 const rangesToBuffer = (ranges: any[], type: Datatype) => {
   const TypedArray = getTypedArrayFromDataType(type);
 

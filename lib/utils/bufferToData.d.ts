@@ -13,5 +13,8 @@ export declare const bufferToString: (arrayBuffer: ArrayBuffer) => string;
 export declare const bufferToAscii: (arrayBuffer: ArrayBuffer) => string;
 export declare const bufferToUTF16: (arrayBuffer: ArrayBuffer) => string;
 export declare const bufferToUTF32: (arrayBuffer: ArrayBuffer) => string;
+/**
+ * Convert an ArrayBuffer to its corresponding type
+ */
 declare const bufferToData: (arrayBuffer: ArrayBuffer, type: Datatype) => string | ArrayBuffer | number[] | bigint[];
 export default bufferToData;

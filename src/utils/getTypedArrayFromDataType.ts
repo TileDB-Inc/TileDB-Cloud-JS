@@ -1,6 +1,9 @@
 import { Datatype } from "../v2";
 import { int64Types } from './mapToBigIntIfNeeded';
 
+/**
+ * Get the TypedArray of every type
+ */
 const getTypedArrayFromDataType = (type: Datatype) => {
   if (type === Datatype.Int32) {
     return Int32Array;
