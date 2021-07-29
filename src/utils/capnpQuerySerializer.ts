@@ -1,8 +1,12 @@
 import { Query as QueryType, Subarray as SubarrayType } from "../v2";
 import { Query, Subarray } from "../capnp/query.capnp";
 import * as capnp from "capnp-ts";
-// import getTypedArrayFromDataType from './getTypedArrayFromDataType';
 
+/**
+ * Serialize the Query object to capnp
+ * @param data Query javascript object
+ * @returns ArrayBuffer of the capnp Query object 
+ */
 const capnpQuerySerializer = (data: Partial<QueryType>) => {
   const message = new capnp.Message();
   const queryData = message.initRoot(Query);

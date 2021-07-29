@@ -1,5 +1,10 @@
 import { Array as ArrayCapnp, Config, DomainArray, MapFloat64, MapUInt64, Query, QueryReader, Stats, Subarray } from "../capnp/query.capnp";
 import * as capnp from "capnp-ts";
+/**
+ * Deserializes an ArrayBuffer to a Query object
+ * @param buffer ArrayBuffer of the capnp Query object
+ * @returns Query object
+ */
 declare const capnpQueryDeSerializer: (buffer: ArrayBuffer | ArrayBufferLike) => {
     attributeBufferHeaders: {
         name: string;

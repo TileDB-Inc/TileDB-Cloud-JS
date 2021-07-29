@@ -31,13 +31,17 @@ export class TileDBQuery {
     const queryAPI = new QueryApi(config);
     const arrayAPI = new ArrayApi(configV1);
     try {
+      // Get ArraySchema of arrray, to get type information of the dimensions and the attributes
       const arraySchemaResponse = await arrayAPI.getArray(
         namespace,
         arrayName,
         "application/json"
       );
       const arraySchema = arraySchemaResponse.data;
-      arraySchema.domain;
+      /**
+       * Get the query response in capnp, we set responseType to arraybuffer instead of JSON
+       * in order to deserialize the query capnp object.
+       */
       const queryResponse = await queryAPI.submitQuery(
         namespace,
         arrayName,
@@ -59,13 +63,31 @@ export class TileDBQuery {
         }
       );
 
+      /**
+       * Axios in nodeJS environments casts the response to a Buffer object
+       * we convert it back to an ArrayBuffer if needed
+       */
       const queryData = convertToArrayBufferIfNodeBuffer(queryResponse.data);
+      /**
+       * First 8 bytes of the response, contain a Uint64 number
+       * which is the size of the response we skip it.
+       */
       const bufferWithoutFirstEightBytes = queryData.slice(8);
 
+      /**
+       * Deserialize buffer to a Query object
+       */
       const queryObject = capnpQueryDeSerializer(bufferWithoutFirstEightBytes);
       const attributeHeaders = queryObject.attributeBufferHeaders;
+      /**
+       * Calculate the size of bytes of the attributes from the attributeBufferHeaders of the Query object.
+       */
       const numberOfBytesOfResults =
         getSizeInBytesOfAllAttributes(attributeHeaders);
+      /**
+       * We get the last N bytes (N is the number of total bytes of the attributes), which contain
+       * the results of all the attributes
+       */
       const resultsBuffer = bufferWithoutFirstEightBytes.slice(
         -1 * numberOfBytesOfResults
       );
@@ -73,7 +95,7 @@ export class TileDBQuery {
         ...arraySchema.domain.dimensions,
         ...arraySchema.attributes,
       ];
-
+      // Calculate results
       const results = getResults(
         resultsBuffer,
         attributeHeaders,
@@ -82,6 +104,10 @@ export class TileDBQuery {
 
       return results;
     } catch (e) {
+      /**
+       * Since we set the responseType to "arrayBuffer", in case the
+       * response error message is a buffer, we deserialize the message before throwing
+       */
       const errorIsABuffer = e?.response?.data?.buffer || e?.response?.data?.length;
       if (errorIsABuffer) {
         const errorArrayBuffer = convertToArrayBufferIfNodeBuffer(e.response.data)
@@ -96,6 +122,11 @@ export class TileDBQuery {
 
 export default TileDBQuery;
 
+/**
+ * If buffer is a NodeJS Buffer object we convert it back to an ArrayBuffer
+ * @param buffer ArrayBuffer or Nodejs Buffer
+ * @returns ArrayBuffer
+ */
 function convertToArrayBufferIfNodeBuffer(buffer: any): ArrayBuffer {
   if (buffer.buffer) {
     return new Uint8Array(buffer).buffer;
@@ -104,6 +135,11 @@ function convertToArrayBufferIfNodeBuffer(buffer: any): ArrayBuffer {
   return buffer;
 }
 
+/**
+ * Add all buffers of an attribute
+ * @param attr AttributeBufferHeader
+ * @returns number of the total bytes of the attribute
+ */
 const getAttributeSizeInBytes = (attr: AttributeBufferHeader) => {
   return (
     attr.fixedLenBufferSizeInBytes +
@@ -111,10 +147,21 @@ const getAttributeSizeInBytes = (attr: AttributeBufferHeader) => {
     attr.validityLenBufferSizeInBytes
   );
 };
-
+/**
+ * Calculate the total bytes of all the attributes
+ * @param attributes 
+ * @returns number of the total bytes of all the attributes
+ */
 const getSizeInBytesOfAllAttributes = (attributes: AttributeBufferHeader[]) =>
   attributes.reduce((accum, attr) => accum + getAttributeSizeInBytes(attr), 0);
 
+/**
+ * Convert an ArrayBuffer to a map of attributes with their results
+ * @param arrayBuffer The slice ArrayBuffer that contains the results
+ * @param attributes 
+ * @param attributesSchema 
+ * @returns A map of attribute names with the results of every attribute
+ */
 export const getResults = (
   arrayBuffer: ArrayBuffer,
   attributes: AttributeBufferHeader[],
@@ -122,9 +169,14 @@ export const getResults = (
 ) => {
   const data = {};
 
+  /**
+   * We start from the last attribute which is at the end of the buffer
+   */
   attributes.reverse().reduce((offset, attribute) => {
     const totalNumberOfBytesOfAttribute = getAttributeSizeInBytes(attribute);
+    // If there are validityLenBufferSizeInBytes the attribute is nullable
     const isNullable = !!attribute.validityLenBufferSizeInBytes;
+    // If there are varLenBufferSizeInBytes the attribute is varLengthSized
     const isVarLengthSized = !!attribute.varLenBufferSizeInBytes;
     const selectedAttributeSchema = getAttributeSchema(
       attribute.name,
@@ -132,10 +184,19 @@ export const getResults = (
     );
 
     const negativeOffset = -1 * offset;
+    /**
+     * If attribute is varLengthSized, we ignore the first N bytes (where N = fixedLenBufferSizeInBytes)
+     * These first N bytes contain the offsets of the attribute, which is a uint64 array.
+     */
     const start =
       negativeOffset -
       totalNumberOfBytesOfAttribute +
       (isVarLengthSized ? attribute.fixedLenBufferSizeInBytes : 0);
+    /**
+     * If attribute is isNullable we ignore the last N bytes (where N = validityLenBufferSizeInBytes)
+     * These last N bytes contain a uint8 array of zeros and ones, where every zero represents
+     * that in that index the attribute is null.
+     */
     const ending =
       negativeOffset -
       (isNullable ? attribute.validityLenBufferSizeInBytes : 0);
@@ -147,12 +208,20 @@ export const getResults = (
     );
 
     if (isNullable) {
+      /**
+       * If attribute is Nullable, we get the last N bytes, cast it to uint8 array to get
+       * what is null.
+       */
       const nullableArrayEnd = ending + attribute.validityLenBufferSizeInBytes;
       const nullableArrayBuffer = arrayBuffer.slice(
         ending,
         nullableArrayEnd ? nullableArrayEnd : undefined
       );
       const nullablesTypedArray = bufferToInt8(nullableArrayBuffer);
+      /**
+       * nullablesArray should be an array of zeros and ones (e.g. [0, 1, 1, 0])
+       * Every zero represents that in that specific index the attribute is NULL
+       */
       const nullablesArray = Array.from(nullablesTypedArray);
 
       let offsets = [];
@@ -165,9 +234,14 @@ export const getResults = (
           startOfBuffer,
           startOfBuffer + attribute.fixedLenBufferSizeInBytes
         );
+        /**
+         * Offsets are Uint64 numbers, buffer contains byte offsets though,
+         * e.g. if type of the attribute is an INT32 (4 bytes per number) and the offsets are [0, 3, 4]
+         * the buffer contains the offsets * bytes of the element instead of just the offsets [0, 3 * 4, 4 * 4] = [0, 12, 16]
+         */
         const byteOffsets = Array.from(new BigUint64Array(offsetsBuffer));
-
-        offsets = byteOffsets.map((o) => o / BigInt(BYTE_PER_ELEMENT));
+        // Convert byte offsets to offsets
+        offsets = byteOffsets.map((o) => Number(o) / BYTE_PER_ELEMENT);
       }
 
       result = setNullables(
@@ -193,6 +267,7 @@ export const getResults = (
  * @returns [NULL, 15, 22, NULL, 8]
  */
 export const setNullables = <T>(vals: T[], nullables: number[], offsets: number[]) => {
+  // If values have offsets we group values together by offset
   const valueArray = offsets.length ? setOffsets(vals, offsets) : vals;
   return valueArray.map((val, i) => (nullables[i] ? val : null));
 };
@@ -220,7 +295,9 @@ export const setOffsets = (vals: any[], offsets: number[]) => {
 
   return arrWithOffsets;
 };
-
+/**
+ * Get attribute data from attribute name, attribute data contains the type of the attribute (e.g. INT32, StringUTF8 etc)
+ */
 const getAttributeSchema = (
   attrName: string,
   attributesSchema: Array<Dimension | Attribute>

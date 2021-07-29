@@ -45,6 +45,10 @@ export const bufferToUTF32 = (arrayBuffer: ArrayBuffer) => {
   return result;
 };
 
+
+/**
+ * Convert an ArrayBuffer to its corresponding type
+ */
 const bufferToData = (arrayBuffer: ArrayBuffer, type: Datatype) => {
   if (type === Datatype.Int32) {
     return typedArrayToArray(bufferToInt32(arrayBuffer));

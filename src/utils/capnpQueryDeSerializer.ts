@@ -20,6 +20,11 @@ import * as capnp from "capnp-ts";
 
 const identity = <T>(x: T) => x;
 
+/**
+ * Deserializes an ArrayBuffer to a Query object
+ * @param buffer ArrayBuffer of the capnp Query object
+ * @returns Query object
+ */
 const capnpQueryDeSerializer = (buffer: ArrayBuffer | ArrayBufferLike) => {
   const message = new capnp.Message(buffer, false);
   const query = message.getRoot(Query);

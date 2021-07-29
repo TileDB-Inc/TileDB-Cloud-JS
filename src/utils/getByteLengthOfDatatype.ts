@@ -1,6 +1,9 @@
 import { Datatype } from "../v2";
 import getTypedArrayFromDataType from "./getTypedArrayFromDataType";
 
+/**
+ * Get the byte length of an individual element of every Datatype
+ */
 const getByteLengthOfDatatype = (type: Datatype) => {
   const TypedArray = getTypedArrayFromDataType(type);
 
