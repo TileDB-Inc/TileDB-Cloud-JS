@@ -168,12 +168,17 @@ export const getResults = (
   attributesSchema: Array<Dimension | Attribute>
 ) => {
   const data = {};
-
   /**
    * We start from the last attribute which is at the end of the buffer
    */
   attributes.reverse().reduce((offset, attribute) => {
     const totalNumberOfBytesOfAttribute = getAttributeSizeInBytes(attribute);
+
+    if (!totalNumberOfBytesOfAttribute) {
+      data[attribute.name] = null;
+      
+      return offset;
+    }
     // If there are validityLenBufferSizeInBytes the attribute is nullable
     const isNullable = !!attribute.validityLenBufferSizeInBytes;
     // If there are varLenBufferSizeInBytes the attribute is varLengthSized
