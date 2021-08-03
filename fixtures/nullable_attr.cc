@@ -41,7 +41,7 @@
 using namespace tiledb;
 
 // Name of array.
-std::string array_name("nullable_attributes_array");
+std::string array_name("nullable_attr_arr");
 
 
 static void serialize_query(const Context &ctx, Query &query,
@@ -138,9 +138,9 @@ void write_array() {
   for (auto e : a2_el_off)
     a2_off.push_back(e * sizeof(int));
 
-  const char a3_data_char[] = "abcdewxyz";
+  const char a3_data_char[] = "abcω☺dewxyz";
   std::vector<char> a3_data(a3_data_char, a3_data_char + 9);
-  std::vector<uint64_t> a3_el_off = {0, 3, 4, 5};
+  std::vector<uint64_t> a3_el_off = {0, 3, 5, 6};
   std::vector<uint64_t> a3_off;
   for (auto e : a3_el_off)
     a3_off.push_back(e * sizeof(char));
@@ -200,7 +200,7 @@ void read_array() {
     std::vector<uint8_t> serialized_body;
     serialize_query(ctx, query, &serialized_body, true);
     std::ofstream body_file;
-    body_file.open("body_char2.raw", std::ios::out | std::ios::binary);
+    body_file.open("body_null_attr.raw", std::ios::out | std::ios::binary);
     for (const auto &d : serialized_body)
         body_file << d;
     body_file.close();
@@ -216,7 +216,7 @@ void read_array() {
   std::vector<uint8_t> serialized_response;
     serialize_query(ctx, query, &serialized_response, false);
     std::ofstream response_file;
-    response_file.open("response_char2.raw", std::ios::out | std::ios::binary);
+    response_file.open("response_null_attr.raw", std::ios::out | std::ios::binary);
     for (const auto &d : serialized_response)
         response_file << d;
     response_file.close();

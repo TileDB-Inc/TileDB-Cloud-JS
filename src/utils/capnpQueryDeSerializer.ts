@@ -18,8 +18,6 @@ import {
 } from "../capnp/query.capnp";
 import * as capnp from "capnp-ts";
 
-const identity = <T>(x: T) => x;
-
 /**
  * Deserializes an ArrayBuffer to a Query object
  * @param buffer ArrayBuffer of the capnp Query object
@@ -202,16 +200,16 @@ export const deserializeWrite = (query: Query) => {
 
 export const deserializeDomainArray = (domainArray: DomainArray) => {
   return {
-    int8: domainArray.getInt8().map(identity),
-    uint8: domainArray.getUint8().map(identity),
-    int16: domainArray.getInt16().map(identity),
-    uint16: domainArray.getUint16().map(identity),
-    int32: domainArray.getInt32().map(identity),
-    uint32: domainArray.getUint32().map(identity),
-    int64: domainArray.getInt64().map(identity),
-    uint64: domainArray.getUint64().map(identity),
-    float32: domainArray.getFloat32().map(identity),
-    float64: domainArray.getFloat64().map(identity),
+    int8: domainArray.getInt8().toArray(),
+    uint8: domainArray.getUint8().toArray(),
+    int16: domainArray.getInt16().toArray(),
+    uint16: domainArray.getUint16().toArray(),
+    int32: domainArray.getInt32().toArray(),
+    uint32: domainArray.getUint32().toArray(),
+    int64: domainArray.getInt64().toArray(),
+    uint64: domainArray.getUint64().toArray(),
+    float32: domainArray.getFloat32().toArray(),
+    float64: domainArray.getFloat64().toArray(),
   };
 };
 

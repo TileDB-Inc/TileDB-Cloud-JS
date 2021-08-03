@@ -4,7 +4,7 @@
 #include <fstream>
 using namespace tiledb;
 // Name of array.
-std::string array_name("variable_length_array_char");
+std::string array_name("variable_length_array_qstart");
 /**
  * Helper function that serializes a query from the "client" or "server"
  * perspective. The flow being mimicked here is (for read queries):
@@ -149,6 +149,17 @@ void write_array()
         .set_buffer("a3", a3_data)
         .set_buffer_nullable("a5", a5_data, a5_validity_buf)
         .set_buffer_nullable("a6", a6_off, a6_data, a6_validity_buf);
+
+
+    // This mimics the body posted to the server
+    std::vector<uint8_t> serialized_body;
+    serialize_query(ctx, query, &serialized_body, true);
+    std::ofstream body_file;
+    body_file.open("body_writer_qstart_sparse.raw", std::ios::out | std::ios::binary);
+    for (const auto &d : serialized_body)
+        body_file << d;
+    body_file.close();
+
     // Perform the write and close the array.
     query.submit();
     array.close();
@@ -195,7 +206,7 @@ void read_array()
     std::vector<uint8_t> serialized_body;
     serialize_query(ctx, query, &serialized_body, true);
     std::ofstream body_file;
-    body_file.open("body_char.raw", std::ios::out | std::ios::binary);
+    body_file.open("body_qstart_sparse.raw", std::ios::out | std::ios::binary);
     for (const auto &d : serialized_body)
         body_file << d;
     body_file.close();
@@ -205,7 +216,7 @@ void read_array()
     std::vector<uint8_t> serialized_response;
     serialize_query(ctx, query, &serialized_response, false);
     std::ofstream response_file;
-    response_file.open("response_char.raw", std::ios::out | std::ios::binary);
+    response_file.open("response_qstart_sparse.raw", std::ios::out | std::ios::binary);
     for (const auto &d : serialized_response)
         response_file << d;
     response_file.close();

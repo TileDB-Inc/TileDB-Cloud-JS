@@ -33,7 +33,7 @@ const getByteLengthOfDataType = (data: number[] | string[], type: Datatype) => {
   if (type === Datatype.StringUcs4) {
     return data.length * 4;
   }
-  // TODO: get other types
+
   if (type === Datatype.StringUtf8) {
     const encoder = new TextEncoder()
     const encodedStr = data.map((str) => encoder.encode(str))
@@ -52,24 +52,8 @@ const isNumberArray = (data: any[]): data is number[] => {
   return typeof data[0] === 'number';
 }
 
-/**
- * Helper function that takes user data and returns a Query object.
- * Since the Query object is really big we don't expect user to manually set all the values.
- * We get the essential minimal data needed from the user (such as the layout and ranges) and
- * convert it to a Query object.
- * @param data 
- * @param attributes 
- * @param dimensions 
- * @returns Query object
- */
-const dataToQuery = (data: QueryData, attributes: Attribute[], dimensions: Dimension[]): Query => {
-  if (!data.layout) {
-    return data as any;
-  }
-  const { bufferSize } = data;
-  //   TODO: Distribute buffer size depending on the data's type (e.g. INT64 needs 8 times the bytes of an INT8)
-  const AVERAGE_BUFFER_SIZE = Math.floor(bufferSize / (attributes.length * 3));
-  const ranges = data.ranges.map((range, i) => {
+export const getRanges = (ranges: QueryData['ranges'], dimensions: Dimension[]) => {
+  return ranges.map((range, i) => {
     const [firstRange] = range;
     const type = dimensions[i].type;
     const isArrayOfArrays = Array.isArray(firstRange);
@@ -97,6 +81,26 @@ const dataToQuery = (data: QueryData, attributes: Attribute[], dimensions: Dimen
       bufferStartSizes,
     };
   });
+};
+
+/**
+ * Helper function that takes user data and returns a Query object.
+ * Since the Query object is really big we don't expect user to manually set all the values.
+ * We get the essential minimal data needed from the user (such as the layout and ranges) and
+ * convert it to a Query object.
+ * @param data 
+ * @param attributes 
+ * @param dimensions 
+ * @returns Query object
+ */
+const dataToQuery = (data: QueryData, attributes: Attribute[], dimensions: Dimension[]): Query => {
+  if (!data.layout) {
+    return data as any;
+  }
+  const { bufferSize } = data;
+  //   TODO: Distribute buffer size depending on the data's type (e.g. INT64 needs 8 times the bytes of an INT8)
+  const AVERAGE_BUFFER_SIZE = Math.floor(bufferSize / (attributes.length * 3));
+  const ranges = getRanges(data.ranges, dimensions);
   const attributeBufferHeaders = attributes.map((attr) => ({
     name: attr.name,
     fixedLenBufferSizeInBytes: 0,
