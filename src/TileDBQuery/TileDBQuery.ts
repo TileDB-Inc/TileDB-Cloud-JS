@@ -11,12 +11,81 @@ import {
 } from "../v2";
 import getByteLengthOfDatatype from "../utils/getByteLengthOfDatatype";
 import flatten from "../utils/flatten";
+import { QueryWrite } from "../utils/dataToQueryWriter";
+import getWriterBody from "../utils/getWriterBody";
 
 export class TileDBQuery {
   configurationParams: ConfigurationParameters;
 
   constructor(params: ConfigurationParameters) {
     this.configurationParams = params;
+  }
+
+  async WriteQuery(namespace: string, arrayName: string, data: QueryWrite) {
+    const config = new Configuration(this.configurationParams);
+    const baseV1 = config.basePath?.replace("v2", "v1");
+    // Add versioning if basePath exists
+    const configV1 = new Configuration({
+      ...this.configurationParams,
+      // Override basePath v2 for v1 to make calls to get ArraySchema (from v1 API)
+      ...(baseV1 ? { basePath: baseV1 } : {}),
+    });
+    const queryAPI = new QueryApi(config);
+    const arrayAPI = new ArrayApi(configV1);
+
+    try {
+      const arraySchemaResponse = await arrayAPI.getArray(
+        namespace,
+        arrayName,
+        "application/json"
+      );
+      const arraySchema = arraySchemaResponse.data;
+      const body = getWriterBody(data, arraySchema);
+      
+
+      const queryResponse = await queryAPI.submitQuery(
+        namespace,
+        arrayName,
+        Querytype.Write,
+        "application/capnp",
+        body as any,
+        undefined,
+        undefined,
+        undefined,
+        {
+          headers: {
+            "Content-Type": "application/capnp",
+          },
+          responseType: "arraybuffer",
+        }
+      );
+
+      /**
+       * Axios in nodeJS environments casts the response to a Buffer object
+       * we convert it back to an ArrayBuffer if needed
+       */
+      const queryData = convertToArrayBufferIfNodeBuffer(queryResponse.data);
+
+      return queryData;
+
+
+    } catch (e) {
+      /**
+       * Since we set the responseType to "arrayBuffer", in case the
+       * response error message is a buffer, we deserialize the message before throwing
+       */
+      const errorIsABuffer =
+        e?.response?.data?.buffer || e?.response?.data?.length;
+      if (errorIsABuffer) {
+        const errorArrayBuffer = convertToArrayBufferIfNodeBuffer(
+          e.response.data
+        );
+        const decodedMessage = new TextDecoder().decode(errorArrayBuffer);
+        throw new Error(decodedMessage);
+      } else {
+        throw e;
+      }
+    }
   }
 
   async SubmitQuery(namespace: string, arrayName: string, body: QueryData) {
@@ -108,9 +177,12 @@ export class TileDBQuery {
        * Since we set the responseType to "arrayBuffer", in case the
        * response error message is a buffer, we deserialize the message before throwing
        */
-      const errorIsABuffer = e?.response?.data?.buffer || e?.response?.data?.length;
+      const errorIsABuffer =
+        e?.response?.data?.buffer || e?.response?.data?.length;
       if (errorIsABuffer) {
-        const errorArrayBuffer = convertToArrayBufferIfNodeBuffer(e.response.data)
+        const errorArrayBuffer = convertToArrayBufferIfNodeBuffer(
+          e.response.data
+        );
         const decodedMessage = new TextDecoder().decode(errorArrayBuffer);
         throw new Error(decodedMessage);
       } else {
@@ -149,7 +221,7 @@ const getAttributeSizeInBytes = (attr: AttributeBufferHeader) => {
 };
 /**
  * Calculate the total bytes of all the attributes
- * @param attributes 
+ * @param attributes
  * @returns number of the total bytes of all the attributes
  */
 const getSizeInBytesOfAllAttributes = (attributes: AttributeBufferHeader[]) =>
@@ -158,8 +230,8 @@ const getSizeInBytesOfAllAttributes = (attributes: AttributeBufferHeader[]) =>
 /**
  * Convert an ArrayBuffer to a map of attributes with their results
  * @param arrayBuffer The slice ArrayBuffer that contains the results
- * @param attributes 
- * @param attributesSchema 
+ * @param attributes
+ * @param attributesSchema
  * @returns A map of attribute names with the results of every attribute
  */
 export const getResults = (
@@ -176,7 +248,7 @@ export const getResults = (
 
     if (!totalNumberOfBytesOfAttribute) {
       data[attribute.name] = null;
-      
+
       return offset;
     }
     // If there are validityLenBufferSizeInBytes the attribute is nullable
@@ -271,7 +343,11 @@ export const getResults = (
  * @param offsets []
  * @returns [NULL, 15, 22, NULL, 8]
  */
-export const setNullables = <T>(vals: T[], nullables: number[], offsets: number[]) => {
+export const setNullables = <T>(
+  vals: T[],
+  nullables: number[],
+  offsets: number[]
+) => {
   // If values have offsets we group values together by offset
   const valueArray = offsets.length ? setOffsets(vals, offsets) : vals;
   return valueArray.map((val, i) => (nullables[i] ? val : null));
