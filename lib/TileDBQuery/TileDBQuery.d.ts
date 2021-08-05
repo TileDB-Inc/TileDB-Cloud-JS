@@ -1,9 +1,11 @@
 import { QueryData } from "../utils/dataToQuery";
 import { Attribute, Dimension } from "../v1";
 import { AttributeBufferHeader, ConfigurationParameters } from "../v2";
+import { QueryWrite } from "../utils/dataToQueryWriter";
 export declare class TileDBQuery {
     configurationParams: ConfigurationParameters;
     constructor(params: ConfigurationParameters);
+    WriteQuery(namespace: string, arrayName: string, data: QueryWrite): Promise<ArrayBuffer>;
     SubmitQuery(namespace: string, arrayName: string, body: QueryData): Promise<{}>;
 }
 export default TileDBQuery;

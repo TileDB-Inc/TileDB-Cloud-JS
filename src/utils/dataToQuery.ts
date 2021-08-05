@@ -52,7 +52,7 @@ const isNumberArray = (data: any[]): data is number[] => {
   return typeof data[0] === 'number';
 }
 
-export const getRanges = (ranges: QueryData['ranges'], dimensions: Dimension[]) => {
+export const getRanges = (ranges: QueryData['ranges'], dimensions: Dimension[], hasDefaultRange?: boolean) => {
   return ranges.map((range, i) => {
     const [firstRange] = range;
     const type = dimensions[i].type;
@@ -75,7 +75,8 @@ export const getRanges = (ranges: QueryData['ranges'], dimensions: Dimension[]) 
     
     return {
       type,
-      hasDefaultRange: false,
+      // TODO: How do we know "hasDefaultRange" ? Is it related with the domain?
+      hasDefaultRange,
       buffer: rangesToBuffer(flatten(range), type),
       bufferSizes,
       bufferStartSizes,

@@ -710,6 +710,12 @@ export interface Writer {
     dedupCoords?: boolean;
     /**
      * 
+     * @type {Subarray}
+     * @memberof Writer
+     */
+    subarrayRanges?: Subarray;
+    /**
+     * 
      * @type {DomainArray}
      * @memberof Writer
      */

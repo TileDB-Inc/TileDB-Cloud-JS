@@ -1,5 +1,5 @@
-import { Query as QueryType, Subarray as SubarrayType } from "../v2";
-import { Query, Subarray } from "../capnp/query.capnp";
+import { Query as QueryType, Subarray as SubarrayType, DomainArray as DomainArrayType } from "../v2";
+import { Query, Subarray, DomainArray } from "../capnp/query.capnp";
 import * as capnp from "capnp-ts";
 
 /**
@@ -12,6 +12,7 @@ const capnpQuerySerializer = (data: Partial<QueryType>) => {
   const queryData = message.initRoot(Query);
   const {
     reader = {},
+    writer = {},
     array = {},
     attributeBufferHeaders = [],
     layout = "",
@@ -67,6 +68,19 @@ const capnpQuerySerializer = (data: Partial<QueryType>) => {
       capnp.Uint64.fromNumber(originalValidityLenBufferSizeInBytes)
     );
   });
+
+  if (writer) {
+    const {subarrayRanges = {}, subarray = {}} = writer;
+    const queryWriter = queryData.initWriter();
+    queryWriter.setCheckCoordDups(writer.checkCoordDups);
+    queryWriter.setCheckCoordOOB(writer.checkCoordOOB);
+    queryWriter.setDedupCoords(writer.dedupCoords);
+    const writerSubArray = queryWriter.initSubarrayRanges();
+    serializeSubArray(writerSubArray, subarrayRanges);
+    const writerDomain = queryWriter.initSubarray();
+    serializeDomainArray(writerDomain, subarray);
+    
+  }
 
   if (reader) {
     const queryReader = queryData.initReader();
@@ -153,6 +167,60 @@ const capnpQuerySerializer = (data: Partial<QueryType>) => {
 const add = (a: number, b: number) => a + b;
 
 export default capnpQuerySerializer;
+
+const serializeDomainArray = (domainArray: DomainArray, data: DomainArrayType) => {
+  const {float32 = [], float64 = [], int8 = [], int16 = [], int32 = [], int64 = [], uint8 = [], uint16 = [], uint32 = [], uint64 = []} = data;
+  
+  const dFloat32 = domainArray.initFloat32(float32.length);
+  float32.forEach((num, i) => {
+    dFloat32.set(i, num);
+  });
+
+  const dFloat64 = domainArray.initFloat64(float64.length);
+  float64.forEach((num, i) => {
+    dFloat64.set(i, num);
+  });
+
+  const dInt8 = domainArray.initInt8(int8.length);
+  int8.forEach((num, i) => {
+    dInt8.set(i, num);
+  });
+
+  const dInt16 = domainArray.initInt16(int16.length);
+  int16.forEach((num, i) => {
+    dInt16.set(i, num);
+  });
+
+  const dInt32 = domainArray.initInt32(int32.length);
+  int32.forEach((num, i) => {
+    dInt32.set(i, num);
+  });
+
+  const dInt64 = domainArray.initInt64(int64.length);
+  int64.forEach((num, i) => {
+    dInt64.set(i, capnp.Int64.fromNumber(num));
+  });
+
+  const dUint8 = domainArray.initUint8(uint8.length);
+  uint8.forEach((num, i) => {
+    dUint8.set(i, num);
+  });
+
+  const dUint16 = domainArray.initUint16(uint16.length);
+  uint16.forEach((num, i) => {
+    dUint16.set(i, num);
+  });
+
+  const dUint32 = domainArray.initUint32(uint32.length);
+  uint32.forEach((num, i) => {
+    dUint32.set(i, num);
+  });
+
+  const dUint64 = domainArray.initUint64(uint64.length);
+  uint64.forEach((num, i) => {
+    dUint64.set(i, capnp.Uint64.fromNumber(num));
+  });
+}
 
 const serializeSubArray = (capSubArray: Subarray, subArray: SubarrayType) => {
   const { ranges = [], layout = "" } = subArray;
