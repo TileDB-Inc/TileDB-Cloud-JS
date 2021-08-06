@@ -409,3 +409,81 @@ const queryFixedA0A3 = {
   },
   stats: { timers: [], counters: [] },
 };
+
+
+const schemaSparese = {
+  "arrayType": "sparse",
+  "attributes": [
+      {
+          "cellValNum": "1",
+          "filterPipeline": {},
+          "name": "a",
+          "type": "INT32"
+      }
+  ],
+  "capacity": "10000",
+  "cellOrder": "row-major",
+  "coordsFilterPipeline": {
+      "filters": [
+          {
+              "data": {
+                  "int32": -1
+              },
+              "type": "ZSTD"
+          }
+      ]
+  },
+  "domain": {
+      "cellOrder": "row-major",
+      "dimensions": [
+          {
+              "domain": {
+                  "int32": [
+                      1,
+                      4
+                  ]
+              },
+              "filterPipeline": {},
+              "name": "rows",
+              "nullTileExtent": false,
+              "tileExtent": {
+                  "int32": 4
+              },
+              "type": "INT32"
+          },
+          {
+              "domain": {
+                  "int32": [
+                      1,
+                      4
+                  ]
+              },
+              "filterPipeline": {},
+              "name": "cols",
+              "nullTileExtent": false,
+              "tileExtent": {
+                  "int32": 4
+              },
+              "type": "INT32"
+          }
+      ],
+      "tileOrder": "row-major",
+      "type": "INT32"
+  },
+  "offsetFilterPipeline": {
+      "filters": [
+          {
+              "data": {
+                  "int32": -1
+              },
+              "type": "ZSTD"
+          }
+      ]
+  },
+  "tileOrder": "row-major",
+  "version": [
+      9
+  ]
+}
+
+module.exports.schemaSparese = schemaSparese;
