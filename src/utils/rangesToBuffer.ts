@@ -1,4 +1,5 @@
 import { Datatype } from "../v2";
+import flatten from "./flatten";
 import getTypedArrayFromDataType from "./getTypedArrayFromDataType";
 import mapToBigIntIfNeeded from "./mapToBigIntIfNeeded";
 
@@ -14,7 +15,11 @@ const rangesToBuffer = (ranges: any[], type: Datatype) => {
     const uint8Array = new Uint8Array(dataview.buffer, 0, dataview.byteLength);
     return Array.from(uint8Array);
   } else if (type === Datatype.StringAscii) {
-    return (ranges as string[]).map((str) => str.charCodeAt(0));
+    const asciiArray = (ranges as string[]).reduce((arr, str) => {
+      const charCodes = str.split('').map((s,i) => str.charCodeAt(i));
+      return [...arr, ...charCodes];
+    }, []);
+    return flatten(asciiArray);
   }
 };
 

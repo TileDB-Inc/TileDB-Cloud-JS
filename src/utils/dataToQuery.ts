@@ -16,7 +16,7 @@ export interface QueryData extends Pick<Query, "layout"> {
  * @param type Datatype (e.g. UINT64, StringUcs2 etc)
  * @returns number of total bytes
  */
-const getByteLengthOfDataType = (data: number[] | string[], type: Datatype) => { 
+const getByteLengthOfDataType = (data: number[] | string[], type: Datatype) => {
   const TypedArray = getTypedArrayFromDataType(type);
   // case 1: it's number of arrays
   if (TypedArray) {
@@ -25,7 +25,7 @@ const getByteLengthOfDataType = (data: number[] | string[], type: Datatype) => {
   }
   // otherwise it's string
   if (type === Datatype.Char || Datatype.StringAscii) {
-    return data.length * 1;
+    return (data as string[]).reduce((accum, str) => accum + str?.length, 0)
   }
   if (type === Datatype.StringUcs2) {
     return data.length * 2;
@@ -77,7 +77,7 @@ export const getRanges = (ranges: QueryData['ranges'], dimensions: Dimension[], 
     return {
       type,
       // TODO: How do we know "hasDefaultRange" ? Is it related with the domain?
-      hasDefaultRange: !!hasDefaultRange,
+      hasDefaultRange: isEmpty || !!hasDefaultRange,
       buffer: rangesToBuffer(flatten(range), type),
       bufferSizes,
       bufferStartSizes: isEmpty ? [0] : bufferStartSizes,

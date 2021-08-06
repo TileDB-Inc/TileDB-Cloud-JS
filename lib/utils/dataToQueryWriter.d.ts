@@ -44,7 +44,7 @@ declare const dataToQueryWriter: (data: QueryWrite, dimensions: Dimension[], val
             ranges: {
                 type: import("../v1").Datatype;
                 hasDefaultRange: boolean;
-                buffer: number[];
+                buffer: any;
                 bufferSizes: number[];
                 bufferStartSizes: number[];
             }[];

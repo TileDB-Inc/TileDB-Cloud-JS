@@ -147,7 +147,7 @@ export class TileDBQuery {
        * Deserialize buffer to a Query object
        */
       const queryObject = capnpQueryDeSerializer(bufferWithoutFirstEightBytes);
-      console.log(queryObject.attributeBufferHeaders);
+      
       const attributeHeaders = queryObject.attributeBufferHeaders;
       /**
        * Calculate the size of bytes of the attributes from the attributeBufferHeaders of the Query object.
