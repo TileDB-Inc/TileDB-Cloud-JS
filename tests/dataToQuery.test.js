@@ -361,6 +361,56 @@ describe("getRanges()", () => {
     ).toEqual(expected);
   });
 
+  it("Should create string empty ranges", () => {
+    const dimensions = [
+      {
+        domain: null,
+        filterPipeline: {},
+        name: "rows",
+        nullTileExtent: true,
+        tileExtent: {},
+        type: "STRING_ASCII",
+      },
+      {
+        domain: {
+          int32: [1, 4],
+        },
+        filterPipeline: {},
+        name: "cols",
+        nullTileExtent: false,
+        tileExtent: {
+          int32: 4,
+        },
+        type: "INT32",
+      },
+    ];
+    const expected = [
+      {
+        buffer: [],
+        bufferSizes: [0],
+        bufferStartSizes: [0],
+        hasDefaultRange: false,
+        type: "STRING_ASCII",
+      },
+      {
+        buffer: [2, 0, 0, 0, 3, 0, 0, 0],
+        bufferSizes: [8],
+        bufferStartSizes: [0],
+        hasDefaultRange: false,
+        type: "INT32",
+      },
+    ];
+    expect(
+      getRanges(
+        [
+          [],
+          [2, 3],
+        ],
+        dimensions
+      )
+    ).toEqual(expected);
+  });
+
   it("Should create string overlapped ranges", () => {
     const dimensions = [
       {

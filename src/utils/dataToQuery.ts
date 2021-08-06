@@ -58,6 +58,7 @@ export const getRanges = (ranges: QueryData['ranges'], dimensions: Dimension[], 
     const type = dimensions[i].type;
     const isArrayOfArrays = Array.isArray(firstRange);
     const isArrayOfInts = isNumberArray(flatten(range));
+    const isEmpty = !range.length;
     
     const bufferSizes = isArrayOfArrays
     ? range.map((r) => getByteLengthOfDataType(r, type))
@@ -76,10 +77,10 @@ export const getRanges = (ranges: QueryData['ranges'], dimensions: Dimension[], 
     return {
       type,
       // TODO: How do we know "hasDefaultRange" ? Is it related with the domain?
-      hasDefaultRange,
+      hasDefaultRange: !!hasDefaultRange,
       buffer: rangesToBuffer(flatten(range), type),
       bufferSizes,
-      bufferStartSizes,
+      bufferStartSizes: isEmpty ? [0] : bufferStartSizes,
     };
   });
 };
@@ -111,6 +112,7 @@ const dataToQuery = (data: QueryData, attributes: Attribute[], dimensions: Dimen
     originalVarLenBufferSizeInBytes: AVERAGE_BUFFER_SIZE,
     originalValidityLenBufferSizeInBytes: AVERAGE_BUFFER_SIZE,
   }));
+  
   return {
     attributeBufferHeaders,
     layout: data.layout,
