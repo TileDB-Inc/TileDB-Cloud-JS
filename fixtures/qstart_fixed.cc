@@ -178,7 +178,7 @@ void read_array() {
 
   // Prepare the query
   Query query(ctx, array, TILEDB_READ);
-  query.set_subarray(subarray)
+  query.add_range<int>(0, 1, 1)
       .set_layout(TILEDB_ROW_MAJOR)
       .set_buffer("a", data)
       .set_buffer("rows", coords_rows)
@@ -188,7 +188,7 @@ void read_array() {
   std::vector<uint8_t> serialized_body;
   serialize_query(ctx, query, &serialized_body, true);
   std::ofstream body_file;
-  body_file.open("body.raw", std::ios::out | std::ios::binary);
+  body_file.open("body_all.raw", std::ios::out | std::ios::binary);
   for (const auto &d : serialized_body)
     body_file << d;
   body_file.close();

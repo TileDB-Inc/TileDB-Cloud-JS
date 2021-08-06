@@ -147,7 +147,7 @@ void read_array() {
   // Prepare the query
   Query query(ctx, array, TILEDB_READ);
   // Slice only rows "bb", "c" and cols 3, 4
-  query.add_range(0, std::string("a"), std::string("c"));
+  // query.add_range(0, std::string("a"), std::string("c"));
   query.add_range<int64_t>(1, 2, 4);
 
   // Prepare the vector that will hold the result.
@@ -167,7 +167,7 @@ void read_array() {
   std::vector<uint8_t> serialized_body;
   serialize_query(ctx, query, &serialized_body, true);
   std::ofstream body_file;
-  body_file.open("body_sparse_string64.raw", std::ios::out | std::ios::binary);
+  body_file.open("body_sparse_string64_all.raw", std::ios::out | std::ios::binary);
   for (const auto &d : serialized_body)
       body_file << d;
   body_file.close();
