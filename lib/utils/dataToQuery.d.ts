@@ -7,7 +7,7 @@ export interface QueryData extends Pick<Query, "layout"> {
 export declare const getRanges: (ranges: QueryData['ranges'], dimensions: Dimension[], hasDefaultRange?: boolean) => {
     type: import("../v1").Datatype;
     hasDefaultRange: boolean;
-    buffer: number[];
+    buffer: any;
     bufferSizes: number[];
     bufferStartSizes: number[];
 }[];

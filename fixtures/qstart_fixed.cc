@@ -166,29 +166,26 @@ void read_array() {
   // Prepare the array for reading
   Array array(ctx, array_uri, TILEDB_READ);
 
-  // Slice only rows 1, 2 and cols 2, 3, 4
-  const std::vector<int> subarray = {1, 2, 2, 4};
-
   // Prepare the vector that will hold the result.
   // We take an upper bound on the result size, as we do not
   // know a priori how big it is (since the array is sparse)
   std::vector<int> data(3);
-  std::vector<int> coords_rows(3);
-  std::vector<int> coords_cols(3);
+  std::vector<char> gene_cols(180);
+
+  std::vector<int64_t> tmp_rows(180);
 
   // Prepare the query
   Query query(ctx, array, TILEDB_READ);
-  query.add_range<int>(0, 1, 1)
+  query.add_range(0, "ENSG00000202059.1", "ENSG00000202059.1")
       .set_layout(TILEDB_ROW_MAJOR)
-      .set_buffer("a", data)
-      .set_buffer("rows", coords_rows)
-      .set_buffer("cols", coords_cols);
+      .set_buffer("gene_id", gene_cols)
+      .set_buffer("tmp", tmp_rows);
 
   // This mimics the body posted to the server
   std::vector<uint8_t> serialized_body;
   serialize_query(ctx, query, &serialized_body, true);
   std::ofstream body_file;
-  body_file.open("body_all.raw", std::ios::out | std::ios::binary);
+  body_file.open("body_real.raw", std::ios::out | std::ios::binary);
   for (const auto &d : serialized_body)
     body_file << d;
   body_file.close();

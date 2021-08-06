@@ -389,7 +389,7 @@ describe("getRanges()", () => {
         buffer: [],
         bufferSizes: [0],
         bufferStartSizes: [0],
-        hasDefaultRange: false,
+        hasDefaultRange: true,
         type: "STRING_ASCII",
       },
       {
@@ -436,8 +436,8 @@ describe("getRanges()", () => {
     ];
     const expected = [
       {
-        buffer: [97, 99, 97, 98],
-        bufferSizes: [2, 2],
+        buffer: [97, 99, 97, 98, 98],
+        bufferSizes: [2, 3],
         bufferStartSizes: [1, 1],
         hasDefaultRange: false,
         type: "STRING_ASCII",
@@ -458,6 +458,59 @@ describe("getRanges()", () => {
             ["a", "bb"],
           ],
           [2, 3],
+        ],
+        dimensions
+      )
+    ).toEqual(expected);
+  });
+
+  it("Should create string genomics ranges", () => {
+    const dimensions = [
+      {
+        "domain": null,
+        "filterPipeline": {},
+        "name": "gene_id",
+        "nullTileExtent": true,
+        "tileExtent": {},
+        "type": "STRING_ASCII"
+      },
+      {
+        "domain": null,
+        "filterPipeline": {},
+        "name": "sample",
+        "nullTileExtent": true,
+        "tileExtent": {},
+        "type": "STRING_ASCII"
+      }
+    ];
+    const expected = [
+      {
+        type: 'STRING_ASCII',
+        hasDefaultRange: true,
+        buffer: [],
+        bufferSizes: [ 0 ],
+        bufferStartSizes: [ 0 ]
+      },
+      {
+        type: 'STRING_ASCII',
+        hasDefaultRange: false,
+        buffer: [
+          71, 84, 69, 88, 45, 49, 49, 49, 55, 70, 45,
+          48, 50, 50, 54, 45, 83, 77, 45, 53, 71, 90,
+          90, 55, 71, 84, 69, 88, 45, 49, 49, 49, 55,
+          70, 45, 49, 51, 50, 54, 45, 83, 77, 45, 53,
+          69, 71, 72, 72
+        ],
+        bufferSizes: [ 48 ],
+        bufferStartSizes: [ 24 ]
+      }
+    ]
+    expect(
+      getRanges(
+        [
+          [
+          ],
+          ["GTEX-1117F-0226-SM-5GZZ7", "GTEX-1117F-1326-SM-5EGHH"]
         ],
         dimensions
       )

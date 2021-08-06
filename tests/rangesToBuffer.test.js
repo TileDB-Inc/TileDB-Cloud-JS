@@ -58,6 +58,11 @@ describe("rangesToBuffer()", () => {
         expect(res).toEqual([97, 99]);
     });
 
+    it('should convert StringAscii with more letters', () => {
+        const res = rangesToBuffer.default(["GTEX-1117F-0226-SM-5GZZ7", "GTEX-1117F-1326-SM-5EGHH"], Datatype.StringAscii);
+        expect(res).toEqual([71, 84, 69, 88, 45, 49, 49, 49, 55, 70, 45, 48, 50, 50, 54, 45, 83, 77, 45, 53, 71, 90, 90, 55, 71, 84, 69, 88, 45, 49, 49, 49, 55, 70, 45, 49, 51, 50, 54, 45, 83, 77, 45, 53, 69, 71, 72, 72]);
+    });
+
     it('should convert DatetimeSec', () => {
         const res = rangesToBuffer.default([1577836800, 1588878856], Datatype.DatetimeSec);
         expect(res).toEqual([0, 225, 11, 94, 0, 0, 0, 0, 8, 94, 180, 94, 0, 0, 0, 0]);
