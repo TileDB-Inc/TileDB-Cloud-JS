@@ -1,4 +1,4 @@
-import { AttributeValues } from "./dataToQueryWriter";
+import { AttributeValues } from "../TileDBQuery/TileDBQuery";
 import { Attribute, Dimension } from "../v1";
 interface ValueBuffer {
     validityBuffer: ArrayBuffer;

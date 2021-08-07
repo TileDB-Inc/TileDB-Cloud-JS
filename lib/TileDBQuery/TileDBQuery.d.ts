@@ -1,7 +1,19 @@
-import { QueryData } from "../utils/dataToQuery";
 import { Attribute, Dimension } from "../v1";
 import { AttributeBufferHeader, ConfigurationParameters } from "../v2";
-import { QueryWrite } from "../utils/dataToQueryWriter";
+import { Query } from "../v2";
+export interface QueryData extends Pick<Query, "layout"> {
+    ranges: Array<number[] | Array<number[]>>;
+    bufferSize: number;
+}
+interface AttributeValue {
+    validity?: number[];
+    offsets?: number[];
+    values: any[];
+}
+export declare type AttributeValues = Record<string, AttributeValue>;
+export interface QueryWrite extends Pick<Query, "layout"> {
+    values: AttributeValues;
+}
 export declare class TileDBQuery {
     configurationParams: ConfigurationParameters;
     constructor(params: ConfigurationParameters);
