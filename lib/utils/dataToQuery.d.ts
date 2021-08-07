@@ -1,6 +1,6 @@
 import { Attribute, Dimension } from "../v1";
 import { Query } from "../v2";
-import { QueryData } from '../TileDBQuery/TileDBQuery';
+import { QueryData } from "../TileDBQuery/TileDBQuery";
 /**
  * Helper function that takes user data and returns a Query object.
  * Since the Query object is really big we don't expect user to manually set all the values.
