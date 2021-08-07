@@ -1,4 +1,4 @@
-import dataToQuery, { QueryData } from "../utils/dataToQuery";
+import dataToQuery from "../utils/dataToQuery";
 import getAttributeResult, { bufferToInt8 } from "../utils/bufferToData";
 import capnpQueryDeSerializer from "../utils/capnpQueryDeSerializer";
 import { ArrayApi, Attribute, Dimension } from "../v1";
@@ -11,8 +11,23 @@ import {
 } from "../v2";
 import getByteLengthOfDatatype from "../utils/getByteLengthOfDatatype";
 import flatten from "../utils/flatten";
-import { QueryWrite } from "../utils/dataToQueryWriter";
 import getWriterBody from "../utils/getWriterBody";
+import { Query } from "../v2";
+
+export interface QueryData extends Pick<Query, "layout"> {
+  ranges: Array<number[] | Array<number[]>>;
+  bufferSize: number;
+}
+interface AttributeValue {
+  validity?: number[];
+  offsets?: number[];
+  values: any[];
+}
+
+export type AttributeValues = Record<string, AttributeValue>
+export interface QueryWrite extends Pick<Query, "layout"> {
+  values: AttributeValues;
+}
 
 export class TileDBQuery {
   configurationParams: ConfigurationParameters;

@@ -90,7 +90,7 @@ static void deserialize_query(const Context &ctx,
                                               query->ptr().get()));
 }
 
-void read_array() {
+void read_genomics_array() {
   Context ctx;
 
   // Prepare the array for reading
@@ -112,25 +112,12 @@ void read_array() {
       .set_buffer("gene_id", rows_offsets, gene_cols)
       .set_buffer("tpm", tpm_rows);
 
-  // Prepare the vector that will hold the result.
-  // We take an upper bound on the result size, as we do not
-  // know a priori how big it is (since the array is sparse)
-
-//   std::vector<int32_t> data(3);
-//   std::vector<char> rows(4);
-//   std::vector<uint64_t> rows_offsets(3);
-//   std::vector<int64_t> cols(3);
-//   query.set_layout(TILEDB_ROW_MAJOR)
-//       .set_buffer("a", data)
-//       .set_buffer("rows",rows_offsets, rows)
-//       .set_buffer("cols", cols);
-
 
   // This mimics the body posted to the server
   std::vector<uint8_t> serialized_body;
   serialize_query(ctx, query, &serialized_body, true);
   std::ofstream body_file;
-  body_file.open("body_real.raw", std::ios::out | std::ios::binary);
+  body_file.open("body_genomics.raw", std::ios::out | std::ios::binary);
   for (const auto &d : serialized_body)
       body_file << d;
   body_file.close();
@@ -142,7 +129,7 @@ void read_array() {
   std::vector<uint8_t> serialized_response;
   serialize_query(ctx, query, &serialized_response, false);
   std::ofstream response_file;
-  response_file.open("response_real.raw", std::ios::out | std::ios::binary);
+  response_file.open("response_genomics.raw", std::ios::out | std::ios::binary);
   for (const auto &d : serialized_response)
       response_file << d;
   response_file.close();
@@ -166,6 +153,6 @@ void read_array() {
 int main() {
   Context ctx;
 
-  read_array();
+  read_genomics_array();
   return 0;
 }

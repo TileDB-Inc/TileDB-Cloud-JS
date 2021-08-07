@@ -1,15 +1,7 @@
 import { Dimension } from "../v1";
 import { ValueBuffers } from "./attributeValuesToArrayBuffers";
-import { Query, Querystatus, Querytype } from "../v2";
-interface AttributeValue {
-    validity?: number[];
-    offsets?: number[];
-    values: any[];
-}
-export declare type AttributeValues = Record<string, AttributeValue>;
-export interface QueryWrite extends Pick<Query, "layout"> {
-    values: AttributeValues;
-}
+import { Querystatus, Querytype } from "../v2";
+import { QueryWrite } from '../TileDBQuery/TileDBQuery';
 declare const dataToQueryWriter: (data: QueryWrite, dimensions: Dimension[], valueBuffer: ValueBuffers) => {
     attributeBufferHeaders: {
         name: string;

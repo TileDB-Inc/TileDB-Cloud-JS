@@ -1,4 +1,4 @@
-import { AttributeValues } from "./dataToQueryWriter";
+import { AttributeValues } from "../TileDBQuery/TileDBQuery";
 import { Attribute, Dimension } from "../v1";
 import dataToArrayBuffer from "./dataToArrayBuffer";
 import { Datatype } from "../v2";
