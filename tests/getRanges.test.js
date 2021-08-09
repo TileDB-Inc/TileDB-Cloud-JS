@@ -319,6 +319,59 @@ describe("getRanges()", () => {
         )
       ).toEqual(expected);
     });
+
+    it("Should create string genomics ranges that select all", () => {
+      const dimensions = [
+        {
+          "domain": null,
+          "filterPipeline": {},
+          "name": "gene_id",
+          "nullTileExtent": true,
+          "tileExtent": {},
+          "type": "STRING_ASCII"
+        },
+        {
+          "domain": null,
+          "filterPipeline": {},
+          "name": "sample",
+          "nullTileExtent": true,
+          "tileExtent": {},
+          "type": "STRING_ASCII"
+        }
+      ];
+      const expected = [
+        {
+          type: 'STRING_ASCII',
+          hasDefaultRange: false,
+          buffer: [
+            69, 78, 83, 71, 48, 48, 48, 48, 48,
+            50, 48, 50, 48, 53, 57, 46, 49, 69,
+            78, 83, 71, 48, 48, 48, 48, 48, 50,
+            48, 50, 48, 53, 57, 46, 49
+          ],
+          bufferSizes: [ 34 ],
+          bufferStartSizes: [ 17 ]
+        },
+        {
+          type: 'STRING_ASCII',
+          hasDefaultRange: true,
+          buffer: [],
+          bufferSizes: [ 0 ],
+          bufferStartSizes: [ 0 ]
+        }
+      ]
+      expect(
+        getRanges(
+          [
+            [
+              "ENSG00000202059.1", "ENSG00000202059.1"
+            ],
+            []
+          ],
+          dimensions
+        )
+      ).toEqual(expected);
+    });
   
     it("Should create datetime ranges", () => {
       const dimensions = [

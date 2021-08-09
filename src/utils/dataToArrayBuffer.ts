@@ -11,19 +11,31 @@ const dataToArrayBuffer = (data: any = [], type: Datatype): ArrayBuffer => {
     const typedArray = (TypedArray as Int32ArrayConstructor).from(data);
     return typedArray.buffer;
   } else if (type === Datatype.StringAscii) {
+    // If it's an array of CHARs join them together to a single string
+    const str = Array.isArray(data) ? data.join('') : data;
     const textEncoder = new TextEncoder();
-    return textEncoder.encode(data).buffer;
+    return textEncoder.encode(str).buffer;
   } else if (type === Datatype.StringUtf8) {
+    // If it's an array of CHARs join them together to a single string
+    const str = Array.isArray(data) ? data.join('') : data;
     const textEncoder = new TextEncoder();
-    return textEncoder.encode(data).buffer;
+    return textEncoder.encode(str).buffer;
   } else if (type === Datatype.StringUtf16) {
-    return utf16StrToArrayBuffer(data);
+    // If it's an array of CHARs join them together to a single string
+    const str = Array.isArray(data) ? data.join('') : data;
+    return utf16StrToArrayBuffer(str);
   } else if (type === Datatype.StringUtf32) {
-    return utf32StrToArrayBuffer(data);
+    // If it's an array of CHARs join them together to a single string
+    const str = Array.isArray(data) ? data.join('') : data;
+    return utf32StrToArrayBuffer(str);
   } else if (type === Datatype.StringUcs2) {
-    return utf16StrToArrayBuffer(data);
+    // If it's an array of CHARs join them together to a single string
+    const str = Array.isArray(data) ? data.join('') : data;
+    return utf16StrToArrayBuffer(str);
   } else if (type === Datatype.StringUcs4) {
-    return utf32StrToArrayBuffer(data);
+    // If it's an array of CHARs join them together to a single string
+    const str = Array.isArray(data) ? data.join('') : data;
+    return utf32StrToArrayBuffer(str);
   }
 };
 

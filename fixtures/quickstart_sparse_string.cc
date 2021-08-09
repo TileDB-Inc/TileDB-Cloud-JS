@@ -41,7 +41,7 @@
 using namespace tiledb;
 
 // Name of array.
-std::string array_name("quickstart_sparse_string_array_int64");
+std::string array_name("quickstart_sparse_string_array");
 
 static void serialize_query(const Context &ctx, Query &query,
                             std::vector<uint8_t> *serialized, bool clientside)
@@ -132,6 +132,15 @@ void write_array() {
       .set_buffer("a", data)
       .set_buffer("rows", rows_offsets, rows)
       .set_buffer("cols", cols);
+
+  // This mimics the body posted to the server
+    std::vector<uint8_t> serialized_body;
+    serialize_query(ctx, query, &serialized_body, true);
+    std::ofstream body_file;
+    body_file.open("body_write_sparse_string.raw", std::ios::out | std::ios::binary);
+    for (const auto &d : serialized_body)
+        body_file << d;
+    body_file.close();
 
   // Perform the write and close the array.
   query.submit();

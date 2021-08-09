@@ -30,6 +30,9 @@ const dataToQueryWriter = (
   );
 
   const dimensionDomains = dimensions.map((dim) => {
+    if (!dim.domain) {
+      return [];
+    }
     const [firstValue] = Object.values(dim.domain);
     return firstValue;
   });

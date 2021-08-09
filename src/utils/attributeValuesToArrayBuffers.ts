@@ -2,6 +2,7 @@ import { AttributeValues } from "../TileDBQuery/TileDBQuery";
 import { Attribute, Dimension } from "../v1";
 import dataToArrayBuffer from "./dataToArrayBuffer";
 import { Datatype } from "../v2";
+import mapToBigIntIfNeeded from "./mapToBigIntIfNeeded";
 
 interface ValueBuffer {
   validityBuffer: ArrayBuffer;
@@ -19,14 +20,14 @@ const attributeValuesToArrayBuffers = (
   const data = {};
   const dimensionsAndAttributes = [...dimensions, ...attributes];
 
-  for (let [key, attribute] of Object.entries(values)) {
+  for (let [attrName, attribute] of Object.entries(values)) {
     const selectedSchema = dimensionsAndAttributes.find(
-      (attr) => attr.name === key
+      (attr) => attr.name === attrName
     );
     const { type } = selectedSchema;
     const { validity = [], offsets = [], values = [] } = attribute;
-    data[key] = {
-      offsetsBuffer: dataToArrayBuffer(offsets, Datatype.Uint64),
+    data[attrName] = {
+      offsetsBuffer: dataToArrayBuffer(mapToBigIntIfNeeded(offsets, Datatype.Uint64), Datatype.Uint64),
       valuesBuffer: dataToArrayBuffer(values, type),
       validityBuffer: dataToArrayBuffer(validity, Datatype.Uint8),
     };
