@@ -107,7 +107,7 @@ void read_genomics_array() {
   std::vector<uint64_t> rows_offsets(15);
 
   // Prepare the query
-  query.add_range(1, std::string("GTEX-1117F-0226-SM-5GZZ7"), std::string("GTEX-1117F-1326-SM-5EGHH"))
+  query.add_range(0, std::string("ENSG00000202059.1"), std::string("ENSG00000202059.1"))
       .set_layout(TILEDB_ROW_MAJOR)
       .set_buffer("gene_id", rows_offsets, gene_cols)
       .set_buffer("tpm", tpm_rows);
