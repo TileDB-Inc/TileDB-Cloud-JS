@@ -10,6 +10,9 @@ import mapToBigIntIfNeeded from "./mapToBigIntIfNeeded";
  * @returns number of total bytes
  */
  const getByteLengthOfData = (data: number[] | string[], type: Datatype) => {
+   if (!data.length) {
+     return 0;
+   }
     const TypedArray = getTypedArrayFromDataType(type);
     // case 1: it's number of arrays
     if (TypedArray) {
