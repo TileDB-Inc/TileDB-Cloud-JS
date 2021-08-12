@@ -28,10 +28,13 @@ const getRanges = (
     const bufferSizes = isArrayOfArrays
       ? range.map((r) => getByteLengthOfdata(r, type))
       : [getByteLengthOfdata(range as number[], type)];
-
     const startRanges = isArrayOfArrays ? range.map((r) => r[0]) : [firstRange];
-    const bufferStartSizes = startRanges.map((startingRange) =>
-      getByteLengthOfdata([startingRange], type)
+    const bufferStartSizes = startRanges.map((startingRange) => {
+      if (!startingRange) {
+        return 0;
+      }
+      return getByteLengthOfdata([startingRange], type)
+    }
     );
     /**
      * bufferStartSizes is used only for var length string ascii dimensions,
