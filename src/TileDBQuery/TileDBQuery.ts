@@ -1,6 +1,7 @@
 import dataToQuery from "../utils/dataToQuery";
 import getAttributeResult, { bufferToInt8 } from "../utils/bufferToData";
 import capnpQueryDeSerializer from "../utils/capnpQueryDeSerializer";
+import setNullables from "../utils/setNullables";
 import { ArrayApi, Attribute, Dimension } from "../v1";
 import {
   AttributeBufferHeader,
@@ -56,7 +57,6 @@ export class TileDBQuery {
       );
       const arraySchema = arraySchemaResponse.data;
       const body = getWriterBody(data, arraySchema);
-      
 
       const queryResponse = await queryAPI.submitQuery(
         namespace,
@@ -80,9 +80,9 @@ export class TileDBQuery {
        * we convert it back to an ArrayBuffer if needed
        */
       const queryData = convertToArrayBufferIfNodeBuffer(queryResponse.data);
-
-      return queryData;
-
+      const bufferWithoutFirstEightBytes = queryData.slice(8);
+  
+      return capnpQueryDeSerializer(bufferWithoutFirstEightBytes);
 
     } catch (e) {
       /**
@@ -338,7 +338,7 @@ export const getResults = (
       }
 
       result = setNullables(
-        Array.from(result as Int32Array),
+        Array.from(result),
         nullablesArray,
         offsets
       );
@@ -352,46 +352,6 @@ export const getResults = (
   return data;
 };
 
-/**
- * Set nullables on an array
- * @param vals [12, 15, 22, 34, 8]
- * @param nullables [0, 1, 1, 0, 1]
- * @param offsets []
- * @returns [NULL, 15, 22, NULL, 8]
- */
-export const setNullables = <T>(
-  vals: T[],
-  nullables: number[],
-  offsets: number[]
-) => {
-  // If values have offsets we group values together by offset
-  const valueArray = offsets.length ? setOffsets(vals, offsets) : vals;
-  return valueArray.map((val, i) => (nullables[i] ? val : null));
-};
-
-/**
- * Group values together according to offsets
- * @param vals [1, 2, 3, 4]
- * @param offsets e.g. [0, 3, 4]
- * @returns [[1,2,3], 4]
- */
-export const setOffsets = (vals: any[], offsets: number[]) => {
-  let arrWithOffsets = [];
-  const valueArray = vals;
-  if (offsets.length) {
-    offsets.forEach((offset, i) => {
-      const offsetDiffWithNext = offsets[i + 1] - offset;
-      if (offsetDiffWithNext) {
-        arrWithOffsets.push(valueArray.slice(0, offsetDiffWithNext));
-        valueArray.splice(0, offsetDiffWithNext);
-      } else {
-        arrWithOffsets.push(valueArray);
-      }
-    });
-  }
-
-  return arrWithOffsets;
-};
 /**
  * Get attribute data from attribute name, attribute data contains the type of the attribute (e.g. INT32, StringUTF8 etc)
  */

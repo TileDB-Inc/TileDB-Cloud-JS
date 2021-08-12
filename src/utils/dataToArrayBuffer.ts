@@ -10,7 +10,7 @@ const dataToArrayBuffer = (data: any = [], type: Datatype): ArrayBuffer => {
   if (TypedArray) {
     const typedArray = (TypedArray as Int32ArrayConstructor).from(data);
     return typedArray.buffer;
-  } else if (type === Datatype.StringAscii) {
+  } else if (type === Datatype.StringAscii || type === Datatype.Char) {
     // If it's an array of CHARs join them together to a single string
     const str = Array.isArray(data) ? data.join('') : data;
     const textEncoder = new TextEncoder();

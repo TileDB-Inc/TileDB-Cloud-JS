@@ -1,5 +1,5 @@
 /**
- * @file   quickstart_sparse_string.cc
+ * @file   quickstart_sparse.cc
  *
  * @section LICENSE
  *
@@ -27,10 +27,8 @@
  *
  * @section DESCRIPTION
  *
- * When run, this program will create a 2D sparse array with one dimension a
- * string type, and the other an integer. This models closely what a dataframe
- * looks like. The program will write some data to it, and read a slice of the
- * data back.
+ * When run, this program will create a simple 2D sparse array, write some data
+ * to it, and read a slice of the data back.
  */
 
 #include <iostream>
@@ -39,6 +37,11 @@
 #include <fstream>
 
 using namespace tiledb;
+
+// Name of array.
+std::string array_name("quickstart_sparse_nullable");
+
+
 
 static void serialize_query(const Context &ctx, Query &query,
                             std::vector<uint8_t> *serialized, bool clientside)
@@ -90,103 +93,73 @@ static void deserialize_query(const Context &ctx,
                                               query->ptr().get()));
 }
 
-void read_genomics_array() {
+void create_array() {
+  // Create a TileDB context.
   Context ctx;
 
-  // Prepare the array for reading
-  Array array(ctx, "s3://genomic-datasets/biological-databases/data/tables/gtex-analysis-rnaseqc-gene-tpm", TILEDB_READ);
+  // The array will be 4x4 with dimensions "rows" and "cols", with domain [1,4].
+  Domain domain(ctx);
+  domain.add_dimension(Dimension::create<int>(ctx, "rows", {{1, 4}}, 4))
+      .add_dimension(Dimension::create<int>(ctx, "cols", {{1, 4}}, 4));
 
-  // Prepare the query
-  Query query(ctx, array, TILEDB_READ);
-  // Slice only rows "bb", "c" and cols 3, 4
-  // query.add_range(0, std::string("a"), std::string("c"));
-  std::vector<char> gene_cols(180);
+  // The array will be sparse.
+  ArraySchema schema(ctx, TILEDB_SPARSE);
+  schema.set_domain(domain).set_order({{TILEDB_ROW_MAJOR, TILEDB_ROW_MAJOR}});
 
-  std::vector<double> tpm_rows(180);
-
-  std::vector<uint64_t> rows_offsets(15);
-
-  // Prepare the query
-  query.add_range(0, std::string("ENSG00000202059.1"), std::string("ENSG00000202059.1"))
-      .set_layout(TILEDB_ROW_MAJOR)
-      .set_buffer("gene_id", rows_offsets, gene_cols)
-      .set_buffer("tpm", tpm_rows);
+  Attribute a = Attribute::create<std::vector<int>>(ctx, "a");
+  a.set_nullable(true);
+  schema.add_attribute(a);
 
 
-  // This mimics the body posted to the server
-  std::vector<uint8_t> serialized_body;
-  serialize_query(ctx, query, &serialized_body, true);
-  std::ofstream body_file;
-  body_file.open("body_genomics.raw", std::ios::out | std::ios::binary);
-  for (const auto &d : serialized_body)
-      body_file << d;
-  body_file.close();
-
-  // Submit the query and close the array.
-  query.submit();
-
-  // this mimics the response from the server
-  std::vector<uint8_t> serialized_response;
-  serialize_query(ctx, query, &serialized_response, false);
-  std::ofstream response_file;
-  response_file.open("response_genomics.raw", std::ios::out | std::ios::binary);
-  for (const auto &d : serialized_response)
-      response_file << d;
-  response_file.close();
-
-  array.close();
+  // Create the (empty) array on disk.
+  Array::create(array_name, schema);
 }
 
-void read_var_length() {
+void write_array() {
   Context ctx;
 
-  // Prepare the array for reading
-  Array array(ctx, "s3://kostas-tiledb-demo/variable_length_array", TILEDB_READ);
-
-  // Prepare the query
-  Query query(ctx, array, TILEDB_READ);
-  // Slice only rows "bb", "c" and cols 3, 4
-  // query.add_range(0, std::string("a"), std::string("c"));
-  std::vector<char> gene_cols(180);
-
-  std::vector<double> tpm_rows(180);
-
-  std::vector<uint64_t> rows_offsets(15);
-
-  // Prepare the query
-  query.set_layout(TILEDB_ROW_MAJOR)
-      .set_buffer("gene_id", rows_offsets, gene_cols)
-      .set_buffer("tpm", tpm_rows);
+  // Write some simple data to cells (1, 1), (2, 4) and (2, 3).
+  std::vector<int> coords_rows = {1, 2, 2};
+  std::vector<int> coords_cols = {1, 4, 3};
+  std::vector<int> data = {1, 2, 3, 9};
 
 
-  // This mimics the body posted to the server
-  std::vector<uint8_t> serialized_body;
-  serialize_query(ctx, query, &serialized_body, true);
-  std::ofstream body_file;
-  body_file.open("body_genomics.raw", std::ios::out | std::ios::binary);
-  for (const auto &d : serialized_body)
-      body_file << d;
-  body_file.close();
+  std::vector<uint8_t> a_validity_buf = {1, 1, 0};
+    std::vector<uint64_t> a_el_off = {
+        0, 1, 3, 4};
+    std::vector<uint64_t> a_off;
+    for (auto e : a_el_off)
+        a_off.push_back(e * sizeof(int));
 
-  // Submit the query and close the array.
+  // Open the array for writing and create the query.
+  Array array(ctx, array_name, TILEDB_WRITE);
+  Query query(ctx, array, TILEDB_WRITE);
+  query.set_layout(TILEDB_UNORDERED)
+      .set_buffer_nullable("a", a_off, data, a_validity_buf)
+      .set_buffer("rows", coords_rows)
+      .set_buffer("cols", coords_cols);
+
+
+std::vector<uint8_t> serialized_body;
+    serialize_query(ctx, query, &serialized_body, true);
+    std::ofstream body_file;
+    body_file.open("body_writer_sparse_nullable.raw", std::ios::out | std::ios::binary);
+    for (const auto &d : serialized_body)
+        body_file << d;
+    body_file.close();
+
+  // Perform the write and close the array.
   query.submit();
-
-  // this mimics the response from the server
-  std::vector<uint8_t> serialized_response;
-  serialize_query(ctx, query, &serialized_response, false);
-  std::ofstream response_file;
-  response_file.open("response_genomics.raw", std::ios::out | std::ios::binary);
-  for (const auto &d : serialized_response)
-      response_file << d;
-  response_file.close();
-
   array.close();
 }
 
 int main() {
   Context ctx;
 
-//   read_genomics_array();
-  read_var_length();
+  if (Object::object(ctx, array_name).type() != Object::Type::Array) {
+    create_array();
+    write_array();
+  }
+
   return 0;
 }
