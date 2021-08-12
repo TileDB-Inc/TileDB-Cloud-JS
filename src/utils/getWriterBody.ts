@@ -14,7 +14,7 @@ const getWriterBody = (data: QueryWrite, arraySchema: ArraySchema) => {
     data.values,
     dimensions,
     attributes
-  );
+  );  
   const queryObject = dataToQueryWriter(data, dimensions, valueBuffers);
 
   const querySerialized = capnpQuerySerializer(queryObject);
@@ -23,7 +23,7 @@ const getWriterBody = (data: QueryWrite, arraySchema: ArraySchema) => {
       const attributeBuffer = concatArrayBuffers(
         valueBuffer.offsetsBuffer,
         valueBuffer.valuesBuffer,
-        valueBuffer.validityBuffer
+        valueBuffer.validityBuffer,
       );
 
       return concatArrayBuffers(accum, attributeBuffer);

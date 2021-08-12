@@ -26,13 +26,14 @@ const attributeValuesToArrayBuffers = (
     );
     const { type } = selectedSchema;
     const { validity = [], offsets = [], values = [] } = attribute;
+    
     data[attrName] = {
       offsetsBuffer: dataToArrayBuffer(mapToBigIntIfNeeded(offsets, Datatype.Uint64), Datatype.Uint64),
-      valuesBuffer: dataToArrayBuffer(values, type),
+      valuesBuffer: dataToArrayBuffer(mapToBigIntIfNeeded(values, type), type),
       validityBuffer: dataToArrayBuffer(validity, Datatype.Uint8),
     };
   }
-
+  
   return data;
 };
 

@@ -160,6 +160,16 @@ void write_array() {
       .set_buffer_nullable("a2", a2_off, a2_data, a2_validity_buf)
       .set_buffer_nullable("a3", a3_off, a3_data, a3_validity_buf);
 
+
+  // This mimics the body posted to the server
+    std::vector<uint8_t> serialized_body;
+    serialize_query(ctx, query, &serialized_body, true);
+    std::ofstream body_file;
+    body_file.open("body_nullable_attr_write.raw", std::ios::out | std::ios::binary);
+    for (const auto &d : serialized_body)
+        body_file << d;
+    body_file.close();
+
   // Perform the write and close the array.
   query.submit();
   array.close();
@@ -281,7 +291,7 @@ int main() {
   }
   create_array();
   write_array();
-  read_array();
+  // read_array();
 
   return 0;
 }

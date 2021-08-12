@@ -4,7 +4,6 @@
 #include <fstream>
 using namespace tiledb;
 // Name of array.
-std::string array_name("variable_length_array_qstart");
 /**
  * Helper function that serializes a query from the "client" or "server"
  * perspective. The flow being mimicked here is (for read queries):
@@ -68,43 +67,17 @@ static void deserialize_query(const Context &ctx,
                                               TILEDB_CAPNP, clientside ? 1 : 0,
                                               query->ptr().get()));
 }
-void create_array()
-{
-    // Create a TileDB context
-    Context ctx;
-    // The array will be 4x4 with dimensions "rows" and "cols", with domain [1,4]
-    Domain domain(ctx);
-    domain.add_dimension(Dimension::create<int>(ctx, "rows", {{1, 4}}, 4))
-        .add_dimension(Dimension::create<int>(ctx, "cols", {{1, 4}}, 4));
-    // The array will be dense
-    ArraySchema schema(ctx, TILEDB_DENSE);
-    schema.set_domain(domain).set_order({{TILEDB_ROW_MAJOR, TILEDB_ROW_MAJOR}});
-    // Add two variable-length attributes "a1" and "a2", the first storing
-    // strings and the second storing a variable number of integers.
-    schema.add_attribute(Attribute::create<char>(ctx, "a1"));
-    schema.add_attribute(Attribute::create<std::vector<uint64_t>>(ctx, "a2"));
-    schema.add_attribute(Attribute::create<std::vector<int>>(ctx, "a4"));
-    // Fixed length attribute
-    schema.add_attribute(Attribute::create<int>(ctx, "a3"));
-    schema.add_attribute(Attribute::create<int>(ctx, "a0"));
 
-    Attribute a5 = Attribute::create<int>(ctx, "a5");
-    Attribute a6 = Attribute::create<std::vector<int>>(ctx, "a6");
-
-    a5.set_nullable(true);
-    a6.set_nullable(true);
-
-    schema.add_attribute(a5);
-    schema.add_attribute(a6);
-
-    // Create the (empty) array on disk.
-    Array::create(array_name, schema);
-}
-void write_array()
+void write_var_length_array()
 {
     Context ctx;
+
+    // Open the array for writing and create the query
+    Array array(ctx, "s3://kostas-tiledb-demo/variable_length_array", TILEDB_WRITE);
+    Query query(ctx, array);
+
     // Prepare some data for the array
-    char a1_data = 'abbcccdddeeefghhhijjjkklmnoop';
+    std::string a1_data = "abbcccdddeeefghhhijjjkklmnoop";
     std::vector<uint64_t> a1_off = {
         0, 1, 3, 6, 9, 11, 12, 13, 16, 17, 20, 22, 23, 24, 25, 27};
     std::vector<uint64_t> a2_data = {1, 1, 20, 311, 27, 82, 5, 6, 6, 7, 7, 8, 8,
@@ -138,9 +111,7 @@ void write_array()
     for (auto e : a6_el_off)
         a6_off.push_back(e * sizeof(int));
 
-    // Open the array for writing and create the query
-    Array array(ctx, array_name, TILEDB_WRITE);
-    Query query(ctx, array);
+    
     query.set_layout(TILEDB_ROW_MAJOR)
         .set_buffer("a0", a0_data)
         .set_buffer("a1", a1_off, a1_data)
@@ -155,7 +126,7 @@ void write_array()
     std::vector<uint8_t> serialized_body;
     serialize_query(ctx, query, &serialized_body, true);
     std::ofstream body_file;
-    body_file.open("body_writer_qstart_sparse.raw", std::ios::out | std::ios::binary);
+    body_file.open("body_var_length_write.raw", std::ios::out | std::ios::binary);
     for (const auto &d : serialized_body)
         body_file << d;
     body_file.close();
@@ -164,73 +135,64 @@ void write_array()
     query.submit();
     array.close();
 }
-void read_array()
-{
-    Context ctx;
-    // Prepare the array for reading
-    Array array(ctx, array_name, TILEDB_READ);
-    // Slice only rows 1, 2 and cols 2, 3, 4
-    const std::vector<int> subarray = {1, 2, 2, 4};
-    // Prepare the vectors that will hold the result
-    std::vector<uint64_t> a1_off(12);
-    char a1_data(9);
-    // a1_data.resize(9);
-    std::vector<uint64_t> a2_off(12);
-    std::vector<uint64_t> a2_data(32);
-    std::vector<uint64_t> a4_off(12);
-    std::vector<int> a4_data(32);
-    // Prepare the vector that will hold the result for ficed-length attribute (of size 6 elements)
-    std::vector<int> a3_data(3);
-    std::vector<int> a0_data(3);
 
-    std::vector<int> a5_data(4);
-    std::vector<uint8_t> a5_validity_buf(a5_data.size());
-    std::vector<int> a6_data(8);
-    std::vector<uint64_t> a6_off(4);
-    std::vector<uint8_t> a6_validity_buf(a6_data.size());
-    // Prepare and submit the query, and close the array
-    Query query(ctx, array);
-    query.add_range(0, 1, 3)
-        .add_range(1, 2, 4)
-        .add_range(1, 1, 3)
-        .set_layout(TILEDB_ROW_MAJOR)
-        .set_buffer("a0", a0_data)
-        .set_buffer("a2", a2_off, a2_data)
-        .set_buffer("a3", a3_data)
-        .set_buffer("a1", a1_off, a1_data)
-        .set_buffer("a4", a4_off, a4_data)
-        .set_buffer_nullable("a5", a5_data, a5_validity_buf)
-        .set_buffer_nullable("a6", a6_off, a6_data, a6_validity_buf);
 
-    // This mimics the body posted to the server
+
+void write_nullable_attr_array() {
+  Context ctx;
+
+  // Prepare some data for the array
+  std::vector<int> a1_data = {100, 200, 300, 400};
+  std::vector<int> a2_data = {10, 10, 20, 30, 30, 30, 40, 40};
+  std::vector<uint64_t> a2_el_off = {0, 2, 3, 6};
+  std::vector<uint64_t> a2_off;
+  for (auto e : a2_el_off)
+    a2_off.push_back(e * sizeof(int));
+
+  const char a3_data_char[] = "abbccddewxyz";
+  std::vector<char> a3_data(a3_data_char, a3_data_char + 9);
+  std::vector<uint64_t> a3_el_off = {0, 3, 5, 6};
+  std::vector<uint64_t> a3_off;
+  for (auto e : a3_el_off)
+    a3_off.push_back(e * sizeof(char));
+
+  // Open the array for writing and create the query
+  Array array(ctx, "s3://kostas-tiledb-demo/nullable_attributes_array", TILEDB_WRITE);
+
+  Query query(ctx, array);
+  query.set_layout(TILEDB_ROW_MAJOR);
+
+  // Specify the validity buffer for each attribute
+  std::vector<uint8_t> a1_validity_buf = {1, 0, 0, 1};
+  std::vector<uint8_t> a2_validity_buf = {0, 1, 1, 0};
+  std::vector<uint8_t> a3_validity_buf = {1, 0, 0, 1};
+  std::vector<int> subarray = {1, 2, 1, 2};
+
+  // Set the query buffers specifying the validity for each data
+  query.set_buffer_nullable("a1", a1_data, a1_validity_buf)
+      .set_buffer_nullable("a2", a2_off, a2_data, a2_validity_buf)
+      .set_buffer_nullable("a3", a3_off, a3_data, a3_validity_buf)
+      .set_subarray(subarray);
+
+ // This mimics the body posted to the server
     std::vector<uint8_t> serialized_body;
     serialize_query(ctx, query, &serialized_body, true);
     std::ofstream body_file;
-    body_file.open("body_qstart_sparse.raw", std::ios::out | std::ios::binary);
+    body_file.open("body_nullable_attr_write.raw", std::ios::out | std::ios::binary);
     for (const auto &d : serialized_body)
         body_file << d;
     body_file.close();
 
-    query.submit();
-    // this mimics the response from the server
-    std::vector<uint8_t> serialized_response;
-    serialize_query(ctx, query, &serialized_response, false);
-    std::ofstream response_file;
-    response_file.open("response_qstart_sparse.raw", std::ios::out | std::ios::binary);
-    for (const auto &d : serialized_response)
-        response_file << d;
-    response_file.close();
-    array.close();
-    
+  // Perform the write and close the array.
+  query.submit();
+  array.close();
 }
+
 int main()
 {
     Context ctx;
-    if (Object::object(ctx, array_name).type() != Object::Type::Array)
-    {
-        create_array();
-        write_array();
-    }
-    // read_array();
+    // write_var_length_array();
+    write_nullable_attr_array();
+    
     return 0;
 }
