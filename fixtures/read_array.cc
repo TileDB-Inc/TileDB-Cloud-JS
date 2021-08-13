@@ -186,7 +186,7 @@ void read_var_length() {
 int main() {
   Context ctx;
 
-//   read_genomics_array();
-  read_var_length();
+  read_genomics_array();
+//   read_var_length();
   return 0;
 }

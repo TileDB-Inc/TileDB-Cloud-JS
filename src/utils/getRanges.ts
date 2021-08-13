@@ -18,12 +18,14 @@ const getRanges = (
   dimensions: Dimension[],
   hasDefaultRange?: boolean
 ) => {
+  
   return ranges.map((range, i) => {
     const [firstRange] = range;
     const type = dimensions[i].type;
     const isArrayOfArrays = Array.isArray(firstRange);
     const isArrayOfInts = isNumberArray(flatten(range));
     const isEmpty = !range.length;
+    
 
     const bufferSizes = isArrayOfArrays
       ? range.map((r) => getByteLengthOfdata(r, type))
