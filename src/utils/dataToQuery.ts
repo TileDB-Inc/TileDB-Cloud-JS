@@ -3,6 +3,7 @@ import { Datatype, Query, Querystatus, Querytype } from "../v2";
 import { QueryData } from "../TileDBQuery/TileDBQuery";
 import getRanges from "./getRanges";
 import getByteLengthOfDatatype from "./getByteLengthOfDatatype";
+import emptyRangesToDomain from "./emptyRangesToDomain";
 
 const createAttributeBufferHeaders = (
   attributes: Attribute[],
@@ -84,7 +85,9 @@ const dataToQuery = (
     return data as any;
   }
   const { bufferSize } = data;
-  const ranges = getRanges(data.ranges, dimensions);
+  // Use default dimension's Domain for ranges that are set empty []
+  const rangesWithDomain = emptyRangesToDomain(data.ranges, dimensions);
+  const ranges = getRanges(rangesWithDomain, dimensions);
   const attributeBufferHeaders = createAttributeBufferHeaders(
     attributes,
     bufferSize
