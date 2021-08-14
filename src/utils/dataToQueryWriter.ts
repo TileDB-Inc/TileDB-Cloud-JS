@@ -3,6 +3,7 @@ import { ValueBuffers } from "./attributeValuesToArrayBuffers";
 import { Querystatus, Querytype } from "../v2";
 import getRanges from "./getRanges";
 import { QueryWrite } from '../TileDBQuery/TileDBQuery';
+import flatten from "./flatten";
 
 const dataToQueryWriter = (
   data: QueryWrite,
@@ -28,7 +29,6 @@ const dataToQueryWriter = (
       };
     }
   );
-
   const dimensionDomains = dimensions.map((dim) => {
     if (!dim.domain) {
       return [];
@@ -36,7 +36,13 @@ const dataToQueryWriter = (
     const [firstValue] = Object.values(dim.domain);
     return firstValue;
   });
-  const ranges = getRanges(dimensionDomains, dimensions, true);
+  const {subarray: subarrayRanges} = data;
+  const hasDefaultRange = subarrayRanges ? false : true;
+  const ranges = getRanges(subarrayRanges || dimensionDomains, dimensions, hasDefaultRange);
+  const subarray = getSubArray(subarrayRanges as Array<number[]>, dimensions);
+  console.log(subarray)
+  console.log(ranges)
+  console.log(attributeBufferHeaders)
 
   return {
     attributeBufferHeaders,
@@ -47,18 +53,7 @@ const dataToQueryWriter = (
       checkCoordDups: false,
       checkCoordOOB: false,
       dedupCoords: false,
-      subarray: {
-        int8: [],
-        uint8: [],
-        int16: [],
-        uint16: [],
-        int32: [],
-        uint32: [],
-        int64: [],
-        uint64: [],
-        float32: [],
-        float64: [],
-      },
+      subarray,
       subarrayRanges: {
         layout: data.layout,
         ranges,
@@ -68,3 +63,26 @@ const dataToQueryWriter = (
 };
 
 export default dataToQueryWriter;
+
+const getSubArray = (ranges: Array<number[]> | undefined, dimensions: Dimension[]) => {
+  const subarray = {
+    int8: [],
+    uint8: [],
+    int16: [],
+    uint16: [],
+    int32: [],
+    uint32: [],
+    int64: [],
+    uint64: [],
+    float32: [],
+    float64: [],
+  };
+
+  if (!ranges) {
+    return subarray;
+  }
+  const type = dimensions[0].type;
+  subarray[type.toLocaleLowerCase()] = flatten(ranges);
+
+  return subarray;
+}
