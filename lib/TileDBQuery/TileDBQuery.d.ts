@@ -13,6 +13,7 @@ interface AttributeValue {
 export declare type AttributeValues = Record<string, AttributeValue>;
 export interface QueryWrite extends Pick<Query, "layout"> {
     values: AttributeValues;
+    subarray?: Array<number[] | string[]>;
 }
 export declare class TileDBQuery {
     configurationParams: ConfigurationParameters;
@@ -20,7 +21,9 @@ export declare class TileDBQuery {
     WriteQuery(namespace: string, arrayName: string, data: QueryWrite): Promise<{
         attributeBufferHeaders: {
             name: string;
-            fixedLenBufferSizeInBytes: number;
+            fixedLenBufferSizeInBytes: number; /**
+             * Deserialize buffer to a Query object
+             */
             varLenBufferSizeInBytes: number;
             validityLenBufferSizeInBytes: number;
             originalFixedLenBufferSizeInBytes: number;
@@ -59,11 +62,6 @@ export declare class TileDBQuery {
                     }[];
                 };
                 ranges: {
-                    /**
-                     * Add all buffers of an attribute
-                     * @param attr AttributeBufferHeader
-                     * @returns number of the total bytes of the attribute
-                     */
                     type: string;
                     hasDefaultRange: boolean;
                     buffer: number[];
@@ -97,11 +95,6 @@ export declare class TileDBQuery {
                     }[];
                 };
                 ranges: {
-                    /**
-                     * Add all buffers of an attribute
-                     * @param attr AttributeBufferHeader
-                     * @returns number of the total bytes of the attribute
-                     */
                     type: string;
                     hasDefaultRange: boolean;
                     buffer: number[];
@@ -127,11 +120,6 @@ export declare class TileDBQuery {
                             }[];
                         };
                         ranges: {
-                            /**
-                             * Add all buffers of an attribute
-                             * @param attr AttributeBufferHeader
-                             * @returns number of the total bytes of the attribute
-                             */
                             type: string;
                             hasDefaultRange: boolean;
                             buffer: number[];
@@ -156,11 +144,6 @@ export declare class TileDBQuery {
                                 }[];
                             };
                             ranges: {
-                                /**
-                                 * Add all buffers of an attribute
-                                 * @param attr AttributeBufferHeader
-                                 * @returns number of the total bytes of the attribute
-                                 */
                                 type: string;
                                 hasDefaultRange: boolean;
                                 buffer: number[];
@@ -174,7 +157,10 @@ export declare class TileDBQuery {
                     };
                     state: {
                         start: number;
-                        end: number;
+                        end: number; /**
+                         * Get the query response in capnp, we set responseType to arraybuffer instead of JSON
+                         * in order to deserialize the query capnp object.
+                         */
                         singleRange: {
                             layout: string;
                             stats: {
@@ -188,11 +174,6 @@ export declare class TileDBQuery {
                                 }[];
                             };
                             ranges: {
-                                /**
-                                 * Add all buffers of an attribute
-                                 * @param attr AttributeBufferHeader
-                                 * @returns number of the total bytes of the attribute
-                                 */
                                 type: string;
                                 hasDefaultRange: boolean;
                                 buffer: number[];
@@ -213,11 +194,6 @@ export declare class TileDBQuery {
                                 }[];
                             };
                             ranges: {
-                                /**
-                                 * Add all buffers of an attribute
-                                 * @param attr AttributeBufferHeader
-                                 * @returns number of the total bytes of the attribute
-                                 */
                                 type: string;
                                 hasDefaultRange: boolean;
                                 buffer: number[];

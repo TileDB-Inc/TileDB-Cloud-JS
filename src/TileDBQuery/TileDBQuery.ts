@@ -28,6 +28,7 @@ interface AttributeValue {
 export type AttributeValues = Record<string, AttributeValue>
 export interface QueryWrite extends Pick<Query, "layout"> {
   values: AttributeValues;
+  subarray?: Array<number[] | string[]>;
 }
 
 export class TileDBQuery {
