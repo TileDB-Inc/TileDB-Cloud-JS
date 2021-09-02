@@ -40,9 +40,6 @@ const dataToQueryWriter = (
   const hasDefaultRange = subarrayRanges ? false : true;
   const ranges = getRanges(subarrayRanges || dimensionDomains, dimensions, hasDefaultRange);
   const subarray = getSubArray(subarrayRanges as Array<number[]>, dimensions);
-  console.log(subarray)
-  console.log(ranges)
-  console.log(attributeBufferHeaders)
 
   return {
     attributeBufferHeaders,
