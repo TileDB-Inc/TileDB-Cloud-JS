@@ -173,9 +173,9 @@ tileDBQuery.ReadQuery("my_namespace", "my_array", query)
   })
 ```
 
-### Read query with overlapping ranges
+### Multi range read queries
 
-For overlapping ranges, user can set a dimension as an array of ranges (a range should always be a two item array the start and the end, like mentioned above).
+A dimension could be an array of ranges as well
 
 ```javascript
 const { TileDBQuery } = require("@tiledb-inc/tiledb-cloud");
