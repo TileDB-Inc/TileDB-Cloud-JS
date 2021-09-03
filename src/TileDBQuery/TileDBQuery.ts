@@ -104,7 +104,7 @@ export class TileDBQuery {
     }
   }
 
-  async SubmitQuery(namespace: string, arrayName: string, body: QueryData) {
+  async ReadQuery(namespace: string, arrayName: string, body: QueryData) {
     const config = new Configuration(this.configurationParams);
     const baseV1 = config.basePath?.replace("v2", "v1");
     // Add versioning if basePath exists

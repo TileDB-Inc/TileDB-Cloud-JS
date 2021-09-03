@@ -438,7 +438,7 @@ export interface Query {
      */
     totalVarLenBufferBytes: number;
     /**
-     * Total number of bytes in fixed size attribute buffers.
+     * Total number of bytes in validity buffers
      * @type {number}
      * @memberof Query
      */
