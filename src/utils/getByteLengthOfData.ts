@@ -2,7 +2,6 @@ import { Datatype } from "../v2";
 import getTypedArrayFromDataType from "./getTypedArrayFromDataType";
 import mapToBigIntIfNeeded from "./mapToBigIntIfNeeded";
 
-
 /**
  * Calculate the number of bytes of an array of numbers or strings
  * @param data Array of numbers or strings
