@@ -28,6 +28,10 @@ export declare class TileDBQuery {
             validityLenBufferSizeInBytes: number;
             originalFixedLenBufferSizeInBytes: number;
             originalVarLenBufferSizeInBytes: number;
+            /**
+             * We get the last N bytes (N is the number of total bytes of the attributes), which contain
+             * the results of all the attributes
+             */
             originalValidityLenBufferSizeInBytes: number;
         }[];
         layout: string;
@@ -157,10 +161,7 @@ export declare class TileDBQuery {
                     };
                     state: {
                         start: number;
-                        end: number; /**
-                         * Get the query response in capnp, we set responseType to arraybuffer instead of JSON
-                         * in order to deserialize the query capnp object.
-                         */
+                        end: number;
                         singleRange: {
                             layout: string;
                             stats: {
@@ -265,7 +266,7 @@ export declare class TileDBQuery {
             }[];
         };
     }>;
-    SubmitQuery(namespace: string, arrayName: string, body: QueryData): Promise<{}>;
+    ReadQuery(namespace: string, arrayName: string, body: QueryData): Promise<{}>;
 }
 export default TileDBQuery;
 /**
