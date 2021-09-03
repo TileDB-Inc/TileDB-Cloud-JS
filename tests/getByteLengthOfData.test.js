@@ -1,6 +1,6 @@
 const {
   default: getByteLengthOfData,
-} = require("../lib/utils/getByteLengthOfData");
+} = require("../lib/utils/getByteLengthOfdata");
 const { Datatype } = require("../lib/v2");
 
 describe("getByteLengthOfData()", () => {
