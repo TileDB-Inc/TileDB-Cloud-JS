@@ -1,4 +1,4 @@
-import { Array as ArrayCapnp, Config, DomainArray, MapFloat64, MapUInt64, Query, QueryReader, Stats, Subarray } from "../capnp/query.capnp";
+import { Array as ArrayCapnp, Config, DomainArray, MapFloat64, MapUInt64, Query, QueryReader, Stats, Subarray } from "../capnp/query_capnp";
 import * as capnp from "capnp-ts";
 /**
  * Deserializes an ArrayBuffer to a Query object

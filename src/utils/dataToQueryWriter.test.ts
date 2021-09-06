@@ -1,13 +1,10 @@
-const {
-  default: dataToQueryWriter,
-} = require("../lib/utils/dataToQueryWriter");
-const {
-  default: attributeValuesToArrayBuffers,
-} = require("../lib/utils/attributeValuesToArrayBuffers");
+import dataToQueryWriter from './dataToQueryWriter';
+import attributeValuesToArrayBuffers from './attributeValuesToArrayBuffers';
+import { Layout } from '../../lib/v2';
 
 describe("dataToQueryWriter()", () => {
   it("Should return query object", () => {
-    const dimensions = [
+    const dimensions: any = [
       {
         domain: null,
         filterPipeline: {},
@@ -30,7 +27,7 @@ describe("dataToQueryWriter()", () => {
       },
     ];
 
-    const attributes = [
+    const attributes: any = [
       {
         cellValNum: "1",
         filterPipeline: {},
@@ -40,7 +37,7 @@ describe("dataToQueryWriter()", () => {
     ];
 
     const query = {
-      layout: "unordered",
+      layout: Layout.Unordered,
       values: {
         a: {
           values: [9, 12, 230],

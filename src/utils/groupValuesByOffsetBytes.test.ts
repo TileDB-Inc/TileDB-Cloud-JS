@@ -1,4 +1,4 @@
-const {default: groupValuesByOffsets} = require("../lib/utils/groupValuesByOffsets");
+import groupValuesByOffsets from './groupValuesByOffsets';
 
 describe("groupValuesByOffsets()", () => {
     it("Should group values by offsets", () => {

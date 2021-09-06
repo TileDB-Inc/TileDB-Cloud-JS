@@ -1,6 +1,6 @@
-const { default: dataToQuery } = require("../lib/utils/dataToQuery");
+import dataToQuery from "./dataToQuery";
 
-const arraySchemaAttributes = [
+const arraySchemaAttributes: any = [
   {
     cellValNum: 4294967295,
     name: "a1",
@@ -66,7 +66,7 @@ const arraySchemaAttributes = [
   },
 ];
 
-const dimensions = [
+const dimensions: any = [
   {
     domain: null,
     filterPipeline: {},
@@ -91,7 +91,7 @@ const dimensions = [
 
 describe("dataToQuery()", () => {
   it("Should return correct data", () => {
-    const stringQueryData = {
+    const stringQueryData: any = {
       layout: "row-major",
       ranges: [
         [

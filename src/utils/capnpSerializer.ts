@@ -1,4 +1,4 @@
-import { ArrayMetadata } from "../capnp/arrayMetadata.capnp";
+import { ArrayMetadata } from "../capnp/arrayMetadata_capnp";
 import { Query } from "../v2";
 import * as capnp from "capnp-ts";
 import { ArrayMetadata as ArrayMetadataType } from "../v1/api";
