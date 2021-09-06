@@ -1,8 +1,9 @@
 import { Attribute, Dimension } from "../v1";
 import { AttributeBufferHeader, ConfigurationParameters } from "../v2";
 import { Query } from "../v2";
+declare type Range = [number, number] | [string, string];
 export interface QueryData extends Pick<Query, "layout"> {
-    ranges: Array<number[] | Array<number[]>>;
+    ranges: Array<Range | Array<Range>>;
     bufferSize: number;
 }
 interface AttributeValue {
@@ -21,17 +22,11 @@ export declare class TileDBQuery {
     WriteQuery(namespace: string, arrayName: string, data: QueryWrite): Promise<{
         attributeBufferHeaders: {
             name: string;
-            fixedLenBufferSizeInBytes: number; /**
-             * Deserialize buffer to a Query object
-             */
+            fixedLenBufferSizeInBytes: number;
             varLenBufferSizeInBytes: number;
             validityLenBufferSizeInBytes: number;
             originalFixedLenBufferSizeInBytes: number;
             originalVarLenBufferSizeInBytes: number;
-            /**
-             * We get the last N bytes (N is the number of total bytes of the attributes), which contain
-             * the results of all the attributes
-             */
             originalValidityLenBufferSizeInBytes: number;
         }[];
         layout: string;

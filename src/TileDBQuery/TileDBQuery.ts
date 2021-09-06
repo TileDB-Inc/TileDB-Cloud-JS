@@ -15,8 +15,9 @@ import flatten from "../utils/flatten";
 import getWriterBody from "../utils/getWriterBody";
 import { Query } from "../v2";
 
+type Range = [number, number] | [string, string];
 export interface QueryData extends Pick<Query, "layout"> {
-  ranges: Array<number[] | Array<number[]>>;
+  ranges: Array<Range | Array<Range>>;
   bufferSize: number;
 }
 interface AttributeValue {

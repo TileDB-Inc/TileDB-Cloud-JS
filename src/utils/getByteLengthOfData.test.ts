@@ -1,7 +1,5 @@
-const {
-  default: getByteLengthOfData,
-} = require("../lib/utils/getByteLengthOfdata");
-const { Datatype } = require("../lib/v2");
+import getByteLengthOfData from "./getByteLengthOfData";
+import { Datatype } from "../v2";
 
 describe("getByteLengthOfData()", () => {
   it("Should return byte length of char", () => {

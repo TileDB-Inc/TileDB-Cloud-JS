@@ -1,5 +1,5 @@
-const serializer = require("../lib/utils/capnpSerializer");
-const deSerializer = require("../lib/utils/capnpDeSerializer");
+import serializer from "./capnpSerializer";
+import { deserializeCapnp, DeserializableType } from "./capnpDeSerializer";
 
 test("serializer", () => {
   const data = {
@@ -27,17 +27,13 @@ test("serializer", () => {
       },
     ],
   };
-  const serializedData = serializer.default(data);
-  expect(serializedData.byteLength).toBe(
-    224
-  );
+  const serializedData = serializer(data);
+  expect(serializedData.byteLength).toBe(224);
 
-  const deSerialized = deSerializer.deserializeCapnp(
+  const deSerialized = deserializeCapnp(
     serializedData,
-    deSerializer.DeserializableType.arrayMetadata
+    DeserializableType.arrayMetadata
   );
 
-  expect(deSerialized).toEqual(
-    data
-  );
+  expect(deSerialized).toEqual(data);
 });
