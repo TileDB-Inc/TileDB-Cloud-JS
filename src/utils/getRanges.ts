@@ -2,7 +2,7 @@ import rangesToBuffer from "./rangesToBuffer";
 import flatten from "./flatten";
 import { QueryData } from "../TileDBQuery/TileDBQuery";
 import { Dimension } from "../v1";
-import getByteLengthOfdata from "./getByteLengthOfdata";
+import getByteLengthOfdata from "./getByteLengthOfData";
 
 /**
  * Checks if data is an array of numbers
