@@ -54,11 +54,7 @@ export declare class TileDBQuery {
                     timers: {
                         key: string;
                         value: number;
-                    }[]; /**
-                     * Calculate the total bytes of all the attributes
-                     * @param attributes
-                     * @returns number of the total bytes of all the attributes
-                     */
+                    }[];
                     counters: {
                         key: string;
                         value: number;
@@ -67,11 +63,6 @@ export declare class TileDBQuery {
                 ranges: {
                     type: string;
                     hasDefaultRange: boolean;
-                    /**
-                     * Add all buffers of an attribute
-                     * @param attr AttributeBufferHeader
-                     * @returns number of the total bytes of the attribute
-                     */
                     buffer: number[];
                     bufferSizes: number[];
                     bufferStartSizes: number[];
@@ -81,11 +72,7 @@ export declare class TileDBQuery {
                 timers: {
                     key: string;
                     value: number;
-                }[]; /**
-                 * Calculate the total bytes of all the attributes
-                 * @param attributes
-                 * @returns number of the total bytes of all the attributes
-                 */
+                }[];
                 counters: {
                     key: string;
                     value: number;
@@ -100,11 +87,7 @@ export declare class TileDBQuery {
                     timers: {
                         key: string;
                         value: number;
-                    }[]; /**
-                     * Calculate the total bytes of all the attributes
-                     * @param attributes
-                     * @returns number of the total bytes of all the attributes
-                     */
+                    }[];
                     counters: {
                         key: string;
                         value: number;
@@ -113,11 +96,6 @@ export declare class TileDBQuery {
                 ranges: {
                     type: string;
                     hasDefaultRange: boolean;
-                    /**
-                     * Add all buffers of an attribute
-                     * @param attr AttributeBufferHeader
-                     * @returns number of the total bytes of the attribute
-                     */
                     buffer: number[];
                     bufferSizes: number[];
                     bufferStartSizes: number[];
@@ -134,11 +112,7 @@ export declare class TileDBQuery {
                             timers: {
                                 key: string;
                                 value: number;
-                            }[]; /**
-                             * Calculate the total bytes of all the attributes
-                             * @param attributes
-                             * @returns number of the total bytes of all the attributes
-                             */
+                            }[];
                             counters: {
                                 key: string;
                                 value: number;
@@ -147,11 +121,6 @@ export declare class TileDBQuery {
                         ranges: {
                             type: string;
                             hasDefaultRange: boolean;
-                            /**
-                             * Add all buffers of an attribute
-                             * @param attr AttributeBufferHeader
-                             * @returns number of the total bytes of the attribute
-                             */
                             buffer: number[];
                             bufferSizes: number[];
                             bufferStartSizes: number[];
@@ -167,11 +136,7 @@ export declare class TileDBQuery {
                                 timers: {
                                     key: string;
                                     value: number;
-                                }[]; /**
-                                 * Calculate the total bytes of all the attributes
-                                 * @param attributes
-                                 * @returns number of the total bytes of all the attributes
-                                 */
+                                }[];
                                 counters: {
                                     key: string;
                                     value: number;
@@ -180,11 +145,6 @@ export declare class TileDBQuery {
                             ranges: {
                                 type: string;
                                 hasDefaultRange: boolean;
-                                /**
-                                 * Add all buffers of an attribute
-                                 * @param attr AttributeBufferHeader
-                                 * @returns number of the total bytes of the attribute
-                                 */
                                 buffer: number[];
                                 bufferSizes: number[];
                                 bufferStartSizes: number[];
@@ -203,11 +163,7 @@ export declare class TileDBQuery {
                                 timers: {
                                     key: string;
                                     value: number;
-                                }[]; /**
-                                 * Calculate the total bytes of all the attributes
-                                 * @param attributes
-                                 * @returns number of the total bytes of all the attributes
-                                 */
+                                }[];
                                 counters: {
                                     key: string;
                                     value: number;
@@ -216,11 +172,6 @@ export declare class TileDBQuery {
                             ranges: {
                                 type: string;
                                 hasDefaultRange: boolean;
-                                /**
-                                 * Add all buffers of an attribute
-                                 * @param attr AttributeBufferHeader
-                                 * @returns number of the total bytes of the attribute
-                                 */
                                 buffer: number[];
                                 bufferSizes: number[];
                                 bufferStartSizes: number[];
@@ -232,11 +183,7 @@ export declare class TileDBQuery {
                                 timers: {
                                     key: string;
                                     value: number;
-                                }[]; /**
-                                 * Calculate the total bytes of all the attributes
-                                 * @param attributes
-                                 * @returns number of the total bytes of all the attributes
-                                 */
+                                }[];
                                 counters: {
                                     key: string;
                                     value: number;
@@ -245,11 +192,6 @@ export declare class TileDBQuery {
                             ranges: {
                                 type: string;
                                 hasDefaultRange: boolean;
-                                /**
-                                 * Add all buffers of an attribute
-                                 * @param attr AttributeBufferHeader
-                                 * @returns number of the total bytes of the attribute
-                                 */
                                 buffer: number[];
                                 bufferSizes: number[];
                                 bufferStartSizes: number[];
@@ -263,11 +205,7 @@ export declare class TileDBQuery {
                         timers: {
                             key: string;
                             value: number;
-                        }[]; /**
-                         * Calculate the total bytes of all the attributes
-                         * @param attributes
-                         * @returns number of the total bytes of all the attributes
-                         */
+                        }[];
                         counters: {
                             key: string;
                             value: number;
@@ -287,11 +225,7 @@ export declare class TileDBQuery {
                 timers: {
                     key: string;
                     value: number;
-                }[]; /**
-                 * Calculate the total bytes of all the attributes
-                 * @param attributes
-                 * @returns number of the total bytes of all the attributes
-                 */
+                }[];
                 counters: {
                     key: string;
                     value: number;
@@ -320,11 +254,7 @@ export declare class TileDBQuery {
             timers: {
                 key: string;
                 value: number;
-            }[]; /**
-             * Calculate the total bytes of all the attributes
-             * @param attributes
-             * @returns number of the total bytes of all the attributes
-             */
+            }[];
             counters: {
                 key: string;
                 value: number;

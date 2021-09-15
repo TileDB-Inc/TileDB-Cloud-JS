@@ -6,7 +6,7 @@ import getByteLengthOfDatatype from "./getByteLengthOfDatatype";
 import emptyRangesToDomain from "./emptyRangesToDomain";
 
 const createAttributeBufferHeaders = (
-  attributes: Attribute[],
+  attributes: Array<Attribute | Dimension>,
   bufferSize: number
 ) => {
   const MAX_BYTES_PER_ELEMENT_OF_ATTRIBUTES = attributes.reduce(
@@ -14,25 +14,26 @@ const createAttributeBufferHeaders = (
     0
   );
   const attributeBufferHeaders = attributes.map((attr) => {
-    const MAX_BYTE_FOR_ELEMENT = getMaxByteSizeOfAttribute(attr); // 13
-    const WEIGHT = MAX_BYTE_FOR_ELEMENT / MAX_BYTES_PER_ELEMENT_OF_ATTRIBUTES; // 13 / 64 = 0.20
-    const BYTES_FOR_ATTRIBUTE = bufferSize * WEIGHT; // 0.20 * 1000 = 200
-    const isVarLength = isAttributeNullable(attr);
-    const BYTES_PER_ELEMENT = getByteLengthOfDatatype(attr.type); // 4
-    const BYTE_PER_OFFSET = getByteLengthOfDatatype(Datatype.Uint64); // 8
+    const MAX_BYTES_FOR_ATTRIBUTE = getMaxByteSizeOfAttribute(attr);
+    const WEIGHT = MAX_BYTES_FOR_ATTRIBUTE / MAX_BYTES_PER_ELEMENT_OF_ATTRIBUTES;
+    const BYTES_FOR_ATTRIBUTE = bufferSize * WEIGHT;
+    const isVarLength = isAttributeVarLength(attr);
+    const isNullable = isAttributeNullable(attr);
+    const BYTES_PER_ELEMENT = getByteLengthOfDatatype(attr.type);
+    const BYTE_PER_OFFSET = getByteLengthOfDatatype(Datatype.Uint64);
 
     const TOTAL_BYTES_PER_ELEMENT =
-      BYTES_FOR_ATTRIBUTE * (BYTES_PER_ELEMENT / MAX_BYTE_FOR_ELEMENT); // 61
-    const TOTAL_BYTE_PER_VALIDITY = BYTES_FOR_ATTRIBUTE / MAX_BYTE_FOR_ELEMENT; // 15
+      BYTES_FOR_ATTRIBUTE * (BYTES_PER_ELEMENT / MAX_BYTES_FOR_ATTRIBUTE);
+    const TOTAL_BYTE_PER_VALIDITY = BYTES_FOR_ATTRIBUTE / MAX_BYTES_FOR_ATTRIBUTE;
     const TOTAL_BYTE_PER_OFFSET =
-      BYTES_FOR_ATTRIBUTE * (BYTE_PER_OFFSET / MAX_BYTE_FOR_ELEMENT); // 123
+      BYTES_FOR_ATTRIBUTE * (BYTE_PER_OFFSET / MAX_BYTES_FOR_ATTRIBUTE);
 
     const fixedLenBufferSizeInBytes = isVarLength
       ? TOTAL_BYTE_PER_OFFSET
       : TOTAL_BYTES_PER_ELEMENT;
     const varLenBufferSizeInBytes = isVarLength ? TOTAL_BYTES_PER_ELEMENT : 0;
-    // TODO: How do i know if attribute is nullable?
-    const validityLenBufferSizeInBytes = TOTAL_BYTE_PER_VALIDITY;
+    
+    const validityLenBufferSizeInBytes = isNullable ? TOTAL_BYTE_PER_VALIDITY : 0;
 
     return {
       name: attr.name,
@@ -46,15 +47,33 @@ const createAttributeBufferHeaders = (
       ),
     };
   });
-
+  
   return attributeBufferHeaders;
 };
 
-const isAttributeNullable = (attribute: Attribute) =>
-  attribute.cellValNum == 4294967295;
 
-const getMaxByteSizeOfAttribute = (attribute: Attribute) => {
-  const isVarLength = isAttributeNullable(attribute);
+const isDimension = (data: Attribute | Dimension): data is Dimension => {
+  return data.hasOwnProperty('nullTileExtent');
+}
+
+const isAttributeVarLength = (attribute: Attribute | Dimension) => {
+  if (isDimension(attribute)) {
+    // Only StringAscii is var-length dimension
+    return attribute.type === Datatype.StringAscii;
+  }
+  return attribute.cellValNum == 4294967295;
+}
+const isAttributeNullable = (attribute: Attribute | Dimension) => {
+  if (isDimension(attribute)) {
+    return false;
+  }
+  // TODO: How do i know if attribute is nullable?
+  return true;
+}
+
+const getMaxByteSizeOfAttribute = (attribute: Attribute | Dimension) => {
+  const isVarLength = isAttributeVarLength(attribute);
+  const isNullable = isAttributeNullable(attribute);
   const BYTES_PER_ELEMENT = getByteLengthOfDatatype(attribute.type);
   const BYTE_PER_VALIDITY = getByteLengthOfDatatype(Datatype.Uint8);
   const BYTE_PER_OFFSET = getByteLengthOfDatatype(Datatype.Uint64);
@@ -62,7 +81,7 @@ const getMaxByteSizeOfAttribute = (attribute: Attribute) => {
   return (
     Number(isVarLength) * BYTE_PER_OFFSET +
     BYTES_PER_ELEMENT +
-    BYTE_PER_VALIDITY
+    Number(isNullable) * BYTE_PER_VALIDITY
   );
 };
 
@@ -89,7 +108,7 @@ const dataToQuery = (
   const rangesWithDomain = emptyRangesToDomain(data.ranges, dimensions);
   const ranges = getRanges(rangesWithDomain, dimensions);
   const attributeBufferHeaders = createAttributeBufferHeaders(
-    attributes,
+    [...attributes, ...dimensions],
     bufferSize
   );
 
