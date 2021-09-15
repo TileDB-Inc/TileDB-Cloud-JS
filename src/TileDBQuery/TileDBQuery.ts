@@ -14,6 +14,8 @@ import getByteLengthOfDatatype from "../utils/getByteLengthOfDatatype";
 import flatten from "../utils/flatten";
 import getWriterBody from "../utils/getWriterBody";
 import { Query } from "../v2";
+import groupValuesByOffsets from "../utils/groupValuesByOffsets";
+import isArrayOfArrays from "../utils/isArrayOfArrays";
 
 type Range = number[] | string[];
 export interface QueryData extends Pick<Query, "layout"> {
@@ -26,7 +28,7 @@ interface AttributeValue {
   values: any[];
 }
 
-export type AttributeValues = Record<string, AttributeValue>
+export type AttributeValues = Record<string, AttributeValue>;
 export interface QueryWrite extends Pick<Query, "layout"> {
   values: AttributeValues;
   subarray?: Array<number[] | string[]>;
@@ -83,9 +85,8 @@ export class TileDBQuery {
        */
       const queryData = convertToArrayBufferIfNodeBuffer(queryResponse.data);
       const bufferWithoutFirstEightBytes = queryData.slice(8);
-  
-      return capnpQueryDeSerializer(bufferWithoutFirstEightBytes);
 
+      return capnpQueryDeSerializer(bufferWithoutFirstEightBytes);
     } catch (e) {
       /**
        * Since we set the responseType to "arrayBuffer", in case the
@@ -164,7 +165,7 @@ export class TileDBQuery {
        * Deserialize buffer to a Query object
        */
       const queryObject = capnpQueryDeSerializer(bufferWithoutFirstEightBytes);
-      
+
       const attributeHeaders = queryObject.attributeBufferHeaders;
       /**
        * Calculate the size of bytes of the attributes from the attributeBufferHeaders of the Query object.
@@ -302,6 +303,26 @@ export const getResults = (
       selectedAttributeSchema.type
     );
 
+    let offsets = [];
+    if (isVarLengthSized) {
+      const BYTE_PER_ELEMENT = getByteLengthOfDatatype(
+        selectedAttributeSchema.type
+      );
+      const startOfBuffer = negativeOffset - totalNumberOfBytesOfAttribute;
+      const offsetsBuffer = arrayBuffer.slice(
+        startOfBuffer,
+        startOfBuffer + attribute.fixedLenBufferSizeInBytes
+      );
+      /**
+       * Offsets are Uint64 numbers, buffer contains byte offsets though,
+       * e.g. if type of the attribute is an INT32 (4 bytes per number) and the offsets are [0, 3, 4]
+       * the buffer contains the offsets * bytes of the element instead of just the offsets [0, 3 * 4, 4 * 4] = [0, 12, 16]
+       */
+      const byteOffsets = Array.from(new BigUint64Array(offsetsBuffer));
+      // Convert byte offsets to offsets
+      offsets = byteOffsets.map((o) => Number(o) / BYTE_PER_ELEMENT);
+    }
+
     if (isNullable) {
       /**
        * If attribute is Nullable, we get the last N bytes, cast it to uint8 array to get
@@ -319,34 +340,15 @@ export const getResults = (
        */
       const nullablesArray = Array.from(nullablesTypedArray);
 
-      let offsets = [];
-      if (isVarLengthSized) {
-        const BYTE_PER_ELEMENT = getByteLengthOfDatatype(
-          selectedAttributeSchema.type
-        );
-        const startOfBuffer = negativeOffset - totalNumberOfBytesOfAttribute;
-        const offsetsBuffer = arrayBuffer.slice(
-          startOfBuffer,
-          startOfBuffer + attribute.fixedLenBufferSizeInBytes
-        );
-        /**
-         * Offsets are Uint64 numbers, buffer contains byte offsets though,
-         * e.g. if type of the attribute is an INT32 (4 bytes per number) and the offsets are [0, 3, 4]
-         * the buffer contains the offsets * bytes of the element instead of just the offsets [0, 3 * 4, 4 * 4] = [0, 12, 16]
-         */
-        const byteOffsets = Array.from(new BigUint64Array(offsetsBuffer));
-        // Convert byte offsets to offsets
-        offsets = byteOffsets.map((o) => Number(o) / BYTE_PER_ELEMENT);
-      }
-
-      result = setNullables(
-        Array.from(result),
-        nullablesArray,
-        offsets
-      );
+      result = setNullables(Array.from(result), nullablesArray, offsets);
     }
 
-    data[attribute.name] = Array.isArray(result) ? flatten(result) : result;
+    // If result is a String slice the String by the offsets to make it an array
+    if (isVarLengthSized && typeof result === "string") {
+      result = groupValuesByOffsets([...result], offsets).map((s) => s.join(''));
+    }
+
+    data[attribute.name] = isArrayOfArrays(result) ? flatten(result) : result;
 
     return offset + totalNumberOfBytesOfAttribute;
   }, 0);
