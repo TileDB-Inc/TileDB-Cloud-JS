@@ -143,6 +143,12 @@ export interface ArrayActivityLog {
      */
     array_task_id?: string;
     /**
+     * id of the activity
+     * @type {string}
+     * @memberof ArrayActivityLog
+     */
+    id?: string;
+    /**
      * ranges for query
      * @type {string}
      * @memberof ArrayActivityLog
@@ -338,7 +344,13 @@ export interface ArrayInfo {
      * @type {boolean}
      * @memberof ArrayInfo
      */
-    read_only?: boolean;
+    read_only?: boolean | null;
+    /**
+     * Indicates whether the array is in user favorites
+     * @type {boolean}
+     * @memberof ArrayInfo
+     */
+    is_favorite?: boolean;
 }
 /**
  * metadata of an array
@@ -408,6 +420,12 @@ export interface ArrayInfoUpdate {
      * @memberof ArrayInfoUpdate
      */
     license_text?: string;
+    /**
+     * Suggests if the array is in read_only mode
+     * @type {boolean}
+     * @memberof ArrayInfoUpdate
+     */
+    read_only?: boolean;
 }
 /**
  * user\'s TileDB array metadata
@@ -726,12 +744,6 @@ export interface ArrayTask {
      * @memberof ArrayTask
      */
     result_format?: ResultFormat;
-    /**
-     * string representing the serialization format to use, i.e. cloudpickle version or arrow IPC verison
-     * @type {string}
-     * @memberof ArrayTask
-     */
-    result_format_version?: string;
 }
 /**
  * Object for ui array tasks browser page
@@ -1214,7 +1226,7 @@ export interface DomainArray {
     float64?: Array<number>;
 }
 /**
- *
+ * A user-favorite item
  * @export
  * @interface Favorite
  */
@@ -1243,6 +1255,37 @@ export interface Favorite {
      * @memberof Favorite
      */
     name?: string;
+    /**
+     * Datetime the favorite was created in UTC
+     * @type {string}
+     * @memberof Favorite
+     */
+    created_at?: string;
+}
+/**
+ * Request body to add a favorite
+ * @export
+ * @interface FavoriteCreate
+ */
+export interface FavoriteCreate {
+    /**
+     *
+     * @type {string}
+     * @memberof FavoriteCreate
+     */
+    name: string;
+    /**
+     *
+     * @type {string}
+     * @memberof FavoriteCreate
+     */
+    namespace: string;
+    /**
+     *
+     * @type {FavoriteType}
+     * @memberof FavoriteCreate
+     */
+    object_type: FavoriteType;
 }
 /**
  * List of values that FavoriteType can take
@@ -1253,29 +1296,23 @@ export declare enum FavoriteType {
     Array = "ARRAY"
 }
 /**
- *
+ * Object including favorites and pagination metadata
  * @export
- * @interface FavoriteUpdate
+ * @interface FavoritesData
  */
-export interface FavoriteUpdate {
+export interface FavoritesData {
+    /**
+     * List of favorites
+     * @type {Array<Favorite>}
+     * @memberof FavoritesData
+     */
+    favorites?: Array<Favorite>;
     /**
      *
-     * @type {string}
-     * @memberof FavoriteUpdate
+     * @type {PaginationMetadata}
+     * @memberof FavoritesData
      */
-    name?: string;
-    /**
-     *
-     * @type {string}
-     * @memberof FavoriteUpdate
-     */
-    namespace?: string;
-    /**
-     *
-     * @type {FavoriteType}
-     * @memberof FavoriteUpdate
-     */
-    object_type?: FavoriteType;
+    pagination_metadata?: PaginationMetadata;
 }
 /**
  * File property assigned to a specific file (array)
@@ -1285,7 +1322,9 @@ export interface FavoriteUpdate {
 export declare enum FilePropertyName {
     Image = "image",
     Size = "size",
-    CodeBlock = "code_block"
+    CodeBlock = "code_block",
+    UdfLanguage = "udf_language",
+    IsDashboard = "is_dashboard"
 }
 /**
  * File types represented as TileDB arrays
@@ -1473,17 +1512,17 @@ export interface GenericUDF {
      */
     argument?: string;
     /**
+     * The UUIDs of stored input parameters (passed in a language-specific format within \"argument\") to be retrieved from the server-side cache. Serialized in standard hex format with no {}.
+     * @type {Array<string>}
+     * @memberof GenericUDF
+     */
+    stored_param_uuids?: Array<string>;
+    /**
      *
      * @type {ResultFormat}
      * @memberof GenericUDF
      */
     result_format?: ResultFormat;
-    /**
-     * string representing the serialization format to use, i.e. cloudpickle version or arrow IPC verison
-     * @type {string}
-     * @memberof GenericUDF
-     */
-    result_format_version?: string;
     /**
      * name of task, optional
      * @type {string}
@@ -1861,12 +1900,6 @@ export interface MultiArrayUDF {
      */
     result_format?: ResultFormat;
     /**
-     * string representing the serialization format to use, i.e. cloudpickle version or arrow IPC verison
-     * @type {string}
-     * @memberof MultiArrayUDF
-     */
-    result_format_version?: string;
-    /**
      * name of task, optional
      * @type {string}
      * @memberof MultiArrayUDF
@@ -1878,6 +1911,12 @@ export interface MultiArrayUDF {
      * @memberof MultiArrayUDF
      */
     argument?: string;
+    /**
+     * The UUIDs of stored input parameters (passed in a language-specific format within \"argument\") to be retrieved from the server-side cache. Serialized in standard hex format with no {}.
+     * @type {Array<string>}
+     * @memberof MultiArrayUDF
+     */
+    stored_param_uuids?: Array<string>;
     /**
      * store results for later retrieval
      * @type {boolean}
@@ -2148,13 +2187,13 @@ export interface OrganizationUser {
  */
 export interface PaginationMetadata {
     /**
-     * pagination offset
+     * pagination offset. Use it to skip the first ((page - 1) * per_page) items
      * @type {number}
      * @memberof PaginationMetadata
      */
     page?: number;
     /**
-     * pagination limit
+     * pagination limit (page size)
      * @type {number}
      * @memberof PaginationMetadata
      */
@@ -2548,12 +2587,6 @@ export interface SQLParameters {
      * @memberof SQLParameters
      */
     result_format?: ResultFormat;
-    /**
-     * string representing the serialization format to use, i.e. cloudpickle version or arrow IPC verisonn
-     * @type {string}
-     * @memberof SQLParameters
-     */
-    result_format_version?: string;
     /**
      * Queries or commands to run before main query
      * @type {Array<string>}
@@ -3349,10 +3382,11 @@ export declare const ArrayApiAxiosParamCreator: (configuration?: Configuration) 
      * @param {Array<string>} [excludeTag] tags to exclude matching array in results, more than one can be included
      * @param {Array<string>} [fileType] file_type to search for, more than one can be included
      * @param {Array<string>} [excludeFileType] file_type to exclude matching array in results, more than one can be included
+     * @param {Array<string>} [fileProperty] file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    arraysBrowserOwnedGet: (page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, fileType?: Array<string>, excludeFileType?: Array<string>, options?: any) => Promise<RequestArgs>;
+    arraysBrowserOwnedGet: (page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, fileType?: Array<string>, excludeFileType?: Array<string>, fileProperty?: Array<string>, options?: any) => Promise<RequestArgs>;
     /**
      * Fetch a sidebar for arrays that are owned directly by user or user\'s organizations
      * @param {*} [options] Override http request option.
@@ -3371,10 +3405,11 @@ export declare const ArrayApiAxiosParamCreator: (configuration?: Configuration) 
      * @param {Array<string>} [excludeTag] tags to exclude matching array in results, more than one can be included
      * @param {Array<string>} [fileType] file_type to search for, more than one can be included
      * @param {Array<string>} [excludeFileType] file_type to exclude matching array in results, more than one can be included
+     * @param {Array<string>} [fileProperty] file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    arraysBrowserPublicGet: (page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, fileType?: Array<string>, excludeFileType?: Array<string>, options?: any) => Promise<RequestArgs>;
+    arraysBrowserPublicGet: (page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, fileType?: Array<string>, excludeFileType?: Array<string>, fileProperty?: Array<string>, options?: any) => Promise<RequestArgs>;
     /**
      * Fetch a sidebar of all arrays that have been shared publically
      * @param {*} [options] Override http request option.
@@ -3393,10 +3428,11 @@ export declare const ArrayApiAxiosParamCreator: (configuration?: Configuration) 
      * @param {Array<string>} [excludeTag] tags to exclude matching array in results, more than one can be included
      * @param {Array<string>} [fileType] file_type to search for, more than one can be included
      * @param {Array<string>} [excludeFileType] file_type to exclude matching array in results, more than one can be included
+     * @param {Array<string>} [fileProperty] file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    arraysBrowserSharedGet: (page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, fileType?: Array<string>, excludeFileType?: Array<string>, options?: any) => Promise<RequestArgs>;
+    arraysBrowserSharedGet: (page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, fileType?: Array<string>, excludeFileType?: Array<string>, fileProperty?: Array<string>, options?: any) => Promise<RequestArgs>;
     /**
      * Fetch a list of all arrays that have been shared with the user
      * @param {*} [options] Override http request option.
@@ -3440,6 +3476,15 @@ export declare const ArrayApiAxiosParamCreator: (configuration?: Configuration) 
      * @throws {RequiredError}
      */
     deregisterArray: (namespace: string, array: string, options?: any) => Promise<RequestArgs>;
+    /**
+     * get activity log by id
+     * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
+     * @param {string} array name/uri of array that is url-encoded
+     * @param {string} id id of the activity
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getActivityLogById: (namespace: string, array: string, id: string, options?: any) => Promise<RequestArgs>;
     /**
      * get all array metadata user has access to
      * @param {string} [publicShare] Public share values can be one of exclude, only
@@ -3616,10 +3661,11 @@ export declare const ArrayApiFp: (configuration?: Configuration) => {
      * @param {Array<string>} [excludeTag] tags to exclude matching array in results, more than one can be included
      * @param {Array<string>} [fileType] file_type to search for, more than one can be included
      * @param {Array<string>} [excludeFileType] file_type to exclude matching array in results, more than one can be included
+     * @param {Array<string>} [fileProperty] file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    arraysBrowserOwnedGet(page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, fileType?: Array<string>, excludeFileType?: Array<string>, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArrayBrowserData>>;
+    arraysBrowserOwnedGet(page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, fileType?: Array<string>, excludeFileType?: Array<string>, fileProperty?: Array<string>, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArrayBrowserData>>;
     /**
      * Fetch a sidebar for arrays that are owned directly by user or user\'s organizations
      * @param {*} [options] Override http request option.
@@ -3638,10 +3684,11 @@ export declare const ArrayApiFp: (configuration?: Configuration) => {
      * @param {Array<string>} [excludeTag] tags to exclude matching array in results, more than one can be included
      * @param {Array<string>} [fileType] file_type to search for, more than one can be included
      * @param {Array<string>} [excludeFileType] file_type to exclude matching array in results, more than one can be included
+     * @param {Array<string>} [fileProperty] file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    arraysBrowserPublicGet(page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, fileType?: Array<string>, excludeFileType?: Array<string>, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArrayBrowserData>>;
+    arraysBrowserPublicGet(page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, fileType?: Array<string>, excludeFileType?: Array<string>, fileProperty?: Array<string>, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArrayBrowserData>>;
     /**
      * Fetch a sidebar of all arrays that have been shared publically
      * @param {*} [options] Override http request option.
@@ -3660,10 +3707,11 @@ export declare const ArrayApiFp: (configuration?: Configuration) => {
      * @param {Array<string>} [excludeTag] tags to exclude matching array in results, more than one can be included
      * @param {Array<string>} [fileType] file_type to search for, more than one can be included
      * @param {Array<string>} [excludeFileType] file_type to exclude matching array in results, more than one can be included
+     * @param {Array<string>} [fileProperty] file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    arraysBrowserSharedGet(page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, fileType?: Array<string>, excludeFileType?: Array<string>, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArrayBrowserData>>;
+    arraysBrowserSharedGet(page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, fileType?: Array<string>, excludeFileType?: Array<string>, fileProperty?: Array<string>, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArrayBrowserData>>;
     /**
      * Fetch a list of all arrays that have been shared with the user
      * @param {*} [options] Override http request option.
@@ -3707,6 +3755,15 @@ export declare const ArrayApiFp: (configuration?: Configuration) => {
      * @throws {RequiredError}
      */
     deregisterArray(namespace: string, array: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
+    /**
+     * get activity log by id
+     * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
+     * @param {string} array name/uri of array that is url-encoded
+     * @param {string} id id of the activity
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getActivityLogById(namespace: string, array: string, id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArrayActivityLog>>;
     /**
      * get all array metadata user has access to
      * @param {string} [publicShare] Public share values can be one of exclude, only
@@ -3883,10 +3940,11 @@ export declare const ArrayApiFactory: (configuration?: Configuration, basePath?:
      * @param {Array<string>} [excludeTag] tags to exclude matching array in results, more than one can be included
      * @param {Array<string>} [fileType] file_type to search for, more than one can be included
      * @param {Array<string>} [excludeFileType] file_type to exclude matching array in results, more than one can be included
+     * @param {Array<string>} [fileProperty] file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    arraysBrowserOwnedGet(page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, fileType?: Array<string>, excludeFileType?: Array<string>, options?: any): AxiosPromise<ArrayBrowserData>;
+    arraysBrowserOwnedGet(page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, fileType?: Array<string>, excludeFileType?: Array<string>, fileProperty?: Array<string>, options?: any): AxiosPromise<ArrayBrowserData>;
     /**
      * Fetch a sidebar for arrays that are owned directly by user or user\'s organizations
      * @param {*} [options] Override http request option.
@@ -3905,10 +3963,11 @@ export declare const ArrayApiFactory: (configuration?: Configuration, basePath?:
      * @param {Array<string>} [excludeTag] tags to exclude matching array in results, more than one can be included
      * @param {Array<string>} [fileType] file_type to search for, more than one can be included
      * @param {Array<string>} [excludeFileType] file_type to exclude matching array in results, more than one can be included
+     * @param {Array<string>} [fileProperty] file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    arraysBrowserPublicGet(page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, fileType?: Array<string>, excludeFileType?: Array<string>, options?: any): AxiosPromise<ArrayBrowserData>;
+    arraysBrowserPublicGet(page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, fileType?: Array<string>, excludeFileType?: Array<string>, fileProperty?: Array<string>, options?: any): AxiosPromise<ArrayBrowserData>;
     /**
      * Fetch a sidebar of all arrays that have been shared publically
      * @param {*} [options] Override http request option.
@@ -3927,10 +3986,11 @@ export declare const ArrayApiFactory: (configuration?: Configuration, basePath?:
      * @param {Array<string>} [excludeTag] tags to exclude matching array in results, more than one can be included
      * @param {Array<string>} [fileType] file_type to search for, more than one can be included
      * @param {Array<string>} [excludeFileType] file_type to exclude matching array in results, more than one can be included
+     * @param {Array<string>} [fileProperty] file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    arraysBrowserSharedGet(page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, fileType?: Array<string>, excludeFileType?: Array<string>, options?: any): AxiosPromise<ArrayBrowserData>;
+    arraysBrowserSharedGet(page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, fileType?: Array<string>, excludeFileType?: Array<string>, fileProperty?: Array<string>, options?: any): AxiosPromise<ArrayBrowserData>;
     /**
      * Fetch a list of all arrays that have been shared with the user
      * @param {*} [options] Override http request option.
@@ -3974,6 +4034,15 @@ export declare const ArrayApiFactory: (configuration?: Configuration, basePath?:
      * @throws {RequiredError}
      */
     deregisterArray(namespace: string, array: string, options?: any): AxiosPromise<void>;
+    /**
+     * get activity log by id
+     * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
+     * @param {string} array name/uri of array that is url-encoded
+     * @param {string} id id of the activity
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getActivityLogById(namespace: string, array: string, id: string, options?: any): AxiosPromise<ArrayActivityLog>;
     /**
      * get all array metadata user has access to
      * @param {string} [publicShare] Public share values can be one of exclude, only
@@ -4153,11 +4222,12 @@ export declare class ArrayApi extends BaseAPI {
      * @param {Array<string>} [excludeTag] tags to exclude matching array in results, more than one can be included
      * @param {Array<string>} [fileType] file_type to search for, more than one can be included
      * @param {Array<string>} [excludeFileType] file_type to exclude matching array in results, more than one can be included
+     * @param {Array<string>} [fileProperty] file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ArrayApi
      */
-    arraysBrowserOwnedGet(page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, fileType?: Array<string>, excludeFileType?: Array<string>, options?: any): Promise<import("axios").AxiosResponse<ArrayBrowserData>>;
+    arraysBrowserOwnedGet(page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, fileType?: Array<string>, excludeFileType?: Array<string>, fileProperty?: Array<string>, options?: any): Promise<import("axios").AxiosResponse<ArrayBrowserData>>;
     /**
      * Fetch a sidebar for arrays that are owned directly by user or user\'s organizations
      * @param {*} [options] Override http request option.
@@ -4177,11 +4247,12 @@ export declare class ArrayApi extends BaseAPI {
      * @param {Array<string>} [excludeTag] tags to exclude matching array in results, more than one can be included
      * @param {Array<string>} [fileType] file_type to search for, more than one can be included
      * @param {Array<string>} [excludeFileType] file_type to exclude matching array in results, more than one can be included
+     * @param {Array<string>} [fileProperty] file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ArrayApi
      */
-    arraysBrowserPublicGet(page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, fileType?: Array<string>, excludeFileType?: Array<string>, options?: any): Promise<import("axios").AxiosResponse<ArrayBrowserData>>;
+    arraysBrowserPublicGet(page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, fileType?: Array<string>, excludeFileType?: Array<string>, fileProperty?: Array<string>, options?: any): Promise<import("axios").AxiosResponse<ArrayBrowserData>>;
     /**
      * Fetch a sidebar of all arrays that have been shared publically
      * @param {*} [options] Override http request option.
@@ -4201,11 +4272,12 @@ export declare class ArrayApi extends BaseAPI {
      * @param {Array<string>} [excludeTag] tags to exclude matching array in results, more than one can be included
      * @param {Array<string>} [fileType] file_type to search for, more than one can be included
      * @param {Array<string>} [excludeFileType] file_type to exclude matching array in results, more than one can be included
+     * @param {Array<string>} [fileProperty] file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ArrayApi
      */
-    arraysBrowserSharedGet(page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, fileType?: Array<string>, excludeFileType?: Array<string>, options?: any): Promise<import("axios").AxiosResponse<ArrayBrowserData>>;
+    arraysBrowserSharedGet(page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, fileType?: Array<string>, excludeFileType?: Array<string>, fileProperty?: Array<string>, options?: any): Promise<import("axios").AxiosResponse<ArrayBrowserData>>;
     /**
      * Fetch a list of all arrays that have been shared with the user
      * @param {*} [options] Override http request option.
@@ -4254,6 +4326,16 @@ export declare class ArrayApi extends BaseAPI {
      * @memberof ArrayApi
      */
     deregisterArray(namespace: string, array: string, options?: any): Promise<import("axios").AxiosResponse<void>>;
+    /**
+     * get activity log by id
+     * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
+     * @param {string} array name/uri of array that is url-encoded
+     * @param {string} id id of the activity
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ArrayApi
+     */
+    getActivityLogById(namespace: string, array: string, id: string, options?: any): Promise<import("axios").AxiosResponse<ArrayActivityLog>>;
     /**
      * get all array metadata user has access to
      * @param {string} [publicShare] Public share values can be one of exclude, only
@@ -4482,12 +4564,19 @@ export declare class ArrayTasksApi extends BaseAPI {
  */
 export declare const FavoritesApiAxiosParamCreator: (configuration?: Configuration) => {
     /**
+     * Add a new favorite
+     * @param {FavoriteCreate} [body]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    addFavorite: (body?: FavoriteCreate, options?: any) => Promise<RequestArgs>;
+    /**
      * Delete specific favorite
      * @param {string} id The uuid of the favorite
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    deleteFavoriteId: (id: string, options?: any) => Promise<RequestArgs>;
+    deleteFavorite: (id: string, options?: any) => Promise<RequestArgs>;
     /**
      * Fetch specific favorite of a user
      * @param {string} id The uuid of the favorite
@@ -4501,14 +4590,7 @@ export declare const FavoritesApiAxiosParamCreator: (configuration?: Configurati
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getFavorites: (type?: string, options?: any) => Promise<RequestArgs>;
-    /**
-     * Add a new favorite
-     * @param {FavoriteUpdate} [body]
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    postFavorite: (body?: FavoriteUpdate, options?: any) => Promise<RequestArgs>;
+    listFavorites: (type?: string, options?: any) => Promise<RequestArgs>;
 };
 /**
  * FavoritesApi - functional programming interface
@@ -4516,12 +4598,19 @@ export declare const FavoritesApiAxiosParamCreator: (configuration?: Configurati
  */
 export declare const FavoritesApiFp: (configuration?: Configuration) => {
     /**
+     * Add a new favorite
+     * @param {FavoriteCreate} [body]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    addFavorite(body?: FavoriteCreate, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
+    /**
      * Delete specific favorite
      * @param {string} id The uuid of the favorite
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    deleteFavoriteId(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
+    deleteFavorite(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
     /**
      * Fetch specific favorite of a user
      * @param {string} id The uuid of the favorite
@@ -4535,14 +4624,7 @@ export declare const FavoritesApiFp: (configuration?: Configuration) => {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getFavorites(type?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Favorite>>>;
-    /**
-     * Add a new favorite
-     * @param {FavoriteUpdate} [body]
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    postFavorite(body?: FavoriteUpdate, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
+    listFavorites(type?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<FavoritesData>>;
 };
 /**
  * FavoritesApi - factory interface
@@ -4550,12 +4632,19 @@ export declare const FavoritesApiFp: (configuration?: Configuration) => {
  */
 export declare const FavoritesApiFactory: (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) => {
     /**
+     * Add a new favorite
+     * @param {FavoriteCreate} [body]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    addFavorite(body?: FavoriteCreate, options?: any): AxiosPromise<void>;
+    /**
      * Delete specific favorite
      * @param {string} id The uuid of the favorite
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    deleteFavoriteId(id: string, options?: any): AxiosPromise<void>;
+    deleteFavorite(id: string, options?: any): AxiosPromise<void>;
     /**
      * Fetch specific favorite of a user
      * @param {string} id The uuid of the favorite
@@ -4569,14 +4658,7 @@ export declare const FavoritesApiFactory: (configuration?: Configuration, basePa
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getFavorites(type?: string, options?: any): AxiosPromise<Array<Favorite>>;
-    /**
-     * Add a new favorite
-     * @param {FavoriteUpdate} [body]
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    postFavorite(body?: FavoriteUpdate, options?: any): AxiosPromise<void>;
+    listFavorites(type?: string, options?: any): AxiosPromise<FavoritesData>;
 };
 /**
  * FavoritesApi - object-oriented interface
@@ -4586,13 +4668,21 @@ export declare const FavoritesApiFactory: (configuration?: Configuration, basePa
  */
 export declare class FavoritesApi extends BaseAPI {
     /**
+     * Add a new favorite
+     * @param {FavoriteCreate} [body]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof FavoritesApi
+     */
+    addFavorite(body?: FavoriteCreate, options?: any): Promise<import("axios").AxiosResponse<void>>;
+    /**
      * Delete specific favorite
      * @param {string} id The uuid of the favorite
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof FavoritesApi
      */
-    deleteFavoriteId(id: string, options?: any): Promise<import("axios").AxiosResponse<void>>;
+    deleteFavorite(id: string, options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**
      * Fetch specific favorite of a user
      * @param {string} id The uuid of the favorite
@@ -4608,15 +4698,7 @@ export declare class FavoritesApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof FavoritesApi
      */
-    getFavorites(type?: string, options?: any): Promise<import("axios").AxiosResponse<Favorite[]>>;
-    /**
-     * Add a new favorite
-     * @param {FavoriteUpdate} [body]
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof FavoritesApi
-     */
-    postFavorite(body?: FavoriteUpdate, options?: any): Promise<import("axios").AxiosResponse<void>>;
+    listFavorites(type?: string, options?: any): Promise<import("axios").AxiosResponse<FavoritesData>>;
 }
 /**
  * InvitationApi - axios parameter creator

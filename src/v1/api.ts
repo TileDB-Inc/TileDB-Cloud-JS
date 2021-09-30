@@ -154,6 +154,12 @@ export interface ArrayActivityLog {
      */
     array_task_id?: string;
     /**
+     * id of the activity
+     * @type {string}
+     * @memberof ArrayActivityLog
+     */
+    id?: string;
+    /**
      * ranges for query
      * @type {string}
      * @memberof ArrayActivityLog
@@ -347,7 +353,13 @@ export interface ArrayInfo {
      * @type {boolean}
      * @memberof ArrayInfo
      */
-    read_only?: boolean;
+    read_only?: boolean | null;
+    /**
+     * Indicates whether the array is in user favorites
+     * @type {boolean}
+     * @memberof ArrayInfo
+     */
+    is_favorite?: boolean;
 }
 /**
  * metadata of an array
@@ -415,6 +427,12 @@ export interface ArrayInfoUpdate {
      * @memberof ArrayInfoUpdate
      */
     license_text?: string;
+    /**
+     * Suggests if the array is in read_only mode
+     * @type {boolean}
+     * @memberof ArrayInfoUpdate
+     */
+    read_only?: boolean;
 }
 /**
  * user\'s TileDB array metadata
@@ -733,12 +751,6 @@ export interface ArrayTask {
      * @memberof ArrayTask
      */
     result_format?: ResultFormat;
-    /**
-     * string representing the serialization format to use, i.e. cloudpickle version or arrow IPC verison
-     * @type {string}
-     * @memberof ArrayTask
-     */
-    result_format_version?: string;
 }
 /**
  * Object for ui array tasks browser page
@@ -1225,13 +1237,13 @@ export interface DomainArray {
     float64?: Array<number>;
 }
 /**
- * 
+ * A user-favorite item
  * @export
  * @interface Favorite
  */
 export interface Favorite {
     /**
-     * unique uuid of the favorite 
+     * unique uuid of the favorite
      * @type {string}
      * @memberof Favorite
      */
@@ -1254,6 +1266,37 @@ export interface Favorite {
      * @memberof Favorite
      */
     name?: string;
+    /**
+     * Datetime the favorite was created in UTC
+     * @type {string}
+     * @memberof Favorite
+     */
+    created_at?: string;
+}
+/**
+ * Request body to add a favorite
+ * @export
+ * @interface FavoriteCreate
+ */
+export interface FavoriteCreate {
+    /**
+     * 
+     * @type {string}
+     * @memberof FavoriteCreate
+     */
+    name: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof FavoriteCreate
+     */
+    namespace: string;
+    /**
+     * 
+     * @type {FavoriteType}
+     * @memberof FavoriteCreate
+     */
+    object_type: FavoriteType;
 }
 /**
  * List of values that FavoriteType can take
@@ -1265,29 +1308,23 @@ export enum FavoriteType {
 }
 
 /**
- * 
+ * Object including favorites and pagination metadata
  * @export
- * @interface FavoriteUpdate
+ * @interface FavoritesData
  */
-export interface FavoriteUpdate {
+export interface FavoritesData {
+    /**
+     * List of favorites
+     * @type {Array<Favorite>}
+     * @memberof FavoritesData
+     */
+    favorites?: Array<Favorite>;
     /**
      * 
-     * @type {string}
-     * @memberof FavoriteUpdate
+     * @type {PaginationMetadata}
+     * @memberof FavoritesData
      */
-    name?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof FavoriteUpdate
-     */
-    namespace?: string;
-    /**
-     * 
-     * @type {FavoriteType}
-     * @memberof FavoriteUpdate
-     */
-    object_type?: FavoriteType;
+    pagination_metadata?: PaginationMetadata;
 }
 /**
  * File property assigned to a specific file (array)
@@ -1297,7 +1334,9 @@ export interface FavoriteUpdate {
 export enum FilePropertyName {
     Image = 'image',
     Size = 'size',
-    CodeBlock = 'code_block'
+    CodeBlock = 'code_block',
+    UdfLanguage = 'udf_language',
+    IsDashboard = 'is_dashboard'
 }
 
 /**
@@ -1489,17 +1528,17 @@ export interface GenericUDF {
      */
     argument?: string;
     /**
+     * The UUIDs of stored input parameters (passed in a language-specific format within \"argument\") to be retrieved from the server-side cache. Serialized in standard hex format with no {}.
+     * @type {Array<string>}
+     * @memberof GenericUDF
+     */
+    stored_param_uuids?: Array<string>;
+    /**
      * 
      * @type {ResultFormat}
      * @memberof GenericUDF
      */
     result_format?: ResultFormat;
-    /**
-     * string representing the serialization format to use, i.e. cloudpickle version or arrow IPC verison
-     * @type {string}
-     * @memberof GenericUDF
-     */
-    result_format_version?: string;
     /**
      * name of task, optional
      * @type {string}
@@ -1880,12 +1919,6 @@ export interface MultiArrayUDF {
      */
     result_format?: ResultFormat;
     /**
-     * string representing the serialization format to use, i.e. cloudpickle version or arrow IPC verison
-     * @type {string}
-     * @memberof MultiArrayUDF
-     */
-    result_format_version?: string;
-    /**
      * name of task, optional
      * @type {string}
      * @memberof MultiArrayUDF
@@ -1897,6 +1930,12 @@ export interface MultiArrayUDF {
      * @memberof MultiArrayUDF
      */
     argument?: string;
+    /**
+     * The UUIDs of stored input parameters (passed in a language-specific format within \"argument\") to be retrieved from the server-side cache. Serialized in standard hex format with no {}.
+     * @type {Array<string>}
+     * @memberof MultiArrayUDF
+     */
+    stored_param_uuids?: Array<string>;
     /**
      * store results for later retrieval
      * @type {boolean}
@@ -2169,13 +2208,13 @@ export interface OrganizationUser {
  */
 export interface PaginationMetadata {
     /**
-     * pagination offset
+     * pagination offset. Use it to skip the first ((page - 1) * per_page) items
      * @type {number}
      * @memberof PaginationMetadata
      */
     page?: number;
     /**
-     * pagination limit
+     * pagination limit (page size)
      * @type {number}
      * @memberof PaginationMetadata
      */
@@ -2578,12 +2617,6 @@ export interface SQLParameters {
      * @memberof SQLParameters
      */
     result_format?: ResultFormat;
-    /**
-     * string representing the serialization format to use, i.e. cloudpickle version or arrow IPC verisonn
-     * @type {string}
-     * @memberof SQLParameters
-     */
-    result_format_version?: string;
     /**
      * Queries or commands to run before main query
      * @type {Array<string>}
@@ -3444,10 +3477,11 @@ export const ArrayApiAxiosParamCreator = function (configuration?: Configuration
          * @param {Array<string>} [excludeTag] tags to exclude matching array in results, more than one can be included
          * @param {Array<string>} [fileType] file_type to search for, more than one can be included
          * @param {Array<string>} [excludeFileType] file_type to exclude matching array in results, more than one can be included
+         * @param {Array<string>} [fileProperty] file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        arraysBrowserOwnedGet: async (page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, fileType?: Array<string>, excludeFileType?: Array<string>, options: any = {}): Promise<RequestArgs> => {
+        arraysBrowserOwnedGet: async (page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, fileType?: Array<string>, excludeFileType?: Array<string>, fileProperty?: Array<string>, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/arrays/browser/owned`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -3505,6 +3539,10 @@ export const ArrayApiAxiosParamCreator = function (configuration?: Configuration
 
             if (excludeFileType) {
                 localVarQueryParameter['exclude_file_type'] = excludeFileType;
+            }
+
+            if (fileProperty) {
+                localVarQueryParameter['file_property'] = fileProperty;
             }
 
 
@@ -3574,10 +3612,11 @@ export const ArrayApiAxiosParamCreator = function (configuration?: Configuration
          * @param {Array<string>} [excludeTag] tags to exclude matching array in results, more than one can be included
          * @param {Array<string>} [fileType] file_type to search for, more than one can be included
          * @param {Array<string>} [excludeFileType] file_type to exclude matching array in results, more than one can be included
+         * @param {Array<string>} [fileProperty] file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        arraysBrowserPublicGet: async (page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, fileType?: Array<string>, excludeFileType?: Array<string>, options: any = {}): Promise<RequestArgs> => {
+        arraysBrowserPublicGet: async (page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, fileType?: Array<string>, excludeFileType?: Array<string>, fileProperty?: Array<string>, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/arrays/browser/public`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -3635,6 +3674,10 @@ export const ArrayApiAxiosParamCreator = function (configuration?: Configuration
 
             if (excludeFileType) {
                 localVarQueryParameter['exclude_file_type'] = excludeFileType;
+            }
+
+            if (fileProperty) {
+                localVarQueryParameter['file_property'] = fileProperty;
             }
 
 
@@ -3704,10 +3747,11 @@ export const ArrayApiAxiosParamCreator = function (configuration?: Configuration
          * @param {Array<string>} [excludeTag] tags to exclude matching array in results, more than one can be included
          * @param {Array<string>} [fileType] file_type to search for, more than one can be included
          * @param {Array<string>} [excludeFileType] file_type to exclude matching array in results, more than one can be included
+         * @param {Array<string>} [fileProperty] file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        arraysBrowserSharedGet: async (page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, fileType?: Array<string>, excludeFileType?: Array<string>, options: any = {}): Promise<RequestArgs> => {
+        arraysBrowserSharedGet: async (page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, fileType?: Array<string>, excludeFileType?: Array<string>, fileProperty?: Array<string>, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/arrays/browser/shared`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -3765,6 +3809,10 @@ export const ArrayApiAxiosParamCreator = function (configuration?: Configuration
 
             if (excludeFileType) {
                 localVarQueryParameter['exclude_file_type'] = excludeFileType;
+            }
+
+            if (fileProperty) {
+                localVarQueryParameter['file_property'] = fileProperty;
             }
 
 
@@ -4020,6 +4068,58 @@ export const ArrayApiAxiosParamCreator = function (configuration?: Configuration
             }
 
             const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+
+            // authentication BasicAuth required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * get activity log by id
+         * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
+         * @param {string} array name/uri of array that is url-encoded
+         * @param {string} id id of the activity
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getActivityLogById: async (namespace: string, array: string, id: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'namespace' is not null or undefined
+            assertParamExists('getActivityLogById', 'namespace', namespace)
+            // verify required parameter 'array' is not null or undefined
+            assertParamExists('getActivityLogById', 'array', array)
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('getActivityLogById', 'id', id)
+            const localVarPath = `/arrays/{namespace}/{array}/activity/{id}`
+                .replace(`{${"namespace"}}`, encodeURIComponent(String(namespace)))
+                .replace(`{${"array"}}`, encodeURIComponent(String(array)))
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
@@ -4962,11 +5062,12 @@ export const ArrayApiFp = function(configuration?: Configuration) {
          * @param {Array<string>} [excludeTag] tags to exclude matching array in results, more than one can be included
          * @param {Array<string>} [fileType] file_type to search for, more than one can be included
          * @param {Array<string>} [excludeFileType] file_type to exclude matching array in results, more than one can be included
+         * @param {Array<string>} [fileProperty] file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async arraysBrowserOwnedGet(page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, fileType?: Array<string>, excludeFileType?: Array<string>, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArrayBrowserData>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.arraysBrowserOwnedGet(page, perPage, search, namespace, orderby, permissions, tag, excludeTag, fileType, excludeFileType, options);
+        async arraysBrowserOwnedGet(page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, fileType?: Array<string>, excludeFileType?: Array<string>, fileProperty?: Array<string>, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArrayBrowserData>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.arraysBrowserOwnedGet(page, perPage, search, namespace, orderby, permissions, tag, excludeTag, fileType, excludeFileType, fileProperty, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -4990,11 +5091,12 @@ export const ArrayApiFp = function(configuration?: Configuration) {
          * @param {Array<string>} [excludeTag] tags to exclude matching array in results, more than one can be included
          * @param {Array<string>} [fileType] file_type to search for, more than one can be included
          * @param {Array<string>} [excludeFileType] file_type to exclude matching array in results, more than one can be included
+         * @param {Array<string>} [fileProperty] file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async arraysBrowserPublicGet(page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, fileType?: Array<string>, excludeFileType?: Array<string>, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArrayBrowserData>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.arraysBrowserPublicGet(page, perPage, search, namespace, orderby, permissions, tag, excludeTag, fileType, excludeFileType, options);
+        async arraysBrowserPublicGet(page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, fileType?: Array<string>, excludeFileType?: Array<string>, fileProperty?: Array<string>, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArrayBrowserData>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.arraysBrowserPublicGet(page, perPage, search, namespace, orderby, permissions, tag, excludeTag, fileType, excludeFileType, fileProperty, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -5018,11 +5120,12 @@ export const ArrayApiFp = function(configuration?: Configuration) {
          * @param {Array<string>} [excludeTag] tags to exclude matching array in results, more than one can be included
          * @param {Array<string>} [fileType] file_type to search for, more than one can be included
          * @param {Array<string>} [excludeFileType] file_type to exclude matching array in results, more than one can be included
+         * @param {Array<string>} [fileProperty] file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async arraysBrowserSharedGet(page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, fileType?: Array<string>, excludeFileType?: Array<string>, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArrayBrowserData>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.arraysBrowserSharedGet(page, perPage, search, namespace, orderby, permissions, tag, excludeTag, fileType, excludeFileType, options);
+        async arraysBrowserSharedGet(page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, fileType?: Array<string>, excludeFileType?: Array<string>, fileProperty?: Array<string>, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArrayBrowserData>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.arraysBrowserSharedGet(page, perPage, search, namespace, orderby, permissions, tag, excludeTag, fileType, excludeFileType, fileProperty, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -5081,6 +5184,18 @@ export const ArrayApiFp = function(configuration?: Configuration) {
          */
         async deregisterArray(namespace: string, array: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.deregisterArray(namespace, array, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * get activity log by id
+         * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
+         * @param {string} array name/uri of array that is url-encoded
+         * @param {string} id id of the activity
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getActivityLogById(namespace: string, array: string, id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArrayActivityLog>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getActivityLogById(namespace, array, id, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -5316,11 +5431,12 @@ export const ArrayApiFactory = function (configuration?: Configuration, basePath
          * @param {Array<string>} [excludeTag] tags to exclude matching array in results, more than one can be included
          * @param {Array<string>} [fileType] file_type to search for, more than one can be included
          * @param {Array<string>} [excludeFileType] file_type to exclude matching array in results, more than one can be included
+         * @param {Array<string>} [fileProperty] file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        arraysBrowserOwnedGet(page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, fileType?: Array<string>, excludeFileType?: Array<string>, options?: any): AxiosPromise<ArrayBrowserData> {
-            return localVarFp.arraysBrowserOwnedGet(page, perPage, search, namespace, orderby, permissions, tag, excludeTag, fileType, excludeFileType, options).then((request) => request(axios, basePath));
+        arraysBrowserOwnedGet(page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, fileType?: Array<string>, excludeFileType?: Array<string>, fileProperty?: Array<string>, options?: any): AxiosPromise<ArrayBrowserData> {
+            return localVarFp.arraysBrowserOwnedGet(page, perPage, search, namespace, orderby, permissions, tag, excludeTag, fileType, excludeFileType, fileProperty, options).then((request) => request(axios, basePath));
         },
         /**
          * Fetch a sidebar for arrays that are owned directly by user or user\'s organizations
@@ -5342,11 +5458,12 @@ export const ArrayApiFactory = function (configuration?: Configuration, basePath
          * @param {Array<string>} [excludeTag] tags to exclude matching array in results, more than one can be included
          * @param {Array<string>} [fileType] file_type to search for, more than one can be included
          * @param {Array<string>} [excludeFileType] file_type to exclude matching array in results, more than one can be included
+         * @param {Array<string>} [fileProperty] file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        arraysBrowserPublicGet(page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, fileType?: Array<string>, excludeFileType?: Array<string>, options?: any): AxiosPromise<ArrayBrowserData> {
-            return localVarFp.arraysBrowserPublicGet(page, perPage, search, namespace, orderby, permissions, tag, excludeTag, fileType, excludeFileType, options).then((request) => request(axios, basePath));
+        arraysBrowserPublicGet(page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, fileType?: Array<string>, excludeFileType?: Array<string>, fileProperty?: Array<string>, options?: any): AxiosPromise<ArrayBrowserData> {
+            return localVarFp.arraysBrowserPublicGet(page, perPage, search, namespace, orderby, permissions, tag, excludeTag, fileType, excludeFileType, fileProperty, options).then((request) => request(axios, basePath));
         },
         /**
          * Fetch a sidebar of all arrays that have been shared publically
@@ -5368,11 +5485,12 @@ export const ArrayApiFactory = function (configuration?: Configuration, basePath
          * @param {Array<string>} [excludeTag] tags to exclude matching array in results, more than one can be included
          * @param {Array<string>} [fileType] file_type to search for, more than one can be included
          * @param {Array<string>} [excludeFileType] file_type to exclude matching array in results, more than one can be included
+         * @param {Array<string>} [fileProperty] file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        arraysBrowserSharedGet(page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, fileType?: Array<string>, excludeFileType?: Array<string>, options?: any): AxiosPromise<ArrayBrowserData> {
-            return localVarFp.arraysBrowserSharedGet(page, perPage, search, namespace, orderby, permissions, tag, excludeTag, fileType, excludeFileType, options).then((request) => request(axios, basePath));
+        arraysBrowserSharedGet(page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, fileType?: Array<string>, excludeFileType?: Array<string>, fileProperty?: Array<string>, options?: any): AxiosPromise<ArrayBrowserData> {
+            return localVarFp.arraysBrowserSharedGet(page, perPage, search, namespace, orderby, permissions, tag, excludeTag, fileType, excludeFileType, fileProperty, options).then((request) => request(axios, basePath));
         },
         /**
          * Fetch a list of all arrays that have been shared with the user
@@ -5426,6 +5544,17 @@ export const ArrayApiFactory = function (configuration?: Configuration, basePath
          */
         deregisterArray(namespace: string, array: string, options?: any): AxiosPromise<void> {
             return localVarFp.deregisterArray(namespace, array, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * get activity log by id
+         * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
+         * @param {string} array name/uri of array that is url-encoded
+         * @param {string} id id of the activity
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getActivityLogById(namespace: string, array: string, id: string, options?: any): AxiosPromise<ArrayActivityLog> {
+            return localVarFp.getActivityLogById(namespace, array, id, options).then((request) => request(axios, basePath));
         },
         /**
          * get all array metadata user has access to
@@ -5645,12 +5774,13 @@ export class ArrayApi extends BaseAPI {
      * @param {Array<string>} [excludeTag] tags to exclude matching array in results, more than one can be included
      * @param {Array<string>} [fileType] file_type to search for, more than one can be included
      * @param {Array<string>} [excludeFileType] file_type to exclude matching array in results, more than one can be included
+     * @param {Array<string>} [fileProperty] file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ArrayApi
      */
-    public arraysBrowserOwnedGet(page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, fileType?: Array<string>, excludeFileType?: Array<string>, options?: any) {
-        return ArrayApiFp(this.configuration).arraysBrowserOwnedGet(page, perPage, search, namespace, orderby, permissions, tag, excludeTag, fileType, excludeFileType, options).then((request) => request(this.axios, this.basePath));
+    public arraysBrowserOwnedGet(page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, fileType?: Array<string>, excludeFileType?: Array<string>, fileProperty?: Array<string>, options?: any) {
+        return ArrayApiFp(this.configuration).arraysBrowserOwnedGet(page, perPage, search, namespace, orderby, permissions, tag, excludeTag, fileType, excludeFileType, fileProperty, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -5675,12 +5805,13 @@ export class ArrayApi extends BaseAPI {
      * @param {Array<string>} [excludeTag] tags to exclude matching array in results, more than one can be included
      * @param {Array<string>} [fileType] file_type to search for, more than one can be included
      * @param {Array<string>} [excludeFileType] file_type to exclude matching array in results, more than one can be included
+     * @param {Array<string>} [fileProperty] file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ArrayApi
      */
-    public arraysBrowserPublicGet(page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, fileType?: Array<string>, excludeFileType?: Array<string>, options?: any) {
-        return ArrayApiFp(this.configuration).arraysBrowserPublicGet(page, perPage, search, namespace, orderby, permissions, tag, excludeTag, fileType, excludeFileType, options).then((request) => request(this.axios, this.basePath));
+    public arraysBrowserPublicGet(page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, fileType?: Array<string>, excludeFileType?: Array<string>, fileProperty?: Array<string>, options?: any) {
+        return ArrayApiFp(this.configuration).arraysBrowserPublicGet(page, perPage, search, namespace, orderby, permissions, tag, excludeTag, fileType, excludeFileType, fileProperty, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -5705,12 +5836,13 @@ export class ArrayApi extends BaseAPI {
      * @param {Array<string>} [excludeTag] tags to exclude matching array in results, more than one can be included
      * @param {Array<string>} [fileType] file_type to search for, more than one can be included
      * @param {Array<string>} [excludeFileType] file_type to exclude matching array in results, more than one can be included
+     * @param {Array<string>} [fileProperty] file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ArrayApi
      */
-    public arraysBrowserSharedGet(page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, fileType?: Array<string>, excludeFileType?: Array<string>, options?: any) {
-        return ArrayApiFp(this.configuration).arraysBrowserSharedGet(page, perPage, search, namespace, orderby, permissions, tag, excludeTag, fileType, excludeFileType, options).then((request) => request(this.axios, this.basePath));
+    public arraysBrowserSharedGet(page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, fileType?: Array<string>, excludeFileType?: Array<string>, fileProperty?: Array<string>, options?: any) {
+        return ArrayApiFp(this.configuration).arraysBrowserSharedGet(page, perPage, search, namespace, orderby, permissions, tag, excludeTag, fileType, excludeFileType, fileProperty, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -5774,6 +5906,19 @@ export class ArrayApi extends BaseAPI {
      */
     public deregisterArray(namespace: string, array: string, options?: any) {
         return ArrayApiFp(this.configuration).deregisterArray(namespace, array, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * get activity log by id
+     * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
+     * @param {string} array name/uri of array that is url-encoded
+     * @param {string} id id of the activity
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ArrayApi
+     */
+    public getActivityLogById(namespace: string, array: string, id: string, options?: any) {
+        return ArrayApiFp(this.configuration).getActivityLogById(namespace, array, id, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -6119,14 +6264,58 @@ export class ArrayTasksApi extends BaseAPI {
 export const FavoritesApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
         /**
+         * Add a new favorite
+         * @param {FavoriteCreate} [body] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        addFavorite: async (body?: FavoriteCreate, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/favorites`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+
+            // authentication BasicAuth required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
+            localVarRequestOptions.data = serializeDataIfNeeded(body, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * Delete specific favorite
          * @param {string} id The uuid of the favorite
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteFavoriteId: async (id: string, options: any = {}): Promise<RequestArgs> => {
+        deleteFavorite: async (id: string, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
-            assertParamExists('deleteFavoriteId', 'id', id)
+            assertParamExists('deleteFavorite', 'id', id)
             const localVarPath = `/favorites/{id}`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -6212,7 +6401,7 @@ export const FavoritesApiAxiosParamCreator = function (configuration?: Configura
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getFavorites: async (type?: string, options: any = {}): Promise<RequestArgs> => {
+        listFavorites: async (type?: string, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/favorites`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -6251,50 +6440,6 @@ export const FavoritesApiAxiosParamCreator = function (configuration?: Configura
                 options: localVarRequestOptions,
             };
         },
-        /**
-         * Add a new favorite
-         * @param {FavoriteUpdate} [body] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        postFavorite: async (body?: FavoriteUpdate, options: any = {}): Promise<RequestArgs> => {
-            const localVarPath = `/favorites`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
-
-            // authentication BasicAuth required
-            // http basic authentication required
-            setBasicAuthToObject(localVarRequestOptions, configuration)
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
-                // for application/capnp mime type requests default responseType to 'arraybuffer'
-                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
-            }
-            localVarRequestOptions.data = serializeDataIfNeeded(body, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
     }
 };
 
@@ -6306,13 +6451,23 @@ export const FavoritesApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = FavoritesApiAxiosParamCreator(configuration)
     return {
         /**
+         * Add a new favorite
+         * @param {FavoriteCreate} [body] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async addFavorite(body?: FavoriteCreate, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.addFavorite(body, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
          * Delete specific favorite
          * @param {string} id The uuid of the favorite
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async deleteFavoriteId(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteFavoriteId(id, options);
+        async deleteFavorite(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteFavorite(id, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -6331,18 +6486,8 @@ export const FavoritesApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getFavorites(type?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Favorite>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getFavorites(type, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * Add a new favorite
-         * @param {FavoriteUpdate} [body] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async postFavorite(body?: FavoriteUpdate, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.postFavorite(body, options);
+        async listFavorites(type?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<FavoritesData>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listFavorites(type, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
     }
@@ -6356,13 +6501,22 @@ export const FavoritesApiFactory = function (configuration?: Configuration, base
     const localVarFp = FavoritesApiFp(configuration)
     return {
         /**
+         * Add a new favorite
+         * @param {FavoriteCreate} [body] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        addFavorite(body?: FavoriteCreate, options?: any): AxiosPromise<void> {
+            return localVarFp.addFavorite(body, options).then((request) => request(axios, basePath));
+        },
+        /**
          * Delete specific favorite
          * @param {string} id The uuid of the favorite
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteFavoriteId(id: string, options?: any): AxiosPromise<void> {
-            return localVarFp.deleteFavoriteId(id, options).then((request) => request(axios, basePath));
+        deleteFavorite(id: string, options?: any): AxiosPromise<void> {
+            return localVarFp.deleteFavorite(id, options).then((request) => request(axios, basePath));
         },
         /**
          * Fetch specific favorite of a user
@@ -6379,17 +6533,8 @@ export const FavoritesApiFactory = function (configuration?: Configuration, base
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getFavorites(type?: string, options?: any): AxiosPromise<Array<Favorite>> {
-            return localVarFp.getFavorites(type, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * Add a new favorite
-         * @param {FavoriteUpdate} [body] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        postFavorite(body?: FavoriteUpdate, options?: any): AxiosPromise<void> {
-            return localVarFp.postFavorite(body, options).then((request) => request(axios, basePath));
+        listFavorites(type?: string, options?: any): AxiosPromise<FavoritesData> {
+            return localVarFp.listFavorites(type, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -6402,14 +6547,25 @@ export const FavoritesApiFactory = function (configuration?: Configuration, base
  */
 export class FavoritesApi extends BaseAPI {
     /**
+     * Add a new favorite
+     * @param {FavoriteCreate} [body] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof FavoritesApi
+     */
+    public addFavorite(body?: FavoriteCreate, options?: any) {
+        return FavoritesApiFp(this.configuration).addFavorite(body, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
      * Delete specific favorite
      * @param {string} id The uuid of the favorite
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof FavoritesApi
      */
-    public deleteFavoriteId(id: string, options?: any) {
-        return FavoritesApiFp(this.configuration).deleteFavoriteId(id, options).then((request) => request(this.axios, this.basePath));
+    public deleteFavorite(id: string, options?: any) {
+        return FavoritesApiFp(this.configuration).deleteFavorite(id, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -6430,19 +6586,8 @@ export class FavoritesApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof FavoritesApi
      */
-    public getFavorites(type?: string, options?: any) {
-        return FavoritesApiFp(this.configuration).getFavorites(type, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * Add a new favorite
-     * @param {FavoriteUpdate} [body] 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof FavoritesApi
-     */
-    public postFavorite(body?: FavoriteUpdate, options?: any) {
-        return FavoritesApiFp(this.configuration).postFavorite(body, options).then((request) => request(this.axios, this.basePath));
+    public listFavorites(type?: string, options?: any) {
+        return FavoritesApiFp(this.configuration).listFavorites(type, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

@@ -2,12 +2,13 @@ import dataToQuery from "../utils/dataToQuery";
 import getAttributeResult, { bufferToInt8 } from "../utils/bufferToData";
 import capnpQueryDeSerializer from "../utils/capnpQueryDeSerializer";
 import setNullables from "../utils/setNullables";
-import { ArrayApi, Attribute, Dimension } from "../v1";
+import { ArrayApi, ArraySchema, Attribute, Dimension } from "../v1";
 import {
   AttributeBufferHeader,
   Configuration,
   ConfigurationParameters,
   QueryApi,
+  Querystatus,
   Querytype,
 } from "../v2";
 import getByteLengthOfDatatype from "../utils/getByteLengthOfDatatype";
@@ -106,7 +107,67 @@ export class TileDBQuery {
     }
   }
 
-  async ReadQuery(namespace: string, arrayName: string, body: QueryData) {
+  async ReadIncompleteQuery(
+    arraySchema: ArraySchema,
+    queryAsArrayBuffer: ArrayBuffer,
+    namespace: string,
+    arrayName: string
+  ): Promise<{
+    query: Query;
+    results: Record<string, any>;
+    queryAsArrayBuffer: ArrayBuffer;
+  }> {
+    const config = new Configuration(this.configurationParams);
+    const queryAPI = new QueryApi(config);
+    const queryResponse = await queryAPI.submitQuery(
+      namespace,
+      arrayName,
+      Querytype.Read,
+      "application/capnp",
+      queryAsArrayBuffer as any,
+      undefined,
+      undefined,
+      undefined,
+      {
+        headers: {
+          "Content-Type": "application/capnp",
+        },
+        responseType: "arraybuffer",
+      }
+    );
+
+    /**
+     * Axios in nodeJS environments casts the response to a Buffer object
+     * we convert it back to an ArrayBuffer if needed
+     */
+    const queryData = convertToArrayBufferIfNodeBuffer(queryResponse.data);
+    /**
+     * First 8 bytes of the response, contain a Uint64 number
+     * which is the size of the response we skip it.
+     */
+    const bufferWithoutFirstEightBytes = queryData.slice(8);
+
+    /**
+     * Deserialize buffer to a Query object
+     */
+    const queryObject = capnpQueryDeSerializer(bufferWithoutFirstEightBytes);
+
+    const attributeHeaders = queryObject.attributeBufferHeaders;
+
+    const results = this.getResultsFromArrayBuffer(
+      arraySchema,
+      bufferWithoutFirstEightBytes,
+      attributeHeaders
+    );
+
+    return {
+      results,
+      query: queryObject as any,
+      queryAsArrayBuffer: bufferWithoutFirstEightBytes,
+    };
+  }
+
+  async *ReadQuery(namespace: string, arrayName: string, body: QueryData) {
     const config = new Configuration(this.configurationParams);
     const baseV1 = config.basePath?.replace("v2", "v1");
     // Add versioning if basePath exists
@@ -159,7 +220,7 @@ export class TileDBQuery {
        * First 8 bytes of the response, contain a Uint64 number
        * which is the size of the response we skip it.
        */
-      const bufferWithoutFirstEightBytes = queryData.slice(8);
+      let bufferWithoutFirstEightBytes = queryData.slice(8);
 
       /**
        * Deserialize buffer to a Query object
@@ -167,46 +228,95 @@ export class TileDBQuery {
       const queryObject = capnpQueryDeSerializer(bufferWithoutFirstEightBytes);
 
       const attributeHeaders = queryObject.attributeBufferHeaders;
-      /**
-       * Calculate the size of bytes of the attributes from the attributeBufferHeaders of the Query object.
-       */
-      const numberOfBytesOfResults =
-        getSizeInBytesOfAllAttributes(attributeHeaders);
-      /**
-       * We get the last N bytes (N is the number of total bytes of the attributes), which contain
-       * the results of all the attributes
-       */
-      const resultsBuffer = bufferWithoutFirstEightBytes.slice(
-        -1 * numberOfBytesOfResults
-      );
-      const mergeAttributesAndDimensions = [
-        ...arraySchema.domain.dimensions,
-        ...arraySchema.attributes,
-      ];
-      // Calculate results
-      const results = getResults(
-        resultsBuffer,
-        attributeHeaders,
-        mergeAttributesAndDimensions
-      );
 
-      return results;
-    } catch (e) {
-      /**
-       * Since we set the responseType to "arrayBuffer", in case the
-       * response error message is a buffer, we deserialize the message before throwing
-       */
-      const errorIsABuffer =
-        e?.response?.data?.buffer || e?.response?.data?.length;
-      if (errorIsABuffer) {
-        const errorArrayBuffer = convertToArrayBufferIfNodeBuffer(
-          e.response.data
-        );
-        const decodedMessage = new TextDecoder().decode(errorArrayBuffer);
-        throw new Error(decodedMessage);
-      } else {
-        throw e;
+      // Case it's incomplete query
+      if (queryObject.status === Querystatus.Incomplete) {
+        try {
+          yield this.getResultsFromArrayBuffer(
+            arraySchema,
+            bufferWithoutFirstEightBytes,
+            attributeHeaders
+          );
+
+          while (true) {
+            const { results, query, queryAsArrayBuffer } =
+              await this.ReadIncompleteQuery(
+                arraySchema,
+                bufferWithoutFirstEightBytes,
+                namespace,
+                arrayName
+              );
+            // Override query object with the new one returned from `ReadIncompleteQuery`
+            bufferWithoutFirstEightBytes = queryAsArrayBuffer;
+
+            if (query.status === Querystatus.Incomplete) {
+              yield results;
+            } else {
+              // Case query is not incomplete
+              yield results;
+              return;
+            }
+          }
+        } catch (e) {
+          this.throwError(e);
+        }
       }
+
+      yield this.getResultsFromArrayBuffer(
+        arraySchema,
+        bufferWithoutFirstEightBytes,
+        attributeHeaders
+      );
+      return;
+    } catch (e) {
+      this.throwError(e);
+    }
+  }
+
+  private getResultsFromArrayBuffer(
+    arraySchema: ArraySchema,
+    bufferResults: ArrayBuffer,
+    attributeHeaders: AttributeBufferHeader[]
+  ) {
+    /**
+     * Calculate the size of bytes of the attributes from the attributeBufferHeaders of the Query object.
+     */
+    const numberOfBytesOfResults =
+      getSizeInBytesOfAllAttributes(attributeHeaders);
+    /**
+     * We get the last N bytes (N is the number of total bytes of the attributes), which contain
+     * the results of all the attributes
+     */
+    const resultsBuffer = bufferResults.slice(-1 * numberOfBytesOfResults);
+    const mergeAttributesAndDimensions = [
+      ...arraySchema.domain.dimensions,
+      ...arraySchema.attributes,
+    ];
+    // Calculate results
+    const results = getResults(
+      resultsBuffer,
+      attributeHeaders,
+      mergeAttributesAndDimensions
+    );
+
+    return results;
+  }
+
+  private throwError(e: any) {
+    /**
+     * Since we set the responseType to "arrayBuffer", in case the
+     * response error message is a buffer, we deserialize the message before throwing
+     */
+    const errorIsABuffer =
+      e?.response?.data?.buffer || e?.response?.data?.length;
+    if (errorIsABuffer) {
+      const errorArrayBuffer = convertToArrayBufferIfNodeBuffer(
+        e.response.data
+      );
+      const decodedMessage = new TextDecoder().decode(errorArrayBuffer);
+      throw new Error(decodedMessage);
+    } else {
+      throw e;
     }
   }
 }
@@ -345,7 +455,9 @@ export const getResults = (
 
     // If result is a String slice the String by the offsets to make it an array
     if (isVarLengthSized && typeof result === "string") {
-      result = groupValuesByOffsets([...result], offsets).map((s) => s.join(''));
+      result = groupValuesByOffsets([...result], offsets).map((s) =>
+        s.join("")
+      );
     }
 
     data[attribute.name] = isArrayOfArrays(result) ? flatten(result) : result;
