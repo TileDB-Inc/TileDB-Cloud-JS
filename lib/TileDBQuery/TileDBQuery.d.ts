@@ -1,4 +1,4 @@
-import { Attribute, Dimension } from "../v1";
+import { ArraySchema, Attribute, Dimension } from "../v1";
 import { AttributeBufferHeader, ConfigurationParameters } from "../v2";
 import { Query } from "../v2";
 declare type Range = number[] | string[];
@@ -261,7 +261,14 @@ export declare class TileDBQuery {
             }[];
         };
     }>;
-    ReadQuery(namespace: string, arrayName: string, body: QueryData): Promise<{}>;
+    ReadIncompleteQuery(arraySchema: ArraySchema, queryAsArrayBuffer: ArrayBuffer, namespace: string, arrayName: string): Promise<{
+        query: Query;
+        results: Record<string, any>;
+        queryAsArrayBuffer: ArrayBuffer;
+    }>;
+    ReadQuery(namespace: string, arrayName: string, body: QueryData): AsyncGenerator<Record<string, any>, void, unknown>;
+    private getResultsFromArrayBuffer;
+    private throwError;
 }
 export default TileDBQuery;
 /**

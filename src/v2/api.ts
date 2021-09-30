@@ -22,6 +22,106 @@ import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObj
 import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } from './base';
 
 /**
+ * Credential information to access Amazon Web Services
+ * @export
+ * @interface AWSCredential
+ */
+export interface AWSCredential {
+    /**
+     * The ID of the access key
+     * @type {string}
+     * @memberof AWSCredential
+     */
+    access_key_id?: string;
+    /**
+     * The access key\'s secret. Never returned in responses.
+     * @type {string}
+     * @memberof AWSCredential
+     */
+    secret_access_key?: string;
+}
+/**
+ * A union type which may contain a credential to access any one cloud provider.
+ * @export
+ * @interface AccessCredential
+ */
+export interface AccessCredential {
+    /**
+     * A user-specified name for the key
+     * @type {string}
+     * @memberof AccessCredential
+     */
+    name?: string;
+    /**
+     * 
+     * @type {CloudProvider}
+     * @memberof AccessCredential
+     */
+    provider?: CloudProvider;
+    /**
+     * True if this is the namespace\'s default credential to be used when connecting to the given cloud provider. There can be at most one default for each unique provider.
+     * @type {boolean}
+     * @memberof AccessCredential
+     */
+    provider_default?: boolean | null;
+    /**
+     * Time when the credential was created (rfc3339)
+     * @type {string}
+     * @memberof AccessCredential
+     */
+    created_at?: string;
+    /**
+     * Time when the credential was last updated (rfc3339)
+     * @type {string}
+     * @memberof AccessCredential
+     */
+    updated_at?: string;
+    /**
+     * 
+     * @type {AccessCredentialCredential}
+     * @memberof AccessCredential
+     */
+    credential?: AccessCredentialCredential;
+}
+/**
+ * The credential information itself. Exactly one sub-field may be set. The names match those in the CloudProvider enum.
+ * @export
+ * @interface AccessCredentialCredential
+ */
+export interface AccessCredentialCredential {
+    /**
+     * 
+     * @type {AWSCredential}
+     * @memberof AccessCredentialCredential
+     */
+    aws?: AWSCredential | null;
+    /**
+     * 
+     * @type {AzureCredential}
+     * @memberof AccessCredentialCredential
+     */
+    azure?: AzureCredential | null;
+}
+/**
+ * Object including credentials and pagination metadata
+ * @export
+ * @interface AccessCredentialsData
+ */
+export interface AccessCredentialsData {
+    /**
+     * List of credentials
+     * @type {Array<AccessCredential>}
+     * @memberof AccessCredentialsData
+     */
+    credentials?: Array<AccessCredential>;
+    /**
+     * 
+     * @type {PaginationMetadata}
+     * @memberof AccessCredentialsData
+     */
+    pagination_metadata?: PaginationMetadata;
+}
+/**
  * Type of activity logged
  * @export
  * @enum {string}
@@ -39,7 +139,10 @@ export enum ActivityEventType {
     Udf = 'udf',
     ArrayMetadataGet = 'array_metadata_get',
     ArrayMetadataUpdate = 'array_metadata_update',
-    EstimatedResultSizes = 'estimated_result_sizes'
+    EstimatedResultSizes = 'estimated_result_sizes',
+    Update = 'update',
+    Info = 'info',
+    Run = 'run'
 }
 
 /**
@@ -85,11 +188,23 @@ export interface ArrayActivityLog {
      */
     array_task_id?: string;
     /**
+     * id of the activity
+     * @type {string}
+     * @memberof ArrayActivityLog
+     */
+    id?: string;
+    /**
      * ranges for query
      * @type {string}
      * @memberof ArrayActivityLog
      */
     query_ranges?: string;
+    /**
+     * stats for query
+     * @type {string}
+     * @memberof ArrayActivityLog
+     */
+    query_stats?: string;
 }
 /**
  * Object including array tasks and metadata
@@ -184,6 +299,35 @@ export interface AttributeBufferSize {
      */
     dataBytes: number;
 }
+/**
+ * Credential information to access Microsoft Azure. Each supported property is the snake_case version of its name in an Azure Storage connection string.
+ * @export
+ * @interface AzureCredential
+ */
+export interface AzureCredential {
+    /**
+     * The name of the Azure account to access
+     * @type {string}
+     * @memberof AzureCredential
+     */
+    account_name?: string;
+    /**
+     * The secret key. Never returned in responses.
+     * @type {string}
+     * @memberof AzureCredential
+     */
+    account_key?: string;
+}
+/**
+ * A service where data is stored or computations take place.
+ * @export
+ * @enum {string}
+ */
+export enum CloudProvider {
+    Aws = 'AWS',
+    Azure = 'AZURE'
+}
+
 /**
  * TileDB data type
  * @export
@@ -353,13 +497,13 @@ export interface ModelError {
  */
 export interface PaginationMetadata {
     /**
-     * pagination offset
+     * pagination offset. Use it to skip the first ((page - 1) * per_page) items
      * @type {number}
      * @memberof PaginationMetadata
      */
     page?: number;
     /**
-     * pagination limit
+     * pagination limit (page size)
      * @type {number}
      * @memberof PaginationMetadata
      */
@@ -898,6 +1042,501 @@ export class ArrayApi extends BaseAPI {
 
 
 /**
+ * OrganizationApi - axios parameter creator
+ * @export
+ */
+export const OrganizationApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * Create a new credential for the namespace
+         * @param {string} namespace namespace
+         * @param {AccessCredential} accessCredential The new credentials to be created.
+         * @param {string} [provider] Show only the credentials from this provider. This should be one of the CloudProvider enum values.
+         * @param {number} [page] pagination offset
+         * @param {number} [perPage] pagination limit
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        addCredential: async (namespace: string, accessCredential: AccessCredential, provider?: string, page?: number, perPage?: number, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'namespace' is not null or undefined
+            assertParamExists('addCredential', 'namespace', namespace)
+            // verify required parameter 'accessCredential' is not null or undefined
+            assertParamExists('addCredential', 'accessCredential', accessCredential)
+            const localVarPath = `/credentials/{namespace}`
+                .replace(`{${"namespace"}}`, encodeURIComponent(String(namespace)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+
+            // authentication BasicAuth required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            if (provider !== undefined) {
+                localVarQueryParameter['provider'] = provider;
+            }
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (perPage !== undefined) {
+                localVarQueryParameter['per_page'] = perPage;
+            }
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
+            localVarRequestOptions.data = serializeDataIfNeeded(accessCredential, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Delete the named access credential. Any arrays still set to use this credential will use the namespace\'s default and may become unreachable.
+         * @param {string} namespace namespace
+         * @param {string} name A URL-safe version of the credential\&#39;s user-provided name
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteCredential: async (namespace: string, name: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'namespace' is not null or undefined
+            assertParamExists('deleteCredential', 'namespace', namespace)
+            // verify required parameter 'name' is not null or undefined
+            assertParamExists('deleteCredential', 'name', name)
+            const localVarPath = `/credentials/{namespace}/{name}`
+                .replace(`{${"namespace"}}`, encodeURIComponent(String(namespace)))
+                .replace(`{${"name"}}`, encodeURIComponent(String(name)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+
+            // authentication BasicAuth required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Retrieve an access credential by name
+         * @param {string} namespace namespace
+         * @param {string} name A URL-safe version of the credential\&#39;s user-provided name
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getCredential: async (namespace: string, name: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'namespace' is not null or undefined
+            assertParamExists('getCredential', 'namespace', namespace)
+            // verify required parameter 'name' is not null or undefined
+            assertParamExists('getCredential', 'name', name)
+            const localVarPath = `/credentials/{namespace}/{name}`
+                .replace(`{${"namespace"}}`, encodeURIComponent(String(namespace)))
+                .replace(`{${"name"}}`, encodeURIComponent(String(name)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+
+            // authentication BasicAuth required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * List the credentials available in the namespace
+         * @param {string} namespace namespace
+         * @param {string} [provider] Show only the credentials from this provider. This should be one of the CloudProvider enum values.
+         * @param {number} [page] pagination offset
+         * @param {number} [perPage] pagination limit
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listCredentials: async (namespace: string, provider?: string, page?: number, perPage?: number, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'namespace' is not null or undefined
+            assertParamExists('listCredentials', 'namespace', namespace)
+            const localVarPath = `/credentials/{namespace}`
+                .replace(`{${"namespace"}}`, encodeURIComponent(String(namespace)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+
+            // authentication BasicAuth required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            if (provider !== undefined) {
+                localVarQueryParameter['provider'] = provider;
+            }
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (perPage !== undefined) {
+                localVarQueryParameter['per_page'] = perPage;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Update the named access credential. This will also update the information used to access arrays set to use this credential.
+         * @param {string} namespace namespace
+         * @param {string} name A URL-safe version of the credential\&#39;s user-provided name
+         * @param {AccessCredential} accessCredential Changes to make to this credential
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateCredential: async (namespace: string, name: string, accessCredential: AccessCredential, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'namespace' is not null or undefined
+            assertParamExists('updateCredential', 'namespace', namespace)
+            // verify required parameter 'name' is not null or undefined
+            assertParamExists('updateCredential', 'name', name)
+            // verify required parameter 'accessCredential' is not null or undefined
+            assertParamExists('updateCredential', 'accessCredential', accessCredential)
+            const localVarPath = `/credentials/{namespace}/{name}`
+                .replace(`{${"namespace"}}`, encodeURIComponent(String(namespace)))
+                .replace(`{${"name"}}`, encodeURIComponent(String(name)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+
+            // authentication BasicAuth required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
+            localVarRequestOptions.data = serializeDataIfNeeded(accessCredential, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * OrganizationApi - functional programming interface
+ * @export
+ */
+export const OrganizationApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = OrganizationApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * Create a new credential for the namespace
+         * @param {string} namespace namespace
+         * @param {AccessCredential} accessCredential The new credentials to be created.
+         * @param {string} [provider] Show only the credentials from this provider. This should be one of the CloudProvider enum values.
+         * @param {number} [page] pagination offset
+         * @param {number} [perPage] pagination limit
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async addCredential(namespace: string, accessCredential: AccessCredential, provider?: string, page?: number, perPage?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.addCredential(namespace, accessCredential, provider, page, perPage, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Delete the named access credential. Any arrays still set to use this credential will use the namespace\'s default and may become unreachable.
+         * @param {string} namespace namespace
+         * @param {string} name A URL-safe version of the credential\&#39;s user-provided name
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async deleteCredential(namespace: string, name: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteCredential(namespace, name, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Retrieve an access credential by name
+         * @param {string} namespace namespace
+         * @param {string} name A URL-safe version of the credential\&#39;s user-provided name
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getCredential(namespace: string, name: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AccessCredential>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getCredential(namespace, name, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * List the credentials available in the namespace
+         * @param {string} namespace namespace
+         * @param {string} [provider] Show only the credentials from this provider. This should be one of the CloudProvider enum values.
+         * @param {number} [page] pagination offset
+         * @param {number} [perPage] pagination limit
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async listCredentials(namespace: string, provider?: string, page?: number, perPage?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AccessCredentialsData>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listCredentials(namespace, provider, page, perPage, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Update the named access credential. This will also update the information used to access arrays set to use this credential.
+         * @param {string} namespace namespace
+         * @param {string} name A URL-safe version of the credential\&#39;s user-provided name
+         * @param {AccessCredential} accessCredential Changes to make to this credential
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async updateCredential(namespace: string, name: string, accessCredential: AccessCredential, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateCredential(namespace, name, accessCredential, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+    }
+};
+
+/**
+ * OrganizationApi - factory interface
+ * @export
+ */
+export const OrganizationApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = OrganizationApiFp(configuration)
+    return {
+        /**
+         * Create a new credential for the namespace
+         * @param {string} namespace namespace
+         * @param {AccessCredential} accessCredential The new credentials to be created.
+         * @param {string} [provider] Show only the credentials from this provider. This should be one of the CloudProvider enum values.
+         * @param {number} [page] pagination offset
+         * @param {number} [perPage] pagination limit
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        addCredential(namespace: string, accessCredential: AccessCredential, provider?: string, page?: number, perPage?: number, options?: any): AxiosPromise<void> {
+            return localVarFp.addCredential(namespace, accessCredential, provider, page, perPage, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Delete the named access credential. Any arrays still set to use this credential will use the namespace\'s default and may become unreachable.
+         * @param {string} namespace namespace
+         * @param {string} name A URL-safe version of the credential\&#39;s user-provided name
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteCredential(namespace: string, name: string, options?: any): AxiosPromise<void> {
+            return localVarFp.deleteCredential(namespace, name, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Retrieve an access credential by name
+         * @param {string} namespace namespace
+         * @param {string} name A URL-safe version of the credential\&#39;s user-provided name
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getCredential(namespace: string, name: string, options?: any): AxiosPromise<AccessCredential> {
+            return localVarFp.getCredential(namespace, name, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * List the credentials available in the namespace
+         * @param {string} namespace namespace
+         * @param {string} [provider] Show only the credentials from this provider. This should be one of the CloudProvider enum values.
+         * @param {number} [page] pagination offset
+         * @param {number} [perPage] pagination limit
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listCredentials(namespace: string, provider?: string, page?: number, perPage?: number, options?: any): AxiosPromise<AccessCredentialsData> {
+            return localVarFp.listCredentials(namespace, provider, page, perPage, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Update the named access credential. This will also update the information used to access arrays set to use this credential.
+         * @param {string} namespace namespace
+         * @param {string} name A URL-safe version of the credential\&#39;s user-provided name
+         * @param {AccessCredential} accessCredential Changes to make to this credential
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateCredential(namespace: string, name: string, accessCredential: AccessCredential, options?: any): AxiosPromise<void> {
+            return localVarFp.updateCredential(namespace, name, accessCredential, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * OrganizationApi - object-oriented interface
+ * @export
+ * @class OrganizationApi
+ * @extends {BaseAPI}
+ */
+export class OrganizationApi extends BaseAPI {
+    /**
+     * Create a new credential for the namespace
+     * @param {string} namespace namespace
+     * @param {AccessCredential} accessCredential The new credentials to be created.
+     * @param {string} [provider] Show only the credentials from this provider. This should be one of the CloudProvider enum values.
+     * @param {number} [page] pagination offset
+     * @param {number} [perPage] pagination limit
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof OrganizationApi
+     */
+    public addCredential(namespace: string, accessCredential: AccessCredential, provider?: string, page?: number, perPage?: number, options?: any) {
+        return OrganizationApiFp(this.configuration).addCredential(namespace, accessCredential, provider, page, perPage, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Delete the named access credential. Any arrays still set to use this credential will use the namespace\'s default and may become unreachable.
+     * @param {string} namespace namespace
+     * @param {string} name A URL-safe version of the credential\&#39;s user-provided name
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof OrganizationApi
+     */
+    public deleteCredential(namespace: string, name: string, options?: any) {
+        return OrganizationApiFp(this.configuration).deleteCredential(namespace, name, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Retrieve an access credential by name
+     * @param {string} namespace namespace
+     * @param {string} name A URL-safe version of the credential\&#39;s user-provided name
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof OrganizationApi
+     */
+    public getCredential(namespace: string, name: string, options?: any) {
+        return OrganizationApiFp(this.configuration).getCredential(namespace, name, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * List the credentials available in the namespace
+     * @param {string} namespace namespace
+     * @param {string} [provider] Show only the credentials from this provider. This should be one of the CloudProvider enum values.
+     * @param {number} [page] pagination offset
+     * @param {number} [perPage] pagination limit
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof OrganizationApi
+     */
+    public listCredentials(namespace: string, provider?: string, page?: number, perPage?: number, options?: any) {
+        return OrganizationApiFp(this.configuration).listCredentials(namespace, provider, page, perPage, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Update the named access credential. This will also update the information used to access arrays set to use this credential.
+     * @param {string} namespace namespace
+     * @param {string} name A URL-safe version of the credential\&#39;s user-provided name
+     * @param {AccessCredential} accessCredential Changes to make to this credential
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof OrganizationApi
+     */
+    public updateCredential(namespace: string, name: string, accessCredential: AccessCredential, options?: any) {
+        return OrganizationApiFp(this.configuration).updateCredential(namespace, name, accessCredential, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+/**
  * QueryApi - axios parameter creator
  * @export
  */
@@ -1065,6 +1704,501 @@ export class QueryApi extends BaseAPI {
      */
     public submitQuery(namespace: string, array: string, type: string, contentType: string, query: Query, xPayer?: string, openAt?: number, readAll?: string, options?: any) {
         return QueryApiFp(this.configuration).submitQuery(namespace, array, type, contentType, query, xPayer, openAt, readAll, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+/**
+ * UserApi - axios parameter creator
+ * @export
+ */
+export const UserApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * Create a new credential for the namespace
+         * @param {string} namespace namespace
+         * @param {AccessCredential} accessCredential The new credentials to be created.
+         * @param {string} [provider] Show only the credentials from this provider. This should be one of the CloudProvider enum values.
+         * @param {number} [page] pagination offset
+         * @param {number} [perPage] pagination limit
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        addCredential: async (namespace: string, accessCredential: AccessCredential, provider?: string, page?: number, perPage?: number, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'namespace' is not null or undefined
+            assertParamExists('addCredential', 'namespace', namespace)
+            // verify required parameter 'accessCredential' is not null or undefined
+            assertParamExists('addCredential', 'accessCredential', accessCredential)
+            const localVarPath = `/credentials/{namespace}`
+                .replace(`{${"namespace"}}`, encodeURIComponent(String(namespace)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+
+            // authentication BasicAuth required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            if (provider !== undefined) {
+                localVarQueryParameter['provider'] = provider;
+            }
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (perPage !== undefined) {
+                localVarQueryParameter['per_page'] = perPage;
+            }
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
+            localVarRequestOptions.data = serializeDataIfNeeded(accessCredential, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Delete the named access credential. Any arrays still set to use this credential will use the namespace\'s default and may become unreachable.
+         * @param {string} namespace namespace
+         * @param {string} name A URL-safe version of the credential\&#39;s user-provided name
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteCredential: async (namespace: string, name: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'namespace' is not null or undefined
+            assertParamExists('deleteCredential', 'namespace', namespace)
+            // verify required parameter 'name' is not null or undefined
+            assertParamExists('deleteCredential', 'name', name)
+            const localVarPath = `/credentials/{namespace}/{name}`
+                .replace(`{${"namespace"}}`, encodeURIComponent(String(namespace)))
+                .replace(`{${"name"}}`, encodeURIComponent(String(name)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+
+            // authentication BasicAuth required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Retrieve an access credential by name
+         * @param {string} namespace namespace
+         * @param {string} name A URL-safe version of the credential\&#39;s user-provided name
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getCredential: async (namespace: string, name: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'namespace' is not null or undefined
+            assertParamExists('getCredential', 'namespace', namespace)
+            // verify required parameter 'name' is not null or undefined
+            assertParamExists('getCredential', 'name', name)
+            const localVarPath = `/credentials/{namespace}/{name}`
+                .replace(`{${"namespace"}}`, encodeURIComponent(String(namespace)))
+                .replace(`{${"name"}}`, encodeURIComponent(String(name)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+
+            // authentication BasicAuth required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * List the credentials available in the namespace
+         * @param {string} namespace namespace
+         * @param {string} [provider] Show only the credentials from this provider. This should be one of the CloudProvider enum values.
+         * @param {number} [page] pagination offset
+         * @param {number} [perPage] pagination limit
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listCredentials: async (namespace: string, provider?: string, page?: number, perPage?: number, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'namespace' is not null or undefined
+            assertParamExists('listCredentials', 'namespace', namespace)
+            const localVarPath = `/credentials/{namespace}`
+                .replace(`{${"namespace"}}`, encodeURIComponent(String(namespace)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+
+            // authentication BasicAuth required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            if (provider !== undefined) {
+                localVarQueryParameter['provider'] = provider;
+            }
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (perPage !== undefined) {
+                localVarQueryParameter['per_page'] = perPage;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Update the named access credential. This will also update the information used to access arrays set to use this credential.
+         * @param {string} namespace namespace
+         * @param {string} name A URL-safe version of the credential\&#39;s user-provided name
+         * @param {AccessCredential} accessCredential Changes to make to this credential
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateCredential: async (namespace: string, name: string, accessCredential: AccessCredential, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'namespace' is not null or undefined
+            assertParamExists('updateCredential', 'namespace', namespace)
+            // verify required parameter 'name' is not null or undefined
+            assertParamExists('updateCredential', 'name', name)
+            // verify required parameter 'accessCredential' is not null or undefined
+            assertParamExists('updateCredential', 'accessCredential', accessCredential)
+            const localVarPath = `/credentials/{namespace}/{name}`
+                .replace(`{${"namespace"}}`, encodeURIComponent(String(namespace)))
+                .replace(`{${"name"}}`, encodeURIComponent(String(name)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+
+            // authentication BasicAuth required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
+            localVarRequestOptions.data = serializeDataIfNeeded(accessCredential, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * UserApi - functional programming interface
+ * @export
+ */
+export const UserApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = UserApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * Create a new credential for the namespace
+         * @param {string} namespace namespace
+         * @param {AccessCredential} accessCredential The new credentials to be created.
+         * @param {string} [provider] Show only the credentials from this provider. This should be one of the CloudProvider enum values.
+         * @param {number} [page] pagination offset
+         * @param {number} [perPage] pagination limit
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async addCredential(namespace: string, accessCredential: AccessCredential, provider?: string, page?: number, perPage?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.addCredential(namespace, accessCredential, provider, page, perPage, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Delete the named access credential. Any arrays still set to use this credential will use the namespace\'s default and may become unreachable.
+         * @param {string} namespace namespace
+         * @param {string} name A URL-safe version of the credential\&#39;s user-provided name
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async deleteCredential(namespace: string, name: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteCredential(namespace, name, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Retrieve an access credential by name
+         * @param {string} namespace namespace
+         * @param {string} name A URL-safe version of the credential\&#39;s user-provided name
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getCredential(namespace: string, name: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AccessCredential>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getCredential(namespace, name, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * List the credentials available in the namespace
+         * @param {string} namespace namespace
+         * @param {string} [provider] Show only the credentials from this provider. This should be one of the CloudProvider enum values.
+         * @param {number} [page] pagination offset
+         * @param {number} [perPage] pagination limit
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async listCredentials(namespace: string, provider?: string, page?: number, perPage?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AccessCredentialsData>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listCredentials(namespace, provider, page, perPage, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Update the named access credential. This will also update the information used to access arrays set to use this credential.
+         * @param {string} namespace namespace
+         * @param {string} name A URL-safe version of the credential\&#39;s user-provided name
+         * @param {AccessCredential} accessCredential Changes to make to this credential
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async updateCredential(namespace: string, name: string, accessCredential: AccessCredential, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateCredential(namespace, name, accessCredential, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+    }
+};
+
+/**
+ * UserApi - factory interface
+ * @export
+ */
+export const UserApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = UserApiFp(configuration)
+    return {
+        /**
+         * Create a new credential for the namespace
+         * @param {string} namespace namespace
+         * @param {AccessCredential} accessCredential The new credentials to be created.
+         * @param {string} [provider] Show only the credentials from this provider. This should be one of the CloudProvider enum values.
+         * @param {number} [page] pagination offset
+         * @param {number} [perPage] pagination limit
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        addCredential(namespace: string, accessCredential: AccessCredential, provider?: string, page?: number, perPage?: number, options?: any): AxiosPromise<void> {
+            return localVarFp.addCredential(namespace, accessCredential, provider, page, perPage, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Delete the named access credential. Any arrays still set to use this credential will use the namespace\'s default and may become unreachable.
+         * @param {string} namespace namespace
+         * @param {string} name A URL-safe version of the credential\&#39;s user-provided name
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteCredential(namespace: string, name: string, options?: any): AxiosPromise<void> {
+            return localVarFp.deleteCredential(namespace, name, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Retrieve an access credential by name
+         * @param {string} namespace namespace
+         * @param {string} name A URL-safe version of the credential\&#39;s user-provided name
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getCredential(namespace: string, name: string, options?: any): AxiosPromise<AccessCredential> {
+            return localVarFp.getCredential(namespace, name, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * List the credentials available in the namespace
+         * @param {string} namespace namespace
+         * @param {string} [provider] Show only the credentials from this provider. This should be one of the CloudProvider enum values.
+         * @param {number} [page] pagination offset
+         * @param {number} [perPage] pagination limit
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listCredentials(namespace: string, provider?: string, page?: number, perPage?: number, options?: any): AxiosPromise<AccessCredentialsData> {
+            return localVarFp.listCredentials(namespace, provider, page, perPage, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Update the named access credential. This will also update the information used to access arrays set to use this credential.
+         * @param {string} namespace namespace
+         * @param {string} name A URL-safe version of the credential\&#39;s user-provided name
+         * @param {AccessCredential} accessCredential Changes to make to this credential
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateCredential(namespace: string, name: string, accessCredential: AccessCredential, options?: any): AxiosPromise<void> {
+            return localVarFp.updateCredential(namespace, name, accessCredential, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * UserApi - object-oriented interface
+ * @export
+ * @class UserApi
+ * @extends {BaseAPI}
+ */
+export class UserApi extends BaseAPI {
+    /**
+     * Create a new credential for the namespace
+     * @param {string} namespace namespace
+     * @param {AccessCredential} accessCredential The new credentials to be created.
+     * @param {string} [provider] Show only the credentials from this provider. This should be one of the CloudProvider enum values.
+     * @param {number} [page] pagination offset
+     * @param {number} [perPage] pagination limit
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UserApi
+     */
+    public addCredential(namespace: string, accessCredential: AccessCredential, provider?: string, page?: number, perPage?: number, options?: any) {
+        return UserApiFp(this.configuration).addCredential(namespace, accessCredential, provider, page, perPage, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Delete the named access credential. Any arrays still set to use this credential will use the namespace\'s default and may become unreachable.
+     * @param {string} namespace namespace
+     * @param {string} name A URL-safe version of the credential\&#39;s user-provided name
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UserApi
+     */
+    public deleteCredential(namespace: string, name: string, options?: any) {
+        return UserApiFp(this.configuration).deleteCredential(namespace, name, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Retrieve an access credential by name
+     * @param {string} namespace namespace
+     * @param {string} name A URL-safe version of the credential\&#39;s user-provided name
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UserApi
+     */
+    public getCredential(namespace: string, name: string, options?: any) {
+        return UserApiFp(this.configuration).getCredential(namespace, name, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * List the credentials available in the namespace
+     * @param {string} namespace namespace
+     * @param {string} [provider] Show only the credentials from this provider. This should be one of the CloudProvider enum values.
+     * @param {number} [page] pagination offset
+     * @param {number} [perPage] pagination limit
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UserApi
+     */
+    public listCredentials(namespace: string, provider?: string, page?: number, perPage?: number, options?: any) {
+        return UserApiFp(this.configuration).listCredentials(namespace, provider, page, perPage, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Update the named access credential. This will also update the information used to access arrays set to use this credential.
+     * @param {string} namespace namespace
+     * @param {string} name A URL-safe version of the credential\&#39;s user-provided name
+     * @param {AccessCredential} accessCredential Changes to make to this credential
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UserApi
+     */
+    public updateCredential(namespace: string, name: string, accessCredential: AccessCredential, options?: any) {
+        return UserApiFp(this.configuration).updateCredential(namespace, name, accessCredential, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

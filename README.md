@@ -144,11 +144,11 @@ arrayApi
 
 ## Queries
 
-TileDB-Cloud-JS supports TileDB queries, by serializing data to capnproto.
+TileDB-Cloud-JS supports TileDB queries, by serializing data to capnproto. `bufferSize` dictates the server the number of bytes that should allocated to make this query. In case the `bufferSize` is not enough, it will result to an imcomplete query. For this reason `ReadQuery` is an async generator so a user could get results in batches.
 
 ### Basic read query
 
-Dimensions should always be an array of 2 (start of the range and the end of the range). `bufferSize` dictates the server the number of bytes that should allocated to make this query.
+Dimensions should always be an array of 2 (start of the range and the end of the range).
 
 ```javascript
 import { TileDBQuery } from '@tiledb-inc/tiledb-cloud';
@@ -164,14 +164,54 @@ const dimension2 = [851000,853000];
 const query = {
     layout: Layout.RowMajor,
     ranges: [dimension1, dimension2],
-    bufferSize: 15000000000000,
+    bufferSize: 1500000000,
 };
 
-tileDBQuery.ReadQuery("my_namespace", "my_array", query)
-  .then((result) => {
-    // returns an object with keys the name of the attributes and values the result
-      console.log(result);
-  })
+const generator = tileDBQuery.ReadQuery("namespace", "arrayName", query);
+generator.next().then(({value}) => {
+    console.log(value)
+});
+```
+
+### Incomplete reads in batches
+
+Dimensions should always be an array of 2 (start of the range and the end of the range).
+
+```javascript
+import { TileDBQuery } from '@tiledb-inc/tiledb-cloud';
+import { Layout } from '@tiledb-inc/tiledb-cloud/lib/v2';
+
+const tileDBQuery = new TileDBQuery({
+    apiKey: 'myApiKey'
+});
+
+const dimension1 = [636800,637800];
+const dimension2 = [851000,853000];
+
+const query = {
+    layout: Layout.RowMajor,
+    ranges: [dimension1, dimension2],
+    bufferSize: 1500,
+};
+
+
+// Iterate over all results
+(async function() {
+    for await (let results of tileDBQuery.ReadQuery("namespace", "arrayName", query)) {
+        console.log(results);
+    }
+})()
+
+
+// Or manually iterating over the results
+const generator = tileDBQuery.ReadQuery("namespace", "arrayName", query);
+(async function() {
+    const result = await generator.next();
+    console.log(result.value);
+
+    const result2= await generator.next();
+    console.log(result2.value);
+})()
 ```
 
 ### Multi range read queries
@@ -195,11 +235,13 @@ const query = {
     bufferSize: 15000000000000,
 };
 
-tileDBQuery.ReadQuery("my_namespace", "my_array", query)
-  .then((result) => {
-    // returns an object with keys the name of the attributes and values the result
-      console.log(result);
-  })
+// Iterate over all results
+(async function() {
+    for await (let results of tileDBQuery.ReadQuery("my_namespace", "my_array", query)) {
+      // returns an object with keys the name of the attributes and values the result
+        console.log(results);
+    }
+})()
 ```
 
 ### Selecting whole dimension
@@ -224,11 +266,13 @@ const query = {
     bufferSize: 15000000000000,
 };
 
-tileDBQuery.ReadQuery("my_namespace", "my_array", query)
-  .then((result) => {
-    // returns an object with keys the name of the attributes and values the result
-      console.log(result);
-  })
+// Iterate over all results
+(async function() {
+    for await (let results of tileDBQuery.ReadQuery("my_namespace", "my_array", query)) {
+      // returns an object with keys the name of the attributes and values the result
+        console.log(results);
+    }
+})()
 ```
 
 
