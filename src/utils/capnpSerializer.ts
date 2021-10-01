@@ -1,11 +1,17 @@
-import { ArrayMetadata } from "../capnp/arrayMetadata.capnp";
+import { ArrayMetadata } from "../capnp/arrayMetadata_capnp";
+import { Query } from "../v2";
 import * as capnp from "capnp-ts";
-import { ArrayMetadata as ArrayMetadataType } from "../api";
+import { ArrayMetadata as ArrayMetadataType } from "../v1/api";
+import capnpQuerySerializer from "./capnpQuerySerializer";
 
 const capnpSerializer = (data: any) => {
   if (isArrayMetadata(data)) {
     return serializeArrayMetadata(data);
+  } else if (isQuerydata(data)) {
+    return capnpQuerySerializer(data);
   }
+  
+  return data;
 };
 
 export default capnpSerializer;
@@ -36,8 +42,16 @@ const serializeArrayMetadata = (data: ArrayMetadataType) => {
   return message.toArrayBuffer();
 };
 
+
 const isArrayMetadata = (data: any): data is ArrayMetadataType => {
   if (data && Array.isArray(data.entries)) {
+    return true;
+  }
+  return false;
+};
+
+const isQuerydata = (data: any): data is Query => {
+  if (data && (data.reader || data.writer)) {
     return true;
   }
   return false;

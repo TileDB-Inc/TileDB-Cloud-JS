@@ -1,13 +1,17 @@
 {
   "name": "@tiledb-inc/tiledb-cloud",
-  "version": "0.1.2",
+  "version": "1.0.0-beta.2",
   "description": "JavaScript client for the TileDB Cloud Service.",
   "main": "lib/index.js",
+  "files": [
+    "/lib"
+  ],
   "scripts": {
-    "generate-openapi": "openapi-generator-cli generate -i ../TileDB-Cloud-API-Spec/openapi-v1.yaml -o ./src -g typescript-axios -t ./openapi-templates --reserved-words-mappings default=default --type-mappings=Array=any",
-    "build": "npm run generate-openapi && tsc",
+    "generate-openapi:v1": "openapi-generator-cli generate -i ../TileDB-Cloud-API-Spec/openapi-v1.yaml -o ./src/v1 -g typescript-axios -t ./openapi-templates --reserved-words-mappings default=default --type-mappings=Array=any",
+    "generate-openapi:v2": "openapi-generator-cli generate -i ../TileDB-Cloud-API-Spec/openapi-v2.yaml -o ./src/v2 -g typescript-axios -t ./openapi-templates --reserved-words-mappings default=default --type-mappings=Array=any",
+    "build": "npm run generate-openapi:v1 && npm run generate-openapi:v2 && tsc",
     "test": "jest",
-    "capnp": "capnpc -o ts src/capnp/arrayMetadata.capnp"
+    "capnp": "capnpc -o ts src/capnp/arrayMetadata.capnp && capnpc -o ts src/capnp/query.capnp"
   },
   "dependencies": {
     "axios": "^0.21.1",
@@ -15,9 +19,12 @@
     "capnpc-ts": "^0.4.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.15.5",
+    "@babel/preset-env": "^7.15.4",
     "@openapitools/openapi-generator-cli": "^2.1.26",
-    "git-tag-version": "^1.3.1",
-    "jest": "^26.6.3",
+    "@types/jest": "^27.0.1",
+    "jest": "^27.2.0",
+    "ts-jest": "^27.0.5",
     "typescript": "^4.2.3"
   },
   "author": "",

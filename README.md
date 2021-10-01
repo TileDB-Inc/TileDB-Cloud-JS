@@ -1,5 +1,12 @@
 # TileDB Cloud library for NodeJS
 
+
+[Installation](#installation) <br/>
+[Basic usage](#basic-usage) <br/>
+[Cap'n Proto serialization](#capn-proto-serialization) <br/>
+[Queries](#queries) <br/>
+[Development](#development)
+
 ### TileDB-Cloud-JS is an axios-based NodeJS API for [TileDB Cloud](https://docs.tiledb.com/cloud/).
 
 > Note: This is an **experimental** package and aims to be similar to [TileDB-Cloud-Py](https://github.com/TileDB-Inc/TileDB-Cloud-Py).  
@@ -15,7 +22,7 @@ npm install @tiledb-inc/tiledb-cloud
 const tiledb = require("@tiledb-inc/tiledb-cloud");
 
 // API tokens are the recommend way to access the cloud apis
-const config = new tiledb.Configuration({
+const config = new tiledb.v1.Configuration({
   apiKey: "<insert token from setting page here>"
 });
 
@@ -27,7 +34,7 @@ const config = new tiledb.Configuration({
 
 // First we must create API objects.
 // In the future we will improve and simplify this interface
-const arrayApi = new tiledb.ArrayApi(config);
+const arrayApi = new tiledb.v1.ArrayApi(config);
 
 arrayApi.getArraysInNamespace('<tiledb-cloud-username>').then((res) => {
   console.log(res);
@@ -45,7 +52,7 @@ arrayApi.getArraysInNamespace('<tiledb-cloud-username>').then((res) => {
 const tiledb = require('@tiledb-inc/tiledb-cloud');
 
 // API tokens are the recommend way to access the cloud apis
-const config = new tiledb.Configuration({
+const config = new tiledb.v1.Configuration({
   apiKey: "<insert token from setting page here>"
 });
 
@@ -57,7 +64,7 @@ const config = new tiledb.Configuration({
 
 // First we must create API objects.
 // In the future we will improve and simplify this interface
-const sqlAPI = new tiledb.SqlApi(config);
+const sqlAPI = new tiledb.v1.SqlApi(config);
 
 // SQL query
 const sql = "select `rows`, AVG(a) as avg_a from `tiledb://TileDB-Inc/quickstart_dense` GROUP BY `rows`";
@@ -95,10 +102,10 @@ For `POST` requests library will automatically serialize data to cap'n proto.
 ```javascript
 const tiledb = require("@tiledb-inc/tiledb-cloud");
 
-const config = new tiledb.Configuration({
+const config = new tiledb.v1.Configuration({
   apiKey: "<insert token from setting page here>"
 });
-const arrayApi = new tiledb.ArrayApi(config);
+const arrayApi = new tiledb.v1.ArrayApi(config);
 
 arrayApi
   .updateArrayMetadataCapnp(
@@ -118,10 +125,10 @@ For `GET` requests library provides methods to deserialize data. If Accept heade
 ```javascript
 const tiledb = require("@tiledb-inc/tiledb-cloud");
 
-const config = new tiledb.Configuration({
+const config = new tiledb.v1.Configuration({
   apiKey: "<insert token from setting page here>"
 });
-const arrayApi = new tiledb.ArrayApi(config);
+const arrayApi = new tiledb.v1.ArrayApi(config);
 
 arrayApi
   .getArrayMetadataCapnp("ns", "array_name", {
@@ -132,6 +139,254 @@ arrayApi
   .then((data) => {
     // data.data is an ArrayBuffer
     console.log(tiledb.deserializeCapnp(data.data, tiledb.DeserializableType.arrayMetadata));
+  })
+```
+
+## Queries
+
+TileDB-Cloud-JS supports TileDB queries, by serializing data to capnproto. `bufferSize` dictates the server the number of bytes that should allocated to make this query. In case the `bufferSize` is not enough, it will result to an incomplete query. For this reason `ReadQuery` is an async generator so a user could get results in batches.
+
+### Basic read query
+
+Dimensions should always be an array of 2 (start of the range and the end of the range).
+
+```javascript
+import { TileDBQuery } from '@tiledb-inc/tiledb-cloud';
+import { Layout } from '@tiledb-inc/tiledb-cloud/lib/v2';
+
+const tileDBQuery = new TileDBQuery({
+    apiKey: 'myApiKey'
+});
+
+const dimension1 = [636800,637800];
+const dimension2 = [851000,853000];
+
+const query = {
+    layout: Layout.RowMajor,
+    ranges: [dimension1, dimension2],
+    bufferSize: 1500000000,
+};
+
+const generator = tileDBQuery.ReadQuery("namespace", "arrayName", query);
+generator.next().then(({value}) => {
+    console.log(value)
+});
+```
+
+### Incomplete reads in batches
+
+Dimensions should always be an array of 2 (start of the range and the end of the range).
+
+```javascript
+import { TileDBQuery } from '@tiledb-inc/tiledb-cloud';
+import { Layout } from '@tiledb-inc/tiledb-cloud/lib/v2';
+
+const tileDBQuery = new TileDBQuery({
+    apiKey: 'myApiKey'
+});
+
+const dimension1 = [636800,637800];
+const dimension2 = [851000,853000];
+
+const query = {
+    layout: Layout.RowMajor,
+    ranges: [dimension1, dimension2],
+    bufferSize: 1500,
+};
+
+
+// Iterate over all results
+(async function() {
+    for await (let results of tileDBQuery.ReadQuery("namespace", "arrayName", query)) {
+        console.log(results);
+    }
+})()
+
+
+// Or manually iterate over the results
+const generator = tileDBQuery.ReadQuery("namespace", "arrayName", query);
+(async function() {
+    const result = await generator.next();
+    console.log(result.value);
+
+    const result2 = await generator.next();
+    console.log(result2.value);
+})()
+```
+
+### Multi range read queries
+
+A dimension could be an array of ranges as well
+
+```javascript
+import { TileDBQuery } from '@tiledb-inc/tiledb-cloud';
+import { Layout } from '@tiledb-inc/tiledb-cloud/lib/v2';
+
+const tileDBQuery = new TileDBQuery({
+    apiKey: 'myApiKey'
+});
+
+const dimension1 = [636800,637800];
+const dimension2 = [[1577836800, 1588878856], [1577836800, 1578878856]];
+
+const query = {
+    layout: Layout.RowMajor,
+    ranges: [dimension1, dimension2],
+    bufferSize: 15000000000000,
+};
+
+// Iterate over all results
+(async function() {
+    for await (let results of tileDBQuery.ReadQuery("my_namespace", "my_array", query)) {
+      // returns an object with keys the name of the attributes and values the result
+        console.log(results);
+    }
+})()
+```
+
+### Selecting whole dimension
+
+By setting a dimension as an empty array, query will select the whole dimension.
+
+```javascript
+import { TileDBQuery } from '@tiledb-inc/tiledb-cloud';
+import { Layout } from '@tiledb-inc/tiledb-cloud/lib/v2';
+
+const tileDBQuery = new TileDBQuery({
+    apiKey: 'myApiKey'
+});
+
+const dimension1 = [636800,637800];
+// Setting empty array, query will select whole 2nd dimension
+const dimension2 = [];
+
+const query = {
+    layout: Layout.RowMajor,
+    ranges: [dimension1, dimension2],
+    bufferSize: 15000000000000,
+};
+
+// Iterate over all results
+(async function() {
+    for await (let results of tileDBQuery.ReadQuery("my_namespace", "my_array", query)) {
+      // returns an object with keys the name of the attributes and values the result
+        console.log(results);
+    }
+})()
+```
+
+
+### Write queries
+
+For write queries user should provide an object with the attribute values and the coordinates of the cells (rows and cols in the object below). In this case we are writing to cells [1, 1] up to [1, 3].
+
+```javascript
+import { TileDBQuery } from '@tiledb-inc/tiledb-cloud';
+import { Layout } from '@tiledb-inc/tiledb-cloud/lib/v2';
+
+const tileDBQuery = new TileDBQuery({
+    apiKey: 'myApiKey'
+});
+
+const query = {
+  layout: Layout.Unordered,
+  values: {
+    rows: {
+      values: [1, 1, 1],
+    },
+    cols: {
+      values: [1, 2, 3],
+    },
+    attr1: {
+      values: [2, 3, 38],
+    },
+    attr2: {
+      values: [10, 20, 30],
+    },
+  },
+};
+
+tileDBQuery.WriteQuery("my_namespace", "my_array", query)
+  .then((result) => {
+    // returns the query object
+      console.log(result);
+  })
+```
+
+### Dense writes with subarray
+
+For Dense arrays we can provide a subarray instead of the coordinates and set the order (e.g. layout set to row-major).
+
+```javascript
+import { TileDBQuery } from '@tiledb-inc/tiledb-cloud';
+import { Layout } from '@tiledb-inc/tiledb-cloud/lib/v2';
+
+const tileDBQuery = new TileDBQuery({
+    apiKey: 'myApiKey'
+});
+
+const query = {
+  layout: Layout.RowMajor,
+  subarray: [[1, 1], [1, 3]],
+  values: {
+    attr1: {
+      values: [2, 3, 38],
+    },
+    attr2: {
+      values: [10, 20, 30],
+    },
+  },
+};
+
+tileDBQuery.WriteQuery("my_namespace", "my_array", query)
+  .then((result) => {
+    // returns the query object
+      console.log(result);
+  })
+```
+
+### Write queries with nullables and var-length attributes
+
+For nullables and var-length attributes user should provide `validity` attribute and/or the `offsets`.
+
+```javascript
+import { TileDBQuery } from '@tiledb-inc/tiledb-cloud';
+import { Layout } from '@tiledb-inc/tiledb-cloud/lib/v2';
+
+const tileDBQuery = new TileDBQuery({
+    apiKey: 'myApiKey'
+});
+
+const query = {
+  layout: Layout.Unordered,
+  values: {
+      a1: {
+          values: [100, 200],
+          validity: [1, 0],
+      },
+      a2: {
+          values: [10, 10, 20],
+          offsets: [0, 8, 12],
+          validity: [1, 0],
+      },
+      a3: {
+          values: ['abcdewxyz'],
+          offsets: [0, 3, 5],
+          validity: [1, 0],
+      },
+      rows: {
+          values: [1, 1]
+      },
+      cols: {
+          values: [1, 2]
+      }
+  }
+};
+
+tileDBQuery.WriteQuery("my_namespace", "my_array", query)
+  .then((result) => {
+    // returns the query object
+      console.log(result);
   })
 ```
 

@@ -1,13 +1,18 @@
-import { ArrayMetadata } from "../capnp/arrayMetadata.capnp";
 import * as capnp from "capnp-ts";
+import { ArrayMetadata } from "../capnp/arrayMetadata_capnp";
+import capnpQueryDeSerializer from './capnpQueryDeSerializer';
 
 export enum DeserializableType {
-  "arrayMetadata"
+  "arrayMetadata",
+  "query",
 }
 
 export const deserializeCapnp = (data: any, type: DeserializableType) => {
   if (!isArrayBuffer(data)) {
     throw new Error(`Data is not of type ArrayBuffer`);
+  }
+  if (type === DeserializableType.query) {
+    return capnpQueryDeSerializer(data);
   }
   if (type === DeserializableType.arrayMetadata) {
     return capnpArrayMetadaDeSerializer(data);
@@ -31,6 +36,7 @@ const capnpArrayMetadaDeSerializer = (buffer: ArrayBuffer | ArrayBufferLike) => 
   });
   return { entries };
 };
+
 
 const isArrayBuffer = (data: any): data is ArrayBuffer => {
   if (data && data.byteLength && data.slice) {

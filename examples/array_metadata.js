@@ -1,9 +1,9 @@
 const tiledb = require("../lib");
 
-const config = new tiledb.Configuration({
+const config = new tiledb.v1.Configuration({
   apiKey: process.env.TDB_API_KEY,
 });
-const arrayApi = new tiledb.ArrayApi(config);
+const arrayApi = new tiledb.v1.ArrayApi(config);
 
 arrayApi
   .updateArrayMetadataCapnp(
@@ -29,7 +29,7 @@ arrayApi
           key: "a3",
           type: "FLOAT32",
           valueNum: 3,
-          value: [205, 204, 140, 63, 205, 204, 140, 63, 205, 204, 12, 64],
+          value: [201, 204, 140, 63, 205, 204, 140, 63, 205, 204, 12, 64],
           del: false,
         },
       ],
