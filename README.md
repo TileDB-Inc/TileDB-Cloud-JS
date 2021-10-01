@@ -144,7 +144,7 @@ arrayApi
 
 ## Queries
 
-TileDB-Cloud-JS supports TileDB queries, by serializing data to capnproto. `bufferSize` dictates the server the number of bytes that should allocated to make this query. In case the `bufferSize` is not enough, it will result to an imcomplete query. For this reason `ReadQuery` is an async generator so a user could get results in batches.
+TileDB-Cloud-JS supports TileDB queries, by serializing data to capnproto. `bufferSize` dictates the server the number of bytes that should allocated to make this query. In case the `bufferSize` is not enough, it will result to an incomplete query. For this reason `ReadQuery` is an async generator so a user could get results in batches.
 
 ### Basic read query
 
@@ -203,13 +203,13 @@ const query = {
 })()
 
 
-// Or manually iterating over the results
+// Or manually iterate over the results
 const generator = tileDBQuery.ReadQuery("namespace", "arrayName", query);
 (async function() {
     const result = await generator.next();
     console.log(result.value);
 
-    const result2= await generator.next();
+    const result2 = await generator.next();
     console.log(result2.value);
 })()
 ```
