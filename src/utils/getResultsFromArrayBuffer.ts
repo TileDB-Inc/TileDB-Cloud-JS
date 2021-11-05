@@ -29,7 +29,7 @@ export const getResultsFromArrayBuffer = (
     const totalNumberOfBytesOfAttribute = getAttributeSizeInBytes(attribute);
 
     if (!totalNumberOfBytesOfAttribute) {
-      data[attribute.name] = null;
+      data[attribute.name] = [];
 
       return offset;
     }

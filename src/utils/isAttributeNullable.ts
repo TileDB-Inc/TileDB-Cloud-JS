@@ -5,8 +5,7 @@ const isAttributeNullable = (attribute: Attribute | Dimension) => {
   if (isDimension(attribute)) {
     return false;
   }
-  // TODO: How do i know if attribute is nullable?
-  return true;
+  return attribute.nullable;
 };
 
 export default isAttributeNullable;
