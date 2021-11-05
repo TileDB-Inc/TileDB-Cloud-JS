@@ -154,6 +154,12 @@ export interface ArrayActivityLog {
      * @memberof ArrayActivityLog
      */
     query_ranges?: string;
+    /**
+     * stats for query
+     * @type {string}
+     * @memberof ArrayActivityLog
+     */
+    query_stats?: string;
 }
 /**
  * Object including array info and pagination metadata

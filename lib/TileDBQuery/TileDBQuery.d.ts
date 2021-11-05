@@ -1,5 +1,5 @@
-import { ArraySchema, Attribute, Dimension } from "../v1";
-import { AttributeBufferHeader, ConfigurationParameters } from "../v2";
+import { ArraySchema } from "../v1";
+import { ConfigurationParameters } from "../v2";
 import { Query } from "../v2";
 declare type Range = number[] | string[];
 export interface QueryData extends Pick<Query, "layout"> {
@@ -39,12 +39,18 @@ export declare class TileDBQuery {
             subarray: {
                 int8: number[];
                 uint8: number[];
-                int16: number[];
+                int16: number[]; /**
+                 * Axios in nodeJS environments casts the response to a Buffer object
+                 * we convert it back to an ArrayBuffer if needed
+                 */
                 uint16: number[];
                 int32: number[];
                 uint32: number[];
                 int64: import("capnp-ts").Int64[];
-                uint64: import("capnp-ts").Uint64[];
+                uint64: import("capnp-ts").Uint64[]; /**
+                 * First 8 bytes of the response, contain a Uint64 number
+                 * which is the size of the response we skip it.
+                 */
                 float32: number[];
                 float64: number[];
             };
@@ -266,16 +272,8 @@ export declare class TileDBQuery {
         results: Record<string, any>;
         queryAsArrayBuffer: ArrayBuffer;
     }>;
-    ReadQuery(namespace: string, arrayName: string, body: QueryData): AsyncGenerator<Record<string, any>, void, unknown>;
+    ReadQuery(namespace: string, arrayName: string, body: QueryData): AsyncGenerator<{}, void, unknown>;
     private getResultsFromArrayBuffer;
     private throwError;
 }
 export default TileDBQuery;
-/**
- * Convert an ArrayBuffer to a map of attributes with their results
- * @param arrayBuffer The slice ArrayBuffer that contains the results
- * @param attributes
- * @param attributesSchema
- * @returns A map of attribute names with the results of every attribute
- */
-export declare const getResults: (arrayBuffer: ArrayBuffer, attributes: AttributeBufferHeader[], attributesSchema: Array<Dimension | Attribute>) => {};
