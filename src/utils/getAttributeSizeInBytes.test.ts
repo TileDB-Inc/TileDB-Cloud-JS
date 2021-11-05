@@ -1,12 +1,11 @@
-import MockAttributeBufferHeader from "../__mocks__/MockAttributeBufferHeader"
+import { nullableVarLengthAttrBufferHeaders } from "../fixtures/attributeBufferHeaders"
 import getAttributeSizeInBytes from "./getAttributeSizeInBytes"
 
 
 describe('getAttributeSizeInBytes()', () => {
     it('Should return total size of buffer size of an attribute', () => {
-        const attr = MockAttributeBufferHeader(6, 24, 3)
-        const result = getAttributeSizeInBytes(attr);
+        const result = getAttributeSizeInBytes(nullableVarLengthAttrBufferHeaders[1]);
 
-        expect(result).toEqual(33);
+        expect(result).toEqual(52);
     })
 })
