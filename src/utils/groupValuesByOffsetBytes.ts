@@ -4,7 +4,7 @@
  * @param offsets e.g. [0, 3, 4]
  * @returns [[1,2,3], 4]
  */
-const groupValuesByOffsets = <T>(
+const groupValuesByOffsetBytes = <T>(
   vals: T[],
   offsets: number[]
 ): Array<T[] | T> => {
@@ -28,4 +28,4 @@ const groupValuesByOffsets = <T>(
   return valueArray;
 };
 
-export default groupValuesByOffsets;
+export default groupValuesByOffsetBytes;

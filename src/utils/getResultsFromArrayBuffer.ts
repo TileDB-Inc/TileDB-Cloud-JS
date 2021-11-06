@@ -6,7 +6,7 @@ import getAttributeResult, { bufferToInt8 } from "./bufferToData";
 import getByteLengthOfDatatype from "./getByteLengthOfDatatype";
 import setNullables from "./setNullables";
 import isArrayOfArrays from "./isArrayOfArrays";
-import groupValuesByOffsets from "./groupValuesByOffsets";
+import groupValuesByOffsetBytes from "./groupValuesByOffsetBytes";
 import flatten from "./flatten";
 import convertToArray from "./convertToArray";
 
@@ -111,8 +111,8 @@ export const getResultsFromArrayBuffer = (
 
     // If result is a String slice the String by the offsets to make it an array
     if (isVarLengthSized && typeof result === "string") {
-      result = groupValuesByOffsets(convertToArray(result), offsets).map((s) =>
-        s.join("")
+      result = groupValuesByOffsetBytes(convertToArray(result), offsets).map(
+        (s) => s.join("")
       );
     }
 

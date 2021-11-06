@@ -1,11 +1,11 @@
 import { flightOriginresult } from "../fixtures/resultsFromBuffer";
-import groupValuesByOffsets from "./groupValuesByOffsets";
+import groupValuesByOffsetBytes from "./groupValuesByOffsetBytes";
 import convertToArray from "./convertToArray";
 import { flightOriginOffsets } from "../fixtures/offsets";
 
 describe("groupValuesByOffsets()", () => {
   it("Should group numbers by offsets", () => {
-    const result = groupValuesByOffsets(
+    const result = groupValuesByOffsetBytes(
       [33, 28, 35, 49, 122, 322, 199, 301, 234, 123, 99, 88],
       [0, 2, 3, 5, 9]
     );
@@ -19,7 +19,7 @@ describe("groupValuesByOffsets()", () => {
   });
 
   it.skip("Should group values by offsets for strings", () => {
-    const result = groupValuesByOffsets(
+    const result = groupValuesByOffsetBytes(
       convertToArray(flightOriginresult),
       flightOriginOffsets
     );
@@ -33,7 +33,7 @@ describe("groupValuesByOffsets()", () => {
       371,
     ];
     const str = `AMC JavelinCadillac FleetwoodCamaro Z28Chrysler ImperialDatsun 710Dodge ChallengerDuster 360Ferrari DinoFiat 128Fiat X1-9Ford Pantera LHonda CivicHornet 4 DriveHornet SportaboutLincoln ContinentalLotus EuropaMaserati BoraMazda RX4Mazda RX4 WagMerc 230Merc 240DMerc 280Merc 280CMerc 450SEMerc 450SLMerc 450SLCPontiac FirebirdPorsche 914-2Toyota CorollaToyota CoronaValiantVolvo 142E`;
-    const result = groupValuesByOffsets(convertToArray(str), offsets);
+    const result = groupValuesByOffsetBytes(convertToArray(str), offsets);
     expect(result.map((s) => s.join(""))).toEqual([
       "AMC Javelin",
       "Cadillac Fleetwood",
