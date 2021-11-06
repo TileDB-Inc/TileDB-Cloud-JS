@@ -7,5 +7,5 @@ import { AttributeBufferHeader } from "../v2";
  * @param attributesSchema
  * @returns A map of attribute names with the results of every attribute
  */
-export declare const getResultsFromArrayBuffer: (arrayBuffer: ArrayBuffer, attributes: AttributeBufferHeader[], attributesSchema: Array<Dimension | Attribute>) => {};
+export declare const getResultsFromArrayBuffer: (arrayBuffer: ArrayBuffer, attributeBufferHeaders: AttributeBufferHeader[], attributesSchema: Array<Dimension | Attribute>) => {};
 export default getResultsFromArrayBuffer;

@@ -8,6 +8,7 @@ import setNullables from "./setNullables";
 import isArrayOfArrays from "./isArrayOfArrays";
 import groupValuesByOffsets from "./groupValuesByOffsets";
 import flatten from "./flatten";
+import convertToArray from "./convertToArray";
 
 /**
  * Convert an ArrayBuffer to a map of attributes with their results
@@ -18,14 +19,15 @@ import flatten from "./flatten";
  */
 export const getResultsFromArrayBuffer = (
   arrayBuffer: ArrayBuffer,
-  attributes: AttributeBufferHeader[],
+  attributeBufferHeaders: AttributeBufferHeader[],
   attributesSchema: Array<Dimension | Attribute>
 ) => {
   const data = {};
+
   /**
    * We start from the last attribute which is at the end of the buffer
    */
-  attributes.reverse().reduce((offset, attribute) => {
+  attributeBufferHeaders.reverse().reduce((offset, attribute) => {
     const totalNumberOfBytesOfAttribute = getAttributeSizeInBytes(attribute);
 
     if (!totalNumberOfBytesOfAttribute) {
@@ -33,6 +35,7 @@ export const getResultsFromArrayBuffer = (
 
       return offset;
     }
+
     // If there are validityLenBufferSizeInBytes the attribute is nullable
     const isNullable = !!attribute.validityLenBufferSizeInBytes;
     // If there are varLenBufferSizeInBytes the attribute is varLengthSized
@@ -108,7 +111,7 @@ export const getResultsFromArrayBuffer = (
 
     // If result is a String slice the String by the offsets to make it an array
     if (isVarLengthSized && typeof result === "string") {
-      result = groupValuesByOffsets([...result], offsets).map((s) =>
+      result = groupValuesByOffsets(convertToArray(result), offsets).map((s) =>
         s.join("")
       );
     }

@@ -5,5 +5,5 @@
  * @param offsets []
  * @returns [NULL, 15, 22, NULL, 8]
  */
-declare const setNullables: <T>(vals: T[], nullables: number[], offsets: number[]) => any[];
+declare const setNullables: <T>(vals: T[], nullables: number[], offsets: number[]) => (T | T[])[];
 export default setNullables;
