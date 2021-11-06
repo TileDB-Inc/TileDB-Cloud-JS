@@ -78,10 +78,10 @@ export const getResultsFromArrayBuffer = (
       (isNullable ? attribute.validityLenBufferSizeInBytes : 0);
     const end = ending ? ending : undefined;
 
-    let result: any = getAttributeResult(
+    let result: string[] | string | number[] | bigint[] = getAttributeResult(
       arrayBuffer.slice(start, end),
       selectedAttributeSchema.type
-    );
+    ) as string | number[] | bigint[];
 
     let offsets = [];
     if (isVarLengthSized && !options.ignoreOffsets) {
@@ -120,7 +120,7 @@ export const getResultsFromArrayBuffer = (
        */
       const nullablesArray = Array.from(nullablesTypedArray);
 
-      result = setNullables(Array.from(result), nullablesArray, offsets);
+      result = setNullables(convertToArray(result), nullablesArray, offsets);
     }
 
     // If result is a String slice the String by the offsets to make it an array
