@@ -13,11 +13,16 @@ import {
 import getWriterBody from "../utils/getWriterBody";
 import convertToArrayBufferIfNodeBuffer from "../utils/convertToArrayBufferIfNodeBuffer";
 import getSizeInBytesOfAllAttributes from "../utils/getSizeInBytesOfAllAttributes";
-import getResultsFromArrayBuffer from "../utils/getResultsFromArrayBuffer";
+import getResultsFromArrayBuffer, {
+  Options,
+} from "../utils/getResultsFromArrayBuffer";
 
 type Range = number[] | string[];
-export interface QueryData extends Pick<Query, "layout"> {
+export interface QueryData extends Pick<Query, "layout">, Options {
   ranges: Array<Range | Array<Range>>;
+  /**
+   * Number of bytes allocated to the server for the query.
+   */
   bufferSize: number;
 }
 interface AttributeValue {
@@ -108,7 +113,8 @@ export class TileDBQuery {
     arraySchema: ArraySchema,
     queryAsArrayBuffer: ArrayBuffer,
     namespace: string,
-    arrayName: string
+    arrayName: string,
+    options: Options
   ): Promise<{
     query: Query;
     results: Record<string, any>;
@@ -154,7 +160,8 @@ export class TileDBQuery {
     const results = this.getResultsFromArrayBuffer(
       arraySchema,
       bufferWithoutFirstEightBytes,
-      attributeHeaders
+      attributeHeaders,
+      options
     );
 
     return {
@@ -207,6 +214,10 @@ export class TileDBQuery {
           responseType: "arraybuffer",
         }
       );
+      const options = {
+        ignoreNullables: body.ignoreNullables,
+        ignoreOffsets: body.ignoreOffsets,
+      };
 
       /**
        * Axios in nodeJS environments casts the response to a Buffer object
@@ -232,7 +243,8 @@ export class TileDBQuery {
           yield this.getResultsFromArrayBuffer(
             arraySchema,
             bufferWithoutFirstEightBytes,
-            attributeHeaders
+            attributeHeaders,
+            options
           );
 
           while (true) {
@@ -241,7 +253,8 @@ export class TileDBQuery {
                 arraySchema,
                 bufferWithoutFirstEightBytes,
                 namespace,
-                arrayName
+                arrayName,
+                options
               );
             // Override query object with the new one returned from `ReadIncompleteQuery`
             bufferWithoutFirstEightBytes = queryAsArrayBuffer;
@@ -262,7 +275,8 @@ export class TileDBQuery {
       yield this.getResultsFromArrayBuffer(
         arraySchema,
         bufferWithoutFirstEightBytes,
-        attributeHeaders
+        attributeHeaders,
+        options
       );
       return;
     } catch (e) {
@@ -273,7 +287,8 @@ export class TileDBQuery {
   private getResultsFromArrayBuffer(
     arraySchema: ArraySchema,
     bufferResults: ArrayBuffer,
-    attributeHeaders: AttributeBufferHeader[]
+    attributeHeaders: AttributeBufferHeader[],
+    options: Options
   ) {
     /**
      * Calculate the size of bytes of the attributes from the attributeBufferHeaders of the Query object.
@@ -293,7 +308,8 @@ export class TileDBQuery {
     const results = getResultsFromArrayBuffer(
       resultsBuffer,
       attributeHeaders,
-      mergeAttributesAndDimensions
+      mergeAttributesAndDimensions,
+      options
     );
 
     return results;

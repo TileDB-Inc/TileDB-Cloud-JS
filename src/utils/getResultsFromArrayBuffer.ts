@@ -10,6 +10,19 @@ import groupValuesByOffsetBytes from "./groupValuesByOffsetBytes";
 import flatten from "./flatten";
 import convertToArray from "./convertToArray";
 
+export interface Options {
+  /**
+   * Results will return without setting nullables, used on big data
+   * to avoid expensive calculations
+   */
+  ignoreNullables?: boolean;
+  /**
+   * Results will return without setting offsets, used on big data
+   * to avoid expensive calculations
+   */
+  ignoreOffsets?: boolean;
+}
+
 /**
  * Convert an ArrayBuffer to a map of attributes with their results
  * @param arrayBuffer The slice ArrayBuffer that contains the results
@@ -20,7 +33,8 @@ import convertToArray from "./convertToArray";
 export const getResultsFromArrayBuffer = (
   arrayBuffer: ArrayBuffer,
   attributeBufferHeaders: AttributeBufferHeader[],
-  attributesSchema: Array<Dimension | Attribute>
+  attributesSchema: Array<Dimension | Attribute>,
+  options: Options = {}
 ) => {
   const data = {};
 
@@ -70,7 +84,7 @@ export const getResultsFromArrayBuffer = (
     );
 
     let offsets = [];
-    if (isVarLengthSized) {
+    if (isVarLengthSized && !options.ignoreOffsets) {
       const BYTE_PER_ELEMENT = getByteLengthOfDatatype(
         selectedAttributeSchema.type
       );
@@ -89,7 +103,7 @@ export const getResultsFromArrayBuffer = (
       offsets = byteOffsets.map((o) => Number(o) / BYTE_PER_ELEMENT);
     }
 
-    if (isNullable) {
+    if (isNullable && !options.ignoreNullables) {
       /**
        * If attribute is Nullable, we get the last N bytes, cast it to uint8 array to get
        * what is null.
@@ -110,7 +124,11 @@ export const getResultsFromArrayBuffer = (
     }
 
     // If result is a String slice the String by the offsets to make it an array
-    if (isVarLengthSized && typeof result === "string") {
+    if (
+      isVarLengthSized &&
+      !options.ignoreOffsets &&
+      typeof result === "string"
+    ) {
       result = groupValuesByOffsetBytes(convertToArray(result), offsets).map(
         (s) => s.join("")
       );

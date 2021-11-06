@@ -32,7 +32,7 @@ describe("getResultsFromArrayBuffer()", () => {
     });
   });
 
-  it("Should convert a raw ArrayBuffer to a results object with fixed length attributes", async () => {
+  it("Should convert a raw ArrayBuffer to a results object with var length & nullable attributes", async () => {
     const file = path.join(__dirname, "../fixtures/nullable_buffer.raw");
     const rawBuffer = readFileSync(file);
     const arrayBufferOfFixedLengthAttributes =

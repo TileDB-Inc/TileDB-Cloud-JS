@@ -1,8 +1,12 @@
 import { ArraySchema } from "../v1";
 import { ConfigurationParameters, Query } from "../v2";
+import { Options } from "../utils/getResultsFromArrayBuffer";
 declare type Range = number[] | string[];
-export interface QueryData extends Pick<Query, "layout"> {
+export interface QueryData extends Pick<Query, "layout">, Options {
     ranges: Array<Range | Array<Range>>;
+    /**
+     * Number of bytes allocated to the server for the query.
+     */
     bufferSize: number;
 }
 interface AttributeValue {
@@ -28,7 +32,9 @@ export declare class TileDBQuery {
             originalVarLenBufferSizeInBytes: number;
             originalValidityLenBufferSizeInBytes: number;
         }[];
-        layout: string;
+        layout: string; /**
+         * Number of bytes allocated to the server for the query.
+         */
         status: string;
         type: string;
         writer: {
@@ -148,7 +154,9 @@ export declare class TileDBQuery {
                                 bufferSizes: number[];
                                 bufferStartSizes: number[];
                             }[];
-                        };
+                        }; /**
+                         * Deserialize buffer to a Query object
+                         */
                         start: number;
                         end: number;
                         splitMultiRange: boolean;
@@ -176,10 +184,6 @@ export declare class TileDBQuery {
                                 bufferStartSizes: number[];
                             }[];
                         }[];
-                        /**
-                         * First 8 bytes of the response, contain a Uint64 number
-                         * which is the size of the response we skip it.
-                         */
                         multiRange: {
                             layout: string;
                             stats: {
@@ -220,7 +224,10 @@ export declare class TileDBQuery {
                 clauses: {
                     fieldName: string;
                     value: number[];
-                    op: string;
+                    op: string; /**
+                     * Since we set the responseType to "arrayBuffer", in case the
+                     * response error message is a buffer, we deserialize the message before throwing
+                     */
                 }[];
                 clauseCombinationOps: string[];
             };
@@ -264,7 +271,7 @@ export declare class TileDBQuery {
             }[];
         };
     }>;
-    ReadIncompleteQuery(arraySchema: ArraySchema, queryAsArrayBuffer: ArrayBuffer, namespace: string, arrayName: string): Promise<{
+    ReadIncompleteQuery(arraySchema: ArraySchema, queryAsArrayBuffer: ArrayBuffer, namespace: string, arrayName: string, options: Options): Promise<{
         query: Query;
         results: Record<string, any>;
         queryAsArrayBuffer: ArrayBuffer;
