@@ -1,7 +1,5 @@
-import { flightOriginresult } from "../fixtures/resultsFromBuffer";
 import groupValuesByOffsetBytes from "./groupValuesByOffsetBytes";
 import convertToArray from "./convertToArray";
-import { flightOriginOffsets } from "../fixtures/offsets";
 
 describe("groupValuesByOffsets()", () => {
   it("Should group numbers by offsets", () => {
@@ -16,14 +14,6 @@ describe("groupValuesByOffsets()", () => {
       [322, 199, 301, 234],
       [123, 99, 88],
     ]);
-  });
-
-  it.skip("Should group values by offsets for strings", () => {
-    const result = groupValuesByOffsetBytes(
-      convertToArray(flightOriginresult),
-      flightOriginOffsets
-    );
-    expect(result).toEqual("");
   });
 
   it("Should group values by offsets for strings", () => {
