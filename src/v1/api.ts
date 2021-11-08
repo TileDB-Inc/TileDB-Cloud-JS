@@ -165,6 +165,12 @@ export interface ArrayActivityLog {
      * @memberof ArrayActivityLog
      */
     query_ranges?: string;
+    /**
+     * stats for query
+     * @type {string}
+     * @memberof ArrayActivityLog
+     */
+    query_stats?: string;
 }
 /**
  * Object including array info and pagination metadata
@@ -209,6 +215,69 @@ export interface ArrayBrowserSidebar {
      * @memberof ArrayBrowserSidebar
      */
     result_count_by_namespace?: object;
+}
+/**
+ * Object including array end_timestamps (list of Unix epoch timestamps in milliseconds) and pagination metadata
+ * @export
+ * @interface ArrayEndTimestampData
+ */
+export interface ArrayEndTimestampData {
+    /**
+     * List of timestamps expressed in milliseconds since Unix epoch
+     * @type {Array<number>}
+     * @memberof ArrayEndTimestampData
+     */
+    end_timestamps?: Array<number>;
+    /**
+     * 
+     * @type {PaginationMetadata}
+     * @memberof ArrayEndTimestampData
+     */
+    pagination_metadata?: PaginationMetadata;
+}
+/**
+ * A user-favorite array item
+ * @export
+ * @interface ArrayFavorite
+ */
+export interface ArrayFavorite {
+    /**
+     * unique uuid of the favorite
+     * @type {string}
+     * @memberof ArrayFavorite
+     */
+    id?: string;
+    /**
+     * Datetime the favorite was created in UTC
+     * @type {string}
+     * @memberof ArrayFavorite
+     */
+    created_at?: string;
+    /**
+     * unique uuid of the array
+     * @type {string}
+     * @memberof ArrayFavorite
+     */
+    array_uuid?: string;
+}
+/**
+ * Object including array favorites and pagination metadata
+ * @export
+ * @interface ArrayFavoritesData
+ */
+export interface ArrayFavoritesData {
+    /**
+     * List of array infos
+     * @type {Array<ArrayInfo>}
+     * @memberof ArrayFavoritesData
+     */
+    arrays?: Array<ArrayInfo>;
+    /**
+     * 
+     * @type {PaginationMetadata}
+     * @memberof ArrayFavoritesData
+     */
+    pagination_metadata?: PaginationMetadata;
 }
 /**
  * metadata of an array
@@ -360,6 +429,12 @@ export interface ArrayInfo {
      * @memberof ArrayInfo
      */
     is_favorite?: boolean;
+    /**
+     * The favorite UUID if the array if is_favorite is true
+     * @type {string}
+     * @memberof ArrayInfo
+     */
+    favorite_uuid?: string;
 }
 /**
  * metadata of an array
@@ -879,6 +954,12 @@ export interface Attribute {
      */
     cellValNum: number;
     /**
+     * Is attribute nullable
+     * @type {boolean}
+     * @memberof Attribute
+     */
+    nullable?: boolean;
+    /**
      * The default fill value
      * @type {Array<number>}
      * @memberof Attribute
@@ -1237,43 +1318,6 @@ export interface DomainArray {
     float64?: Array<number>;
 }
 /**
- * A user-favorite item
- * @export
- * @interface Favorite
- */
-export interface Favorite {
-    /**
-     * unique uuid of the favorite
-     * @type {string}
-     * @memberof Favorite
-     */
-    id?: string;
-    /**
-     * 
-     * @type {FavoriteType}
-     * @memberof Favorite
-     */
-    object_type?: FavoriteType;
-    /**
-     * The namespace the favorite is in. It won\'t be persisted in DB
-     * @type {string}
-     * @memberof Favorite
-     */
-    namespace?: string;
-    /**
-     * Name of the object. It wont be persisted in DB
-     * @type {string}
-     * @memberof Favorite
-     */
-    name?: string;
-    /**
-     * Datetime the favorite was created in UTC
-     * @type {string}
-     * @memberof Favorite
-     */
-    created_at?: string;
-}
-/**
  * Request body to add a favorite
  * @export
  * @interface FavoriteCreate
@@ -1291,40 +1335,6 @@ export interface FavoriteCreate {
      * @memberof FavoriteCreate
      */
     namespace: string;
-    /**
-     * 
-     * @type {FavoriteType}
-     * @memberof FavoriteCreate
-     */
-    object_type: FavoriteType;
-}
-/**
- * List of values that FavoriteType can take
- * @export
- * @enum {string}
- */
-export enum FavoriteType {
-    Array = 'ARRAY'
-}
-
-/**
- * Object including favorites and pagination metadata
- * @export
- * @interface FavoritesData
- */
-export interface FavoritesData {
-    /**
-     * List of favorites
-     * @type {Array<Favorite>}
-     * @memberof FavoritesData
-     */
-    favorites?: Array<Favorite>;
-    /**
-     * 
-     * @type {PaginationMetadata}
-     * @memberof FavoritesData
-     */
-    pagination_metadata?: PaginationMetadata;
 }
 /**
  * File property assigned to a specific file (array)
@@ -1808,6 +1818,50 @@ export enum Layout {
 }
 
 /**
+ * A user-favorite MLModel item
+ * @export
+ * @interface MLModelFavorite
+ */
+export interface MLModelFavorite {
+    /**
+     * unique uuid of the favorite
+     * @type {string}
+     * @memberof MLModelFavorite
+     */
+    id?: string;
+    /**
+     * Datetime the favorite was created in UTC
+     * @type {string}
+     * @memberof MLModelFavorite
+     */
+    created_at?: string;
+    /**
+     * unique uuid of the MLModel
+     * @type {string}
+     * @memberof MLModelFavorite
+     */
+    mlmodel_uuid?: string;
+}
+/**
+ * Object including MLModel favorites and pagination metadata
+ * @export
+ * @interface MLModelFavoritesData
+ */
+export interface MLModelFavoritesData {
+    /**
+     * List of MLModel infos
+     * @type {Array<ArrayInfo>}
+     * @memberof MLModelFavoritesData
+     */
+    mlmodels?: Array<ArrayInfo>;
+    /**
+     * 
+     * @type {PaginationMetadata}
+     * @memberof MLModelFavoritesData
+     */
+    pagination_metadata?: PaginationMetadata;
+}
+/**
  * a list of max buffer sizes, one per attribute
  * @export
  * @interface MaxBufferSizes
@@ -2005,6 +2059,50 @@ export interface NonEmptyDomain {
      * @memberof NonEmptyDomain
      */
     isEmpty: boolean;
+}
+/**
+ * A user-favorite notebook item
+ * @export
+ * @interface NotebookFavorite
+ */
+export interface NotebookFavorite {
+    /**
+     * unique uuid of the favorite
+     * @type {string}
+     * @memberof NotebookFavorite
+     */
+    id?: string;
+    /**
+     * Datetime the favorite was created in UTC
+     * @type {string}
+     * @memberof NotebookFavorite
+     */
+    created_at?: string;
+    /**
+     * unique uuid of the notebook
+     * @type {string}
+     * @memberof NotebookFavorite
+     */
+    notebook_uuid?: string;
+}
+/**
+ * Object including notebook favorites and pagination metadata
+ * @export
+ * @interface NotebookFavoritesData
+ */
+export interface NotebookFavoritesData {
+    /**
+     * List of notebook infos
+     * @type {Array<ArrayInfo>}
+     * @memberof NotebookFavoritesData
+     */
+    notebooks?: Array<ArrayInfo>;
+    /**
+     * 
+     * @type {PaginationMetadata}
+     * @memberof NotebookFavoritesData
+     */
+    pagination_metadata?: PaginationMetadata;
 }
 /**
  * Status details of a notebook server
@@ -2638,7 +2736,8 @@ export interface SQLParameters {
 export enum SSOProvider {
     Github = 'github',
     Google = 'google',
-    Stripe = 'stripe'
+    Stripe = 'stripe',
+    Okta = 'okta'
 }
 
 /**
@@ -2947,6 +3046,50 @@ export interface UDFArrayDetails {
      * @memberof UDFArrayDetails
      */
     buffers?: Array<string>;
+}
+/**
+ * A user-favorite UDF item
+ * @export
+ * @interface UDFFavorite
+ */
+export interface UDFFavorite {
+    /**
+     * unique uuid of the favorite
+     * @type {string}
+     * @memberof UDFFavorite
+     */
+    id?: string;
+    /**
+     * Datetime the favorite was created in UTC
+     * @type {string}
+     * @memberof UDFFavorite
+     */
+    created_at?: string;
+    /**
+     * unique uuid of the UDF
+     * @type {string}
+     * @memberof UDFFavorite
+     */
+    udf_uuid?: string;
+}
+/**
+ * Object including UDF favorites and pagination metadata
+ * @export
+ * @interface UDFFavoritesData
+ */
+export interface UDFFavoritesData {
+    /**
+     * List of UDF infos
+     * @type {Array<ArrayInfo>}
+     * @memberof UDFFavoritesData
+     */
+    udfs?: Array<ArrayInfo>;
+    /**
+     * 
+     * @type {PaginationMetadata}
+     * @memberof UDFFavoritesData
+     */
+    pagination_metadata?: PaginationMetadata;
 }
 /**
  * Defines a set of images related to a specific name
@@ -3871,6 +4014,64 @@ export const ArrayApiAxiosParamCreator = function (configuration?: Configuration
             };
         },
         /**
+         * retrieve a list of timestamps from the array fragment info listing in milliseconds, paginated
+         * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
+         * @param {string} array name/uri of array that is url-encoded
+         * @param {number} [page] pagination offset
+         * @param {number} [perPage] pagination limit
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        arraysNamespaceArrayEndTimestampsGet: async (namespace: string, array: string, page?: number, perPage?: number, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'namespace' is not null or undefined
+            assertParamExists('arraysNamespaceArrayEndTimestampsGet', 'namespace', namespace)
+            // verify required parameter 'array' is not null or undefined
+            assertParamExists('arraysNamespaceArrayEndTimestampsGet', 'array', array)
+            const localVarPath = `/arrays/{namespace}/{array}/end_timestamps`
+                .replace(`{${"namespace"}}`, encodeURIComponent(String(namespace)))
+                .replace(`{${"array"}}`, encodeURIComponent(String(array)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+
+            // authentication BasicAuth required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (perPage !== undefined) {
+                localVarQueryParameter['per_page'] = perPage;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * consolidate an array at a specified URI
          * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
          * @param {string} array name/uri of array that is url-encoded
@@ -4317,10 +4518,11 @@ export const ArrayApiAxiosParamCreator = function (configuration?: Configuration
          * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
          * @param {string} array name/uri of array that is url-encoded
          * @param {number} [length] (optional) limit character length of returned values
+         * @param {number} [endTimestamp] Milliseconds since Unix epoch, metadata will use open_at functionality to open array at the specific timestamp
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getArrayMetaDataJson: async (namespace: string, array: string, length?: number, options: any = {}): Promise<RequestArgs> => {
+        getArrayMetaDataJson: async (namespace: string, array: string, length?: number, endTimestamp?: number, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'namespace' is not null or undefined
             assertParamExists('getArrayMetaDataJson', 'namespace', namespace)
             // verify required parameter 'array' is not null or undefined
@@ -4348,6 +4550,10 @@ export const ArrayApiAxiosParamCreator = function (configuration?: Configuration
 
             if (length !== undefined) {
                 localVarQueryParameter['length'] = length;
+            }
+
+            if (endTimestamp !== undefined) {
+                localVarQueryParameter['end_timestamp'] = endTimestamp;
             }
 
 
@@ -4698,6 +4904,59 @@ export const ArrayApiAxiosParamCreator = function (configuration?: Configuration
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Get fragment end_timestamp on an array, will search for the closest end_timestamp to the timestamp asked
+         * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
+         * @param {string} array name/uri of array that is url-encoded
+         * @param {number} [endTimestamp] Milliseconds since Unix epoch
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getFragmentEndTimestamp: async (namespace: string, array: string, endTimestamp?: number, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'namespace' is not null or undefined
+            assertParamExists('getFragmentEndTimestamp', 'namespace', namespace)
+            // verify required parameter 'array' is not null or undefined
+            assertParamExists('getFragmentEndTimestamp', 'array', array)
+            const localVarPath = `/arrays/{namespace}/{array}/fragment_end_timestamp`
+                .replace(`{${"namespace"}}`, encodeURIComponent(String(namespace)))
+                .replace(`{${"array"}}`, encodeURIComponent(String(array)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+
+            // authentication BasicAuth required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            if (endTimestamp !== undefined) {
+                localVarQueryParameter['end_timestamp'] = endTimestamp;
+            }
 
 
     
@@ -5138,6 +5397,19 @@ export const ArrayApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
+         * retrieve a list of timestamps from the array fragment info listing in milliseconds, paginated
+         * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
+         * @param {string} array name/uri of array that is url-encoded
+         * @param {number} [page] pagination offset
+         * @param {number} [perPage] pagination limit
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async arraysNamespaceArrayEndTimestampsGet(namespace: string, array: string, page?: number, perPage?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArrayEndTimestampData>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.arraysNamespaceArrayEndTimestampsGet(namespace, array, page, perPage, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
          * consolidate an array at a specified URI
          * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
          * @param {string} array name/uri of array that is url-encoded
@@ -5239,11 +5511,12 @@ export const ArrayApiFp = function(configuration?: Configuration) {
          * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
          * @param {string} array name/uri of array that is url-encoded
          * @param {number} [length] (optional) limit character length of returned values
+         * @param {number} [endTimestamp] Milliseconds since Unix epoch, metadata will use open_at functionality to open array at the specific timestamp
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getArrayMetaDataJson(namespace: string, array: string, length?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getArrayMetaDataJson(namespace, array, length, options);
+        async getArrayMetaDataJson(namespace: string, array: string, length?: number, endTimestamp?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getArrayMetaDataJson(namespace, array, length, endTimestamp, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -5323,6 +5596,18 @@ export const ArrayApiFp = function(configuration?: Configuration) {
          */
         async getArraysInNamespace(namespace: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ArrayInfo>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getArraysInNamespace(namespace, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Get fragment end_timestamp on an array, will search for the closest end_timestamp to the timestamp asked
+         * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
+         * @param {string} array name/uri of array that is url-encoded
+         * @param {number} [endTimestamp] Milliseconds since Unix epoch
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getFragmentEndTimestamp(namespace: string, array: string, endTimestamp?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<number>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getFragmentEndTimestamp(namespace, array, endTimestamp, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -5501,6 +5786,18 @@ export const ArrayApiFactory = function (configuration?: Configuration, basePath
             return localVarFp.arraysBrowserSharedSidebarGet(options).then((request) => request(axios, basePath));
         },
         /**
+         * retrieve a list of timestamps from the array fragment info listing in milliseconds, paginated
+         * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
+         * @param {string} array name/uri of array that is url-encoded
+         * @param {number} [page] pagination offset
+         * @param {number} [perPage] pagination limit
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        arraysNamespaceArrayEndTimestampsGet(namespace: string, array: string, page?: number, perPage?: number, options?: any): AxiosPromise<ArrayEndTimestampData> {
+            return localVarFp.arraysNamespaceArrayEndTimestampsGet(namespace, array, page, perPage, options).then((request) => request(axios, basePath));
+        },
+        /**
          * consolidate an array at a specified URI
          * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
          * @param {string} array name/uri of array that is url-encoded
@@ -5594,11 +5891,12 @@ export const ArrayApiFactory = function (configuration?: Configuration, basePath
          * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
          * @param {string} array name/uri of array that is url-encoded
          * @param {number} [length] (optional) limit character length of returned values
+         * @param {number} [endTimestamp] Milliseconds since Unix epoch, metadata will use open_at functionality to open array at the specific timestamp
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getArrayMetaDataJson(namespace: string, array: string, length?: number, options?: any): AxiosPromise<object> {
-            return localVarFp.getArrayMetaDataJson(namespace, array, length, options).then((request) => request(axios, basePath));
+        getArrayMetaDataJson(namespace: string, array: string, length?: number, endTimestamp?: number, options?: any): AxiosPromise<object> {
+            return localVarFp.getArrayMetaDataJson(namespace, array, length, endTimestamp, options).then((request) => request(axios, basePath));
         },
         /**
          * get metadata on an array
@@ -5671,6 +5969,17 @@ export const ArrayApiFactory = function (configuration?: Configuration, basePath
          */
         getArraysInNamespace(namespace: string, options?: any): AxiosPromise<Array<ArrayInfo>> {
             return localVarFp.getArraysInNamespace(namespace, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Get fragment end_timestamp on an array, will search for the closest end_timestamp to the timestamp asked
+         * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
+         * @param {string} array name/uri of array that is url-encoded
+         * @param {number} [endTimestamp] Milliseconds since Unix epoch
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getFragmentEndTimestamp(namespace: string, array: string, endTimestamp?: number, options?: any): AxiosPromise<number> {
+            return localVarFp.getFragmentEndTimestamp(namespace, array, endTimestamp, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -5856,6 +6165,20 @@ export class ArrayApi extends BaseAPI {
     }
 
     /**
+     * retrieve a list of timestamps from the array fragment info listing in milliseconds, paginated
+     * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
+     * @param {string} array name/uri of array that is url-encoded
+     * @param {number} [page] pagination offset
+     * @param {number} [perPage] pagination limit
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ArrayApi
+     */
+    public arraysNamespaceArrayEndTimestampsGet(namespace: string, array: string, page?: number, perPage?: number, options?: any) {
+        return ArrayApiFp(this.configuration).arraysNamespaceArrayEndTimestampsGet(namespace, array, page, perPage, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
      * consolidate an array at a specified URI
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
      * @param {string} array name/uri of array that is url-encoded
@@ -5965,12 +6288,13 @@ export class ArrayApi extends BaseAPI {
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
      * @param {string} array name/uri of array that is url-encoded
      * @param {number} [length] (optional) limit character length of returned values
+     * @param {number} [endTimestamp] Milliseconds since Unix epoch, metadata will use open_at functionality to open array at the specific timestamp
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ArrayApi
      */
-    public getArrayMetaDataJson(namespace: string, array: string, length?: number, options?: any) {
-        return ArrayApiFp(this.configuration).getArrayMetaDataJson(namespace, array, length, options).then((request) => request(this.axios, this.basePath));
+    public getArrayMetaDataJson(namespace: string, array: string, length?: number, endTimestamp?: number, options?: any) {
+        return ArrayApiFp(this.configuration).getArrayMetaDataJson(namespace, array, length, endTimestamp, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -6057,6 +6381,19 @@ export class ArrayApi extends BaseAPI {
      */
     public getArraysInNamespace(namespace: string, options?: any) {
         return ArrayApiFp(this.configuration).getArraysInNamespace(namespace, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Get fragment end_timestamp on an array, will search for the closest end_timestamp to the timestamp asked
+     * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
+     * @param {string} array name/uri of array that is url-encoded
+     * @param {number} [endTimestamp] Milliseconds since Unix epoch
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ArrayApi
+     */
+    public getFragmentEndTimestamp(namespace: string, array: string, endTimestamp?: number, options?: any) {
+        return ArrayApiFp(this.configuration).getFragmentEndTimestamp(namespace, array, endTimestamp, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -6264,13 +6601,13 @@ export class ArrayTasksApi extends BaseAPI {
 export const FavoritesApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
         /**
-         * Add a new favorite
+         * Add a new array favorite
          * @param {FavoriteCreate} [body] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        addFavorite: async (body?: FavoriteCreate, options: any = {}): Promise<RequestArgs> => {
-            const localVarPath = `/favorites`;
+        addArrayFavorite: async (body?: FavoriteCreate, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/arrays/favorites`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -6308,15 +6645,147 @@ export const FavoritesApiAxiosParamCreator = function (configuration?: Configura
             };
         },
         /**
-         * Delete specific favorite
-         * @param {string} id The uuid of the favorite
+         * Add a new ML model favorite
+         * @param {FavoriteCreate} [body] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteFavorite: async (id: string, options: any = {}): Promise<RequestArgs> => {
+        addMLModelFavorite: async (body?: FavoriteCreate, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/mlmodels/favorites`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+
+            // authentication BasicAuth required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
+            localVarRequestOptions.data = serializeDataIfNeeded(body, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Add a new notebook favorite
+         * @param {FavoriteCreate} [body] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        addNotebookFavorite: async (body?: FavoriteCreate, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/notebooks/favorites`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+
+            // authentication BasicAuth required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
+            localVarRequestOptions.data = serializeDataIfNeeded(body, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Add a new UDF favorite
+         * @param {FavoriteCreate} [body] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        addUDFFavorite: async (body?: FavoriteCreate, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/udfs/favorites`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+
+            // authentication BasicAuth required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
+            localVarRequestOptions.data = serializeDataIfNeeded(body, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Delete specific array favorite
+         * @param {string} id The uuid of the array favorite
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteArrayFavorite: async (id: string, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
-            assertParamExists('deleteFavorite', 'id', id)
-            const localVarPath = `/favorites/{id}`
+            assertParamExists('deleteArrayFavorite', 'id', id)
+            const localVarPath = `/arrays/favorites/{id}`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -6352,15 +6821,147 @@ export const FavoritesApiAxiosParamCreator = function (configuration?: Configura
             };
         },
         /**
-         * Fetch specific favorite of a user
-         * @param {string} id The uuid of the favorite
+         * Delete specific ML model favorite
+         * @param {string} id The uuid of the ML model favorite
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getFavorite: async (id: string, options: any = {}): Promise<RequestArgs> => {
+        deleteMLModelFavorite: async (id: string, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
-            assertParamExists('getFavorite', 'id', id)
-            const localVarPath = `/favorites/{id}`
+            assertParamExists('deleteMLModelFavorite', 'id', id)
+            const localVarPath = `/mlmodels/favorites/{id}`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+
+            // authentication BasicAuth required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Delete specific notebook favorite
+         * @param {string} id The uuid of the notebook favorite
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteNotebookFavorite: async (id: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('deleteNotebookFavorite', 'id', id)
+            const localVarPath = `/notebooks/favorites/{id}`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+
+            // authentication BasicAuth required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Delete specific UDF favorite
+         * @param {string} id The uuid of the UDF favorite
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteUDFFavorite: async (id: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('deleteUDFFavorite', 'id', id)
+            const localVarPath = `/udfs/favorites/{id}`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+
+            // authentication BasicAuth required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Fetch specific array favorite of a user
+         * @param {string} id The uuid of the array favorite
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getArrayFavorite: async (id: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('getArrayFavorite', 'id', id)
+            const localVarPath = `/arrays/favorites/{id}`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -6396,13 +6997,20 @@ export const FavoritesApiAxiosParamCreator = function (configuration?: Configura
             };
         },
         /**
-         * Fetch all favorites of connected user
-         * @param {string} [type] The type of the desired favorites e.g. arrays
+         * Fetch array favorite of a specific array
+         * @param {string} namespace The namespace of the array
+         * @param {string} name The name of the array
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listFavorites: async (type?: string, options: any = {}): Promise<RequestArgs> => {
-            const localVarPath = `/favorites`;
+        getArrayFavoriteForArray: async (namespace: string, name: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'namespace' is not null or undefined
+            assertParamExists('getArrayFavoriteForArray', 'namespace', namespace)
+            // verify required parameter 'name' is not null or undefined
+            assertParamExists('getArrayFavoriteForArray', 'name', name)
+            const localVarPath = `/arrays/favorites/{namespace}/{name}`
+                .replace(`{${"namespace"}}`, encodeURIComponent(String(namespace)))
+                .replace(`{${"name"}}`, encodeURIComponent(String(name)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -6421,9 +7029,641 @@ export const FavoritesApiAxiosParamCreator = function (configuration?: Configura
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            if (type !== undefined) {
-                localVarQueryParameter['type'] = type;
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
             }
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Fetch specific ML model favorite of a user
+         * @param {string} id The uuid of the ML model favorite
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getMLModelFavorite: async (id: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('getMLModelFavorite', 'id', id)
+            const localVarPath = `/mlmodels/favorites/{id}`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+
+            // authentication BasicAuth required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Fetch ML model favorite of a specific ML model
+         * @param {string} namespace The namespace of the ML model
+         * @param {string} name The name of the ML model
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getMLModelFavoriteForMLModel: async (namespace: string, name: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'namespace' is not null or undefined
+            assertParamExists('getMLModelFavoriteForMLModel', 'namespace', namespace)
+            // verify required parameter 'name' is not null or undefined
+            assertParamExists('getMLModelFavoriteForMLModel', 'name', name)
+            const localVarPath = `/mlmodels/favorites/{namespace}/{name}`
+                .replace(`{${"namespace"}}`, encodeURIComponent(String(namespace)))
+                .replace(`{${"name"}}`, encodeURIComponent(String(name)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+
+            // authentication BasicAuth required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Fetch specific notebook favorite of a user
+         * @param {string} id The uuid of the notebook favorite
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getNotebookFavorite: async (id: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('getNotebookFavorite', 'id', id)
+            const localVarPath = `/notebooks/favorites/{id}`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+
+            // authentication BasicAuth required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Fetch notebook favorite of a specific notebook
+         * @param {string} namespace The namespace of the notebook
+         * @param {string} name The name of the notebook
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getNotebookFavoriteForNotebook: async (namespace: string, name: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'namespace' is not null or undefined
+            assertParamExists('getNotebookFavoriteForNotebook', 'namespace', namespace)
+            // verify required parameter 'name' is not null or undefined
+            assertParamExists('getNotebookFavoriteForNotebook', 'name', name)
+            const localVarPath = `/notebooks/favorites/{namespace}/{name}`
+                .replace(`{${"namespace"}}`, encodeURIComponent(String(namespace)))
+                .replace(`{${"name"}}`, encodeURIComponent(String(name)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+
+            // authentication BasicAuth required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Fetch specific UDF favorite of a user
+         * @param {string} id The uuid of the UDF favorite
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getUDFFavorite: async (id: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('getUDFFavorite', 'id', id)
+            const localVarPath = `/udfs/favorites/{id}`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+
+            // authentication BasicAuth required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Fetch UDF favorite of a specific UDF
+         * @param {string} namespace The namespace of the UDF
+         * @param {string} name The name of the UDF
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getUDFFavoriteForUDF: async (namespace: string, name: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'namespace' is not null or undefined
+            assertParamExists('getUDFFavoriteForUDF', 'namespace', namespace)
+            // verify required parameter 'name' is not null or undefined
+            assertParamExists('getUDFFavoriteForUDF', 'name', name)
+            const localVarPath = `/udfs/favorites/{namespace}/{name}`
+                .replace(`{${"namespace"}}`, encodeURIComponent(String(namespace)))
+                .replace(`{${"name"}}`, encodeURIComponent(String(name)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+
+            // authentication BasicAuth required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Fetch all array favorites of connected user
+         * @param {number} [page] pagination offset
+         * @param {number} [perPage] pagination limit
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listArrayFavorites: async (page?: number, perPage?: number, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/arrays/favorites`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+
+            // authentication BasicAuth required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (perPage !== undefined) {
+                localVarQueryParameter['per_page'] = perPage;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Fetch all favorite array uuids of connected user
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listArrayFavoritesUUIDs: async (options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/arrays/favorites/uuids`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+
+            // authentication BasicAuth required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Fetch all ML models favorites of connected user
+         * @param {number} [page] pagination offset
+         * @param {number} [perPage] pagination limit
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listMLModelFavorites: async (page?: number, perPage?: number, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/mlmodels/favorites`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+
+            // authentication BasicAuth required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (perPage !== undefined) {
+                localVarQueryParameter['per_page'] = perPage;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Fetch all favorite ML models uuids of connected user
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listMLModelFavoritesUUIDs: async (options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/mlmodels/favorites/uuids`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+
+            // authentication BasicAuth required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Fetch all notebook favorites of connected user
+         * @param {number} [page] pagination offset
+         * @param {number} [perPage] pagination limit
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listNotebookFavorites: async (page?: number, perPage?: number, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/notebooks/favorites`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+
+            // authentication BasicAuth required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (perPage !== undefined) {
+                localVarQueryParameter['per_page'] = perPage;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Fetch all favorite notebook uuids of connected user
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listNotebookFavoritesUUIDs: async (options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/notebooks/favorites/uuids`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+
+            // authentication BasicAuth required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Fetch all UDF favorites of connected user
+         * @param {number} [page] pagination offset
+         * @param {number} [perPage] pagination limit
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listUDFFavorites: async (page?: number, perPage?: number, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/udfs/favorites`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+
+            // authentication BasicAuth required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (perPage !== undefined) {
+                localVarQueryParameter['per_page'] = perPage;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Fetch all favorite UDF uuids of connected user
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listUDFFavoritesUUIDs: async (options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/udfs/favorites/uuids`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+
+            // authentication BasicAuth required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
 
 
     
@@ -6451,43 +7691,247 @@ export const FavoritesApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = FavoritesApiAxiosParamCreator(configuration)
     return {
         /**
-         * Add a new favorite
+         * Add a new array favorite
          * @param {FavoriteCreate} [body] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async addFavorite(body?: FavoriteCreate, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.addFavorite(body, options);
+        async addArrayFavorite(body?: FavoriteCreate, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.addArrayFavorite(body, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * Delete specific favorite
-         * @param {string} id The uuid of the favorite
+         * Add a new ML model favorite
+         * @param {FavoriteCreate} [body] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async deleteFavorite(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteFavorite(id, options);
+        async addMLModelFavorite(body?: FavoriteCreate, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.addMLModelFavorite(body, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * Fetch specific favorite of a user
-         * @param {string} id The uuid of the favorite
+         * Add a new notebook favorite
+         * @param {FavoriteCreate} [body] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getFavorite(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Favorite>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getFavorite(id, options);
+        async addNotebookFavorite(body?: FavoriteCreate, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.addNotebookFavorite(body, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * Fetch all favorites of connected user
-         * @param {string} [type] The type of the desired favorites e.g. arrays
+         * Add a new UDF favorite
+         * @param {FavoriteCreate} [body] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listFavorites(type?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<FavoritesData>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.listFavorites(type, options);
+        async addUDFFavorite(body?: FavoriteCreate, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.addUDFFavorite(body, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Delete specific array favorite
+         * @param {string} id The uuid of the array favorite
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async deleteArrayFavorite(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteArrayFavorite(id, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Delete specific ML model favorite
+         * @param {string} id The uuid of the ML model favorite
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async deleteMLModelFavorite(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteMLModelFavorite(id, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Delete specific notebook favorite
+         * @param {string} id The uuid of the notebook favorite
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async deleteNotebookFavorite(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteNotebookFavorite(id, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Delete specific UDF favorite
+         * @param {string} id The uuid of the UDF favorite
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async deleteUDFFavorite(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteUDFFavorite(id, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Fetch specific array favorite of a user
+         * @param {string} id The uuid of the array favorite
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getArrayFavorite(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArrayFavorite>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getArrayFavorite(id, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Fetch array favorite of a specific array
+         * @param {string} namespace The namespace of the array
+         * @param {string} name The name of the array
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getArrayFavoriteForArray(namespace: string, name: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArrayFavorite>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getArrayFavoriteForArray(namespace, name, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Fetch specific ML model favorite of a user
+         * @param {string} id The uuid of the ML model favorite
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getMLModelFavorite(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<MLModelFavorite>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getMLModelFavorite(id, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Fetch ML model favorite of a specific ML model
+         * @param {string} namespace The namespace of the ML model
+         * @param {string} name The name of the ML model
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getMLModelFavoriteForMLModel(namespace: string, name: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<MLModelFavorite>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getMLModelFavoriteForMLModel(namespace, name, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Fetch specific notebook favorite of a user
+         * @param {string} id The uuid of the notebook favorite
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getNotebookFavorite(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<NotebookFavorite>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getNotebookFavorite(id, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Fetch notebook favorite of a specific notebook
+         * @param {string} namespace The namespace of the notebook
+         * @param {string} name The name of the notebook
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getNotebookFavoriteForNotebook(namespace: string, name: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<NotebookFavorite>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getNotebookFavoriteForNotebook(namespace, name, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Fetch specific UDF favorite of a user
+         * @param {string} id The uuid of the UDF favorite
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getUDFFavorite(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UDFFavorite>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getUDFFavorite(id, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Fetch UDF favorite of a specific UDF
+         * @param {string} namespace The namespace of the UDF
+         * @param {string} name The name of the UDF
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getUDFFavoriteForUDF(namespace: string, name: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UDFFavorite>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getUDFFavoriteForUDF(namespace, name, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Fetch all array favorites of connected user
+         * @param {number} [page] pagination offset
+         * @param {number} [perPage] pagination limit
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async listArrayFavorites(page?: number, perPage?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArrayFavoritesData>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listArrayFavorites(page, perPage, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Fetch all favorite array uuids of connected user
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async listArrayFavoritesUUIDs(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ArrayFavorite>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listArrayFavoritesUUIDs(options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Fetch all ML models favorites of connected user
+         * @param {number} [page] pagination offset
+         * @param {number} [perPage] pagination limit
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async listMLModelFavorites(page?: number, perPage?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<MLModelFavoritesData>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listMLModelFavorites(page, perPage, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Fetch all favorite ML models uuids of connected user
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async listMLModelFavoritesUUIDs(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<MLModelFavorite>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listMLModelFavoritesUUIDs(options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Fetch all notebook favorites of connected user
+         * @param {number} [page] pagination offset
+         * @param {number} [perPage] pagination limit
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async listNotebookFavorites(page?: number, perPage?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<NotebookFavoritesData>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listNotebookFavorites(page, perPage, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Fetch all favorite notebook uuids of connected user
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async listNotebookFavoritesUUIDs(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<NotebookFavorite>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listNotebookFavoritesUUIDs(options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Fetch all UDF favorites of connected user
+         * @param {number} [page] pagination offset
+         * @param {number} [perPage] pagination limit
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async listUDFFavorites(page?: number, perPage?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UDFFavoritesData>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listUDFFavorites(page, perPage, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Fetch all favorite UDF uuids of connected user
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async listUDFFavoritesUUIDs(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<UDFFavorite>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listUDFFavoritesUUIDs(options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
     }
@@ -6501,40 +7945,224 @@ export const FavoritesApiFactory = function (configuration?: Configuration, base
     const localVarFp = FavoritesApiFp(configuration)
     return {
         /**
-         * Add a new favorite
+         * Add a new array favorite
          * @param {FavoriteCreate} [body] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        addFavorite(body?: FavoriteCreate, options?: any): AxiosPromise<void> {
-            return localVarFp.addFavorite(body, options).then((request) => request(axios, basePath));
+        addArrayFavorite(body?: FavoriteCreate, options?: any): AxiosPromise<void> {
+            return localVarFp.addArrayFavorite(body, options).then((request) => request(axios, basePath));
         },
         /**
-         * Delete specific favorite
-         * @param {string} id The uuid of the favorite
+         * Add a new ML model favorite
+         * @param {FavoriteCreate} [body] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteFavorite(id: string, options?: any): AxiosPromise<void> {
-            return localVarFp.deleteFavorite(id, options).then((request) => request(axios, basePath));
+        addMLModelFavorite(body?: FavoriteCreate, options?: any): AxiosPromise<void> {
+            return localVarFp.addMLModelFavorite(body, options).then((request) => request(axios, basePath));
         },
         /**
-         * Fetch specific favorite of a user
-         * @param {string} id The uuid of the favorite
+         * Add a new notebook favorite
+         * @param {FavoriteCreate} [body] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getFavorite(id: string, options?: any): AxiosPromise<Favorite> {
-            return localVarFp.getFavorite(id, options).then((request) => request(axios, basePath));
+        addNotebookFavorite(body?: FavoriteCreate, options?: any): AxiosPromise<void> {
+            return localVarFp.addNotebookFavorite(body, options).then((request) => request(axios, basePath));
         },
         /**
-         * Fetch all favorites of connected user
-         * @param {string} [type] The type of the desired favorites e.g. arrays
+         * Add a new UDF favorite
+         * @param {FavoriteCreate} [body] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listFavorites(type?: string, options?: any): AxiosPromise<FavoritesData> {
-            return localVarFp.listFavorites(type, options).then((request) => request(axios, basePath));
+        addUDFFavorite(body?: FavoriteCreate, options?: any): AxiosPromise<void> {
+            return localVarFp.addUDFFavorite(body, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Delete specific array favorite
+         * @param {string} id The uuid of the array favorite
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteArrayFavorite(id: string, options?: any): AxiosPromise<void> {
+            return localVarFp.deleteArrayFavorite(id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Delete specific ML model favorite
+         * @param {string} id The uuid of the ML model favorite
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteMLModelFavorite(id: string, options?: any): AxiosPromise<void> {
+            return localVarFp.deleteMLModelFavorite(id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Delete specific notebook favorite
+         * @param {string} id The uuid of the notebook favorite
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteNotebookFavorite(id: string, options?: any): AxiosPromise<void> {
+            return localVarFp.deleteNotebookFavorite(id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Delete specific UDF favorite
+         * @param {string} id The uuid of the UDF favorite
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteUDFFavorite(id: string, options?: any): AxiosPromise<void> {
+            return localVarFp.deleteUDFFavorite(id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Fetch specific array favorite of a user
+         * @param {string} id The uuid of the array favorite
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getArrayFavorite(id: string, options?: any): AxiosPromise<ArrayFavorite> {
+            return localVarFp.getArrayFavorite(id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Fetch array favorite of a specific array
+         * @param {string} namespace The namespace of the array
+         * @param {string} name The name of the array
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getArrayFavoriteForArray(namespace: string, name: string, options?: any): AxiosPromise<ArrayFavorite> {
+            return localVarFp.getArrayFavoriteForArray(namespace, name, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Fetch specific ML model favorite of a user
+         * @param {string} id The uuid of the ML model favorite
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getMLModelFavorite(id: string, options?: any): AxiosPromise<MLModelFavorite> {
+            return localVarFp.getMLModelFavorite(id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Fetch ML model favorite of a specific ML model
+         * @param {string} namespace The namespace of the ML model
+         * @param {string} name The name of the ML model
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getMLModelFavoriteForMLModel(namespace: string, name: string, options?: any): AxiosPromise<MLModelFavorite> {
+            return localVarFp.getMLModelFavoriteForMLModel(namespace, name, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Fetch specific notebook favorite of a user
+         * @param {string} id The uuid of the notebook favorite
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getNotebookFavorite(id: string, options?: any): AxiosPromise<NotebookFavorite> {
+            return localVarFp.getNotebookFavorite(id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Fetch notebook favorite of a specific notebook
+         * @param {string} namespace The namespace of the notebook
+         * @param {string} name The name of the notebook
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getNotebookFavoriteForNotebook(namespace: string, name: string, options?: any): AxiosPromise<NotebookFavorite> {
+            return localVarFp.getNotebookFavoriteForNotebook(namespace, name, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Fetch specific UDF favorite of a user
+         * @param {string} id The uuid of the UDF favorite
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getUDFFavorite(id: string, options?: any): AxiosPromise<UDFFavorite> {
+            return localVarFp.getUDFFavorite(id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Fetch UDF favorite of a specific UDF
+         * @param {string} namespace The namespace of the UDF
+         * @param {string} name The name of the UDF
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getUDFFavoriteForUDF(namespace: string, name: string, options?: any): AxiosPromise<UDFFavorite> {
+            return localVarFp.getUDFFavoriteForUDF(namespace, name, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Fetch all array favorites of connected user
+         * @param {number} [page] pagination offset
+         * @param {number} [perPage] pagination limit
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listArrayFavorites(page?: number, perPage?: number, options?: any): AxiosPromise<ArrayFavoritesData> {
+            return localVarFp.listArrayFavorites(page, perPage, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Fetch all favorite array uuids of connected user
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listArrayFavoritesUUIDs(options?: any): AxiosPromise<Array<ArrayFavorite>> {
+            return localVarFp.listArrayFavoritesUUIDs(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Fetch all ML models favorites of connected user
+         * @param {number} [page] pagination offset
+         * @param {number} [perPage] pagination limit
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listMLModelFavorites(page?: number, perPage?: number, options?: any): AxiosPromise<MLModelFavoritesData> {
+            return localVarFp.listMLModelFavorites(page, perPage, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Fetch all favorite ML models uuids of connected user
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listMLModelFavoritesUUIDs(options?: any): AxiosPromise<Array<MLModelFavorite>> {
+            return localVarFp.listMLModelFavoritesUUIDs(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Fetch all notebook favorites of connected user
+         * @param {number} [page] pagination offset
+         * @param {number} [perPage] pagination limit
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listNotebookFavorites(page?: number, perPage?: number, options?: any): AxiosPromise<NotebookFavoritesData> {
+            return localVarFp.listNotebookFavorites(page, perPage, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Fetch all favorite notebook uuids of connected user
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listNotebookFavoritesUUIDs(options?: any): AxiosPromise<Array<NotebookFavorite>> {
+            return localVarFp.listNotebookFavoritesUUIDs(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Fetch all UDF favorites of connected user
+         * @param {number} [page] pagination offset
+         * @param {number} [perPage] pagination limit
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listUDFFavorites(page?: number, perPage?: number, options?: any): AxiosPromise<UDFFavoritesData> {
+            return localVarFp.listUDFFavorites(page, perPage, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Fetch all favorite UDF uuids of connected user
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listUDFFavoritesUUIDs(options?: any): AxiosPromise<Array<UDFFavorite>> {
+            return localVarFp.listUDFFavoritesUUIDs(options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -6547,47 +8175,271 @@ export const FavoritesApiFactory = function (configuration?: Configuration, base
  */
 export class FavoritesApi extends BaseAPI {
     /**
-     * Add a new favorite
+     * Add a new array favorite
      * @param {FavoriteCreate} [body] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof FavoritesApi
      */
-    public addFavorite(body?: FavoriteCreate, options?: any) {
-        return FavoritesApiFp(this.configuration).addFavorite(body, options).then((request) => request(this.axios, this.basePath));
+    public addArrayFavorite(body?: FavoriteCreate, options?: any) {
+        return FavoritesApiFp(this.configuration).addArrayFavorite(body, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
-     * Delete specific favorite
-     * @param {string} id The uuid of the favorite
+     * Add a new ML model favorite
+     * @param {FavoriteCreate} [body] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof FavoritesApi
      */
-    public deleteFavorite(id: string, options?: any) {
-        return FavoritesApiFp(this.configuration).deleteFavorite(id, options).then((request) => request(this.axios, this.basePath));
+    public addMLModelFavorite(body?: FavoriteCreate, options?: any) {
+        return FavoritesApiFp(this.configuration).addMLModelFavorite(body, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
-     * Fetch specific favorite of a user
-     * @param {string} id The uuid of the favorite
+     * Add a new notebook favorite
+     * @param {FavoriteCreate} [body] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof FavoritesApi
      */
-    public getFavorite(id: string, options?: any) {
-        return FavoritesApiFp(this.configuration).getFavorite(id, options).then((request) => request(this.axios, this.basePath));
+    public addNotebookFavorite(body?: FavoriteCreate, options?: any) {
+        return FavoritesApiFp(this.configuration).addNotebookFavorite(body, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
-     * Fetch all favorites of connected user
-     * @param {string} [type] The type of the desired favorites e.g. arrays
+     * Add a new UDF favorite
+     * @param {FavoriteCreate} [body] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof FavoritesApi
      */
-    public listFavorites(type?: string, options?: any) {
-        return FavoritesApiFp(this.configuration).listFavorites(type, options).then((request) => request(this.axios, this.basePath));
+    public addUDFFavorite(body?: FavoriteCreate, options?: any) {
+        return FavoritesApiFp(this.configuration).addUDFFavorite(body, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Delete specific array favorite
+     * @param {string} id The uuid of the array favorite
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof FavoritesApi
+     */
+    public deleteArrayFavorite(id: string, options?: any) {
+        return FavoritesApiFp(this.configuration).deleteArrayFavorite(id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Delete specific ML model favorite
+     * @param {string} id The uuid of the ML model favorite
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof FavoritesApi
+     */
+    public deleteMLModelFavorite(id: string, options?: any) {
+        return FavoritesApiFp(this.configuration).deleteMLModelFavorite(id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Delete specific notebook favorite
+     * @param {string} id The uuid of the notebook favorite
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof FavoritesApi
+     */
+    public deleteNotebookFavorite(id: string, options?: any) {
+        return FavoritesApiFp(this.configuration).deleteNotebookFavorite(id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Delete specific UDF favorite
+     * @param {string} id The uuid of the UDF favorite
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof FavoritesApi
+     */
+    public deleteUDFFavorite(id: string, options?: any) {
+        return FavoritesApiFp(this.configuration).deleteUDFFavorite(id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Fetch specific array favorite of a user
+     * @param {string} id The uuid of the array favorite
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof FavoritesApi
+     */
+    public getArrayFavorite(id: string, options?: any) {
+        return FavoritesApiFp(this.configuration).getArrayFavorite(id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Fetch array favorite of a specific array
+     * @param {string} namespace The namespace of the array
+     * @param {string} name The name of the array
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof FavoritesApi
+     */
+    public getArrayFavoriteForArray(namespace: string, name: string, options?: any) {
+        return FavoritesApiFp(this.configuration).getArrayFavoriteForArray(namespace, name, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Fetch specific ML model favorite of a user
+     * @param {string} id The uuid of the ML model favorite
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof FavoritesApi
+     */
+    public getMLModelFavorite(id: string, options?: any) {
+        return FavoritesApiFp(this.configuration).getMLModelFavorite(id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Fetch ML model favorite of a specific ML model
+     * @param {string} namespace The namespace of the ML model
+     * @param {string} name The name of the ML model
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof FavoritesApi
+     */
+    public getMLModelFavoriteForMLModel(namespace: string, name: string, options?: any) {
+        return FavoritesApiFp(this.configuration).getMLModelFavoriteForMLModel(namespace, name, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Fetch specific notebook favorite of a user
+     * @param {string} id The uuid of the notebook favorite
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof FavoritesApi
+     */
+    public getNotebookFavorite(id: string, options?: any) {
+        return FavoritesApiFp(this.configuration).getNotebookFavorite(id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Fetch notebook favorite of a specific notebook
+     * @param {string} namespace The namespace of the notebook
+     * @param {string} name The name of the notebook
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof FavoritesApi
+     */
+    public getNotebookFavoriteForNotebook(namespace: string, name: string, options?: any) {
+        return FavoritesApiFp(this.configuration).getNotebookFavoriteForNotebook(namespace, name, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Fetch specific UDF favorite of a user
+     * @param {string} id The uuid of the UDF favorite
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof FavoritesApi
+     */
+    public getUDFFavorite(id: string, options?: any) {
+        return FavoritesApiFp(this.configuration).getUDFFavorite(id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Fetch UDF favorite of a specific UDF
+     * @param {string} namespace The namespace of the UDF
+     * @param {string} name The name of the UDF
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof FavoritesApi
+     */
+    public getUDFFavoriteForUDF(namespace: string, name: string, options?: any) {
+        return FavoritesApiFp(this.configuration).getUDFFavoriteForUDF(namespace, name, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Fetch all array favorites of connected user
+     * @param {number} [page] pagination offset
+     * @param {number} [perPage] pagination limit
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof FavoritesApi
+     */
+    public listArrayFavorites(page?: number, perPage?: number, options?: any) {
+        return FavoritesApiFp(this.configuration).listArrayFavorites(page, perPage, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Fetch all favorite array uuids of connected user
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof FavoritesApi
+     */
+    public listArrayFavoritesUUIDs(options?: any) {
+        return FavoritesApiFp(this.configuration).listArrayFavoritesUUIDs(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Fetch all ML models favorites of connected user
+     * @param {number} [page] pagination offset
+     * @param {number} [perPage] pagination limit
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof FavoritesApi
+     */
+    public listMLModelFavorites(page?: number, perPage?: number, options?: any) {
+        return FavoritesApiFp(this.configuration).listMLModelFavorites(page, perPage, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Fetch all favorite ML models uuids of connected user
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof FavoritesApi
+     */
+    public listMLModelFavoritesUUIDs(options?: any) {
+        return FavoritesApiFp(this.configuration).listMLModelFavoritesUUIDs(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Fetch all notebook favorites of connected user
+     * @param {number} [page] pagination offset
+     * @param {number} [perPage] pagination limit
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof FavoritesApi
+     */
+    public listNotebookFavorites(page?: number, perPage?: number, options?: any) {
+        return FavoritesApiFp(this.configuration).listNotebookFavorites(page, perPage, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Fetch all favorite notebook uuids of connected user
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof FavoritesApi
+     */
+    public listNotebookFavoritesUUIDs(options?: any) {
+        return FavoritesApiFp(this.configuration).listNotebookFavoritesUUIDs(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Fetch all UDF favorites of connected user
+     * @param {number} [page] pagination offset
+     * @param {number} [perPage] pagination limit
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof FavoritesApi
+     */
+    public listUDFFavorites(page?: number, perPage?: number, options?: any) {
+        return FavoritesApiFp(this.configuration).listUDFFavorites(page, perPage, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Fetch all favorite UDF uuids of connected user
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof FavoritesApi
+     */
+    public listUDFFavoritesUUIDs(options?: any) {
+        return FavoritesApiFp(this.configuration).listUDFFavoritesUUIDs(options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -7468,18 +9320,20 @@ export class NotebookApi extends BaseAPI {
 export const NotebooksApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
         /**
-         * retrieve a list of timestamps from the array fragment info listing in milliseconds
+         * retrieve a list of timestamps from the array fragment info listing in milliseconds, paginated
          * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
          * @param {string} array name/uri of array that is url-encoded
+         * @param {number} [page] pagination offset
+         * @param {number} [perPage] pagination limit
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        notebooksNamespaceArrayVersionsGet: async (namespace: string, array: string, options: any = {}): Promise<RequestArgs> => {
+        notebooksNamespaceArrayEndTimestampsGet: async (namespace: string, array: string, page?: number, perPage?: number, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'namespace' is not null or undefined
-            assertParamExists('notebooksNamespaceArrayVersionsGet', 'namespace', namespace)
+            assertParamExists('notebooksNamespaceArrayEndTimestampsGet', 'namespace', namespace)
             // verify required parameter 'array' is not null or undefined
-            assertParamExists('notebooksNamespaceArrayVersionsGet', 'array', array)
-            const localVarPath = `/notebooks/{namespace}/{array}/versions`
+            assertParamExists('notebooksNamespaceArrayEndTimestampsGet', 'array', array)
+            const localVarPath = `/notebooks/{namespace}/{array}/end_timestamps`
                 .replace(`{${"namespace"}}`, encodeURIComponent(String(namespace)))
                 .replace(`{${"array"}}`, encodeURIComponent(String(array)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -7499,6 +9353,14 @@ export const NotebooksApiAxiosParamCreator = function (configuration?: Configura
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (perPage !== undefined) {
+                localVarQueryParameter['per_page'] = perPage;
+            }
 
 
     
@@ -7526,14 +9388,16 @@ export const NotebooksApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = NotebooksApiAxiosParamCreator(configuration)
     return {
         /**
-         * retrieve a list of timestamps from the array fragment info listing in milliseconds
+         * retrieve a list of timestamps from the array fragment info listing in milliseconds, paginated
          * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
          * @param {string} array name/uri of array that is url-encoded
+         * @param {number} [page] pagination offset
+         * @param {number} [perPage] pagination limit
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async notebooksNamespaceArrayVersionsGet(namespace: string, array: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<number>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.notebooksNamespaceArrayVersionsGet(namespace, array, options);
+        async notebooksNamespaceArrayEndTimestampsGet(namespace: string, array: string, page?: number, perPage?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArrayEndTimestampData>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.notebooksNamespaceArrayEndTimestampsGet(namespace, array, page, perPage, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
     }
@@ -7547,14 +9411,16 @@ export const NotebooksApiFactory = function (configuration?: Configuration, base
     const localVarFp = NotebooksApiFp(configuration)
     return {
         /**
-         * retrieve a list of timestamps from the array fragment info listing in milliseconds
+         * retrieve a list of timestamps from the array fragment info listing in milliseconds, paginated
          * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
          * @param {string} array name/uri of array that is url-encoded
+         * @param {number} [page] pagination offset
+         * @param {number} [perPage] pagination limit
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        notebooksNamespaceArrayVersionsGet(namespace: string, array: string, options?: any): AxiosPromise<Array<number>> {
-            return localVarFp.notebooksNamespaceArrayVersionsGet(namespace, array, options).then((request) => request(axios, basePath));
+        notebooksNamespaceArrayEndTimestampsGet(namespace: string, array: string, page?: number, perPage?: number, options?: any): AxiosPromise<ArrayEndTimestampData> {
+            return localVarFp.notebooksNamespaceArrayEndTimestampsGet(namespace, array, page, perPage, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -7567,15 +9433,17 @@ export const NotebooksApiFactory = function (configuration?: Configuration, base
  */
 export class NotebooksApi extends BaseAPI {
     /**
-     * retrieve a list of timestamps from the array fragment info listing in milliseconds
+     * retrieve a list of timestamps from the array fragment info listing in milliseconds, paginated
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
      * @param {string} array name/uri of array that is url-encoded
+     * @param {number} [page] pagination offset
+     * @param {number} [perPage] pagination limit
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof NotebooksApi
      */
-    public notebooksNamespaceArrayVersionsGet(namespace: string, array: string, options?: any) {
-        return NotebooksApiFp(this.configuration).notebooksNamespaceArrayVersionsGet(namespace, array, options).then((request) => request(this.axios, this.basePath));
+    public notebooksNamespaceArrayEndTimestampsGet(namespace: string, array: string, page?: number, perPage?: number, options?: any) {
+        return NotebooksApiFp(this.configuration).notebooksNamespaceArrayEndTimestampsGet(namespace, array, page, perPage, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -10495,18 +12363,20 @@ export const UdfApiAxiosParamCreator = function (configuration?: Configuration) 
             };
         },
         /**
-         * retrieve a list of timestamps from the array fragment info listing in milliseconds
+         * retrieve a list of timestamps from the array fragment info listing in milliseconds, paginated
          * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
          * @param {string} array name/uri of array that is url-encoded
+         * @param {number} [page] pagination offset
+         * @param {number} [perPage] pagination limit
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        udfNamespaceArrayVersionsGet: async (namespace: string, array: string, options: any = {}): Promise<RequestArgs> => {
+        udfNamespaceArrayEndTimestampsGet: async (namespace: string, array: string, page?: number, perPage?: number, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'namespace' is not null or undefined
-            assertParamExists('udfNamespaceArrayVersionsGet', 'namespace', namespace)
+            assertParamExists('udfNamespaceArrayEndTimestampsGet', 'namespace', namespace)
             // verify required parameter 'array' is not null or undefined
-            assertParamExists('udfNamespaceArrayVersionsGet', 'array', array)
-            const localVarPath = `/udf/{namespace}/{array}/versions`
+            assertParamExists('udfNamespaceArrayEndTimestampsGet', 'array', array)
+            const localVarPath = `/udf/{namespace}/{array}/end_timestamps`
                 .replace(`{${"namespace"}}`, encodeURIComponent(String(namespace)))
                 .replace(`{${"array"}}`, encodeURIComponent(String(array)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -10526,6 +12396,14 @@ export const UdfApiAxiosParamCreator = function (configuration?: Configuration) 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (perPage !== undefined) {
+                localVarQueryParameter['per_page'] = perPage;
+            }
 
 
     
@@ -10703,14 +12581,16 @@ export const UdfApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * retrieve a list of timestamps from the array fragment info listing in milliseconds
+         * retrieve a list of timestamps from the array fragment info listing in milliseconds, paginated
          * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
          * @param {string} array name/uri of array that is url-encoded
+         * @param {number} [page] pagination offset
+         * @param {number} [perPage] pagination limit
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async udfNamespaceArrayVersionsGet(namespace: string, array: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<number>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.udfNamespaceArrayVersionsGet(namespace, array, options);
+        async udfNamespaceArrayEndTimestampsGet(namespace: string, array: string, page?: number, perPage?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArrayEndTimestampData>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.udfNamespaceArrayEndTimestampsGet(namespace, array, page, perPage, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -10824,14 +12704,16 @@ export const UdfApiFactory = function (configuration?: Configuration, basePath?:
             return localVarFp.submitUDF(namespace, array, udf, xPayer, acceptEncoding, v2, options).then((request) => request(axios, basePath));
         },
         /**
-         * retrieve a list of timestamps from the array fragment info listing in milliseconds
+         * retrieve a list of timestamps from the array fragment info listing in milliseconds, paginated
          * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
          * @param {string} array name/uri of array that is url-encoded
+         * @param {number} [page] pagination offset
+         * @param {number} [perPage] pagination limit
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        udfNamespaceArrayVersionsGet(namespace: string, array: string, options?: any): AxiosPromise<Array<number>> {
-            return localVarFp.udfNamespaceArrayVersionsGet(namespace, array, options).then((request) => request(axios, basePath));
+        udfNamespaceArrayEndTimestampsGet(namespace: string, array: string, page?: number, perPage?: number, options?: any): AxiosPromise<ArrayEndTimestampData> {
+            return localVarFp.udfNamespaceArrayEndTimestampsGet(namespace, array, page, perPage, options).then((request) => request(axios, basePath));
         },
         /**
          * updated an existing registerd UDF in the given namespace
@@ -10959,15 +12841,17 @@ export class UdfApi extends BaseAPI {
     }
 
     /**
-     * retrieve a list of timestamps from the array fragment info listing in milliseconds
+     * retrieve a list of timestamps from the array fragment info listing in milliseconds, paginated
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
      * @param {string} array name/uri of array that is url-encoded
+     * @param {number} [page] pagination offset
+     * @param {number} [perPage] pagination limit
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UdfApi
      */
-    public udfNamespaceArrayVersionsGet(namespace: string, array: string, options?: any) {
-        return UdfApiFp(this.configuration).udfNamespaceArrayVersionsGet(namespace, array, options).then((request) => request(this.axios, this.basePath));
+    public udfNamespaceArrayEndTimestampsGet(namespace: string, array: string, page?: number, perPage?: number, options?: any) {
+        return UdfApiFp(this.configuration).udfNamespaceArrayEndTimestampsGet(namespace, array, page, perPage, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

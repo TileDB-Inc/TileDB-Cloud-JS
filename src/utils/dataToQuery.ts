@@ -4,6 +4,8 @@ import { QueryData } from "../TileDBQuery/TileDBQuery";
 import getRanges from "./getRanges";
 import getByteLengthOfDatatype from "./getByteLengthOfDatatype";
 import emptyRangesToDomain from "./emptyRangesToDomain";
+import isAttributeVarLength from "./isAttributeVarLength";
+import isAttributeNullable from "./isAttributeNullable";
 
 const createAttributeBufferHeaders = (
   attributes: Array<Attribute | Dimension>,
@@ -15,7 +17,8 @@ const createAttributeBufferHeaders = (
   );
   const attributeBufferHeaders = attributes.map((attr) => {
     const MAX_BYTES_FOR_ATTRIBUTE = getMaxByteSizeOfAttribute(attr);
-    const WEIGHT = MAX_BYTES_FOR_ATTRIBUTE / MAX_BYTES_PER_ELEMENT_OF_ATTRIBUTES;
+    const WEIGHT =
+      MAX_BYTES_FOR_ATTRIBUTE / MAX_BYTES_PER_ELEMENT_OF_ATTRIBUTES;
     const BYTES_FOR_ATTRIBUTE = bufferSize * WEIGHT;
     const isVarLength = isAttributeVarLength(attr);
     const isNullable = isAttributeNullable(attr);
@@ -24,7 +27,8 @@ const createAttributeBufferHeaders = (
 
     const TOTAL_BYTES_PER_ELEMENT =
       BYTES_FOR_ATTRIBUTE * (BYTES_PER_ELEMENT / MAX_BYTES_FOR_ATTRIBUTE);
-    const TOTAL_BYTE_PER_VALIDITY = BYTES_FOR_ATTRIBUTE / MAX_BYTES_FOR_ATTRIBUTE;
+    const TOTAL_BYTE_PER_VALIDITY =
+      BYTES_FOR_ATTRIBUTE / MAX_BYTES_FOR_ATTRIBUTE;
     const TOTAL_BYTE_PER_OFFSET =
       BYTES_FOR_ATTRIBUTE * (BYTE_PER_OFFSET / MAX_BYTES_FOR_ATTRIBUTE);
 
@@ -32,8 +36,10 @@ const createAttributeBufferHeaders = (
       ? TOTAL_BYTE_PER_OFFSET
       : TOTAL_BYTES_PER_ELEMENT;
     const varLenBufferSizeInBytes = isVarLength ? TOTAL_BYTES_PER_ELEMENT : 0;
-    
-    const validityLenBufferSizeInBytes = isNullable ? TOTAL_BYTE_PER_VALIDITY : 0;
+
+    const validityLenBufferSizeInBytes = isNullable
+      ? TOTAL_BYTE_PER_VALIDITY
+      : 0;
 
     return {
       name: attr.name,
@@ -47,29 +53,9 @@ const createAttributeBufferHeaders = (
       ),
     };
   });
-  
+
   return attributeBufferHeaders;
 };
-
-
-const isDimension = (data: Attribute | Dimension): data is Dimension => {
-  return data.hasOwnProperty('nullTileExtent');
-}
-
-const isAttributeVarLength = (attribute: Attribute | Dimension) => {
-  if (isDimension(attribute)) {
-    // Only StringAscii is var-length dimension
-    return attribute.type === Datatype.StringAscii;
-  }
-  return attribute.cellValNum == 4294967295;
-}
-const isAttributeNullable = (attribute: Attribute | Dimension) => {
-  if (isDimension(attribute)) {
-    return false;
-  }
-  // TODO: How do i know if attribute is nullable?
-  return true;
-}
 
 const getMaxByteSizeOfAttribute = (attribute: Attribute | Dimension) => {
   const isVarLength = isAttributeVarLength(attribute);

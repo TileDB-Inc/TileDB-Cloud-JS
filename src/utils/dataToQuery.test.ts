@@ -128,35 +128,35 @@ describe("dataToQuery()", () => {
       {
         fixedLenBufferSizeInBytes: 0,
         name: "a1",
-        originalFixedLenBufferSizeInBytes: 1411,
-        originalValidityLenBufferSizeInBytes: 176,
-        originalVarLenBufferSizeInBytes: 176,
+        originalFixedLenBufferSizeInBytes: 1500,
+        originalValidityLenBufferSizeInBytes: 0,
+        originalVarLenBufferSizeInBytes: 187,
         validityLenBufferSizeInBytes: 0,
         varLenBufferSizeInBytes: 0,
       },
       {
         fixedLenBufferSizeInBytes: 0,
         name: "a2",
-        originalFixedLenBufferSizeInBytes: 1411,
-        originalValidityLenBufferSizeInBytes: 176,
-        originalVarLenBufferSizeInBytes: 1411,
+        originalFixedLenBufferSizeInBytes: 1500,
+        originalValidityLenBufferSizeInBytes: 0,
+        originalVarLenBufferSizeInBytes: 1500,
         validityLenBufferSizeInBytes: 0,
         varLenBufferSizeInBytes: 0,
       },
       {
         fixedLenBufferSizeInBytes: 0,
         name: "a4",
-        originalFixedLenBufferSizeInBytes: 1411,
-        originalValidityLenBufferSizeInBytes: 176,
-        originalVarLenBufferSizeInBytes: 705,
+        originalFixedLenBufferSizeInBytes: 1500,
+        originalValidityLenBufferSizeInBytes: 0,
+        originalVarLenBufferSizeInBytes: 750,
         validityLenBufferSizeInBytes: 0,
         varLenBufferSizeInBytes: 0,
       },
       {
         fixedLenBufferSizeInBytes: 0,
         name: "a3",
-        originalFixedLenBufferSizeInBytes: 705,
-        originalValidityLenBufferSizeInBytes: 176,
+        originalFixedLenBufferSizeInBytes: 750,
+        originalValidityLenBufferSizeInBytes: 0,
         originalVarLenBufferSizeInBytes: 0,
         validityLenBufferSizeInBytes: 0,
         varLenBufferSizeInBytes: 0,
@@ -164,8 +164,8 @@ describe("dataToQuery()", () => {
       {
         fixedLenBufferSizeInBytes: 0,
         name: "a0",
-        originalFixedLenBufferSizeInBytes: 705,
-        originalValidityLenBufferSizeInBytes: 176,
+        originalFixedLenBufferSizeInBytes: 750,
+        originalValidityLenBufferSizeInBytes: 0,
         originalVarLenBufferSizeInBytes: 0,
         validityLenBufferSizeInBytes: 0,
         varLenBufferSizeInBytes: 0,
@@ -173,8 +173,8 @@ describe("dataToQuery()", () => {
       {
         fixedLenBufferSizeInBytes: 0,
         name: "a5",
-        originalFixedLenBufferSizeInBytes: 705,
-        originalValidityLenBufferSizeInBytes: 176,
+        originalFixedLenBufferSizeInBytes: 750,
+        originalValidityLenBufferSizeInBytes: 187,
         originalVarLenBufferSizeInBytes: 0,
         validityLenBufferSizeInBytes: 0,
         varLenBufferSizeInBytes: 0,
@@ -182,25 +182,25 @@ describe("dataToQuery()", () => {
       {
         fixedLenBufferSizeInBytes: 0,
         name: "a6",
-        originalFixedLenBufferSizeInBytes: 1411,
-        originalValidityLenBufferSizeInBytes: 176,
-        originalVarLenBufferSizeInBytes: 705,
+        originalFixedLenBufferSizeInBytes: 1500,
+        originalValidityLenBufferSizeInBytes: 187,
+        originalVarLenBufferSizeInBytes: 750,
         validityLenBufferSizeInBytes: 0,
         varLenBufferSizeInBytes: 0,
       },
       {
         fixedLenBufferSizeInBytes: 0,
         name: "rows",
-        originalFixedLenBufferSizeInBytes: 1411,
+        originalFixedLenBufferSizeInBytes: 1500,
         originalValidityLenBufferSizeInBytes: 0,
-        originalVarLenBufferSizeInBytes: 176,
+        originalVarLenBufferSizeInBytes: 187,
         validityLenBufferSizeInBytes: 0,
         varLenBufferSizeInBytes: 0,
       },
       {
         fixedLenBufferSizeInBytes: 0,
         name: "cols",
-        originalFixedLenBufferSizeInBytes: 1411,
+        originalFixedLenBufferSizeInBytes: 1500,
         originalValidityLenBufferSizeInBytes: 0,
         originalVarLenBufferSizeInBytes: 0,
         validityLenBufferSizeInBytes: 0,
@@ -208,13 +208,18 @@ describe("dataToQuery()", () => {
       },
     ];
     const totalBufferSize = expectedAttrBuffers.reduce((accum, attr) => {
-      return accum + attr.originalFixedLenBufferSizeInBytes + attr.originalVarLenBufferSizeInBytes + attr.originalValidityLenBufferSizeInBytes
+      return (
+        accum +
+        attr.originalFixedLenBufferSizeInBytes +
+        attr.originalVarLenBufferSizeInBytes +
+        attr.originalValidityLenBufferSizeInBytes
+      );
     }, 0);
     const res = dataToQuery(stringQueryData, arraySchemaAttributes, dimensions);
 
-    expect(totalBufferSize).toBe(14986);
     expect(res.reader.layout).toEqual("row-major");
     expect(res.reader.subarray.ranges).toEqual(exptectedRanges);
     expect(res.attributeBufferHeaders).toEqual(expectedAttrBuffers);
+    expect(totalBufferSize).toBe(14998);
   });
 });

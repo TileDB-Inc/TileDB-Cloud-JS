@@ -154,6 +154,12 @@ export interface ArrayActivityLog {
      * @memberof ArrayActivityLog
      */
     query_ranges?: string;
+    /**
+     * stats for query
+     * @type {string}
+     * @memberof ArrayActivityLog
+     */
+    query_stats?: string;
 }
 /**
  * Object including array info and pagination metadata
@@ -198,6 +204,69 @@ export interface ArrayBrowserSidebar {
      * @memberof ArrayBrowserSidebar
      */
     result_count_by_namespace?: object;
+}
+/**
+ * Object including array end_timestamps (list of Unix epoch timestamps in milliseconds) and pagination metadata
+ * @export
+ * @interface ArrayEndTimestampData
+ */
+export interface ArrayEndTimestampData {
+    /**
+     * List of timestamps expressed in milliseconds since Unix epoch
+     * @type {Array<number>}
+     * @memberof ArrayEndTimestampData
+     */
+    end_timestamps?: Array<number>;
+    /**
+     *
+     * @type {PaginationMetadata}
+     * @memberof ArrayEndTimestampData
+     */
+    pagination_metadata?: PaginationMetadata;
+}
+/**
+ * A user-favorite array item
+ * @export
+ * @interface ArrayFavorite
+ */
+export interface ArrayFavorite {
+    /**
+     * unique uuid of the favorite
+     * @type {string}
+     * @memberof ArrayFavorite
+     */
+    id?: string;
+    /**
+     * Datetime the favorite was created in UTC
+     * @type {string}
+     * @memberof ArrayFavorite
+     */
+    created_at?: string;
+    /**
+     * unique uuid of the array
+     * @type {string}
+     * @memberof ArrayFavorite
+     */
+    array_uuid?: string;
+}
+/**
+ * Object including array favorites and pagination metadata
+ * @export
+ * @interface ArrayFavoritesData
+ */
+export interface ArrayFavoritesData {
+    /**
+     * List of array infos
+     * @type {Array<ArrayInfo>}
+     * @memberof ArrayFavoritesData
+     */
+    arrays?: Array<ArrayInfo>;
+    /**
+     *
+     * @type {PaginationMetadata}
+     * @memberof ArrayFavoritesData
+     */
+    pagination_metadata?: PaginationMetadata;
 }
 /**
  * metadata of an array
@@ -351,6 +420,12 @@ export interface ArrayInfo {
      * @memberof ArrayInfo
      */
     is_favorite?: boolean;
+    /**
+     * The favorite UUID if the array if is_favorite is true
+     * @type {string}
+     * @memberof ArrayInfo
+     */
+    favorite_uuid?: string;
 }
 /**
  * metadata of an array
@@ -869,6 +944,12 @@ export interface Attribute {
      */
     cellValNum: number;
     /**
+     * Is attribute nullable
+     * @type {boolean}
+     * @memberof Attribute
+     */
+    nullable?: boolean;
+    /**
      * The default fill value
      * @type {Array<number>}
      * @memberof Attribute
@@ -1226,43 +1307,6 @@ export interface DomainArray {
     float64?: Array<number>;
 }
 /**
- * A user-favorite item
- * @export
- * @interface Favorite
- */
-export interface Favorite {
-    /**
-     * unique uuid of the favorite
-     * @type {string}
-     * @memberof Favorite
-     */
-    id?: string;
-    /**
-     *
-     * @type {FavoriteType}
-     * @memberof Favorite
-     */
-    object_type?: FavoriteType;
-    /**
-     * The namespace the favorite is in. It won\'t be persisted in DB
-     * @type {string}
-     * @memberof Favorite
-     */
-    namespace?: string;
-    /**
-     * Name of the object. It wont be persisted in DB
-     * @type {string}
-     * @memberof Favorite
-     */
-    name?: string;
-    /**
-     * Datetime the favorite was created in UTC
-     * @type {string}
-     * @memberof Favorite
-     */
-    created_at?: string;
-}
-/**
  * Request body to add a favorite
  * @export
  * @interface FavoriteCreate
@@ -1280,39 +1324,6 @@ export interface FavoriteCreate {
      * @memberof FavoriteCreate
      */
     namespace: string;
-    /**
-     *
-     * @type {FavoriteType}
-     * @memberof FavoriteCreate
-     */
-    object_type: FavoriteType;
-}
-/**
- * List of values that FavoriteType can take
- * @export
- * @enum {string}
- */
-export declare enum FavoriteType {
-    Array = "ARRAY"
-}
-/**
- * Object including favorites and pagination metadata
- * @export
- * @interface FavoritesData
- */
-export interface FavoritesData {
-    /**
-     * List of favorites
-     * @type {Array<Favorite>}
-     * @memberof FavoritesData
-     */
-    favorites?: Array<Favorite>;
-    /**
-     *
-     * @type {PaginationMetadata}
-     * @memberof FavoritesData
-     */
-    pagination_metadata?: PaginationMetadata;
 }
 /**
  * File property assigned to a specific file (array)
@@ -1789,6 +1800,50 @@ export declare enum Layout {
     Unordered = "unordered"
 }
 /**
+ * A user-favorite MLModel item
+ * @export
+ * @interface MLModelFavorite
+ */
+export interface MLModelFavorite {
+    /**
+     * unique uuid of the favorite
+     * @type {string}
+     * @memberof MLModelFavorite
+     */
+    id?: string;
+    /**
+     * Datetime the favorite was created in UTC
+     * @type {string}
+     * @memberof MLModelFavorite
+     */
+    created_at?: string;
+    /**
+     * unique uuid of the MLModel
+     * @type {string}
+     * @memberof MLModelFavorite
+     */
+    mlmodel_uuid?: string;
+}
+/**
+ * Object including MLModel favorites and pagination metadata
+ * @export
+ * @interface MLModelFavoritesData
+ */
+export interface MLModelFavoritesData {
+    /**
+     * List of MLModel infos
+     * @type {Array<ArrayInfo>}
+     * @memberof MLModelFavoritesData
+     */
+    mlmodels?: Array<ArrayInfo>;
+    /**
+     *
+     * @type {PaginationMetadata}
+     * @memberof MLModelFavoritesData
+     */
+    pagination_metadata?: PaginationMetadata;
+}
+/**
  * a list of max buffer sizes, one per attribute
  * @export
  * @interface MaxBufferSizes
@@ -1985,6 +2040,50 @@ export interface NonEmptyDomain {
      * @memberof NonEmptyDomain
      */
     isEmpty: boolean;
+}
+/**
+ * A user-favorite notebook item
+ * @export
+ * @interface NotebookFavorite
+ */
+export interface NotebookFavorite {
+    /**
+     * unique uuid of the favorite
+     * @type {string}
+     * @memberof NotebookFavorite
+     */
+    id?: string;
+    /**
+     * Datetime the favorite was created in UTC
+     * @type {string}
+     * @memberof NotebookFavorite
+     */
+    created_at?: string;
+    /**
+     * unique uuid of the notebook
+     * @type {string}
+     * @memberof NotebookFavorite
+     */
+    notebook_uuid?: string;
+}
+/**
+ * Object including notebook favorites and pagination metadata
+ * @export
+ * @interface NotebookFavoritesData
+ */
+export interface NotebookFavoritesData {
+    /**
+     * List of notebook infos
+     * @type {Array<ArrayInfo>}
+     * @memberof NotebookFavoritesData
+     */
+    notebooks?: Array<ArrayInfo>;
+    /**
+     *
+     * @type {PaginationMetadata}
+     * @memberof NotebookFavoritesData
+     */
+    pagination_metadata?: PaginationMetadata;
 }
 /**
  * Status details of a notebook server
@@ -2608,7 +2707,8 @@ export interface SQLParameters {
 export declare enum SSOProvider {
     Github = "github",
     Google = "google",
-    Stripe = "stripe"
+    Stripe = "stripe",
+    Okta = "okta"
 }
 /**
  * A Subarray
@@ -2916,6 +3016,50 @@ export interface UDFArrayDetails {
      * @memberof UDFArrayDetails
      */
     buffers?: Array<string>;
+}
+/**
+ * A user-favorite UDF item
+ * @export
+ * @interface UDFFavorite
+ */
+export interface UDFFavorite {
+    /**
+     * unique uuid of the favorite
+     * @type {string}
+     * @memberof UDFFavorite
+     */
+    id?: string;
+    /**
+     * Datetime the favorite was created in UTC
+     * @type {string}
+     * @memberof UDFFavorite
+     */
+    created_at?: string;
+    /**
+     * unique uuid of the UDF
+     * @type {string}
+     * @memberof UDFFavorite
+     */
+    udf_uuid?: string;
+}
+/**
+ * Object including UDF favorites and pagination metadata
+ * @export
+ * @interface UDFFavoritesData
+ */
+export interface UDFFavoritesData {
+    /**
+     * List of UDF infos
+     * @type {Array<ArrayInfo>}
+     * @memberof UDFFavoritesData
+     */
+    udfs?: Array<ArrayInfo>;
+    /**
+     *
+     * @type {PaginationMetadata}
+     * @memberof UDFFavoritesData
+     */
+    pagination_metadata?: PaginationMetadata;
 }
 /**
  * Defines a set of images related to a specific name
@@ -3440,6 +3584,16 @@ export declare const ArrayApiAxiosParamCreator: (configuration?: Configuration) 
      */
     arraysBrowserSharedSidebarGet: (options?: any) => Promise<RequestArgs>;
     /**
+     * retrieve a list of timestamps from the array fragment info listing in milliseconds, paginated
+     * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
+     * @param {string} array name/uri of array that is url-encoded
+     * @param {number} [page] pagination offset
+     * @param {number} [perPage] pagination limit
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    arraysNamespaceArrayEndTimestampsGet: (namespace: string, array: string, page?: number, perPage?: number, options?: any) => Promise<RequestArgs>;
+    /**
      * consolidate an array at a specified URI
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
      * @param {string} array name/uri of array that is url-encoded
@@ -3517,10 +3671,11 @@ export declare const ArrayApiAxiosParamCreator: (configuration?: Configuration) 
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
      * @param {string} array name/uri of array that is url-encoded
      * @param {number} [length] (optional) limit character length of returned values
+     * @param {number} [endTimestamp] Milliseconds since Unix epoch, metadata will use open_at functionality to open array at the specific timestamp
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getArrayMetaDataJson: (namespace: string, array: string, length?: number, options?: any) => Promise<RequestArgs>;
+    getArrayMetaDataJson: (namespace: string, array: string, length?: number, endTimestamp?: number, options?: any) => Promise<RequestArgs>;
     /**
      * get metadata on an array
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
@@ -3579,6 +3734,15 @@ export declare const ArrayApiAxiosParamCreator: (configuration?: Configuration) 
      * @throws {RequiredError}
      */
     getArraysInNamespace: (namespace: string, options?: any) => Promise<RequestArgs>;
+    /**
+     * Get fragment end_timestamp on an array, will search for the closest end_timestamp to the timestamp asked
+     * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
+     * @param {string} array name/uri of array that is url-encoded
+     * @param {number} [endTimestamp] Milliseconds since Unix epoch
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getFragmentEndTimestamp: (namespace: string, array: string, endTimestamp?: number, options?: any) => Promise<RequestArgs>;
     /**
      *
      * @param {*} [options] Override http request option.
@@ -3719,6 +3883,16 @@ export declare const ArrayApiFp: (configuration?: Configuration) => {
      */
     arraysBrowserSharedSidebarGet(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArrayBrowserSidebar>>;
     /**
+     * retrieve a list of timestamps from the array fragment info listing in milliseconds, paginated
+     * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
+     * @param {string} array name/uri of array that is url-encoded
+     * @param {number} [page] pagination offset
+     * @param {number} [perPage] pagination limit
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    arraysNamespaceArrayEndTimestampsGet(namespace: string, array: string, page?: number, perPage?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArrayEndTimestampData>>;
+    /**
      * consolidate an array at a specified URI
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
      * @param {string} array name/uri of array that is url-encoded
@@ -3796,10 +3970,11 @@ export declare const ArrayApiFp: (configuration?: Configuration) => {
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
      * @param {string} array name/uri of array that is url-encoded
      * @param {number} [length] (optional) limit character length of returned values
+     * @param {number} [endTimestamp] Milliseconds since Unix epoch, metadata will use open_at functionality to open array at the specific timestamp
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getArrayMetaDataJson(namespace: string, array: string, length?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>>;
+    getArrayMetaDataJson(namespace: string, array: string, length?: number, endTimestamp?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>>;
     /**
      * get metadata on an array
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
@@ -3858,6 +4033,15 @@ export declare const ArrayApiFp: (configuration?: Configuration) => {
      * @throws {RequiredError}
      */
     getArraysInNamespace(namespace: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ArrayInfo>>>;
+    /**
+     * Get fragment end_timestamp on an array, will search for the closest end_timestamp to the timestamp asked
+     * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
+     * @param {string} array name/uri of array that is url-encoded
+     * @param {number} [endTimestamp] Milliseconds since Unix epoch
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getFragmentEndTimestamp(namespace: string, array: string, endTimestamp?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<number>>;
     /**
      *
      * @param {*} [options] Override http request option.
@@ -3998,6 +4182,16 @@ export declare const ArrayApiFactory: (configuration?: Configuration, basePath?:
      */
     arraysBrowserSharedSidebarGet(options?: any): AxiosPromise<ArrayBrowserSidebar>;
     /**
+     * retrieve a list of timestamps from the array fragment info listing in milliseconds, paginated
+     * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
+     * @param {string} array name/uri of array that is url-encoded
+     * @param {number} [page] pagination offset
+     * @param {number} [perPage] pagination limit
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    arraysNamespaceArrayEndTimestampsGet(namespace: string, array: string, page?: number, perPage?: number, options?: any): AxiosPromise<ArrayEndTimestampData>;
+    /**
      * consolidate an array at a specified URI
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
      * @param {string} array name/uri of array that is url-encoded
@@ -4075,10 +4269,11 @@ export declare const ArrayApiFactory: (configuration?: Configuration, basePath?:
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
      * @param {string} array name/uri of array that is url-encoded
      * @param {number} [length] (optional) limit character length of returned values
+     * @param {number} [endTimestamp] Milliseconds since Unix epoch, metadata will use open_at functionality to open array at the specific timestamp
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getArrayMetaDataJson(namespace: string, array: string, length?: number, options?: any): AxiosPromise<object>;
+    getArrayMetaDataJson(namespace: string, array: string, length?: number, endTimestamp?: number, options?: any): AxiosPromise<object>;
     /**
      * get metadata on an array
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
@@ -4137,6 +4332,15 @@ export declare const ArrayApiFactory: (configuration?: Configuration, basePath?:
      * @throws {RequiredError}
      */
     getArraysInNamespace(namespace: string, options?: any): AxiosPromise<Array<ArrayInfo>>;
+    /**
+     * Get fragment end_timestamp on an array, will search for the closest end_timestamp to the timestamp asked
+     * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
+     * @param {string} array name/uri of array that is url-encoded
+     * @param {number} [endTimestamp] Milliseconds since Unix epoch
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getFragmentEndTimestamp(namespace: string, array: string, endTimestamp?: number, options?: any): AxiosPromise<number>;
     /**
      *
      * @param {*} [options] Override http request option.
@@ -4286,6 +4490,17 @@ export declare class ArrayApi extends BaseAPI {
      */
     arraysBrowserSharedSidebarGet(options?: any): Promise<import("axios").AxiosResponse<ArrayBrowserSidebar>>;
     /**
+     * retrieve a list of timestamps from the array fragment info listing in milliseconds, paginated
+     * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
+     * @param {string} array name/uri of array that is url-encoded
+     * @param {number} [page] pagination offset
+     * @param {number} [perPage] pagination limit
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ArrayApi
+     */
+    arraysNamespaceArrayEndTimestampsGet(namespace: string, array: string, page?: number, perPage?: number, options?: any): Promise<import("axios").AxiosResponse<ArrayEndTimestampData>>;
+    /**
      * consolidate an array at a specified URI
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
      * @param {string} array name/uri of array that is url-encoded
@@ -4371,11 +4586,12 @@ export declare class ArrayApi extends BaseAPI {
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
      * @param {string} array name/uri of array that is url-encoded
      * @param {number} [length] (optional) limit character length of returned values
+     * @param {number} [endTimestamp] Milliseconds since Unix epoch, metadata will use open_at functionality to open array at the specific timestamp
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ArrayApi
      */
-    getArrayMetaDataJson(namespace: string, array: string, length?: number, options?: any): Promise<import("axios").AxiosResponse<object>>;
+    getArrayMetaDataJson(namespace: string, array: string, length?: number, endTimestamp?: number, options?: any): Promise<import("axios").AxiosResponse<object>>;
     /**
      * get metadata on an array
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
@@ -4441,6 +4657,16 @@ export declare class ArrayApi extends BaseAPI {
      * @memberof ArrayApi
      */
     getArraysInNamespace(namespace: string, options?: any): Promise<import("axios").AxiosResponse<ArrayInfo[]>>;
+    /**
+     * Get fragment end_timestamp on an array, will search for the closest end_timestamp to the timestamp asked
+     * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
+     * @param {string} array name/uri of array that is url-encoded
+     * @param {number} [endTimestamp] Milliseconds since Unix epoch
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ArrayApi
+     */
+    getFragmentEndTimestamp(namespace: string, array: string, endTimestamp?: number, options?: any): Promise<import("axios").AxiosResponse<number>>;
     /**
      *
      * @param {*} [options] Override http request option.
@@ -4564,33 +4790,177 @@ export declare class ArrayTasksApi extends BaseAPI {
  */
 export declare const FavoritesApiAxiosParamCreator: (configuration?: Configuration) => {
     /**
-     * Add a new favorite
+     * Add a new array favorite
      * @param {FavoriteCreate} [body]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    addFavorite: (body?: FavoriteCreate, options?: any) => Promise<RequestArgs>;
+    addArrayFavorite: (body?: FavoriteCreate, options?: any) => Promise<RequestArgs>;
     /**
-     * Delete specific favorite
-     * @param {string} id The uuid of the favorite
+     * Add a new ML model favorite
+     * @param {FavoriteCreate} [body]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    deleteFavorite: (id: string, options?: any) => Promise<RequestArgs>;
+    addMLModelFavorite: (body?: FavoriteCreate, options?: any) => Promise<RequestArgs>;
     /**
-     * Fetch specific favorite of a user
-     * @param {string} id The uuid of the favorite
+     * Add a new notebook favorite
+     * @param {FavoriteCreate} [body]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getFavorite: (id: string, options?: any) => Promise<RequestArgs>;
+    addNotebookFavorite: (body?: FavoriteCreate, options?: any) => Promise<RequestArgs>;
     /**
-     * Fetch all favorites of connected user
-     * @param {string} [type] The type of the desired favorites e.g. arrays
+     * Add a new UDF favorite
+     * @param {FavoriteCreate} [body]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    listFavorites: (type?: string, options?: any) => Promise<RequestArgs>;
+    addUDFFavorite: (body?: FavoriteCreate, options?: any) => Promise<RequestArgs>;
+    /**
+     * Delete specific array favorite
+     * @param {string} id The uuid of the array favorite
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    deleteArrayFavorite: (id: string, options?: any) => Promise<RequestArgs>;
+    /**
+     * Delete specific ML model favorite
+     * @param {string} id The uuid of the ML model favorite
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    deleteMLModelFavorite: (id: string, options?: any) => Promise<RequestArgs>;
+    /**
+     * Delete specific notebook favorite
+     * @param {string} id The uuid of the notebook favorite
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    deleteNotebookFavorite: (id: string, options?: any) => Promise<RequestArgs>;
+    /**
+     * Delete specific UDF favorite
+     * @param {string} id The uuid of the UDF favorite
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    deleteUDFFavorite: (id: string, options?: any) => Promise<RequestArgs>;
+    /**
+     * Fetch specific array favorite of a user
+     * @param {string} id The uuid of the array favorite
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getArrayFavorite: (id: string, options?: any) => Promise<RequestArgs>;
+    /**
+     * Fetch array favorite of a specific array
+     * @param {string} namespace The namespace of the array
+     * @param {string} name The name of the array
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getArrayFavoriteForArray: (namespace: string, name: string, options?: any) => Promise<RequestArgs>;
+    /**
+     * Fetch specific ML model favorite of a user
+     * @param {string} id The uuid of the ML model favorite
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getMLModelFavorite: (id: string, options?: any) => Promise<RequestArgs>;
+    /**
+     * Fetch ML model favorite of a specific ML model
+     * @param {string} namespace The namespace of the ML model
+     * @param {string} name The name of the ML model
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getMLModelFavoriteForMLModel: (namespace: string, name: string, options?: any) => Promise<RequestArgs>;
+    /**
+     * Fetch specific notebook favorite of a user
+     * @param {string} id The uuid of the notebook favorite
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getNotebookFavorite: (id: string, options?: any) => Promise<RequestArgs>;
+    /**
+     * Fetch notebook favorite of a specific notebook
+     * @param {string} namespace The namespace of the notebook
+     * @param {string} name The name of the notebook
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getNotebookFavoriteForNotebook: (namespace: string, name: string, options?: any) => Promise<RequestArgs>;
+    /**
+     * Fetch specific UDF favorite of a user
+     * @param {string} id The uuid of the UDF favorite
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getUDFFavorite: (id: string, options?: any) => Promise<RequestArgs>;
+    /**
+     * Fetch UDF favorite of a specific UDF
+     * @param {string} namespace The namespace of the UDF
+     * @param {string} name The name of the UDF
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getUDFFavoriteForUDF: (namespace: string, name: string, options?: any) => Promise<RequestArgs>;
+    /**
+     * Fetch all array favorites of connected user
+     * @param {number} [page] pagination offset
+     * @param {number} [perPage] pagination limit
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    listArrayFavorites: (page?: number, perPage?: number, options?: any) => Promise<RequestArgs>;
+    /**
+     * Fetch all favorite array uuids of connected user
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    listArrayFavoritesUUIDs: (options?: any) => Promise<RequestArgs>;
+    /**
+     * Fetch all ML models favorites of connected user
+     * @param {number} [page] pagination offset
+     * @param {number} [perPage] pagination limit
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    listMLModelFavorites: (page?: number, perPage?: number, options?: any) => Promise<RequestArgs>;
+    /**
+     * Fetch all favorite ML models uuids of connected user
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    listMLModelFavoritesUUIDs: (options?: any) => Promise<RequestArgs>;
+    /**
+     * Fetch all notebook favorites of connected user
+     * @param {number} [page] pagination offset
+     * @param {number} [perPage] pagination limit
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    listNotebookFavorites: (page?: number, perPage?: number, options?: any) => Promise<RequestArgs>;
+    /**
+     * Fetch all favorite notebook uuids of connected user
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    listNotebookFavoritesUUIDs: (options?: any) => Promise<RequestArgs>;
+    /**
+     * Fetch all UDF favorites of connected user
+     * @param {number} [page] pagination offset
+     * @param {number} [perPage] pagination limit
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    listUDFFavorites: (page?: number, perPage?: number, options?: any) => Promise<RequestArgs>;
+    /**
+     * Fetch all favorite UDF uuids of connected user
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    listUDFFavoritesUUIDs: (options?: any) => Promise<RequestArgs>;
 };
 /**
  * FavoritesApi - functional programming interface
@@ -4598,33 +4968,177 @@ export declare const FavoritesApiAxiosParamCreator: (configuration?: Configurati
  */
 export declare const FavoritesApiFp: (configuration?: Configuration) => {
     /**
-     * Add a new favorite
+     * Add a new array favorite
      * @param {FavoriteCreate} [body]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    addFavorite(body?: FavoriteCreate, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
+    addArrayFavorite(body?: FavoriteCreate, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
     /**
-     * Delete specific favorite
-     * @param {string} id The uuid of the favorite
+     * Add a new ML model favorite
+     * @param {FavoriteCreate} [body]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    deleteFavorite(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
+    addMLModelFavorite(body?: FavoriteCreate, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
     /**
-     * Fetch specific favorite of a user
-     * @param {string} id The uuid of the favorite
+     * Add a new notebook favorite
+     * @param {FavoriteCreate} [body]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getFavorite(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Favorite>>;
+    addNotebookFavorite(body?: FavoriteCreate, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
     /**
-     * Fetch all favorites of connected user
-     * @param {string} [type] The type of the desired favorites e.g. arrays
+     * Add a new UDF favorite
+     * @param {FavoriteCreate} [body]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    listFavorites(type?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<FavoritesData>>;
+    addUDFFavorite(body?: FavoriteCreate, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
+    /**
+     * Delete specific array favorite
+     * @param {string} id The uuid of the array favorite
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    deleteArrayFavorite(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
+    /**
+     * Delete specific ML model favorite
+     * @param {string} id The uuid of the ML model favorite
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    deleteMLModelFavorite(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
+    /**
+     * Delete specific notebook favorite
+     * @param {string} id The uuid of the notebook favorite
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    deleteNotebookFavorite(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
+    /**
+     * Delete specific UDF favorite
+     * @param {string} id The uuid of the UDF favorite
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    deleteUDFFavorite(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
+    /**
+     * Fetch specific array favorite of a user
+     * @param {string} id The uuid of the array favorite
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getArrayFavorite(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArrayFavorite>>;
+    /**
+     * Fetch array favorite of a specific array
+     * @param {string} namespace The namespace of the array
+     * @param {string} name The name of the array
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getArrayFavoriteForArray(namespace: string, name: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArrayFavorite>>;
+    /**
+     * Fetch specific ML model favorite of a user
+     * @param {string} id The uuid of the ML model favorite
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getMLModelFavorite(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<MLModelFavorite>>;
+    /**
+     * Fetch ML model favorite of a specific ML model
+     * @param {string} namespace The namespace of the ML model
+     * @param {string} name The name of the ML model
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getMLModelFavoriteForMLModel(namespace: string, name: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<MLModelFavorite>>;
+    /**
+     * Fetch specific notebook favorite of a user
+     * @param {string} id The uuid of the notebook favorite
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getNotebookFavorite(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<NotebookFavorite>>;
+    /**
+     * Fetch notebook favorite of a specific notebook
+     * @param {string} namespace The namespace of the notebook
+     * @param {string} name The name of the notebook
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getNotebookFavoriteForNotebook(namespace: string, name: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<NotebookFavorite>>;
+    /**
+     * Fetch specific UDF favorite of a user
+     * @param {string} id The uuid of the UDF favorite
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getUDFFavorite(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UDFFavorite>>;
+    /**
+     * Fetch UDF favorite of a specific UDF
+     * @param {string} namespace The namespace of the UDF
+     * @param {string} name The name of the UDF
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getUDFFavoriteForUDF(namespace: string, name: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UDFFavorite>>;
+    /**
+     * Fetch all array favorites of connected user
+     * @param {number} [page] pagination offset
+     * @param {number} [perPage] pagination limit
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    listArrayFavorites(page?: number, perPage?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArrayFavoritesData>>;
+    /**
+     * Fetch all favorite array uuids of connected user
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    listArrayFavoritesUUIDs(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ArrayFavorite>>>;
+    /**
+     * Fetch all ML models favorites of connected user
+     * @param {number} [page] pagination offset
+     * @param {number} [perPage] pagination limit
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    listMLModelFavorites(page?: number, perPage?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<MLModelFavoritesData>>;
+    /**
+     * Fetch all favorite ML models uuids of connected user
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    listMLModelFavoritesUUIDs(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<MLModelFavorite>>>;
+    /**
+     * Fetch all notebook favorites of connected user
+     * @param {number} [page] pagination offset
+     * @param {number} [perPage] pagination limit
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    listNotebookFavorites(page?: number, perPage?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<NotebookFavoritesData>>;
+    /**
+     * Fetch all favorite notebook uuids of connected user
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    listNotebookFavoritesUUIDs(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<NotebookFavorite>>>;
+    /**
+     * Fetch all UDF favorites of connected user
+     * @param {number} [page] pagination offset
+     * @param {number} [perPage] pagination limit
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    listUDFFavorites(page?: number, perPage?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UDFFavoritesData>>;
+    /**
+     * Fetch all favorite UDF uuids of connected user
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    listUDFFavoritesUUIDs(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<UDFFavorite>>>;
 };
 /**
  * FavoritesApi - factory interface
@@ -4632,33 +5146,177 @@ export declare const FavoritesApiFp: (configuration?: Configuration) => {
  */
 export declare const FavoritesApiFactory: (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) => {
     /**
-     * Add a new favorite
+     * Add a new array favorite
      * @param {FavoriteCreate} [body]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    addFavorite(body?: FavoriteCreate, options?: any): AxiosPromise<void>;
+    addArrayFavorite(body?: FavoriteCreate, options?: any): AxiosPromise<void>;
     /**
-     * Delete specific favorite
-     * @param {string} id The uuid of the favorite
+     * Add a new ML model favorite
+     * @param {FavoriteCreate} [body]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    deleteFavorite(id: string, options?: any): AxiosPromise<void>;
+    addMLModelFavorite(body?: FavoriteCreate, options?: any): AxiosPromise<void>;
     /**
-     * Fetch specific favorite of a user
-     * @param {string} id The uuid of the favorite
+     * Add a new notebook favorite
+     * @param {FavoriteCreate} [body]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getFavorite(id: string, options?: any): AxiosPromise<Favorite>;
+    addNotebookFavorite(body?: FavoriteCreate, options?: any): AxiosPromise<void>;
     /**
-     * Fetch all favorites of connected user
-     * @param {string} [type] The type of the desired favorites e.g. arrays
+     * Add a new UDF favorite
+     * @param {FavoriteCreate} [body]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    listFavorites(type?: string, options?: any): AxiosPromise<FavoritesData>;
+    addUDFFavorite(body?: FavoriteCreate, options?: any): AxiosPromise<void>;
+    /**
+     * Delete specific array favorite
+     * @param {string} id The uuid of the array favorite
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    deleteArrayFavorite(id: string, options?: any): AxiosPromise<void>;
+    /**
+     * Delete specific ML model favorite
+     * @param {string} id The uuid of the ML model favorite
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    deleteMLModelFavorite(id: string, options?: any): AxiosPromise<void>;
+    /**
+     * Delete specific notebook favorite
+     * @param {string} id The uuid of the notebook favorite
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    deleteNotebookFavorite(id: string, options?: any): AxiosPromise<void>;
+    /**
+     * Delete specific UDF favorite
+     * @param {string} id The uuid of the UDF favorite
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    deleteUDFFavorite(id: string, options?: any): AxiosPromise<void>;
+    /**
+     * Fetch specific array favorite of a user
+     * @param {string} id The uuid of the array favorite
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getArrayFavorite(id: string, options?: any): AxiosPromise<ArrayFavorite>;
+    /**
+     * Fetch array favorite of a specific array
+     * @param {string} namespace The namespace of the array
+     * @param {string} name The name of the array
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getArrayFavoriteForArray(namespace: string, name: string, options?: any): AxiosPromise<ArrayFavorite>;
+    /**
+     * Fetch specific ML model favorite of a user
+     * @param {string} id The uuid of the ML model favorite
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getMLModelFavorite(id: string, options?: any): AxiosPromise<MLModelFavorite>;
+    /**
+     * Fetch ML model favorite of a specific ML model
+     * @param {string} namespace The namespace of the ML model
+     * @param {string} name The name of the ML model
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getMLModelFavoriteForMLModel(namespace: string, name: string, options?: any): AxiosPromise<MLModelFavorite>;
+    /**
+     * Fetch specific notebook favorite of a user
+     * @param {string} id The uuid of the notebook favorite
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getNotebookFavorite(id: string, options?: any): AxiosPromise<NotebookFavorite>;
+    /**
+     * Fetch notebook favorite of a specific notebook
+     * @param {string} namespace The namespace of the notebook
+     * @param {string} name The name of the notebook
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getNotebookFavoriteForNotebook(namespace: string, name: string, options?: any): AxiosPromise<NotebookFavorite>;
+    /**
+     * Fetch specific UDF favorite of a user
+     * @param {string} id The uuid of the UDF favorite
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getUDFFavorite(id: string, options?: any): AxiosPromise<UDFFavorite>;
+    /**
+     * Fetch UDF favorite of a specific UDF
+     * @param {string} namespace The namespace of the UDF
+     * @param {string} name The name of the UDF
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getUDFFavoriteForUDF(namespace: string, name: string, options?: any): AxiosPromise<UDFFavorite>;
+    /**
+     * Fetch all array favorites of connected user
+     * @param {number} [page] pagination offset
+     * @param {number} [perPage] pagination limit
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    listArrayFavorites(page?: number, perPage?: number, options?: any): AxiosPromise<ArrayFavoritesData>;
+    /**
+     * Fetch all favorite array uuids of connected user
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    listArrayFavoritesUUIDs(options?: any): AxiosPromise<Array<ArrayFavorite>>;
+    /**
+     * Fetch all ML models favorites of connected user
+     * @param {number} [page] pagination offset
+     * @param {number} [perPage] pagination limit
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    listMLModelFavorites(page?: number, perPage?: number, options?: any): AxiosPromise<MLModelFavoritesData>;
+    /**
+     * Fetch all favorite ML models uuids of connected user
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    listMLModelFavoritesUUIDs(options?: any): AxiosPromise<Array<MLModelFavorite>>;
+    /**
+     * Fetch all notebook favorites of connected user
+     * @param {number} [page] pagination offset
+     * @param {number} [perPage] pagination limit
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    listNotebookFavorites(page?: number, perPage?: number, options?: any): AxiosPromise<NotebookFavoritesData>;
+    /**
+     * Fetch all favorite notebook uuids of connected user
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    listNotebookFavoritesUUIDs(options?: any): AxiosPromise<Array<NotebookFavorite>>;
+    /**
+     * Fetch all UDF favorites of connected user
+     * @param {number} [page] pagination offset
+     * @param {number} [perPage] pagination limit
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    listUDFFavorites(page?: number, perPage?: number, options?: any): AxiosPromise<UDFFavoritesData>;
+    /**
+     * Fetch all favorite UDF uuids of connected user
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    listUDFFavoritesUUIDs(options?: any): AxiosPromise<Array<UDFFavorite>>;
 };
 /**
  * FavoritesApi - object-oriented interface
@@ -4668,37 +5326,201 @@ export declare const FavoritesApiFactory: (configuration?: Configuration, basePa
  */
 export declare class FavoritesApi extends BaseAPI {
     /**
-     * Add a new favorite
+     * Add a new array favorite
      * @param {FavoriteCreate} [body]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof FavoritesApi
      */
-    addFavorite(body?: FavoriteCreate, options?: any): Promise<import("axios").AxiosResponse<void>>;
+    addArrayFavorite(body?: FavoriteCreate, options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**
-     * Delete specific favorite
-     * @param {string} id The uuid of the favorite
+     * Add a new ML model favorite
+     * @param {FavoriteCreate} [body]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof FavoritesApi
      */
-    deleteFavorite(id: string, options?: any): Promise<import("axios").AxiosResponse<void>>;
+    addMLModelFavorite(body?: FavoriteCreate, options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**
-     * Fetch specific favorite of a user
-     * @param {string} id The uuid of the favorite
+     * Add a new notebook favorite
+     * @param {FavoriteCreate} [body]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof FavoritesApi
      */
-    getFavorite(id: string, options?: any): Promise<import("axios").AxiosResponse<Favorite>>;
+    addNotebookFavorite(body?: FavoriteCreate, options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**
-     * Fetch all favorites of connected user
-     * @param {string} [type] The type of the desired favorites e.g. arrays
+     * Add a new UDF favorite
+     * @param {FavoriteCreate} [body]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof FavoritesApi
      */
-    listFavorites(type?: string, options?: any): Promise<import("axios").AxiosResponse<FavoritesData>>;
+    addUDFFavorite(body?: FavoriteCreate, options?: any): Promise<import("axios").AxiosResponse<void>>;
+    /**
+     * Delete specific array favorite
+     * @param {string} id The uuid of the array favorite
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof FavoritesApi
+     */
+    deleteArrayFavorite(id: string, options?: any): Promise<import("axios").AxiosResponse<void>>;
+    /**
+     * Delete specific ML model favorite
+     * @param {string} id The uuid of the ML model favorite
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof FavoritesApi
+     */
+    deleteMLModelFavorite(id: string, options?: any): Promise<import("axios").AxiosResponse<void>>;
+    /**
+     * Delete specific notebook favorite
+     * @param {string} id The uuid of the notebook favorite
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof FavoritesApi
+     */
+    deleteNotebookFavorite(id: string, options?: any): Promise<import("axios").AxiosResponse<void>>;
+    /**
+     * Delete specific UDF favorite
+     * @param {string} id The uuid of the UDF favorite
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof FavoritesApi
+     */
+    deleteUDFFavorite(id: string, options?: any): Promise<import("axios").AxiosResponse<void>>;
+    /**
+     * Fetch specific array favorite of a user
+     * @param {string} id The uuid of the array favorite
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof FavoritesApi
+     */
+    getArrayFavorite(id: string, options?: any): Promise<import("axios").AxiosResponse<ArrayFavorite>>;
+    /**
+     * Fetch array favorite of a specific array
+     * @param {string} namespace The namespace of the array
+     * @param {string} name The name of the array
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof FavoritesApi
+     */
+    getArrayFavoriteForArray(namespace: string, name: string, options?: any): Promise<import("axios").AxiosResponse<ArrayFavorite>>;
+    /**
+     * Fetch specific ML model favorite of a user
+     * @param {string} id The uuid of the ML model favorite
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof FavoritesApi
+     */
+    getMLModelFavorite(id: string, options?: any): Promise<import("axios").AxiosResponse<MLModelFavorite>>;
+    /**
+     * Fetch ML model favorite of a specific ML model
+     * @param {string} namespace The namespace of the ML model
+     * @param {string} name The name of the ML model
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof FavoritesApi
+     */
+    getMLModelFavoriteForMLModel(namespace: string, name: string, options?: any): Promise<import("axios").AxiosResponse<MLModelFavorite>>;
+    /**
+     * Fetch specific notebook favorite of a user
+     * @param {string} id The uuid of the notebook favorite
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof FavoritesApi
+     */
+    getNotebookFavorite(id: string, options?: any): Promise<import("axios").AxiosResponse<NotebookFavorite>>;
+    /**
+     * Fetch notebook favorite of a specific notebook
+     * @param {string} namespace The namespace of the notebook
+     * @param {string} name The name of the notebook
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof FavoritesApi
+     */
+    getNotebookFavoriteForNotebook(namespace: string, name: string, options?: any): Promise<import("axios").AxiosResponse<NotebookFavorite>>;
+    /**
+     * Fetch specific UDF favorite of a user
+     * @param {string} id The uuid of the UDF favorite
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof FavoritesApi
+     */
+    getUDFFavorite(id: string, options?: any): Promise<import("axios").AxiosResponse<UDFFavorite>>;
+    /**
+     * Fetch UDF favorite of a specific UDF
+     * @param {string} namespace The namespace of the UDF
+     * @param {string} name The name of the UDF
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof FavoritesApi
+     */
+    getUDFFavoriteForUDF(namespace: string, name: string, options?: any): Promise<import("axios").AxiosResponse<UDFFavorite>>;
+    /**
+     * Fetch all array favorites of connected user
+     * @param {number} [page] pagination offset
+     * @param {number} [perPage] pagination limit
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof FavoritesApi
+     */
+    listArrayFavorites(page?: number, perPage?: number, options?: any): Promise<import("axios").AxiosResponse<ArrayFavoritesData>>;
+    /**
+     * Fetch all favorite array uuids of connected user
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof FavoritesApi
+     */
+    listArrayFavoritesUUIDs(options?: any): Promise<import("axios").AxiosResponse<ArrayFavorite[]>>;
+    /**
+     * Fetch all ML models favorites of connected user
+     * @param {number} [page] pagination offset
+     * @param {number} [perPage] pagination limit
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof FavoritesApi
+     */
+    listMLModelFavorites(page?: number, perPage?: number, options?: any): Promise<import("axios").AxiosResponse<MLModelFavoritesData>>;
+    /**
+     * Fetch all favorite ML models uuids of connected user
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof FavoritesApi
+     */
+    listMLModelFavoritesUUIDs(options?: any): Promise<import("axios").AxiosResponse<MLModelFavorite[]>>;
+    /**
+     * Fetch all notebook favorites of connected user
+     * @param {number} [page] pagination offset
+     * @param {number} [perPage] pagination limit
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof FavoritesApi
+     */
+    listNotebookFavorites(page?: number, perPage?: number, options?: any): Promise<import("axios").AxiosResponse<NotebookFavoritesData>>;
+    /**
+     * Fetch all favorite notebook uuids of connected user
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof FavoritesApi
+     */
+    listNotebookFavoritesUUIDs(options?: any): Promise<import("axios").AxiosResponse<NotebookFavorite[]>>;
+    /**
+     * Fetch all UDF favorites of connected user
+     * @param {number} [page] pagination offset
+     * @param {number} [perPage] pagination limit
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof FavoritesApi
+     */
+    listUDFFavorites(page?: number, perPage?: number, options?: any): Promise<import("axios").AxiosResponse<UDFFavoritesData>>;
+    /**
+     * Fetch all favorite UDF uuids of connected user
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof FavoritesApi
+     */
+    listUDFFavoritesUUIDs(options?: any): Promise<import("axios").AxiosResponse<UDFFavorite[]>>;
 }
 /**
  * InvitationApi - axios parameter creator
@@ -5083,13 +5905,15 @@ export declare class NotebookApi extends BaseAPI {
  */
 export declare const NotebooksApiAxiosParamCreator: (configuration?: Configuration) => {
     /**
-     * retrieve a list of timestamps from the array fragment info listing in milliseconds
+     * retrieve a list of timestamps from the array fragment info listing in milliseconds, paginated
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
      * @param {string} array name/uri of array that is url-encoded
+     * @param {number} [page] pagination offset
+     * @param {number} [perPage] pagination limit
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    notebooksNamespaceArrayVersionsGet: (namespace: string, array: string, options?: any) => Promise<RequestArgs>;
+    notebooksNamespaceArrayEndTimestampsGet: (namespace: string, array: string, page?: number, perPage?: number, options?: any) => Promise<RequestArgs>;
 };
 /**
  * NotebooksApi - functional programming interface
@@ -5097,13 +5921,15 @@ export declare const NotebooksApiAxiosParamCreator: (configuration?: Configurati
  */
 export declare const NotebooksApiFp: (configuration?: Configuration) => {
     /**
-     * retrieve a list of timestamps from the array fragment info listing in milliseconds
+     * retrieve a list of timestamps from the array fragment info listing in milliseconds, paginated
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
      * @param {string} array name/uri of array that is url-encoded
+     * @param {number} [page] pagination offset
+     * @param {number} [perPage] pagination limit
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    notebooksNamespaceArrayVersionsGet(namespace: string, array: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<number>>>;
+    notebooksNamespaceArrayEndTimestampsGet(namespace: string, array: string, page?: number, perPage?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArrayEndTimestampData>>;
 };
 /**
  * NotebooksApi - factory interface
@@ -5111,13 +5937,15 @@ export declare const NotebooksApiFp: (configuration?: Configuration) => {
  */
 export declare const NotebooksApiFactory: (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) => {
     /**
-     * retrieve a list of timestamps from the array fragment info listing in milliseconds
+     * retrieve a list of timestamps from the array fragment info listing in milliseconds, paginated
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
      * @param {string} array name/uri of array that is url-encoded
+     * @param {number} [page] pagination offset
+     * @param {number} [perPage] pagination limit
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    notebooksNamespaceArrayVersionsGet(namespace: string, array: string, options?: any): AxiosPromise<Array<number>>;
+    notebooksNamespaceArrayEndTimestampsGet(namespace: string, array: string, page?: number, perPage?: number, options?: any): AxiosPromise<ArrayEndTimestampData>;
 };
 /**
  * NotebooksApi - object-oriented interface
@@ -5127,14 +5955,16 @@ export declare const NotebooksApiFactory: (configuration?: Configuration, basePa
  */
 export declare class NotebooksApi extends BaseAPI {
     /**
-     * retrieve a list of timestamps from the array fragment info listing in milliseconds
+     * retrieve a list of timestamps from the array fragment info listing in milliseconds, paginated
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
      * @param {string} array name/uri of array that is url-encoded
+     * @param {number} [page] pagination offset
+     * @param {number} [perPage] pagination limit
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof NotebooksApi
      */
-    notebooksNamespaceArrayVersionsGet(namespace: string, array: string, options?: any): Promise<import("axios").AxiosResponse<number[]>>;
+    notebooksNamespaceArrayEndTimestampsGet(namespace: string, array: string, page?: number, perPage?: number, options?: any): Promise<import("axios").AxiosResponse<ArrayEndTimestampData>>;
 }
 /**
  * OrganizationApi - axios parameter creator
@@ -6277,13 +7107,15 @@ export declare const UdfApiAxiosParamCreator: (configuration?: Configuration) =>
      */
     submitUDF: (namespace: string, array: string, udf: MultiArrayUDF, xPayer?: string, acceptEncoding?: string, v2?: string, options?: any) => Promise<RequestArgs>;
     /**
-     * retrieve a list of timestamps from the array fragment info listing in milliseconds
+     * retrieve a list of timestamps from the array fragment info listing in milliseconds, paginated
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
      * @param {string} array name/uri of array that is url-encoded
+     * @param {number} [page] pagination offset
+     * @param {number} [perPage] pagination limit
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    udfNamespaceArrayVersionsGet: (namespace: string, array: string, options?: any) => Promise<RequestArgs>;
+    udfNamespaceArrayEndTimestampsGet: (namespace: string, array: string, page?: number, perPage?: number, options?: any) => Promise<RequestArgs>;
     /**
      * updated an existing registerd UDF in the given namespace
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
@@ -6372,13 +7204,15 @@ export declare const UdfApiFp: (configuration?: Configuration) => {
      */
     submitUDF(namespace: string, array: string, udf: MultiArrayUDF, xPayer?: string, acceptEncoding?: string, v2?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>>;
     /**
-     * retrieve a list of timestamps from the array fragment info listing in milliseconds
+     * retrieve a list of timestamps from the array fragment info listing in milliseconds, paginated
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
      * @param {string} array name/uri of array that is url-encoded
+     * @param {number} [page] pagination offset
+     * @param {number} [perPage] pagination limit
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    udfNamespaceArrayVersionsGet(namespace: string, array: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<number>>>;
+    udfNamespaceArrayEndTimestampsGet(namespace: string, array: string, page?: number, perPage?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArrayEndTimestampData>>;
     /**
      * updated an existing registerd UDF in the given namespace
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
@@ -6467,13 +7301,15 @@ export declare const UdfApiFactory: (configuration?: Configuration, basePath?: s
      */
     submitUDF(namespace: string, array: string, udf: MultiArrayUDF, xPayer?: string, acceptEncoding?: string, v2?: string, options?: any): AxiosPromise<any>;
     /**
-     * retrieve a list of timestamps from the array fragment info listing in milliseconds
+     * retrieve a list of timestamps from the array fragment info listing in milliseconds, paginated
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
      * @param {string} array name/uri of array that is url-encoded
+     * @param {number} [page] pagination offset
+     * @param {number} [perPage] pagination limit
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    udfNamespaceArrayVersionsGet(namespace: string, array: string, options?: any): AxiosPromise<Array<number>>;
+    udfNamespaceArrayEndTimestampsGet(namespace: string, array: string, page?: number, perPage?: number, options?: any): AxiosPromise<ArrayEndTimestampData>;
     /**
      * updated an existing registerd UDF in the given namespace
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
@@ -6572,14 +7408,16 @@ export declare class UdfApi extends BaseAPI {
      */
     submitUDF(namespace: string, array: string, udf: MultiArrayUDF, xPayer?: string, acceptEncoding?: string, v2?: string, options?: any): Promise<import("axios").AxiosResponse<any>>;
     /**
-     * retrieve a list of timestamps from the array fragment info listing in milliseconds
+     * retrieve a list of timestamps from the array fragment info listing in milliseconds, paginated
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
      * @param {string} array name/uri of array that is url-encoded
+     * @param {number} [page] pagination offset
+     * @param {number} [perPage] pagination limit
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UdfApi
      */
-    udfNamespaceArrayVersionsGet(namespace: string, array: string, options?: any): Promise<import("axios").AxiosResponse<number[]>>;
+    udfNamespaceArrayEndTimestampsGet(namespace: string, array: string, page?: number, perPage?: number, options?: any): Promise<import("axios").AxiosResponse<ArrayEndTimestampData>>;
     /**
      * updated an existing registerd UDF in the given namespace
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)

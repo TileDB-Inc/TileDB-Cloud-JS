@@ -4,5 +4,5 @@
  * @param offsets e.g. [0, 3, 4]
  * @returns [[1,2,3], 4]
  */
-declare const groupValuesByOffsetBytes: (vals: any[], offsets: number[]) => any[];
+declare const groupValuesByOffsetBytes: <T>(vals: T[], offsets: number[]) => (T | T[])[];
 export default groupValuesByOffsetBytes;
