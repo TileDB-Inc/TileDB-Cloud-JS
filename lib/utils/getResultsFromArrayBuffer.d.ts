@@ -11,6 +11,10 @@ export interface Options {
      * to avoid expensive calculations
      */
     ignoreOffsets?: boolean;
+    /**
+     * Return only given attributes/dimensions
+     */
+    attributes?: string[];
 }
 /**
  * Convert an ArrayBuffer to a map of attributes with their results

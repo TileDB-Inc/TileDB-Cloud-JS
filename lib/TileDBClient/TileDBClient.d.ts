@@ -1,8 +1,14 @@
-import { ArrayApi, ArrayInfoUpdate, ArraySharing } from "../v1";
-import { ConfigurationParameters } from "../v2";
+import { NotebookApi } from "./../v1/api";
+import { ArrayApi, ArrayInfoUpdate, ArraySharing, OrganizationApi, TasksApi, UserApi } from "../v1";
+import { ConfigurationParameters, Configuration } from "../v2";
 declare class TileDBClient {
-    config: ConfigurationParameters;
+    config: Configuration;
+    configV2: Configuration;
     ArrayApi: ArrayApi;
+    OrganizationApi: OrganizationApi;
+    UserApi: UserApi;
+    NotebookApi: NotebookApi;
+    TasksApi: TasksApi;
     constructor(params: ConfigurationParameters);
     info(namespace: string, array: string, options?: any): Promise<import("axios").AxiosResponse<import("../v1").ArrayInfo, any>>;
     arrayActivity(namespace: string, array: string, start?: number, end?: number, eventTypes?: string, taskId?: string, hasTaskId?: boolean, options?: any): Promise<import("axios").AxiosResponse<import("../v1").ArrayActivityLog[], any>>;
@@ -62,5 +68,28 @@ declare class TileDBClient {
         fileProperty?: string[];
         options?: any;
     }): Promise<import("axios").AxiosResponse<import("../v1").ArrayBrowserData, any>>;
+    /**
+     * Organization to fetch
+     */
+    organization(organization: string, options?: any): Promise<import("axios").AxiosResponse<import("../v1").Organization, any>>;
+    /**
+     * List of all organizations user is part of
+     */
+    organizations(options?: any): Promise<import("axios").AxiosResponse<import("../v1").Organization[], any>>;
+    /**
+     * Your user profile
+     */
+    userProfile(options?: any): Promise<import("axios").AxiosResponse<import("../v1").User, any>>;
+    /**
+     * Rename a notebook's name
+     */
+    renameNotebook(namespace: string, array: string, notebookName: string, options?: any): Promise<import("axios").AxiosResponse<void, any>>;
+    task(id: string, options?: any): Promise<import("axios").AxiosResponse<import("../v1").ArrayTask, any>>;
+    downloadNotebookContents(): string;
+    downloadNotebookToFile(): Promise<string>;
+    uploadNotebookContents(): void;
+    uploadNotebookFromFile(): void;
+    lastSqlTask(): void;
+    lastUDFTask(): void;
 }
 export default TileDBClient;

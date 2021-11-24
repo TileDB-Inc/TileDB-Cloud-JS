@@ -6,6 +6,7 @@ import getByteLengthOfDatatype from "./getByteLengthOfDatatype";
 import emptyRangesToDomain from "./emptyRangesToDomain";
 import isAttributeVarLength from "./isAttributeVarLength";
 import isAttributeNullable from "./isAttributeNullable";
+import { Options } from "./getResultsFromArrayBuffer";
 
 const createAttributeBufferHeaders = (
   attributes: Array<Attribute | Dimension>,
@@ -84,7 +85,8 @@ const getMaxByteSizeOfAttribute = (attribute: Attribute | Dimension) => {
 const dataToQuery = (
   data: QueryData,
   attributes: Attribute[],
-  dimensions: Dimension[]
+  dimensions: Dimension[],
+  options: Options
 ): Query => {
   if (!data.layout) {
     return data as any;
@@ -93,8 +95,15 @@ const dataToQuery = (
   // Use default dimension's Domain for ranges that are set empty []
   const rangesWithDomain = emptyRangesToDomain(data.ranges, dimensions);
   const ranges = getRanges(rangesWithDomain, dimensions);
+  const attributesAndDimensions = [...attributes, ...dimensions];
+  // if user sets options.attributes we filter out all the other unwanted dimensions / attributes
+  const selectedAttributes = options.attributes
+    ? attributesAndDimensions.filter((attr) =>
+        options.attributes.includes(attr.name)
+      )
+    : attributesAndDimensions;
   const attributeBufferHeaders = createAttributeBufferHeaders(
-    [...attributes, ...dimensions],
+    selectedAttributes,
     bufferSize
   );
 
