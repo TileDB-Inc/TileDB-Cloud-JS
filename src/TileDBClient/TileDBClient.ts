@@ -7,7 +7,9 @@ import {
   TasksApi,
   UserApi,
 } from "../v1";
-import { ConfigurationParameters, Configuration } from "../v2";
+import UDF from "../UDF";
+import { ConfigurationParameters, Configuration, Layout } from "../v2";
+import TileDBQuery from "../TileDBQuery";
 
 class TileDBClient {
   config: Configuration;
@@ -17,6 +19,7 @@ class TileDBClient {
   UserApi: UserApi;
   NotebookApi: NotebookApi;
   TasksApi: TasksApi;
+  udf: UDF;
 
   constructor(params: ConfigurationParameters) {
     const config = new Configuration(params);
@@ -34,6 +37,7 @@ class TileDBClient {
     this.UserApi = new UserApi(params);
     this.NotebookApi = new NotebookApi(params);
     this.TasksApi = new TasksApi(params);
+    this.udf = new UDF(this.config);
   }
 
   public info(namespace: string, array: string, options?: any) {
@@ -293,14 +297,30 @@ class TileDBClient {
     return this.TasksApi.taskIdGet(id, options);
   }
 
-  // TODO: Fix queries to get only one attribute (contents)
-  public downloadNotebookContents() {
-    return "";
+  public async downloadNotebookContents(namespace: string, notebook: string) {
+    const notebookInfo = await this.info(namespace, notebook);
+    const tiledbQuery = new TileDBQuery(this.configV2);
+    const notebookSize = notebookInfo.data.size;
+    const query = {
+      layout: Layout.RowMajor,
+      ranges: [[]],
+      // TODO: What is the correct buffer size?
+      bufferSize: notebookSize / 2,
+      attributes: ["contents"],
+    };
+
+    const gen = tiledbQuery.ReadQuery(namespace, notebook, query);
+    const { value } = await gen.next();
+    const buffer = Uint8Array.from((value as { contents: number[] }).contents);
+    const decoder = new TextDecoder();
+    const json = decoder.decode(buffer);
+
+    return json;
   }
 
   // TODO: Download contents as file (https://github.com/eligrey/FileSaver.js)
-  public async downloadNotebookToFile() {
-    const contents = await this.downloadNotebookContents();
+  public async downloadNotebookToFile(namespace: string, notebook: string) {
+    const contents = await this.info(namespace, notebook);
     return contents;
   }
 

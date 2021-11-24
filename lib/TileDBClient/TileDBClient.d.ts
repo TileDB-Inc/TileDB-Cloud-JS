@@ -1,5 +1,6 @@
 import { NotebookApi } from "./../v1/api";
 import { ArrayApi, ArrayInfoUpdate, ArraySharing, OrganizationApi, TasksApi, UserApi } from "../v1";
+import UDF from "../UDF";
 import { ConfigurationParameters, Configuration } from "../v2";
 declare class TileDBClient {
     config: Configuration;
@@ -9,6 +10,7 @@ declare class TileDBClient {
     UserApi: UserApi;
     NotebookApi: NotebookApi;
     TasksApi: TasksApi;
+    udf: UDF;
     constructor(params: ConfigurationParameters);
     info(namespace: string, array: string, options?: any): Promise<import("axios").AxiosResponse<import("../v1").ArrayInfo, any>>;
     arrayActivity(namespace: string, array: string, start?: number, end?: number, eventTypes?: string, taskId?: string, hasTaskId?: boolean, options?: any): Promise<import("axios").AxiosResponse<import("../v1").ArrayActivityLog[], any>>;
@@ -85,8 +87,8 @@ declare class TileDBClient {
      */
     renameNotebook(namespace: string, array: string, notebookName: string, options?: any): Promise<import("axios").AxiosResponse<void, any>>;
     task(id: string, options?: any): Promise<import("axios").AxiosResponse<import("../v1").ArrayTask, any>>;
-    downloadNotebookContents(): string;
-    downloadNotebookToFile(): Promise<string>;
+    downloadNotebookContents(namespace: string, notebook: string): Promise<string>;
+    downloadNotebookToFile(namespace: string, notebook: string): Promise<import("axios").AxiosResponse<import("../v1").ArrayInfo, any>>;
     uploadNotebookContents(): void;
     uploadNotebookFromFile(): void;
     lastSqlTask(): void;
