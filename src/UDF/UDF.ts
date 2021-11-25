@@ -63,7 +63,7 @@ class UDF {
     return this.API.updateUDFInfo(namespace, name, udfObject);
   }
 
-  public updateSignleArrayUdf(
+  public updateSingleArrayUdf(
     namespace: string,
     name: string,
     udf: Omit<UDFInfoUpdate, "type">

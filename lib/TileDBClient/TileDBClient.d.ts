@@ -15,8 +15,8 @@ declare class TileDBClient {
     info(namespace: string, array: string, options?: any): Promise<import("axios").AxiosResponse<import("../v1").ArrayInfo>>;
     arrayActivity(namespace: string, array: string, start?: number, end?: number, eventTypes?: string, taskId?: string, hasTaskId?: boolean, options?: any): Promise<import("axios").AxiosResponse<import("../v1").ArrayActivityLog[]>>;
     deregisterArray(namespace: string, array: string, options?: any): Promise<import("axios").AxiosResponse<void>>;
-    listSharedWith(namespace: string, array: string, options?: any): Promise<import("axios").AxiosResponse<ArraySharing[]>>;
     registerArray(namespace: string, array: string, arrayMetadata: ArrayInfoUpdate, options?: any): Promise<import("axios").AxiosResponse<void>>;
+    listSharedWith(namespace: string, array: string, options?: any): Promise<import("axios").AxiosResponse<ArraySharing[]>>;
     shareArray(namespace: string, array: string, arraySharing: ArraySharing, options?: any): Promise<import("axios").AxiosResponse<void>>;
     unshareArray(namespace: string, array: string, namespaceToUnshare: string, options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**

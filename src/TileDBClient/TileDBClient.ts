@@ -71,10 +71,6 @@ class TileDBClient {
     return this.ArrayApi.deregisterArray(namespace, array, options);
   }
 
-  public listSharedWith(namespace: string, array: string, options?: any) {
-    return this.ArrayApi.getArraySharingPolicies(namespace, array, options);
-  }
-
   public registerArray(
     namespace: string,
     array: string,
@@ -87,6 +83,10 @@ class TileDBClient {
       arrayMetadata,
       options
     );
+  }
+
+  public listSharedWith(namespace: string, array: string, options?: any) {
+    return this.ArrayApi.getArraySharingPolicies(namespace, array, options);
   }
 
   public shareArray(
