@@ -98,10 +98,15 @@ class TileDBClient {
     return this.ArrayApi.shareArray(namespace, array, arraySharing, options);
   }
 
-  public unshareArray(namespace: string, array: string, options?: any) {
+  public unshareArray(
+    namespace: string,
+    array: string,
+    namespaceToUnshare: string,
+    options?: any
+  ) {
     const noActions = {
       actions: [],
-      namespace,
+      namespace: namespaceToUnshare,
     };
     return this.ArrayApi.shareArray(namespace, array, noActions, options);
   }
@@ -317,6 +322,7 @@ class TileDBClient {
     const decoder = new TextDecoder();
     const json = decoder.decode(buffer);
 
+    // Replace unprintable characters
     return json.replace(/[^\x20-\x7E]/g, "");
   }
 

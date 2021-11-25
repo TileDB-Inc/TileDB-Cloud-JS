@@ -18,7 +18,7 @@ declare class TileDBClient {
     listSharedWith(namespace: string, array: string, options?: any): Promise<import("axios").AxiosResponse<ArraySharing[]>>;
     registerArray(namespace: string, array: string, arrayMetadata: ArrayInfoUpdate, options?: any): Promise<import("axios").AxiosResponse<void>>;
     shareArray(namespace: string, array: string, arraySharing: ArraySharing, options?: any): Promise<import("axios").AxiosResponse<void>>;
-    unshareArray(namespace: string, array: string, options?: any): Promise<import("axios").AxiosResponse<void>>;
+    unshareArray(namespace: string, array: string, namespaceToUnshare: string, options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**
      * List arrays in a user account
      */

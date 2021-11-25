@@ -87,9 +87,14 @@ class UDF {
     return this.API.shareUDFInfo(namespace, udfName, udfSharing);
   }
 
-  public unshare(namespace: string, udfName: string) {
+  public unshare(
+    namespace: string,
+    udfName: string,
+    namespaceToUnshare: string
+  ) {
     const noActions = {
-      namespace,
+      namespace: namespaceToUnshare,
+      actions: [],
     };
     return this.API.shareUDFInfo(namespace, udfName, noActions);
   }
