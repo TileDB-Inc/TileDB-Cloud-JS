@@ -1,3 +1,4 @@
+import save from "save-file";
 import { NotebookApi } from "./../v1/api";
 import {
   ArrayApi,
@@ -305,7 +306,8 @@ class TileDBClient {
       layout: Layout.RowMajor,
       ranges: [[]],
       // TODO: What is the correct buffer size?
-      bufferSize: notebookSize / 2,
+      // Sometimes getting error 502 (buffer size is too big) or not the complete contents
+      bufferSize: 0.6 * notebookSize,
       attributes: ["contents"],
     };
 
@@ -315,13 +317,12 @@ class TileDBClient {
     const decoder = new TextDecoder();
     const json = decoder.decode(buffer);
 
-    return json;
+    return json.replace(/[^\x20-\x7E]/g, "");
   }
 
-  // TODO: Download contents as file (https://github.com/eligrey/FileSaver.js)
   public async downloadNotebookToFile(namespace: string, notebook: string) {
-    const contents = await this.info(namespace, notebook);
-    return contents;
+    const contents = await this.downloadNotebookContents(namespace, notebook);
+    await save(contents, `${notebook}.ipynb`);
   }
 
   // TODO: We need a way to create an array and save contents as "contents" attribute

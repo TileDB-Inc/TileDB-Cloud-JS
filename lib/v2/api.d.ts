@@ -935,7 +935,7 @@ export declare class ArrayApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ArrayApi
      */
-    arrayActivityLog(namespace: string, array: string, start?: number, end?: number, eventTypes?: Array<string>, taskId?: string, hasTaskId?: boolean, page?: number, perPage?: number, options?: any): Promise<import("axios").AxiosResponse<ArrayActivityLogData, any>>;
+    arrayActivityLog(namespace: string, array: string, start?: number, end?: number, eventTypes?: Array<string>, taskId?: string, hasTaskId?: boolean, page?: number, perPage?: number, options?: any): Promise<import("axios").AxiosResponse<ArrayActivityLogData>>;
 }
 /**
  * OrganizationApi - axios parameter creator
@@ -1111,7 +1111,7 @@ export declare class OrganizationApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof OrganizationApi
      */
-    addCredential(namespace: string, accessCredential: AccessCredential, provider?: string, page?: number, perPage?: number, options?: any): Promise<import("axios").AxiosResponse<void, any>>;
+    addCredential(namespace: string, accessCredential: AccessCredential, provider?: string, page?: number, perPage?: number, options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**
      * Delete the named access credential. Any arrays still set to use this credential will use the namespace\'s default and may become unreachable.
      * @param {string} namespace namespace
@@ -1120,7 +1120,7 @@ export declare class OrganizationApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof OrganizationApi
      */
-    deleteCredential(namespace: string, name: string, options?: any): Promise<import("axios").AxiosResponse<void, any>>;
+    deleteCredential(namespace: string, name: string, options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**
      * Retrieve an access credential by name
      * @param {string} namespace namespace
@@ -1129,7 +1129,7 @@ export declare class OrganizationApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof OrganizationApi
      */
-    getCredential(namespace: string, name: string, options?: any): Promise<import("axios").AxiosResponse<AccessCredential, any>>;
+    getCredential(namespace: string, name: string, options?: any): Promise<import("axios").AxiosResponse<AccessCredential>>;
     /**
      * List the credentials available in the namespace
      * @param {string} namespace namespace
@@ -1140,7 +1140,7 @@ export declare class OrganizationApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof OrganizationApi
      */
-    listCredentials(namespace: string, provider?: string, page?: number, perPage?: number, options?: any): Promise<import("axios").AxiosResponse<AccessCredentialsData, any>>;
+    listCredentials(namespace: string, provider?: string, page?: number, perPage?: number, options?: any): Promise<import("axios").AxiosResponse<AccessCredentialsData>>;
     /**
      * Update the named access credential. This will also update the information used to access arrays set to use this credential.
      * @param {string} namespace namespace
@@ -1150,7 +1150,7 @@ export declare class OrganizationApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof OrganizationApi
      */
-    updateCredential(namespace: string, name: string, accessCredential: AccessCredential, options?: any): Promise<import("axios").AxiosResponse<void, any>>;
+    updateCredential(namespace: string, name: string, accessCredential: AccessCredential, options?: any): Promise<import("axios").AxiosResponse<void>>;
 }
 /**
  * QueryApi - axios parameter creator
@@ -1233,7 +1233,7 @@ export declare class QueryApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof QueryApi
      */
-    submitQuery(namespace: string, array: string, type: string, contentType: string, query: Query, xPayer?: string, openAt?: number, readAll?: string, options?: any): Promise<import("axios").AxiosResponse<any, any>>;
+    submitQuery(namespace: string, array: string, type: string, contentType: string, query: Query, xPayer?: string, openAt?: number, readAll?: string, options?: any): Promise<import("axios").AxiosResponse<any>>;
 }
 /**
  * UserApi - axios parameter creator
@@ -1409,7 +1409,7 @@ export declare class UserApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof UserApi
      */
-    addCredential(namespace: string, accessCredential: AccessCredential, provider?: string, page?: number, perPage?: number, options?: any): Promise<import("axios").AxiosResponse<void, any>>;
+    addCredential(namespace: string, accessCredential: AccessCredential, provider?: string, page?: number, perPage?: number, options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**
      * Delete the named access credential. Any arrays still set to use this credential will use the namespace\'s default and may become unreachable.
      * @param {string} namespace namespace
@@ -1418,7 +1418,7 @@ export declare class UserApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof UserApi
      */
-    deleteCredential(namespace: string, name: string, options?: any): Promise<import("axios").AxiosResponse<void, any>>;
+    deleteCredential(namespace: string, name: string, options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**
      * Retrieve an access credential by name
      * @param {string} namespace namespace
@@ -1427,7 +1427,7 @@ export declare class UserApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof UserApi
      */
-    getCredential(namespace: string, name: string, options?: any): Promise<import("axios").AxiosResponse<AccessCredential, any>>;
+    getCredential(namespace: string, name: string, options?: any): Promise<import("axios").AxiosResponse<AccessCredential>>;
     /**
      * List the credentials available in the namespace
      * @param {string} namespace namespace
@@ -1438,7 +1438,7 @@ export declare class UserApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof UserApi
      */
-    listCredentials(namespace: string, provider?: string, page?: number, perPage?: number, options?: any): Promise<import("axios").AxiosResponse<AccessCredentialsData, any>>;
+    listCredentials(namespace: string, provider?: string, page?: number, perPage?: number, options?: any): Promise<import("axios").AxiosResponse<AccessCredentialsData>>;
     /**
      * Update the named access credential. This will also update the information used to access arrays set to use this credential.
      * @param {string} namespace namespace
@@ -1448,5 +1448,5 @@ export declare class UserApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof UserApi
      */
-    updateCredential(namespace: string, name: string, accessCredential: AccessCredential, options?: any): Promise<import("axios").AxiosResponse<void, any>>;
+    updateCredential(namespace: string, name: string, accessCredential: AccessCredential, options?: any): Promise<import("axios").AxiosResponse<void>>;
 }

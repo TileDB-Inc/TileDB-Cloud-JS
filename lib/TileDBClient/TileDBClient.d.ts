@@ -12,13 +12,13 @@ declare class TileDBClient {
     TasksApi: TasksApi;
     udf: UDF;
     constructor(params: ConfigurationParameters);
-    info(namespace: string, array: string, options?: any): Promise<import("axios").AxiosResponse<import("../v1").ArrayInfo, any>>;
-    arrayActivity(namespace: string, array: string, start?: number, end?: number, eventTypes?: string, taskId?: string, hasTaskId?: boolean, options?: any): Promise<import("axios").AxiosResponse<import("../v1").ArrayActivityLog[], any>>;
-    deregisterArray(namespace: string, array: string, options?: any): Promise<import("axios").AxiosResponse<void, any>>;
-    listSharedWith(namespace: string, array: string, options?: any): Promise<import("axios").AxiosResponse<ArraySharing[], any>>;
-    registerArray(namespace: string, array: string, arrayMetadata: ArrayInfoUpdate, options?: any): Promise<import("axios").AxiosResponse<void, any>>;
-    shareArray(namespace: string, array: string, arraySharing: ArraySharing, options?: any): Promise<import("axios").AxiosResponse<void, any>>;
-    unshareArray(namespace: string, array: string, options?: any): Promise<import("axios").AxiosResponse<void, any>>;
+    info(namespace: string, array: string, options?: any): Promise<import("axios").AxiosResponse<import("../v1").ArrayInfo>>;
+    arrayActivity(namespace: string, array: string, start?: number, end?: number, eventTypes?: string, taskId?: string, hasTaskId?: boolean, options?: any): Promise<import("axios").AxiosResponse<import("../v1").ArrayActivityLog[]>>;
+    deregisterArray(namespace: string, array: string, options?: any): Promise<import("axios").AxiosResponse<void>>;
+    listSharedWith(namespace: string, array: string, options?: any): Promise<import("axios").AxiosResponse<ArraySharing[]>>;
+    registerArray(namespace: string, array: string, arrayMetadata: ArrayInfoUpdate, options?: any): Promise<import("axios").AxiosResponse<void>>;
+    shareArray(namespace: string, array: string, arraySharing: ArraySharing, options?: any): Promise<import("axios").AxiosResponse<void>>;
+    unshareArray(namespace: string, array: string, options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**
      * List arrays in a user account
      */
@@ -35,7 +35,7 @@ declare class TileDBClient {
         excludeFileType?: string[];
         fileProperty?: string[];
         options?: any;
-    }): Promise<import("axios").AxiosResponse<import("../v1").ArrayBrowserData, any>>;
+    }): Promise<import("axios").AxiosResponse<import("../v1").ArrayBrowserData>>;
     /**
      * List public arrays
      */
@@ -52,7 +52,7 @@ declare class TileDBClient {
         excludeFileType?: string[];
         fileProperty?: string[];
         options?: any;
-    }): Promise<import("axios").AxiosResponse<import("../v1").ArrayBrowserData, any>>;
+    }): Promise<import("axios").AxiosResponse<import("../v1").ArrayBrowserData>>;
     /**
      * List shared arrays
      */
@@ -69,26 +69,26 @@ declare class TileDBClient {
         excludeFileType?: string[];
         fileProperty?: string[];
         options?: any;
-    }): Promise<import("axios").AxiosResponse<import("../v1").ArrayBrowserData, any>>;
+    }): Promise<import("axios").AxiosResponse<import("../v1").ArrayBrowserData>>;
     /**
      * Organization to fetch
      */
-    organization(organization: string, options?: any): Promise<import("axios").AxiosResponse<import("../v1").Organization, any>>;
+    organization(organization: string, options?: any): Promise<import("axios").AxiosResponse<import("../v1").Organization>>;
     /**
      * List of all organizations user is part of
      */
-    organizations(options?: any): Promise<import("axios").AxiosResponse<import("../v1").Organization[], any>>;
+    organizations(options?: any): Promise<import("axios").AxiosResponse<import("../v1").Organization[]>>;
     /**
      * Your user profile
      */
-    userProfile(options?: any): Promise<import("axios").AxiosResponse<import("../v1").User, any>>;
+    userProfile(options?: any): Promise<import("axios").AxiosResponse<import("../v1").User>>;
     /**
      * Rename a notebook's name
      */
-    renameNotebook(namespace: string, array: string, notebookName: string, options?: any): Promise<import("axios").AxiosResponse<void, any>>;
-    task(id: string, options?: any): Promise<import("axios").AxiosResponse<import("../v1").ArrayTask, any>>;
+    renameNotebook(namespace: string, array: string, notebookName: string, options?: any): Promise<import("axios").AxiosResponse<void>>;
+    task(id: string, options?: any): Promise<import("axios").AxiosResponse<import("../v1").ArrayTask>>;
     downloadNotebookContents(namespace: string, notebook: string): Promise<string>;
-    downloadNotebookToFile(namespace: string, notebook: string): Promise<import("axios").AxiosResponse<import("../v1").ArrayInfo, any>>;
+    downloadNotebookToFile(namespace: string, notebook: string): Promise<void>;
     uploadNotebookContents(): void;
     uploadNotebookFromFile(): void;
     lastSqlTask(): void;

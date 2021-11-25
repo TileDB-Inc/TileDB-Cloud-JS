@@ -4413,7 +4413,7 @@ export declare class ArrayApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ArrayApi
      */
-    arrayActivityLog(namespace: string, array: string, start?: number, end?: number, eventTypes?: string, taskId?: string, hasTaskId?: boolean, options?: any): Promise<import("axios").AxiosResponse<ArrayActivityLog[], any>>;
+    arrayActivityLog(namespace: string, array: string, start?: number, end?: number, eventTypes?: string, taskId?: string, hasTaskId?: boolean, options?: any): Promise<import("axios").AxiosResponse<ArrayActivityLog[]>>;
     /**
      * Fetch a list of all arrays that are owned directly by user or user\'s organizations
      * @param {number} [page] pagination offset
@@ -4431,14 +4431,14 @@ export declare class ArrayApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ArrayApi
      */
-    arraysBrowserOwnedGet(page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, fileType?: Array<string>, excludeFileType?: Array<string>, fileProperty?: Array<string>, options?: any): Promise<import("axios").AxiosResponse<ArrayBrowserData, any>>;
+    arraysBrowserOwnedGet(page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, fileType?: Array<string>, excludeFileType?: Array<string>, fileProperty?: Array<string>, options?: any): Promise<import("axios").AxiosResponse<ArrayBrowserData>>;
     /**
      * Fetch a sidebar for arrays that are owned directly by user or user\'s organizations
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ArrayApi
      */
-    arraysBrowserOwnedSidebarGet(options?: any): Promise<import("axios").AxiosResponse<ArrayBrowserSidebar, any>>;
+    arraysBrowserOwnedSidebarGet(options?: any): Promise<import("axios").AxiosResponse<ArrayBrowserSidebar>>;
     /**
      * Fetch a list of all arrays that have been shared publically
      * @param {number} [page] pagination offset
@@ -4456,14 +4456,14 @@ export declare class ArrayApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ArrayApi
      */
-    arraysBrowserPublicGet(page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, fileType?: Array<string>, excludeFileType?: Array<string>, fileProperty?: Array<string>, options?: any): Promise<import("axios").AxiosResponse<ArrayBrowserData, any>>;
+    arraysBrowserPublicGet(page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, fileType?: Array<string>, excludeFileType?: Array<string>, fileProperty?: Array<string>, options?: any): Promise<import("axios").AxiosResponse<ArrayBrowserData>>;
     /**
      * Fetch a sidebar of all arrays that have been shared publically
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ArrayApi
      */
-    arraysBrowserPublicSidebarGet(options?: any): Promise<import("axios").AxiosResponse<ArrayBrowserSidebar, any>>;
+    arraysBrowserPublicSidebarGet(options?: any): Promise<import("axios").AxiosResponse<ArrayBrowserSidebar>>;
     /**
      * Fetch a list of all arrays that have been shared with the user
      * @param {number} [page] pagination offset
@@ -4481,14 +4481,14 @@ export declare class ArrayApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ArrayApi
      */
-    arraysBrowserSharedGet(page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, fileType?: Array<string>, excludeFileType?: Array<string>, fileProperty?: Array<string>, options?: any): Promise<import("axios").AxiosResponse<ArrayBrowserData, any>>;
+    arraysBrowserSharedGet(page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, fileType?: Array<string>, excludeFileType?: Array<string>, fileProperty?: Array<string>, options?: any): Promise<import("axios").AxiosResponse<ArrayBrowserData>>;
     /**
      * Fetch a list of all arrays that have been shared with the user
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ArrayApi
      */
-    arraysBrowserSharedSidebarGet(options?: any): Promise<import("axios").AxiosResponse<ArrayBrowserSidebar, any>>;
+    arraysBrowserSharedSidebarGet(options?: any): Promise<import("axios").AxiosResponse<ArrayBrowserSidebar>>;
     /**
      * retrieve a list of timestamps from the array fragment info listing in milliseconds, paginated
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
@@ -4499,7 +4499,7 @@ export declare class ArrayApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ArrayApi
      */
-    arraysNamespaceArrayEndTimestampsGet(namespace: string, array: string, page?: number, perPage?: number, options?: any): Promise<import("axios").AxiosResponse<ArrayEndTimestampData, any>>;
+    arraysNamespaceArrayEndTimestampsGet(namespace: string, array: string, page?: number, perPage?: number, options?: any): Promise<import("axios").AxiosResponse<ArrayEndTimestampData>>;
     /**
      * consolidate an array at a specified URI
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
@@ -4509,7 +4509,7 @@ export declare class ArrayApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ArrayApi
      */
-    consolidateArray(namespace: string, array: string, tiledbConfig: TileDBConfig, options?: any): Promise<import("axios").AxiosResponse<void, any>>;
+    consolidateArray(namespace: string, array: string, tiledbConfig: TileDBConfig, options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**
      * create a array schema at a specified URI registered to a group/project
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
@@ -4521,7 +4521,7 @@ export declare class ArrayApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ArrayApi
      */
-    createArray(namespace: string, array: string, contentType: string, arraySchema: ArraySchema, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, options?: any): Promise<import("axios").AxiosResponse<void, any>>;
+    createArray(namespace: string, array: string, contentType: string, arraySchema: ArraySchema, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**
      * delete a array
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
@@ -4531,7 +4531,7 @@ export declare class ArrayApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ArrayApi
      */
-    deleteArray(namespace: string, array: string, contentType: string, options?: any): Promise<import("axios").AxiosResponse<void, any>>;
+    deleteArray(namespace: string, array: string, contentType: string, options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**
      * deregister a array
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
@@ -4540,7 +4540,7 @@ export declare class ArrayApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ArrayApi
      */
-    deregisterArray(namespace: string, array: string, options?: any): Promise<import("axios").AxiosResponse<void, any>>;
+    deregisterArray(namespace: string, array: string, options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**
      * get activity log by id
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
@@ -4550,7 +4550,7 @@ export declare class ArrayApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ArrayApi
      */
-    getActivityLogById(namespace: string, array: string, id: string, options?: any): Promise<import("axios").AxiosResponse<ArrayActivityLog, any>>;
+    getActivityLogById(namespace: string, array: string, id: string, options?: any): Promise<import("axios").AxiosResponse<ArrayActivityLog>>;
     /**
      * get all array metadata user has access to
      * @param {string} [publicShare] Public share values can be one of exclude, only
@@ -4558,7 +4558,7 @@ export declare class ArrayApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ArrayApi
      */
-    getAllArrayMetadata(publicShare?: string, options?: any): Promise<import("axios").AxiosResponse<ArrayInfo[], any>>;
+    getAllArrayMetadata(publicShare?: string, options?: any): Promise<import("axios").AxiosResponse<ArrayInfo[]>>;
     /**
      * get an ArraySchema using a url encoded uri
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
@@ -4568,7 +4568,7 @@ export declare class ArrayApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ArrayApi
      */
-    getArray(namespace: string, array: string, contentType: string, options?: any): Promise<import("axios").AxiosResponse<ArraySchema, any>>;
+    getArray(namespace: string, array: string, contentType: string, options?: any): Promise<import("axios").AxiosResponse<ArraySchema>>;
     /**
      * get the max buffer sizes of an array for a subarray
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
@@ -4580,7 +4580,7 @@ export declare class ArrayApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ArrayApi
      */
-    getArrayMaxBufferSizes(namespace: string, array: string, subarray: string, contentType: string, xPayer?: string, options?: any): Promise<import("axios").AxiosResponse<MaxBufferSizes, any>>;
+    getArrayMaxBufferSizes(namespace: string, array: string, subarray: string, contentType: string, xPayer?: string, options?: any): Promise<import("axios").AxiosResponse<MaxBufferSizes>>;
     /**
      * get metadata from the array in json format
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
@@ -4591,7 +4591,7 @@ export declare class ArrayApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ArrayApi
      */
-    getArrayMetaDataJson(namespace: string, array: string, length?: number, endTimestamp?: number, options?: any): Promise<import("axios").AxiosResponse<object, any>>;
+    getArrayMetaDataJson(namespace: string, array: string, length?: number, endTimestamp?: number, options?: any): Promise<import("axios").AxiosResponse<object>>;
     /**
      * get metadata on an array
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
@@ -4600,7 +4600,7 @@ export declare class ArrayApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ArrayApi
      */
-    getArrayMetadata(namespace: string, array: string, options?: any): Promise<import("axios").AxiosResponse<ArrayInfo, any>>;
+    getArrayMetadata(namespace: string, array: string, options?: any): Promise<import("axios").AxiosResponse<ArrayInfo>>;
     /**
      * get metadata on an array
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
@@ -4609,7 +4609,7 @@ export declare class ArrayApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ArrayApi
      */
-    getArrayMetadataCapnp(namespace: string, array: string, options?: any): Promise<import("axios").AxiosResponse<ArrayMetadata, any>>;
+    getArrayMetadataCapnp(namespace: string, array: string, options?: any): Promise<import("axios").AxiosResponse<ArrayMetadata>>;
     /**
      * get the non empty domain of an array
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
@@ -4620,7 +4620,7 @@ export declare class ArrayApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ArrayApi
      */
-    getArrayNonEmptyDomain(namespace: string, array: string, contentType: string, xPayer?: string, options?: any): Promise<import("axios").AxiosResponse<NonEmptyDomain, any>>;
+    getArrayNonEmptyDomain(namespace: string, array: string, contentType: string, xPayer?: string, options?: any): Promise<import("axios").AxiosResponse<NonEmptyDomain>>;
     /**
      * get non-empty domain from the array in json format
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
@@ -4629,7 +4629,7 @@ export declare class ArrayApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ArrayApi
      */
-    getArrayNonEmptyDomainJson(namespace: string, array: string, options?: any): Promise<import("axios").AxiosResponse<object, any>>;
+    getArrayNonEmptyDomainJson(namespace: string, array: string, options?: any): Promise<import("axios").AxiosResponse<object>>;
     /**
      * get an sample set of data from the array
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
@@ -4639,7 +4639,7 @@ export declare class ArrayApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ArrayApi
      */
-    getArraySampleData(namespace: string, array: string, samples?: number, options?: any): Promise<import("axios").AxiosResponse<ArraySample, any>>;
+    getArraySampleData(namespace: string, array: string, samples?: number, options?: any): Promise<import("axios").AxiosResponse<ArraySample>>;
     /**
      * Get all sharing details of the array
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
@@ -4648,7 +4648,7 @@ export declare class ArrayApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ArrayApi
      */
-    getArraySharingPolicies(namespace: string, array: string, options?: any): Promise<import("axios").AxiosResponse<ArraySharing[], any>>;
+    getArraySharingPolicies(namespace: string, array: string, options?: any): Promise<import("axios").AxiosResponse<ArraySharing[]>>;
     /**
      * get metadata on all arrays in a namespace
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
@@ -4656,7 +4656,7 @@ export declare class ArrayApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ArrayApi
      */
-    getArraysInNamespace(namespace: string, options?: any): Promise<import("axios").AxiosResponse<ArrayInfo[], any>>;
+    getArraysInNamespace(namespace: string, options?: any): Promise<import("axios").AxiosResponse<ArrayInfo[]>>;
     /**
      * Get fragment end_timestamp on an array, will search for the closest end_timestamp to the timestamp asked
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
@@ -4666,14 +4666,14 @@ export declare class ArrayApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ArrayApi
      */
-    getFragmentEndTimestamp(namespace: string, array: string, endTimestamp?: number, options?: any): Promise<import("axios").AxiosResponse<number, any>>;
+    getFragmentEndTimestamp(namespace: string, array: string, endTimestamp?: number, options?: any): Promise<import("axios").AxiosResponse<number>>;
     /**
      *
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ArrayApi
      */
-    getLastAccessedArrays(options?: any): Promise<import("axios").AxiosResponse<LastAccessedArray[], any>>;
+    getLastAccessedArrays(options?: any): Promise<import("axios").AxiosResponse<LastAccessedArray[]>>;
     /**
      * register an array at a specified URI registered to the given namespace
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
@@ -4683,7 +4683,7 @@ export declare class ArrayApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ArrayApi
      */
-    registerArray(namespace: string, array: string, arrayMetadata: ArrayInfoUpdate, options?: any): Promise<import("axios").AxiosResponse<void, any>>;
+    registerArray(namespace: string, array: string, arrayMetadata: ArrayInfoUpdate, options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**
      * Share an array with a user
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
@@ -4693,7 +4693,7 @@ export declare class ArrayApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ArrayApi
      */
-    shareArray(namespace: string, array: string, arraySharing: ArraySharing, options?: any): Promise<import("axios").AxiosResponse<void, any>>;
+    shareArray(namespace: string, array: string, arraySharing: ArraySharing, options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**
      * update metadata on an array
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
@@ -4703,7 +4703,7 @@ export declare class ArrayApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ArrayApi
      */
-    updateArrayMetadata(namespace: string, array: string, arrayMetadata: ArrayInfoUpdate, options?: any): Promise<import("axios").AxiosResponse<void, any>>;
+    updateArrayMetadata(namespace: string, array: string, arrayMetadata: ArrayInfoUpdate, options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**
      * update metadata on an array
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
@@ -4713,7 +4713,7 @@ export declare class ArrayApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ArrayApi
      */
-    updateArrayMetadataCapnp(namespace: string, array: string, arrayMetadataEntries: ArrayMetadata, options?: any): Promise<import("axios").AxiosResponse<void, any>>;
+    updateArrayMetadataCapnp(namespace: string, array: string, arrayMetadataEntries: ArrayMetadata, options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**
      * vacuum an array at a specified URI
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
@@ -4723,7 +4723,7 @@ export declare class ArrayApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ArrayApi
      */
-    vacuumArray(namespace: string, array: string, tiledbConfig: TileDBConfig, options?: any): Promise<import("axios").AxiosResponse<void, any>>;
+    vacuumArray(namespace: string, array: string, tiledbConfig: TileDBConfig, options?: any): Promise<import("axios").AxiosResponse<void>>;
 }
 /**
  * ArrayTasksApi - axios parameter creator
@@ -4782,7 +4782,7 @@ export declare class ArrayTasksApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ArrayTasksApi
      */
-    getArrayTasksSidebar(start?: number, end?: number, options?: any): Promise<import("axios").AxiosResponse<ArrayTaskBrowserSidebar, any>>;
+    getArrayTasksSidebar(start?: number, end?: number, options?: any): Promise<import("axios").AxiosResponse<ArrayTaskBrowserSidebar>>;
 }
 /**
  * FavoritesApi - axios parameter creator
@@ -5332,7 +5332,7 @@ export declare class FavoritesApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof FavoritesApi
      */
-    addArrayFavorite(body?: FavoriteCreate, options?: any): Promise<import("axios").AxiosResponse<void, any>>;
+    addArrayFavorite(body?: FavoriteCreate, options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**
      * Add a new ML model favorite
      * @param {FavoriteCreate} [body]
@@ -5340,7 +5340,7 @@ export declare class FavoritesApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof FavoritesApi
      */
-    addMLModelFavorite(body?: FavoriteCreate, options?: any): Promise<import("axios").AxiosResponse<void, any>>;
+    addMLModelFavorite(body?: FavoriteCreate, options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**
      * Add a new notebook favorite
      * @param {FavoriteCreate} [body]
@@ -5348,7 +5348,7 @@ export declare class FavoritesApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof FavoritesApi
      */
-    addNotebookFavorite(body?: FavoriteCreate, options?: any): Promise<import("axios").AxiosResponse<void, any>>;
+    addNotebookFavorite(body?: FavoriteCreate, options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**
      * Add a new UDF favorite
      * @param {FavoriteCreate} [body]
@@ -5356,7 +5356,7 @@ export declare class FavoritesApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof FavoritesApi
      */
-    addUDFFavorite(body?: FavoriteCreate, options?: any): Promise<import("axios").AxiosResponse<void, any>>;
+    addUDFFavorite(body?: FavoriteCreate, options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**
      * Delete specific array favorite
      * @param {string} id The uuid of the array favorite
@@ -5364,7 +5364,7 @@ export declare class FavoritesApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof FavoritesApi
      */
-    deleteArrayFavorite(id: string, options?: any): Promise<import("axios").AxiosResponse<void, any>>;
+    deleteArrayFavorite(id: string, options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**
      * Delete specific ML model favorite
      * @param {string} id The uuid of the ML model favorite
@@ -5372,7 +5372,7 @@ export declare class FavoritesApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof FavoritesApi
      */
-    deleteMLModelFavorite(id: string, options?: any): Promise<import("axios").AxiosResponse<void, any>>;
+    deleteMLModelFavorite(id: string, options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**
      * Delete specific notebook favorite
      * @param {string} id The uuid of the notebook favorite
@@ -5380,7 +5380,7 @@ export declare class FavoritesApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof FavoritesApi
      */
-    deleteNotebookFavorite(id: string, options?: any): Promise<import("axios").AxiosResponse<void, any>>;
+    deleteNotebookFavorite(id: string, options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**
      * Delete specific UDF favorite
      * @param {string} id The uuid of the UDF favorite
@@ -5388,7 +5388,7 @@ export declare class FavoritesApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof FavoritesApi
      */
-    deleteUDFFavorite(id: string, options?: any): Promise<import("axios").AxiosResponse<void, any>>;
+    deleteUDFFavorite(id: string, options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**
      * Fetch specific array favorite of a user
      * @param {string} id The uuid of the array favorite
@@ -5396,7 +5396,7 @@ export declare class FavoritesApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof FavoritesApi
      */
-    getArrayFavorite(id: string, options?: any): Promise<import("axios").AxiosResponse<ArrayFavorite, any>>;
+    getArrayFavorite(id: string, options?: any): Promise<import("axios").AxiosResponse<ArrayFavorite>>;
     /**
      * Fetch array favorite of a specific array
      * @param {string} namespace The namespace of the array
@@ -5405,7 +5405,7 @@ export declare class FavoritesApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof FavoritesApi
      */
-    getArrayFavoriteForArray(namespace: string, name: string, options?: any): Promise<import("axios").AxiosResponse<ArrayFavorite, any>>;
+    getArrayFavoriteForArray(namespace: string, name: string, options?: any): Promise<import("axios").AxiosResponse<ArrayFavorite>>;
     /**
      * Fetch specific ML model favorite of a user
      * @param {string} id The uuid of the ML model favorite
@@ -5413,7 +5413,7 @@ export declare class FavoritesApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof FavoritesApi
      */
-    getMLModelFavorite(id: string, options?: any): Promise<import("axios").AxiosResponse<MLModelFavorite, any>>;
+    getMLModelFavorite(id: string, options?: any): Promise<import("axios").AxiosResponse<MLModelFavorite>>;
     /**
      * Fetch ML model favorite of a specific ML model
      * @param {string} namespace The namespace of the ML model
@@ -5422,7 +5422,7 @@ export declare class FavoritesApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof FavoritesApi
      */
-    getMLModelFavoriteForMLModel(namespace: string, name: string, options?: any): Promise<import("axios").AxiosResponse<MLModelFavorite, any>>;
+    getMLModelFavoriteForMLModel(namespace: string, name: string, options?: any): Promise<import("axios").AxiosResponse<MLModelFavorite>>;
     /**
      * Fetch specific notebook favorite of a user
      * @param {string} id The uuid of the notebook favorite
@@ -5430,7 +5430,7 @@ export declare class FavoritesApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof FavoritesApi
      */
-    getNotebookFavorite(id: string, options?: any): Promise<import("axios").AxiosResponse<NotebookFavorite, any>>;
+    getNotebookFavorite(id: string, options?: any): Promise<import("axios").AxiosResponse<NotebookFavorite>>;
     /**
      * Fetch notebook favorite of a specific notebook
      * @param {string} namespace The namespace of the notebook
@@ -5439,7 +5439,7 @@ export declare class FavoritesApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof FavoritesApi
      */
-    getNotebookFavoriteForNotebook(namespace: string, name: string, options?: any): Promise<import("axios").AxiosResponse<NotebookFavorite, any>>;
+    getNotebookFavoriteForNotebook(namespace: string, name: string, options?: any): Promise<import("axios").AxiosResponse<NotebookFavorite>>;
     /**
      * Fetch specific UDF favorite of a user
      * @param {string} id The uuid of the UDF favorite
@@ -5447,7 +5447,7 @@ export declare class FavoritesApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof FavoritesApi
      */
-    getUDFFavorite(id: string, options?: any): Promise<import("axios").AxiosResponse<UDFFavorite, any>>;
+    getUDFFavorite(id: string, options?: any): Promise<import("axios").AxiosResponse<UDFFavorite>>;
     /**
      * Fetch UDF favorite of a specific UDF
      * @param {string} namespace The namespace of the UDF
@@ -5456,7 +5456,7 @@ export declare class FavoritesApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof FavoritesApi
      */
-    getUDFFavoriteForUDF(namespace: string, name: string, options?: any): Promise<import("axios").AxiosResponse<UDFFavorite, any>>;
+    getUDFFavoriteForUDF(namespace: string, name: string, options?: any): Promise<import("axios").AxiosResponse<UDFFavorite>>;
     /**
      * Fetch all array favorites of connected user
      * @param {number} [page] pagination offset
@@ -5465,14 +5465,14 @@ export declare class FavoritesApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof FavoritesApi
      */
-    listArrayFavorites(page?: number, perPage?: number, options?: any): Promise<import("axios").AxiosResponse<ArrayFavoritesData, any>>;
+    listArrayFavorites(page?: number, perPage?: number, options?: any): Promise<import("axios").AxiosResponse<ArrayFavoritesData>>;
     /**
      * Fetch all favorite array uuids of connected user
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof FavoritesApi
      */
-    listArrayFavoritesUUIDs(options?: any): Promise<import("axios").AxiosResponse<ArrayFavorite[], any>>;
+    listArrayFavoritesUUIDs(options?: any): Promise<import("axios").AxiosResponse<ArrayFavorite[]>>;
     /**
      * Fetch all ML models favorites of connected user
      * @param {number} [page] pagination offset
@@ -5481,14 +5481,14 @@ export declare class FavoritesApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof FavoritesApi
      */
-    listMLModelFavorites(page?: number, perPage?: number, options?: any): Promise<import("axios").AxiosResponse<MLModelFavoritesData, any>>;
+    listMLModelFavorites(page?: number, perPage?: number, options?: any): Promise<import("axios").AxiosResponse<MLModelFavoritesData>>;
     /**
      * Fetch all favorite ML models uuids of connected user
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof FavoritesApi
      */
-    listMLModelFavoritesUUIDs(options?: any): Promise<import("axios").AxiosResponse<MLModelFavorite[], any>>;
+    listMLModelFavoritesUUIDs(options?: any): Promise<import("axios").AxiosResponse<MLModelFavorite[]>>;
     /**
      * Fetch all notebook favorites of connected user
      * @param {number} [page] pagination offset
@@ -5497,14 +5497,14 @@ export declare class FavoritesApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof FavoritesApi
      */
-    listNotebookFavorites(page?: number, perPage?: number, options?: any): Promise<import("axios").AxiosResponse<NotebookFavoritesData, any>>;
+    listNotebookFavorites(page?: number, perPage?: number, options?: any): Promise<import("axios").AxiosResponse<NotebookFavoritesData>>;
     /**
      * Fetch all favorite notebook uuids of connected user
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof FavoritesApi
      */
-    listNotebookFavoritesUUIDs(options?: any): Promise<import("axios").AxiosResponse<NotebookFavorite[], any>>;
+    listNotebookFavoritesUUIDs(options?: any): Promise<import("axios").AxiosResponse<NotebookFavorite[]>>;
     /**
      * Fetch all UDF favorites of connected user
      * @param {number} [page] pagination offset
@@ -5513,14 +5513,14 @@ export declare class FavoritesApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof FavoritesApi
      */
-    listUDFFavorites(page?: number, perPage?: number, options?: any): Promise<import("axios").AxiosResponse<UDFFavoritesData, any>>;
+    listUDFFavorites(page?: number, perPage?: number, options?: any): Promise<import("axios").AxiosResponse<UDFFavoritesData>>;
     /**
      * Fetch all favorite UDF uuids of connected user
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof FavoritesApi
      */
-    listUDFFavoritesUUIDs(options?: any): Promise<import("axios").AxiosResponse<UDFFavorite[], any>>;
+    listUDFFavoritesUUIDs(options?: any): Promise<import("axios").AxiosResponse<UDFFavorite[]>>;
 }
 /**
  * InvitationApi - axios parameter creator
@@ -5722,7 +5722,7 @@ export declare class InvitationApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof InvitationApi
      */
-    acceptInvitation(invitation: string, options?: any): Promise<import("axios").AxiosResponse<void, any>>;
+    acceptInvitation(invitation: string, options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**
      * Cancels join organization invitation
      * @param {string} invitation the id of invitation about to be cancelled
@@ -5731,7 +5731,7 @@ export declare class InvitationApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof InvitationApi
      */
-    cancelJoinOrganization(invitation: string, organization: string, options?: any): Promise<import("axios").AxiosResponse<void, any>>;
+    cancelJoinOrganization(invitation: string, organization: string, options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**
      * Cancels array sharing invitation
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
@@ -5741,7 +5741,7 @@ export declare class InvitationApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof InvitationApi
      */
-    cancelShareArrayByInvite(namespace: string, invitation: string, array: string, options?: any): Promise<import("axios").AxiosResponse<void, any>>;
+    cancelShareArrayByInvite(namespace: string, invitation: string, array: string, options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**
      * Fetch a list of invitations
      * @param {string} [organization] name or id of organization to filter
@@ -5757,7 +5757,7 @@ export declare class InvitationApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof InvitationApi
      */
-    fetchInvitations(organization?: string, array?: string, start?: number, end?: number, page?: number, perPage?: number, type?: string, status?: string, orderby?: string, options?: any): Promise<import("axios").AxiosResponse<InvitationData, any>>;
+    fetchInvitations(organization?: string, array?: string, start?: number, end?: number, page?: number, perPage?: number, type?: string, status?: string, orderby?: string, options?: any): Promise<import("axios").AxiosResponse<InvitationData>>;
     /**
      * Sends email to multiple recipients with joining information regarding an organization
      * @param {string} organization name or uuid of organization
@@ -5766,7 +5766,7 @@ export declare class InvitationApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof InvitationApi
      */
-    joinOrganization(organization: string, emailInvite: InvitationOrganizationJoinEmail, options?: any): Promise<import("axios").AxiosResponse<void, any>>;
+    joinOrganization(organization: string, emailInvite: InvitationOrganizationJoinEmail, options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**
      * Sends email to multiple recipients with sharing information regarding an array
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
@@ -5776,7 +5776,7 @@ export declare class InvitationApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof InvitationApi
      */
-    shareArrayByInvite(namespace: string, array: string, emailInvite: InvitationArrayShareEmail, options?: any): Promise<import("axios").AxiosResponse<void, any>>;
+    shareArrayByInvite(namespace: string, array: string, emailInvite: InvitationArrayShareEmail, options?: any): Promise<import("axios").AxiosResponse<void>>;
 }
 /**
  * NotebookApi - axios parameter creator
@@ -5879,7 +5879,7 @@ export declare class NotebookApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof NotebookApi
      */
-    getNotebookServerStatus(namespace: string, options?: any): Promise<import("axios").AxiosResponse<NotebookStatus, any>>;
+    getNotebookServerStatus(namespace: string, options?: any): Promise<import("axios").AxiosResponse<NotebookStatus>>;
     /**
      * Shutdown a notebook server
      * @param {string} namespace namespace notebook is in (an organization name or user\&#39;s username)
@@ -5887,7 +5887,7 @@ export declare class NotebookApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof NotebookApi
      */
-    shutdownNotebookServer(namespace: string, options?: any): Promise<import("axios").AxiosResponse<void, any>>;
+    shutdownNotebookServer(namespace: string, options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**
      * update name on a notebok, moving related s3 object to new location
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
@@ -5897,7 +5897,7 @@ export declare class NotebookApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof NotebookApi
      */
-    updateNotebookName(namespace: string, array: string, notebookMetadata: ArrayInfoUpdate, options?: any): Promise<import("axios").AxiosResponse<void, any>>;
+    updateNotebookName(namespace: string, array: string, notebookMetadata: ArrayInfoUpdate, options?: any): Promise<import("axios").AxiosResponse<void>>;
 }
 /**
  * NotebooksApi - axios parameter creator
@@ -5964,7 +5964,7 @@ export declare class NotebooksApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof NotebooksApi
      */
-    notebooksNamespaceArrayEndTimestampsGet(namespace: string, array: string, page?: number, perPage?: number, options?: any): Promise<import("axios").AxiosResponse<ArrayEndTimestampData, any>>;
+    notebooksNamespaceArrayEndTimestampsGet(namespace: string, array: string, page?: number, perPage?: number, options?: any): Promise<import("axios").AxiosResponse<ArrayEndTimestampData>>;
 }
 /**
  * OrganizationApi - axios parameter creator
@@ -6323,7 +6323,7 @@ export declare class OrganizationApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof OrganizationApi
      */
-    addAWSAccessCredentials(namespace: string, awsAccessCredentials: AWSAccessCredentials, options?: any): Promise<import("axios").AxiosResponse<void, any>>;
+    addAWSAccessCredentials(namespace: string, awsAccessCredentials: AWSAccessCredentials, options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**
      * add a user to an organization
      * @param {string} organization organization name
@@ -6332,7 +6332,7 @@ export declare class OrganizationApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof OrganizationApi
      */
-    addUserToOrganization(organization: string, user: OrganizationUser, options?: any): Promise<import("axios").AxiosResponse<void, any>>;
+    addUserToOrganization(organization: string, user: OrganizationUser, options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**
      * Check if aws keys are set
      * @param {string} namespace namespace
@@ -6340,7 +6340,7 @@ export declare class OrganizationApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof OrganizationApi
      */
-    checkAWSAccessCredentials(namespace: string, options?: any): Promise<import("axios").AxiosResponse<AWSAccessCredentials[], any>>;
+    checkAWSAccessCredentials(namespace: string, options?: any): Promise<import("axios").AxiosResponse<AWSAccessCredentials[]>>;
     /**
      * Check if aws keys are set by name
      * @param {string} namespace namespace
@@ -6349,7 +6349,7 @@ export declare class OrganizationApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof OrganizationApi
      */
-    checkAWSAccessCredentialsByName(namespace: string, name: string, options?: any): Promise<import("axios").AxiosResponse<AWSAccessCredentials, any>>;
+    checkAWSAccessCredentialsByName(namespace: string, name: string, options?: any): Promise<import("axios").AxiosResponse<AWSAccessCredentials>>;
     /**
      * create a organization, the user creating will be listed as owner
      * @param {Organization} organization organization to create
@@ -6357,7 +6357,7 @@ export declare class OrganizationApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof OrganizationApi
      */
-    createOrganization(organization: Organization, options?: any): Promise<import("axios").AxiosResponse<void, any>>;
+    createOrganization(organization: Organization, options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**
      * delete a AWS Access credentials in a namespace. This will likely cause arrays to become unreachable
      * @param {string} namespace namespace
@@ -6366,7 +6366,7 @@ export declare class OrganizationApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof OrganizationApi
      */
-    deleteAWSAccessCredentials(namespace: string, name: string, options?: any): Promise<import("axios").AxiosResponse<void, any>>;
+    deleteAWSAccessCredentials(namespace: string, name: string, options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**
      * delete a organization
      * @param {string} organization organization name or id
@@ -6374,7 +6374,7 @@ export declare class OrganizationApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof OrganizationApi
      */
-    deleteOrganization(organization: string, options?: any): Promise<import("axios").AxiosResponse<void, any>>;
+    deleteOrganization(organization: string, options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**
      * delete a user from an organization
      * @param {string} organization organization name
@@ -6383,14 +6383,14 @@ export declare class OrganizationApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof OrganizationApi
      */
-    deleteUserFromOrganization(organization: string, username: string, options?: any): Promise<import("axios").AxiosResponse<void, any>>;
+    deleteUserFromOrganization(organization: string, username: string, options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**
      * get all organizations that the user is member of
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof OrganizationApi
      */
-    getAllOrganizations(options?: any): Promise<import("axios").AxiosResponse<Organization[], any>>;
+    getAllOrganizations(options?: any): Promise<import("axios").AxiosResponse<Organization[]>>;
     /**
      * get a organization
      * @param {string} organization organization name or id
@@ -6398,7 +6398,7 @@ export declare class OrganizationApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof OrganizationApi
      */
-    getOrganization(organization: string, options?: any): Promise<import("axios").AxiosResponse<Organization, any>>;
+    getOrganization(organization: string, options?: any): Promise<import("axios").AxiosResponse<Organization>>;
     /**
      * get a user from an organization
      * @param {string} organization organization name
@@ -6407,7 +6407,7 @@ export declare class OrganizationApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof OrganizationApi
      */
-    getOrganizationUser(organization: string, username: string, options?: any): Promise<import("axios").AxiosResponse<OrganizationUser, any>>;
+    getOrganizationUser(organization: string, username: string, options?: any): Promise<import("axios").AxiosResponse<OrganizationUser>>;
     /**
      * Update aws keys or associated buckets. This will update the key associations for each array in the namespace
      * @param {string} namespace namespace
@@ -6417,7 +6417,7 @@ export declare class OrganizationApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof OrganizationApi
      */
-    updateAWSAccessCredentials(namespace: string, name: string, awsAccessCredentials: AWSAccessCredentials, options?: any): Promise<import("axios").AxiosResponse<void, any>>;
+    updateAWSAccessCredentials(namespace: string, name: string, awsAccessCredentials: AWSAccessCredentials, options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**
      * update a organization
      * @param {string} organization organization name or id
@@ -6426,7 +6426,7 @@ export declare class OrganizationApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof OrganizationApi
      */
-    updateOrganization(organization: string, organizationDetails: Organization, options?: any): Promise<import("axios").AxiosResponse<void, any>>;
+    updateOrganization(organization: string, organizationDetails: Organization, options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**
      * update a user in an organization
      * @param {string} organization organization name
@@ -6436,7 +6436,7 @@ export declare class OrganizationApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof OrganizationApi
      */
-    updateUserInOrganization(organization: string, username: string, user: OrganizationUser, options?: any): Promise<import("axios").AxiosResponse<void, any>>;
+    updateUserInOrganization(organization: string, username: string, user: OrganizationUser, options?: any): Promise<import("axios").AxiosResponse<void>>;
 }
 /**
  * QueryApi - axios parameter creator
@@ -6656,7 +6656,7 @@ export declare class QueryApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof QueryApi
      */
-    finalizeQuery(namespace: string, array: string, type: string, contentType: string, query: Query, xPayer?: string, openAt?: number, options?: any): Promise<import("axios").AxiosResponse<Query, any>>;
+    finalizeQuery(namespace: string, array: string, type: string, contentType: string, query: Query, xPayer?: string, openAt?: number, options?: any): Promise<import("axios").AxiosResponse<Query>>;
     /**
      * send a query to run against a specified array/URI registered to a group/project
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
@@ -6670,7 +6670,7 @@ export declare class QueryApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof QueryApi
      */
-    getEstResultSizes(namespace: string, array: string, type: string, contentType: string, query: Query, xPayer?: string, openAt?: number, options?: any): Promise<import("axios").AxiosResponse<Query, any>>;
+    getEstResultSizes(namespace: string, array: string, type: string, contentType: string, query: Query, xPayer?: string, openAt?: number, options?: any): Promise<import("axios").AxiosResponse<Query>>;
     /**
      * send a query to run against a specified array/URI registered to a group/project, returns file bytes
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
@@ -6681,7 +6681,7 @@ export declare class QueryApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof QueryApi
      */
-    getFile(namespace: string, array: string, contentType: string, xPayer?: string, options?: any): Promise<import("axios").AxiosResponse<any, any>>;
+    getFile(namespace: string, array: string, contentType: string, xPayer?: string, options?: any): Promise<import("axios").AxiosResponse<any>>;
     /**
      * send a query to run against a specified array/URI registered to a group/project
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
@@ -6695,7 +6695,7 @@ export declare class QueryApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof QueryApi
      */
-    submitQuery(namespace: string, array: string, type: string, contentType: string, query: Query, xPayer?: string, openAt?: number, options?: any): Promise<import("axios").AxiosResponse<Query, any>>;
+    submitQuery(namespace: string, array: string, type: string, contentType: string, query: Query, xPayer?: string, openAt?: number, options?: any): Promise<import("axios").AxiosResponse<Query>>;
     /**
      * send a query to run against a specified array/URI registered to a group/project, returns json results
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
@@ -6707,7 +6707,7 @@ export declare class QueryApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof QueryApi
      */
-    submitQueryJson(namespace: string, array: string, contentType: string, queryJson: QueryJson, xPayer?: string, options?: any): Promise<import("axios").AxiosResponse<object, any>>;
+    submitQueryJson(namespace: string, array: string, contentType: string, queryJson: QueryJson, xPayer?: string, options?: any): Promise<import("axios").AxiosResponse<object>>;
 }
 /**
  * SqlApi - axios parameter creator
@@ -6770,7 +6770,7 @@ export declare class SqlApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof SqlApi
      */
-    runSQL(namespace: string, sql: SQLParameters, acceptEncoding?: string, options?: any): Promise<import("axios").AxiosResponse<object[], any>>;
+    runSQL(namespace: string, sql: SQLParameters, acceptEncoding?: string, options?: any): Promise<import("axios").AxiosResponse<object[]>>;
 }
 /**
  * StatsApi - axios parameter creator
@@ -6821,7 +6821,7 @@ export declare class StatsApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof StatsApi
      */
-    getTiledbStats(options?: any): Promise<import("axios").AxiosResponse<InlineResponse200, any>>;
+    getTiledbStats(options?: any): Promise<import("axios").AxiosResponse<InlineResponse200>>;
 }
 /**
  * TasksApi - axios parameter creator
@@ -6989,7 +6989,7 @@ export declare class TasksApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof TasksApi
      */
-    runSQL(namespace: string, sql: SQLParameters, acceptEncoding?: string, options?: any): Promise<import("axios").AxiosResponse<object[], any>>;
+    runSQL(namespace: string, sql: SQLParameters, acceptEncoding?: string, options?: any): Promise<import("axios").AxiosResponse<object[]>>;
     /**
      * Fetch an array task
      * @param {string} id task id to fetch
@@ -6997,7 +6997,7 @@ export declare class TasksApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof TasksApi
      */
-    taskIdGet(id: string, options?: any): Promise<import("axios").AxiosResponse<ArrayTask, any>>;
+    taskIdGet(id: string, options?: any): Promise<import("axios").AxiosResponse<ArrayTask>>;
     /**
      * Retrieve results of an array task
      * @param {string} id task id to retrieve stored results
@@ -7006,7 +7006,7 @@ export declare class TasksApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof TasksApi
      */
-    taskIdResultGet(id: string, acceptEncoding?: string, options?: any): Promise<import("axios").AxiosResponse<string, any>>;
+    taskIdResultGet(id: string, acceptEncoding?: string, options?: any): Promise<import("axios").AxiosResponse<string>>;
     /**
      * Fetch a list of all array tasks a user has access to
      * @param {string} [namespace] namespace to filter
@@ -7027,7 +7027,7 @@ export declare class TasksApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof TasksApi
      */
-    tasksGet(namespace?: string, createdBy?: string, array?: string, start?: number, end?: number, page?: number, perPage?: number, type?: string, excludeType?: Array<string>, fileType?: Array<string>, excludeFileType?: Array<string>, status?: string, search?: string, orderby?: string, options?: any): Promise<import("axios").AxiosResponse<ArrayTaskData, any>>;
+    tasksGet(namespace?: string, createdBy?: string, array?: string, start?: number, end?: number, page?: number, perPage?: number, type?: string, excludeType?: Array<string>, fileType?: Array<string>, excludeFileType?: Array<string>, status?: string, search?: string, orderby?: string, options?: any): Promise<import("axios").AxiosResponse<ArrayTaskData>>;
 }
 /**
  * UdfApi - axios parameter creator
@@ -7335,7 +7335,7 @@ export declare class UdfApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof UdfApi
      */
-    deleteUDFInfo(namespace: string, name: string, options?: any): Promise<import("axios").AxiosResponse<void, any>>;
+    deleteUDFInfo(namespace: string, name: string, options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**
      * get a specific UDF in the given namespace
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
@@ -7344,7 +7344,7 @@ export declare class UdfApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof UdfApi
      */
-    getUDFInfo(namespace: string, name: string, options?: any): Promise<import("axios").AxiosResponse<UDFInfo, any>>;
+    getUDFInfo(namespace: string, name: string, options?: any): Promise<import("axios").AxiosResponse<UDFInfo>>;
     /**
      * Get all sharing details of the udf
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
@@ -7353,7 +7353,7 @@ export declare class UdfApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof UdfApi
      */
-    getUDFInfoSharingPolicies(namespace: string, name: string, options?: any): Promise<import("axios").AxiosResponse<UDFSharing[], any>>;
+    getUDFInfoSharingPolicies(namespace: string, name: string, options?: any): Promise<import("axios").AxiosResponse<UDFSharing[]>>;
     /**
      * register a UDF in the given namespace
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
@@ -7363,7 +7363,7 @@ export declare class UdfApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof UdfApi
      */
-    registerUDFInfo(namespace: string, name: string, udf: UDFInfoUpdate, options?: any): Promise<import("axios").AxiosResponse<void, any>>;
+    registerUDFInfo(namespace: string, name: string, udf: UDFInfoUpdate, options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**
      * Share a UDF with a user
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
@@ -7373,7 +7373,7 @@ export declare class UdfApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof UdfApi
      */
-    shareUDFInfo(namespace: string, name: string, udfSharing: UDFSharing, options?: any): Promise<import("axios").AxiosResponse<void, any>>;
+    shareUDFInfo(namespace: string, name: string, udfSharing: UDFSharing, options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**
      * submit a generic UDF in the given namespace
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
@@ -7383,7 +7383,7 @@ export declare class UdfApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof UdfApi
      */
-    submitGenericUDF(namespace: string, udf: GenericUDF, acceptEncoding?: string, options?: any): Promise<import("axios").AxiosResponse<any, any>>;
+    submitGenericUDF(namespace: string, udf: GenericUDF, acceptEncoding?: string, options?: any): Promise<import("axios").AxiosResponse<any>>;
     /**
      * submit a multi-array UDF in the given namespace
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
@@ -7393,7 +7393,7 @@ export declare class UdfApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof UdfApi
      */
-    submitMultiArrayUDF(namespace: string, udf: MultiArrayUDF, acceptEncoding?: string, options?: any): Promise<import("axios").AxiosResponse<any, any>>;
+    submitMultiArrayUDF(namespace: string, udf: MultiArrayUDF, acceptEncoding?: string, options?: any): Promise<import("axios").AxiosResponse<any>>;
     /**
      * send a UDF to run against a specified array/URI registered to a group/project
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
@@ -7406,7 +7406,7 @@ export declare class UdfApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof UdfApi
      */
-    submitUDF(namespace: string, array: string, udf: MultiArrayUDF, xPayer?: string, acceptEncoding?: string, v2?: string, options?: any): Promise<import("axios").AxiosResponse<any, any>>;
+    submitUDF(namespace: string, array: string, udf: MultiArrayUDF, xPayer?: string, acceptEncoding?: string, v2?: string, options?: any): Promise<import("axios").AxiosResponse<any>>;
     /**
      * retrieve a list of timestamps from the array fragment info listing in milliseconds, paginated
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
@@ -7417,7 +7417,7 @@ export declare class UdfApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof UdfApi
      */
-    udfNamespaceArrayEndTimestampsGet(namespace: string, array: string, page?: number, perPage?: number, options?: any): Promise<import("axios").AxiosResponse<ArrayEndTimestampData, any>>;
+    udfNamespaceArrayEndTimestampsGet(namespace: string, array: string, page?: number, perPage?: number, options?: any): Promise<import("axios").AxiosResponse<ArrayEndTimestampData>>;
     /**
      * updated an existing registerd UDF in the given namespace
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
@@ -7427,7 +7427,7 @@ export declare class UdfApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof UdfApi
      */
-    updateUDFInfo(namespace: string, name: string, udf: UDFInfoUpdate, options?: any): Promise<import("axios").AxiosResponse<void, any>>;
+    updateUDFInfo(namespace: string, name: string, udf: UDFInfoUpdate, options?: any): Promise<import("axios").AxiosResponse<void>>;
 }
 /**
  * UserApi - axios parameter creator
@@ -7942,7 +7942,7 @@ export declare class UserApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof UserApi
      */
-    addAWSAccessCredentials(namespace: string, awsAccessCredentials: AWSAccessCredentials, options?: any): Promise<import("axios").AxiosResponse<void, any>>;
+    addAWSAccessCredentials(namespace: string, awsAccessCredentials: AWSAccessCredentials, options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**
      * add a user to an organization
      * @param {string} organization organization name
@@ -7951,7 +7951,7 @@ export declare class UserApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof UserApi
      */
-    addUserToOrganization(organization: string, user: OrganizationUser, options?: any): Promise<import("axios").AxiosResponse<void, any>>;
+    addUserToOrganization(organization: string, user: OrganizationUser, options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**
      * Check if aws keys are set
      * @param {string} namespace namespace
@@ -7959,7 +7959,7 @@ export declare class UserApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof UserApi
      */
-    checkAWSAccessCredentials(namespace: string, options?: any): Promise<import("axios").AxiosResponse<AWSAccessCredentials[], any>>;
+    checkAWSAccessCredentials(namespace: string, options?: any): Promise<import("axios").AxiosResponse<AWSAccessCredentials[]>>;
     /**
      * Check if aws keys are set by name
      * @param {string} namespace namespace
@@ -7968,14 +7968,14 @@ export declare class UserApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof UserApi
      */
-    checkAWSAccessCredentialsByName(namespace: string, name: string, options?: any): Promise<import("axios").AxiosResponse<AWSAccessCredentials, any>>;
+    checkAWSAccessCredentialsByName(namespace: string, name: string, options?: any): Promise<import("axios").AxiosResponse<AWSAccessCredentials>>;
     /**
      * confirm user email
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UserApi
      */
-    confirmEmail(options?: any): Promise<import("axios").AxiosResponse<void, any>>;
+    confirmEmail(options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**
      * create a user
      * @param {User} user user to create
@@ -7983,7 +7983,7 @@ export declare class UserApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof UserApi
      */
-    createUser(user: User, options?: any): Promise<import("axios").AxiosResponse<void, any>>;
+    createUser(user: User, options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**
      * delete a AWS Access credentials in a namespace. This will likely cause arrays to become unreachable
      * @param {string} namespace namespace
@@ -7992,7 +7992,7 @@ export declare class UserApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof UserApi
      */
-    deleteAWSAccessCredentials(namespace: string, name: string, options?: any): Promise<import("axios").AxiosResponse<void, any>>;
+    deleteAWSAccessCredentials(namespace: string, name: string, options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**
      * delete a user
      * @param {string} username username or id
@@ -8000,7 +8000,7 @@ export declare class UserApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof UserApi
      */
-    deleteUser(username: string, options?: any): Promise<import("axios").AxiosResponse<void, any>>;
+    deleteUser(username: string, options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**
      * delete a user from an organization
      * @param {string} organization organization name
@@ -8009,7 +8009,7 @@ export declare class UserApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof UserApi
      */
-    deleteUserFromOrganization(organization: string, username: string, options?: any): Promise<import("axios").AxiosResponse<void, any>>;
+    deleteUserFromOrganization(organization: string, username: string, options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**
      * get a user from an organization
      * @param {string} organization organization name
@@ -8018,7 +8018,7 @@ export declare class UserApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof UserApi
      */
-    getOrganizationUser(organization: string, username: string, options?: any): Promise<import("axios").AxiosResponse<OrganizationUser, any>>;
+    getOrganizationUser(organization: string, username: string, options?: any): Promise<import("axios").AxiosResponse<OrganizationUser>>;
     /**
      * Get session token for user
      * @param {string} [rememberMe] flag to create a token with expiration of 30 days, default is false
@@ -8026,21 +8026,21 @@ export declare class UserApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof UserApi
      */
-    getSession(rememberMe?: string, options?: any): Promise<import("axios").AxiosResponse<Token, any>>;
+    getSession(rememberMe?: string, options?: any): Promise<import("axios").AxiosResponse<Token>>;
     /**
      * retrieves available token scopes for a user
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UserApi
      */
-    getTokenScopes(options?: any): Promise<import("axios").AxiosResponse<TokenScope[], any>>;
+    getTokenScopes(options?: any): Promise<import("axios").AxiosResponse<TokenScope[]>>;
     /**
      * get a user
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UserApi
      */
-    getUser(options?: any): Promise<import("axios").AxiosResponse<User, any>>;
+    getUser(options?: any): Promise<import("axios").AxiosResponse<User>>;
     /**
      * get a user
      * @param {string} username username or id
@@ -8048,7 +8048,7 @@ export declare class UserApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof UserApi
      */
-    getUserWithUsername(username: string, options?: any): Promise<import("axios").AxiosResponse<User, any>>;
+    getUserWithUsername(username: string, options?: any): Promise<import("axios").AxiosResponse<User>>;
     /**
      * Request an authorization token, optionally taken a TokenRequest object to set parameters on the token
      * @param {TokenRequest} [tokenRequest] token request object
@@ -8056,7 +8056,7 @@ export declare class UserApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof UserApi
      */
-    requestToken(tokenRequest?: TokenRequest, options?: any): Promise<import("axios").AxiosResponse<Token, any>>;
+    requestToken(tokenRequest?: TokenRequest, options?: any): Promise<import("axios").AxiosResponse<Token>>;
     /**
      * reset user password
      * @param {InlineObject} user
@@ -8064,7 +8064,7 @@ export declare class UserApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof UserApi
      */
-    resetUserPassword(user: InlineObject, options?: any): Promise<import("axios").AxiosResponse<void, any>>;
+    resetUserPassword(user: InlineObject, options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**
      * revoke an authorization token
      * @param {string} token token name or token itself
@@ -8072,21 +8072,21 @@ export declare class UserApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof UserApi
      */
-    revokeToken(token: string, options?: any): Promise<import("axios").AxiosResponse<void, any>>;
+    revokeToken(token: string, options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**
      * Fetch a list of user tokens
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UserApi
      */
-    tokensGet(options?: any): Promise<import("axios").AxiosResponse<Token[], any>>;
+    tokensGet(options?: any): Promise<import("axios").AxiosResponse<Token[]>>;
     /**
      * Fetch a list of user session tokens
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UserApi
      */
-    tokensSessionGet(options?: any): Promise<import("axios").AxiosResponse<Token[], any>>;
+    tokensSessionGet(options?: any): Promise<import("axios").AxiosResponse<Token[]>>;
     /**
      * Update aws keys or associated buckets. This will update the key associations for each array in the namespace
      * @param {string} namespace namespace
@@ -8096,7 +8096,7 @@ export declare class UserApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof UserApi
      */
-    updateAWSAccessCredentials(namespace: string, name: string, awsAccessCredentials: AWSAccessCredentials, options?: any): Promise<import("axios").AxiosResponse<void, any>>;
+    updateAWSAccessCredentials(namespace: string, name: string, awsAccessCredentials: AWSAccessCredentials, options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**
      * update a user
      * @param {string} username username or id
@@ -8105,7 +8105,7 @@ export declare class UserApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof UserApi
      */
-    updateUser(username: string, user: User, options?: any): Promise<import("axios").AxiosResponse<void, any>>;
+    updateUser(username: string, user: User, options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**
      * update a user in an organization
      * @param {string} organization organization name
@@ -8115,5 +8115,5 @@ export declare class UserApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof UserApi
      */
-    updateUserInOrganization(organization: string, username: string, user: OrganizationUser, options?: any): Promise<import("axios").AxiosResponse<void, any>>;
+    updateUserInOrganization(organization: string, username: string, user: OrganizationUser, options?: any): Promise<import("axios").AxiosResponse<void>>;
 }
