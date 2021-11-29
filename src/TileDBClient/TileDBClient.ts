@@ -23,6 +23,7 @@ class TileDBClient {
   TasksApi: TasksApi;
   udf: UDF;
   sql: Sql;
+  query: TileDBQuery;
 
   constructor(params: ConfigurationParameters) {
     const config = new Configuration(params);
@@ -42,6 +43,7 @@ class TileDBClient {
     this.TasksApi = new TasksApi(params);
     this.udf = new UDF(this.config);
     this.sql = new Sql(this.config);
+    this.query = new TileDBQuery(this.configV2);
   }
 
   public info(namespace: string, array: string, options?: any) {
