@@ -21,6 +21,10 @@ export interface Options {
    * to avoid expensive calculations
    */
   ignoreOffsets?: boolean;
+  /**
+   * Return only given attributes/dimensions
+   */
+  attributes?: string[];
 }
 
 /**

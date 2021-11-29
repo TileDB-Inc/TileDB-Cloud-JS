@@ -190,6 +190,11 @@ export class TileDBQuery {
         "application/json"
       );
       const arraySchema = arraySchemaResponse.data;
+      const options = {
+        ignoreNullables: body.ignoreNullables,
+        ignoreOffsets: body.ignoreOffsets,
+        attributes: body.attributes,
+      };
       /**
        * Get the query response in capnp, we set responseType to arraybuffer instead of JSON
        * in order to deserialize the query capnp object.
@@ -202,7 +207,8 @@ export class TileDBQuery {
         dataToQuery(
           body,
           arraySchema.attributes,
-          arraySchema.domain.dimensions
+          arraySchema.domain.dimensions,
+          options
         ),
         undefined,
         undefined,
@@ -214,10 +220,6 @@ export class TileDBQuery {
           responseType: "arraybuffer",
         }
       );
-      const options = {
-        ignoreNullables: body.ignoreNullables,
-        ignoreOffsets: body.ignoreOffsets,
-      };
 
       /**
        * Axios in nodeJS environments casts the response to a Buffer object
@@ -304,6 +306,7 @@ export class TileDBQuery {
       ...arraySchema.domain.dimensions,
       ...arraySchema.attributes,
     ];
+
     // Calculate results
     const results = getResultsFromArrayBuffer(
       resultsBuffer,

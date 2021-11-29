@@ -1,6 +1,7 @@
 import { Attribute, Dimension } from "../v1";
 import { Query } from "../v2";
 import { QueryData } from "../TileDBQuery/TileDBQuery";
+import { Options } from "./getResultsFromArrayBuffer";
 /**
  * Helper function that takes user data and returns a Query object.
  * Since the Query object is really big we don't expect user to manually set all the values.
@@ -11,5 +12,5 @@ import { QueryData } from "../TileDBQuery/TileDBQuery";
  * @param dimensions
  * @returns Query object
  */
-declare const dataToQuery: (data: QueryData, attributes: Attribute[], dimensions: Dimension[]) => Query;
+declare const dataToQuery: (data: QueryData, attributes: Attribute[], dimensions: Dimension[], options: Options) => Query;
 export default dataToQuery;

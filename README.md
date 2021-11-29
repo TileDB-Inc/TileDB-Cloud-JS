@@ -19,24 +19,17 @@ npm install @tiledb-inc/tiledb-cloud
 ### Basic usage:
 
 ```javascript
-const tiledb = require("@tiledb-inc/tiledb-cloud");
+import client = from "@tiledb-inc/tiledb-cloud";
 
 // API tokens are the recommend way to access the cloud apis
-const config = new tiledb.v1.Configuration({
+const config = {
   apiKey: "<insert token from setting page here>"
-});
+};
 
-// Username and passwords are also supported, uncomment below and comment out above to use username/password auth instead
-// const config = {
-//   username: "<tiledb-cloud-username>",
-//   password: "<tiledb-cloud-password>"
-// };
+// First we must create the client.
+const tiledbClient = new client(config);
 
-// First we must create API objects.
-// In the future we will improve and simplify this interface
-const arrayApi = new tiledb.v1.ArrayApi(config);
-
-arrayApi.getArraysInNamespace('<tiledb-cloud-username>').then((res) => {
+tiledbClient.userProfile().then((res) => {
   console.log(res);
 }).catch((ex) => {
   console.log(ex);
@@ -49,32 +42,21 @@ arrayApi.getArraysInNamespace('<tiledb-cloud-username>').then((res) => {
 
 ```javascript
 
-const tiledb = require('@tiledb-inc/tiledb-cloud');
+import client = from "@tiledb-inc/tiledb-cloud";
 
 // API tokens are the recommend way to access the cloud apis
-const config = new tiledb.v1.Configuration({
+const config = {
   apiKey: "<insert token from setting page here>"
-});
+};
 
-// Username and passwords are also supported, uncomment below and comment out above to use username/password auth instead
-// const config = {
-//   username: "<tiledb-cloud-username>",
-//   password: "<tiledb-cloud-password>"
-// };
-
-// First we must create API objects.
-// In the future we will improve and simplify this interface
-const sqlAPI = new tiledb.v1.SqlApi(config);
+// Create a client instance
+const tiledbClient = new client(config);
 
 // SQL query
 const sql = "select `rows`, AVG(a) as avg_a from `tiledb://TileDB-Inc/quickstart_dense` GROUP BY `rows`";
 
-const sqlDetails = {
-  query: sql
-};
-
 // Run SQL and print any returned data to console
-sqlAPI.runSQL("<tiledb-cloud-username>", sqlDetails).then((res) => {
+tiledbClient.sql.exec("<tiledb-cloud-username>", sql).then((res) => {
   console.log(res.data)
   /*
     Will print:
@@ -92,56 +74,6 @@ sqlAPI.runSQL("<tiledb-cloud-username>", sqlDetails).then((res) => {
 
 ```
 
-
-## Cap'n Proto serialization
-
-Endpoints that support cap'n proto mime type user should set appropriate headers (Accept for GET requests and Content-Type for POST/PUT) to `application/capnp`.
-
-For `POST` requests library will automatically serialize data to cap'n proto.
-
-```javascript
-const tiledb = require("@tiledb-inc/tiledb-cloud");
-
-const config = new tiledb.v1.Configuration({
-  apiKey: "<insert token from setting page here>"
-});
-const arrayApi = new tiledb.v1.ArrayApi(config);
-
-arrayApi
-  .updateArrayMetadataCapnp(
-    "ns",
-    "array_name",
-    data,
-    {
-      headers: {
-        "Content-Type": "application/capnp",
-      },
-    })
-```
-
-For `GET` requests library provides methods to deserialize data. If Accept header is set to "application/capnp", library will set `responseType` to `arraybuffer` since helpers accept [ArrayBuffer](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer) to deserialize the response (user can still override `responseType`).
-`deserializeCapnp` helper function receives an `ArrayBuffer` and the type of the data expected. Library provides a `DeserializableType` enum for all the supported types.
-
-```javascript
-const tiledb = require("@tiledb-inc/tiledb-cloud");
-
-const config = new tiledb.v1.Configuration({
-  apiKey: "<insert token from setting page here>"
-});
-const arrayApi = new tiledb.v1.ArrayApi(config);
-
-arrayApi
-  .getArrayMetadataCapnp("ns", "array_name", {
-    headers: {
-      "Accept": "application/capnp",
-    },
-  })
-  .then((data) => {
-    // data.data is an ArrayBuffer
-    console.log(tiledb.deserializeCapnp(data.data, tiledb.DeserializableType.arrayMetadata));
-  })
-```
-
 ## Queries
 
 TileDB-Cloud-JS supports TileDB queries, by serializing data to capnproto. `bufferSize` dictates the server the number of bytes that should allocated to make this query. In case the `bufferSize` is not enough, it will result to an incomplete query. For this reason `ReadQuery` is an async generator so a user could get results in batches.
@@ -151,23 +83,23 @@ TileDB-Cloud-JS supports TileDB queries, by serializing data to capnproto. `buff
 Dimensions should always be an array of 2 (start of the range and the end of the range).
 
 ```javascript
-import { TileDBQuery } from '@tiledb-inc/tiledb-cloud';
-import { Layout } from '@tiledb-inc/tiledb-cloud/lib/v2';
+import client = from "@tiledb-inc/tiledb-cloud";
 
-const tileDBQuery = new TileDBQuery({
-    apiKey: 'myApiKey'
-});
+// API tokens are the recommend way to access the cloud apis
+const config = {
+  apiKey: "<insert token from setting page here>"
+};
 
-const dimension1 = [636800,637800];
-const dimension2 = [851000,853000];
+// Create a client instance
+const tiledbClient = new client(config);
 
 const query = {
-    layout: Layout.RowMajor,
+    layout: "row-major",
     ranges: [dimension1, dimension2],
     bufferSize: 1500000000,
 };
 
-const generator = tileDBQuery.ReadQuery("namespace", "arrayName", query);
+const generator = tiledbClient.query.ReadQuery("namespace", "arrayName", query);
 generator.next().then(({value}) => {
     console.log(value)
 });
@@ -178,18 +110,21 @@ generator.next().then(({value}) => {
 Dimensions should always be an array of 2 (start of the range and the end of the range).
 
 ```javascript
-import { TileDBQuery } from '@tiledb-inc/tiledb-cloud';
-import { Layout } from '@tiledb-inc/tiledb-cloud/lib/v2';
+import client = from "@tiledb-inc/tiledb-cloud";
 
-const tileDBQuery = new TileDBQuery({
-    apiKey: 'myApiKey'
-});
+// API tokens are the recommend way to access the cloud apis
+const config = {
+  apiKey: "<insert token from setting page here>"
+};
+
+// Create a client instance
+const tiledbClient = new client(config);
 
 const dimension1 = [636800,637800];
 const dimension2 = [851000,853000];
 
 const query = {
-    layout: Layout.RowMajor,
+    layout: "row-major",
     ranges: [dimension1, dimension2],
     bufferSize: 1500,
 };
@@ -197,7 +132,7 @@ const query = {
 
 // Iterate over all results
 (async function() {
-    for await (let results of tileDBQuery.ReadQuery("namespace", "arrayName", query)) {
+    for await (let results of tiledbClient.query.ReadQuery("namespace", "arrayName", query)) {
         console.log(results);
     }
 })()
@@ -219,25 +154,28 @@ const generator = tileDBQuery.ReadQuery("namespace", "arrayName", query);
 A dimension could be an array of ranges as well
 
 ```javascript
-import { TileDBQuery } from '@tiledb-inc/tiledb-cloud';
-import { Layout } from '@tiledb-inc/tiledb-cloud/lib/v2';
+import client = from "@tiledb-inc/tiledb-cloud";
 
-const tileDBQuery = new TileDBQuery({
-    apiKey: 'myApiKey'
-});
+// API tokens are the recommend way to access the cloud apis
+const config = {
+  apiKey: "<insert token from setting page here>"
+};
+
+// Create a client instance
+const tiledbClient = new client(config);
 
 const dimension1 = [636800,637800];
 const dimension2 = [[1577836800, 1588878856], [1577836800, 1578878856]];
 
 const query = {
-    layout: Layout.RowMajor,
+    layout: "row-major",
     ranges: [dimension1, dimension2],
     bufferSize: 15000000000000,
 };
 
 // Iterate over all results
 (async function() {
-    for await (let results of tileDBQuery.ReadQuery("my_namespace", "my_array", query)) {
+    for await (let results of tiledbClient.query.ReadQuery("my_namespace", "my_array", query)) {
       // returns an object with keys the name of the attributes and values the result
         console.log(results);
     }
@@ -249,26 +187,29 @@ const query = {
 By setting a dimension as an empty array, query will select the whole dimension.
 
 ```javascript
-import { TileDBQuery } from '@tiledb-inc/tiledb-cloud';
-import { Layout } from '@tiledb-inc/tiledb-cloud/lib/v2';
+import client = from "@tiledb-inc/tiledb-cloud";
 
-const tileDBQuery = new TileDBQuery({
-    apiKey: 'myApiKey'
-});
+// API tokens are the recommend way to access the cloud apis
+const config = {
+  apiKey: "<insert token from setting page here>"
+};
+
+// Create a client instance
+const tiledbClient = new client(config);
 
 const dimension1 = [636800,637800];
 // Setting empty array, query will select whole 2nd dimension
 const dimension2 = [];
 
 const query = {
-    layout: Layout.RowMajor,
+    layout: "row-major",
     ranges: [dimension1, dimension2],
     bufferSize: 15000000000000,
 };
 
 // Iterate over all results
 (async function() {
-    for await (let results of tileDBQuery.ReadQuery("my_namespace", "my_array", query)) {
+    for await (let results of tiledbClient.query.ReadQuery("my_namespace", "my_array", query)) {
       // returns an object with keys the name of the attributes and values the result
         console.log(results);
     }
@@ -281,15 +222,19 @@ const query = {
 For write queries user should provide an object with the attribute values and the coordinates of the cells (rows and cols in the object below). In this case we are writing to cells [1, 1] up to [1, 3].
 
 ```javascript
-import { TileDBQuery } from '@tiledb-inc/tiledb-cloud';
-import { Layout } from '@tiledb-inc/tiledb-cloud/lib/v2';
+import client = from "@tiledb-inc/tiledb-cloud";
 
-const tileDBQuery = new TileDBQuery({
-    apiKey: 'myApiKey'
-});
+// API tokens are the recommend way to access the cloud apis
+const config = {
+  apiKey: "<insert token from setting page here>"
+};
+
+// Create a client instance
+const tiledbClient = new client(config);
+
 
 const query = {
-  layout: Layout.Unordered,
+  layout: "unordered",
   values: {
     rows: {
       values: [1, 1, 1],
@@ -306,7 +251,7 @@ const query = {
   },
 };
 
-tileDBQuery.WriteQuery("my_namespace", "my_array", query)
+tiledbClient.query.WriteQuery("my_namespace", "my_array", query)
   .then((result) => {
     // returns the query object
       console.log(result);
@@ -318,15 +263,18 @@ tileDBQuery.WriteQuery("my_namespace", "my_array", query)
 For Dense arrays we can provide a subarray instead of the coordinates and set the order (e.g. layout set to row-major).
 
 ```javascript
-import { TileDBQuery } from '@tiledb-inc/tiledb-cloud';
-import { Layout } from '@tiledb-inc/tiledb-cloud/lib/v2';
+import client = from "@tiledb-inc/tiledb-cloud";
 
-const tileDBQuery = new TileDBQuery({
-    apiKey: 'myApiKey'
-});
+// API tokens are the recommend way to access the cloud apis
+const config = {
+  apiKey: "<insert token from setting page here>"
+};
+
+// Create a client instance
+const tiledbClient = new client(config);
 
 const query = {
-  layout: Layout.RowMajor,
+  layout: "row-major",
   subarray: [[1, 1], [1, 3]],
   values: {
     attr1: {
@@ -338,7 +286,7 @@ const query = {
   },
 };
 
-tileDBQuery.WriteQuery("my_namespace", "my_array", query)
+tiledbClient.query.WriteQuery("my_namespace", "my_array", query)
   .then((result) => {
     // returns the query object
       console.log(result);
@@ -350,15 +298,19 @@ tileDBQuery.WriteQuery("my_namespace", "my_array", query)
 For nullables and var-length attributes user should provide `validity` attribute and/or the `offsets`.
 
 ```javascript
-import { TileDBQuery } from '@tiledb-inc/tiledb-cloud';
-import { Layout } from '@tiledb-inc/tiledb-cloud/lib/v2';
+import client = from "@tiledb-inc/tiledb-cloud";
 
-const tileDBQuery = new TileDBQuery({
-    apiKey: 'myApiKey'
-});
+// API tokens are the recommend way to access the cloud apis
+const config = {
+  apiKey: "<insert token from setting page here>"
+};
+
+// Create a client instance
+const tiledbClient = new client(config);
+
 
 const query = {
-  layout: Layout.Unordered,
+  layout: "unordered",
   values: {
       a1: {
           values: [100, 200],
@@ -383,7 +335,7 @@ const query = {
   }
 };
 
-tileDBQuery.WriteQuery("my_namespace", "my_array", query)
+tiledbClient.query.WriteQuery("my_namespace", "my_array", query)
   .then((result) => {
     // returns the query object
       console.log(result);
