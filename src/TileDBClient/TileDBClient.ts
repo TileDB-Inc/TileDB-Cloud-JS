@@ -9,6 +9,7 @@ import {
   UserApi,
 } from "../v1";
 import UDF from "../UDF";
+import Sql from "../Sql";
 import { ConfigurationParameters, Configuration, Layout } from "../v2";
 import TileDBQuery from "../TileDBQuery";
 
@@ -21,6 +22,7 @@ class TileDBClient {
   NotebookApi: NotebookApi;
   TasksApi: TasksApi;
   udf: UDF;
+  sql: Sql;
 
   constructor(params: ConfigurationParameters) {
     const config = new Configuration(params);
@@ -39,6 +41,7 @@ class TileDBClient {
     this.NotebookApi = new NotebookApi(params);
     this.TasksApi = new TasksApi(params);
     this.udf = new UDF(this.config);
+    this.sql = new Sql(this.config);
   }
 
   public info(namespace: string, array: string, options?: any) {

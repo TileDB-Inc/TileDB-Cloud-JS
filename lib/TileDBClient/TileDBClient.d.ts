@@ -1,6 +1,7 @@
 import { NotebookApi } from "./../v1/api";
 import { ArrayApi, ArrayInfoUpdate, ArraySharing, OrganizationApi, TasksApi, UserApi } from "../v1";
 import UDF from "../UDF";
+import Sql from "../Sql";
 import { ConfigurationParameters, Configuration } from "../v2";
 declare class TileDBClient {
     config: Configuration;
@@ -11,6 +12,7 @@ declare class TileDBClient {
     NotebookApi: NotebookApi;
     TasksApi: TasksApi;
     udf: UDF;
+    sql: Sql;
     constructor(params: ConfigurationParameters);
     info(namespace: string, array: string, options?: any): Promise<import("axios").AxiosResponse<import("../v1").ArrayInfo>>;
     arrayActivity(namespace: string, array: string, start?: number, end?: number, eventTypes?: string, taskId?: string, hasTaskId?: boolean, options?: any): Promise<import("axios").AxiosResponse<import("../v1").ArrayActivityLog[]>>;
