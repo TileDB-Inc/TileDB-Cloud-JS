@@ -215,7 +215,12 @@ describe("dataToQuery()", () => {
         attr.originalValidityLenBufferSizeInBytes
       );
     }, 0);
-    const res = dataToQuery(stringQueryData, arraySchemaAttributes, dimensions);
+    const res = dataToQuery(
+      stringQueryData,
+      arraySchemaAttributes,
+      dimensions,
+      {}
+    );
 
     expect(res.reader.layout).toEqual("row-major");
     expect(res.reader.subarray.ranges).toEqual(exptectedRanges);
