@@ -19,7 +19,7 @@ npm install @tiledb-inc/tiledb-cloud
 ### Basic usage:
 
 ```javascript
-import client = from "@tiledb-inc/tiledb-cloud";
+import client from "@tiledb-inc/tiledb-cloud";
 
 // API tokens are the recommend way to access the cloud apis
 const config = {
@@ -38,11 +38,51 @@ tiledbClient.userProfile().then((res) => {
 
 ```
 
+### Download a file in TileDB format:
+
+```javascript
+import client from "@tiledb-inc/tiledb-cloud";
+
+// API tokens are the recommend way to access the cloud apis
+const config = {
+  apiKey: "<insert token from setting page here>"
+};
+
+// First we must create the client.
+const tiledbClient = new client(config);
+
+client.downloadFile('namespace', 'tiledb_file').then((res) => {
+  console.log('saved!');
+});
+
+
+```
+
+### Download a TileDB notebook:
+
+```javascript
+import client from "@tiledb-inc/tiledb-cloud";
+
+// API tokens are the recommend way to access the cloud apis
+const config = {
+  apiKey: "<insert token from setting page here>"
+};
+
+// First we must create the client.
+const tiledbClient = new client(config);
+
+client.downloadNotebookToFile("kostas", "test_plot_widget").then((res) => {
+  console.log('saved as test_plot_widget.ipynb');
+});
+
+
+```
+
 ### Serverless SQL example:
 
 ```javascript
 
-import client = from "@tiledb-inc/tiledb-cloud";
+import client from "@tiledb-inc/tiledb-cloud";
 
 // API tokens are the recommend way to access the cloud apis
 const config = {
@@ -83,7 +123,7 @@ TileDB-Cloud-JS supports TileDB queries, by serializing data to capnproto. `buff
 Dimensions should always be an array of 2 (start of the range and the end of the range).
 
 ```javascript
-import client = from "@tiledb-inc/tiledb-cloud";
+import client from "@tiledb-inc/tiledb-cloud";
 
 // API tokens are the recommend way to access the cloud apis
 const config = {
@@ -110,7 +150,7 @@ generator.next().then(({value}) => {
 Dimensions should always be an array of 2 (start of the range and the end of the range).
 
 ```javascript
-import client = from "@tiledb-inc/tiledb-cloud";
+import client from "@tiledb-inc/tiledb-cloud";
 
 // API tokens are the recommend way to access the cloud apis
 const config = {
@@ -154,7 +194,7 @@ const generator = tileDBQuery.ReadQuery("namespace", "arrayName", query);
 A dimension could be an array of ranges as well
 
 ```javascript
-import client = from "@tiledb-inc/tiledb-cloud";
+import client from "@tiledb-inc/tiledb-cloud";
 
 // API tokens are the recommend way to access the cloud apis
 const config = {
@@ -187,7 +227,7 @@ const query = {
 By setting a dimension as an empty array, query will select the whole dimension.
 
 ```javascript
-import client = from "@tiledb-inc/tiledb-cloud";
+import client from "@tiledb-inc/tiledb-cloud";
 
 // API tokens are the recommend way to access the cloud apis
 const config = {
@@ -222,7 +262,7 @@ const query = {
 For write queries user should provide an object with the attribute values and the coordinates of the cells (rows and cols in the object below). In this case we are writing to cells [1, 1] up to [1, 3].
 
 ```javascript
-import client = from "@tiledb-inc/tiledb-cloud";
+import client from "@tiledb-inc/tiledb-cloud";
 
 // API tokens are the recommend way to access the cloud apis
 const config = {
@@ -263,7 +303,7 @@ tiledbClient.query.WriteQuery("my_namespace", "my_array", query)
 For Dense arrays we can provide a subarray instead of the coordinates and set the order (e.g. layout set to row-major).
 
 ```javascript
-import client = from "@tiledb-inc/tiledb-cloud";
+import client from "@tiledb-inc/tiledb-cloud";
 
 // API tokens are the recommend way to access the cloud apis
 const config = {
@@ -298,7 +338,7 @@ tiledbClient.query.WriteQuery("my_namespace", "my_array", query)
 For nullables and var-length attributes user should provide `validity` attribute and/or the `offsets`.
 
 ```javascript
-import client = from "@tiledb-inc/tiledb-cloud";
+import client from "@tiledb-inc/tiledb-cloud";
 
 // API tokens are the recommend way to access the cloud apis
 const config = {
