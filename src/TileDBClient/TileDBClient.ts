@@ -13,6 +13,11 @@ import Sql from "../Sql";
 import { ConfigurationParameters, Configuration, Layout } from "../v2";
 import TileDBQuery from "../TileDBQuery";
 
+interface NotebookOrFileDimensions {
+  contents: number[];
+  position: number[];
+}
+
 class TileDBClient {
   config: Configuration;
   configV2: Configuration;
@@ -309,21 +314,37 @@ class TileDBClient {
   }
 
   public async downloadNotebookContents(namespace: string, notebook: string) {
-    const notebookInfo = await this.info(namespace, notebook);
+    interface NotebookMetadata {
+      file_size: number;
+    }
+    const res = await this.ArrayApi.getArrayMetaDataJson(namespace, notebook);
     const tiledbQuery = new TileDBQuery(this.configV2);
-    const notebookSize = notebookInfo.data.size;
+    const notebookSize = (res.data as NotebookMetadata).file_size;
+    if (!notebookSize) {
+      throw new Error(
+        `file_size was not found inside the array's metadata, are you sure that "${namespace}/${notebook}" is a TileDB notebook?`
+      );
+    }
     const query = {
       layout: Layout.RowMajor,
-      ranges: [[]],
-      // TODO: What is the correct buffer size?
-      // Sometimes getting error 502 (buffer size is too big) or not the complete contents
-      bufferSize: 0.6 * notebookSize,
+      ranges: [[0, notebookSize]],
+      bufferSize: notebookSize,
       attributes: ["contents"],
     };
+    // NotebookContents is an Array of Uint8
+    let notebookContents: number[] = [];
 
-    const gen = tiledbQuery.ReadQuery(namespace, notebook, query);
-    const { value } = await gen.next();
-    const buffer = Uint8Array.from((value as { contents: number[] }).contents);
+    for await (let results of tiledbQuery.ReadQuery(
+      namespace,
+      notebook,
+      query
+    )) {
+      notebookContents = notebookContents.concat(
+        (results as NotebookOrFileDimensions).contents
+      );
+    }
+
+    const buffer = Uint8Array.from(notebookContents);
     const decoder = new TextDecoder();
     const json = decoder.decode(buffer);
 
@@ -334,6 +355,44 @@ class TileDBClient {
   public async downloadNotebookToFile(namespace: string, notebook: string) {
     const contents = await this.downloadNotebookContents(namespace, notebook);
     await save(contents, `${notebook}.ipynb`);
+  }
+
+  public async downloadFile(namespace: string, file: string) {
+    interface FileMetadata {
+      original_file_name: string;
+      file_size: number;
+      file_extension: string;
+      mime_type: string;
+    }
+    const res = await this.ArrayApi.getArrayMetaDataJson(namespace, file);
+    const { original_file_name, file_size } = res.data as FileMetadata;
+
+    if (!original_file_name || !file_size) {
+      throw new Error(
+        `file_size or original_file_name were not found inside the array's metadata, are you sure that "${namespace}/${file}" is a TileDB file?`
+      );
+    }
+
+    const tiledbQuery = new TileDBQuery(this.configV2);
+    // FileContents is an Array of Uint8
+    let fileContents: number[] = [];
+
+    const query = {
+      layout: Layout.RowMajor,
+      ranges: [[0, file_size]],
+      bufferSize: file_size,
+      attributes: ["contents"],
+    };
+
+    for await (let results of tiledbQuery.ReadQuery(namespace, file, query)) {
+      fileContents = fileContents.concat(
+        (results as NotebookOrFileDimensions).contents
+      );
+    }
+
+    const buffer = Uint8Array.from(fileContents).buffer;
+
+    await save(buffer, original_file_name);
   }
 
   // TODO: We need a way to create an array and save contents as "contents" attribute
