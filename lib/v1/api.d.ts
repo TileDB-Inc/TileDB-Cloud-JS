@@ -55,13 +55,13 @@ export interface AWSAccessCredentials {
      */
     buckets?: Array<string>;
     /**
-     * Time when udf dependencies was created (rfc3339)
+     * Time when UDF dependencies were created (rfc3339)
      * @type {string}
      * @memberof AWSAccessCredentials
      */
     created_at?: string;
     /**
-     * Time when udf dependencies was last updated (rfc3339)
+     * Time when UDF dependencies was last updated (rfc3339)
      * @type {string}
      * @memberof AWSAccessCredentials
      */
@@ -137,13 +137,13 @@ export interface ArrayActivityLog {
      */
     bytes_received?: number;
     /**
-     * uuid of associated array task
+     * UUID of associated array task
      * @type {string}
      * @memberof ArrayActivityLog
      */
     array_task_id?: string;
     /**
-     * id of the activity
+     * ID of the activity
      * @type {string}
      * @memberof ArrayActivityLog
      */
@@ -231,23 +231,23 @@ export interface ArrayEndTimestampData {
  */
 export interface ArrayFavorite {
     /**
-     * unique uuid of the favorite
-     * @type {string}
-     * @memberof ArrayFavorite
-     */
-    id?: string;
-    /**
-     * Datetime the favorite was created in UTC
-     * @type {string}
-     * @memberof ArrayFavorite
-     */
-    created_at?: string;
-    /**
-     * unique uuid of the array
+     * unique UUID of the array
      * @type {string}
      * @memberof ArrayFavorite
      */
     array_uuid?: string;
+    /**
+     * the namespace of the array
+     * @type {string}
+     * @memberof ArrayFavorite
+     */
+    namespace?: string;
+    /**
+     * the name of the array
+     * @type {string}
+     * @memberof ArrayFavorite
+     */
+    name?: string;
 }
 /**
  * Object including array favorites and pagination metadata
@@ -275,7 +275,7 @@ export interface ArrayFavoritesData {
  */
 export interface ArrayInfo {
     /**
-     * unique id of registered array
+     * unique ID of registered array
      * @type {string}
      * @memberof ArrayInfo
      */
@@ -420,12 +420,6 @@ export interface ArrayInfo {
      * @memberof ArrayInfo
      */
     is_favorite?: boolean;
-    /**
-     * The favorite UUID if the array if is_favorite is true
-     * @type {string}
-     * @memberof ArrayInfo
-     */
-    favorite_uuid?: string;
 }
 /**
  * metadata of an array
@@ -670,7 +664,7 @@ export interface ArraySharing {
  */
 export interface ArrayTask {
     /**
-     * task id
+     * task ID
      * @type {string}
      * @memberof ArrayTask
      */
@@ -734,7 +728,7 @@ export interface ArrayTask {
      * @type {string}
      * @memberof ArrayTask
      */
-    finish_time?: string;
+    finish_time?: string | null;
     /**
      * Total accumulated for task in USD, example is $0.12
      * @type {number}
@@ -819,6 +813,18 @@ export interface ArrayTask {
      * @memberof ArrayTask
      */
     result_format?: ResultFormat;
+    /**
+     * If set, the ID of the log for the task graph that this was part of.
+     * @type {string}
+     * @memberof ArrayTask
+     */
+    task_graph_uuid?: string;
+    /**
+     * If set, the client-defined ID of the node within this task\'s graph.
+     * @type {string}
+     * @memberof ArrayTask
+     */
+    client_node_uuid?: string;
 }
 /**
  * Object for ui array tasks browser page
@@ -889,9 +895,12 @@ export interface ArrayTaskLog {
  * @enum {string}
  */
 export declare enum ArrayTaskStatus {
+    Queued = "QUEUED",
     Failed = "FAILED",
     Completed = "COMPLETED",
-    Running = "RUNNING"
+    Running = "RUNNING",
+    Denied = "DENIED",
+    Unknown = "UNKNOWN"
 }
 /**
  * Synchronous Task Type
@@ -1307,23 +1316,74 @@ export interface DomainArray {
     float64?: Array<number>;
 }
 /**
- * Request body to add a favorite
+ * Input/Output information required to create a new file
  * @export
- * @interface FavoriteCreate
+ * @interface FileCreate
  */
-export interface FavoriteCreate {
+export interface FileCreate {
     /**
-     *
+     * storage URI of the input file
      * @type {string}
-     * @memberof FavoriteCreate
+     * @memberof FileCreate
      */
-    name: string;
+    input_uri?: string;
     /**
-     *
+     * output location of the TileDB File
      * @type {string}
-     * @memberof FavoriteCreate
+     * @memberof FileCreate
      */
-    namespace: string;
+    output_uri?: string;
+    /**
+     * name to set for registered file
+     * @type {string}
+     * @memberof FileCreate
+     */
+    name?: string;
+}
+/**
+ * Created file name and information
+ * @export
+ * @interface FileCreated
+ */
+export interface FileCreated {
+    /**
+     * output location of the TileDB File
+     * @type {string}
+     * @memberof FileCreated
+     */
+    output_uri?: string;
+    /**
+     * name of the file created
+     * @type {string}
+     * @memberof FileCreated
+     */
+    file_name?: string;
+}
+/**
+ * Output information required to export a file
+ * @export
+ * @interface FileExport
+ */
+export interface FileExport {
+    /**
+     * output location of the TileDB File
+     * @type {string}
+     * @memberof FileExport
+     */
+    output_uri?: string;
+}
+/**
+ * Output uri of the exported file
+ * @export
+ * @interface FileExported
+ */
+export interface FileExported {
+    /**
+     * output location of the exported file
+     * @type {string}
+     * @memberof FileExported
+     */
+    output_uri?: string;
 }
 /**
  * File property assigned to a specific file (array)
@@ -1345,7 +1405,8 @@ export declare enum FilePropertyName {
 export declare enum FileType {
     Notebook = "notebook",
     UserDefinedFunction = "user_defined_function",
-    MlModel = "ml_model"
+    MlModel = "ml_model",
+    File = "file"
 }
 /**
  * Filter
@@ -1499,7 +1560,7 @@ export interface GenericUDF {
      */
     version?: string;
     /**
-     * Docker image name to use for udf
+     * Docker image name to use for UDF
      * @type {string}
      * @memberof GenericUDF
      */
@@ -1517,7 +1578,7 @@ export interface GenericUDF {
      */
     exec_raw?: string;
     /**
-     * Argument(s) to pass to udf function, tuple or list of args/kwargs which can be in native or json format
+     * Argument(s) to pass to UDF function, tuple or list of args/kwargs which can be in native or JSON format
      * @type {string}
      * @memberof GenericUDF
      */
@@ -1546,6 +1607,173 @@ export interface GenericUDF {
      * @memberof GenericUDF
      */
     store_results?: boolean;
+    /**
+     * UDF-type timeout in seconds (default: 900)
+     * @type {number}
+     * @memberof GenericUDF
+     */
+    timeout?: number;
+    /**
+     * Set to true to avoid downloading the results of this UDF. Useful for intermediate nodes in a task graph where you will not be using the results of your function. Defaults to false (\"yes download results\").
+     * @type {boolean}
+     * @memberof GenericUDF
+     */
+    dont_download_results?: boolean;
+    /**
+     * If set, the ID of the log for the task graph that this was part of.
+     * @type {string}
+     * @memberof GenericUDF
+     */
+    task_graph_uuid?: string;
+    /**
+     * If set, the client-defined ID of the node within this task\'s graph.
+     * @type {string}
+     * @memberof GenericUDF
+     */
+    client_node_uuid?: string;
+}
+/**
+ * Attributes that describe the group itself, not any of the subgroups or assets
+ * @export
+ * @interface Group
+ */
+export interface Group {
+    /**
+     * the globally unique id of the group
+     * @type {string}
+     * @memberof Group
+     */
+    id?: string;
+    /**
+     * The namespace of the group
+     * @type {string}
+     * @memberof Group
+     */
+    namespace?: string;
+    /**
+     * The name of the group. It is unique within the namespace. No 2 groups can have the same name
+     * @type {string}
+     * @memberof Group
+     */
+    name?: string;
+    /**
+     * A human readable description of the content of the group
+     * @type {string}
+     * @memberof Group
+     */
+    description?: string;
+}
+/**
+ * Initial attributes for the creation of a new group
+ * @export
+ * @interface GroupCreate
+ */
+export interface GroupCreate {
+    /**
+     * The name of the parent of the group. If empty, then the new group will be a top level group.
+     * @type {string}
+     * @memberof GroupCreate
+     */
+    parent?: string;
+    /**
+     * A human readable description of the content of the group
+     * @type {string}
+     * @memberof GroupCreate
+     */
+    description?: string;
+}
+/**
+ * The contents of a group i.e attributes, subgroups and assets
+ * @export
+ * @interface GroupListing
+ */
+export interface GroupListing {
+    /**
+     * the globally unique id of the group
+     * @type {string}
+     * @memberof GroupListing
+     */
+    id?: string;
+    /**
+     * The namespace of the group
+     * @type {string}
+     * @memberof GroupListing
+     */
+    namespace?: string;
+    /**
+     * The name of the group. It is unique within the namespace. No 2 groups can have the same name
+     * @type {string}
+     * @memberof GroupListing
+     */
+    name?: string;
+    /**
+     * A human readable description of the content of the group
+     * @type {string}
+     * @memberof GroupListing
+     */
+    description?: string;
+    /**
+     * Contains one page of subgroups of the group.
+     * @type {Array<Group>}
+     * @memberof GroupListing
+     */
+    groups?: Array<Group>;
+    /**
+     * Contains one page of assets of the group as ArrayInfos
+     * @type {Array<ArrayInfo>}
+     * @memberof GroupListing
+     */
+    assets?: Array<ArrayInfo>;
+    /**
+     *
+     * @type {PaginationMetadata}
+     * @memberof GroupListing
+     */
+    pagination_metadata?: PaginationMetadata;
+}
+/**
+ *
+ * @export
+ * @interface GroupListingAllOf
+ */
+export interface GroupListingAllOf {
+    /**
+     * Contains one page of subgroups of the group.
+     * @type {Array<Group>}
+     * @memberof GroupListingAllOf
+     */
+    groups?: Array<Group>;
+    /**
+     * Contains one page of assets of the group as ArrayInfos
+     * @type {Array<ArrayInfo>}
+     * @memberof GroupListingAllOf
+     */
+    assets?: Array<ArrayInfo>;
+    /**
+     *
+     * @type {PaginationMetadata}
+     * @memberof GroupListingAllOf
+     */
+    pagination_metadata?: PaginationMetadata;
+}
+/**
+ * Updates for a group. New values for the attributes.
+ * @export
+ * @interface GroupUpdate
+ */
+export interface GroupUpdate {
+    /**
+     * The new name of the group
+     * @type {string}
+     * @memberof GroupUpdate
+     */
+    name?: string;
+    /**
+     * A new human readable description of the content of the group
+     * @type {string}
+     * @memberof GroupUpdate
+     */
+    description?: string;
 }
 /**
  * Password to update
@@ -1580,7 +1808,7 @@ export interface InlineResponse200 {
  */
 export interface Invitation {
     /**
-     * Unique id of invitation added to magic link
+     * Unique ID of invitation added to magic link
      * @type {string}
      * @memberof Invitation
      */
@@ -1598,13 +1826,13 @@ export interface Invitation {
      */
     owner_namespace_uuid?: string;
     /**
-     * Unique id of the user accepted the invitation
+     * Unique ID of the user accepted the invitation
      * @type {string}
      * @memberof Invitation
      */
     user_namespace_uuid?: string;
     /**
-     * Unique id of the organization user accepted the invitation
+     * Unique ID of the organization user accepted the invitation
      * @type {string}
      * @memberof Invitation
      */
@@ -1622,7 +1850,7 @@ export interface Invitation {
      */
     organization_role?: OrganizationRoles;
     /**
-     * Unique id of the array
+     * Unique ID of the array
      * @type {string}
      * @memberof Invitation
      */
@@ -1758,7 +1986,7 @@ export declare enum InvitationType {
  */
 export interface LastAccessedArray {
     /**
-     * unique id of array
+     * unique ID of array
      * @type {string}
      * @memberof LastAccessedArray
      */
@@ -1806,23 +2034,23 @@ export declare enum Layout {
  */
 export interface MLModelFavorite {
     /**
-     * unique uuid of the favorite
-     * @type {string}
-     * @memberof MLModelFavorite
-     */
-    id?: string;
-    /**
-     * Datetime the favorite was created in UTC
-     * @type {string}
-     * @memberof MLModelFavorite
-     */
-    created_at?: string;
-    /**
-     * unique uuid of the MLModel
+     * unique UUID of the MLModel
      * @type {string}
      * @memberof MLModelFavorite
      */
     mlmodel_uuid?: string;
+    /**
+     * the namespace of the MLModel
+     * @type {string}
+     * @memberof MLModelFavorite
+     */
+    namespace?: string;
+    /**
+     * the name of the MLModel
+     * @type {string}
+     * @memberof MLModelFavorite
+     */
+    name?: string;
 }
 /**
  * Object including MLModel favorites and pagination metadata
@@ -1931,7 +2159,7 @@ export interface MultiArrayUDF {
      */
     version?: string;
     /**
-     * Docker image name to use for udf
+     * Docker image name to use for UDF
      * @type {string}
      * @memberof MultiArrayUDF
      */
@@ -1961,7 +2189,7 @@ export interface MultiArrayUDF {
      */
     task_name?: string;
     /**
-     * Argument(s) to pass to udf function, tuple or list of args/kwargs which can be in native or json format
+     * Argument(s) to pass to UDF function, tuple or list of args/kwargs which can be in native or JSON format
      * @type {string}
      * @memberof MultiArrayUDF
      */
@@ -1979,6 +2207,12 @@ export interface MultiArrayUDF {
      */
     store_results?: boolean;
     /**
+     * Set to true to avoid downloading the results of this UDF. Useful for intermediate nodes in a task graph where you will not be using the results of your function. Defaults to false (\"yes download results\").
+     * @type {boolean}
+     * @memberof MultiArrayUDF
+     */
+    dont_download_results?: boolean;
+    /**
      *
      * @type {QueryRanges}
      * @memberof MultiArrayUDF
@@ -1991,7 +2225,7 @@ export interface MultiArrayUDF {
      */
     subarray?: UDFSubarray;
     /**
-     * List of buffers to fetch (attributes + dimensions). Deprecated please set arrays with UDFArrayDetails
+     * List of buffers to fetch (attributes + dimensions). Deprecated; please set arrays with `UDFArrayDetails`.
      * @type {Array<string>}
      * @memberof MultiArrayUDF
      */
@@ -2002,6 +2236,24 @@ export interface MultiArrayUDF {
      * @memberof MultiArrayUDF
      */
     arrays?: Array<UDFArrayDetails>;
+    /**
+     * UDF-type timeout in seconds (default: 900)
+     * @type {number}
+     * @memberof MultiArrayUDF
+     */
+    timeout?: number;
+    /**
+     * If set, the ID of the log for the task graph that this was part of.
+     * @type {string}
+     * @memberof MultiArrayUDF
+     */
+    task_graph_uuid?: string;
+    /**
+     * If set, the client-defined ID of the node within this task\'s graph.
+     * @type {string}
+     * @memberof MultiArrayUDF
+     */
+    client_node_uuid?: string;
 }
 /**
  * actions a user can take on an organization
@@ -2048,23 +2300,23 @@ export interface NonEmptyDomain {
  */
 export interface NotebookFavorite {
     /**
-     * unique uuid of the favorite
-     * @type {string}
-     * @memberof NotebookFavorite
-     */
-    id?: string;
-    /**
-     * Datetime the favorite was created in UTC
-     * @type {string}
-     * @memberof NotebookFavorite
-     */
-    created_at?: string;
-    /**
-     * unique uuid of the notebook
+     * unique UUID of the notebook
      * @type {string}
      * @memberof NotebookFavorite
      */
     notebook_uuid?: string;
+    /**
+     * the namespace of the notebook
+     * @type {string}
+     * @memberof NotebookFavorite
+     */
+    namespace?: string;
+    /**
+     * the name of the notebook
+     * @type {string}
+     * @memberof NotebookFavorite
+     */
+    name?: string;
 }
 /**
  * Object including notebook favorites and pagination metadata
@@ -2135,7 +2387,7 @@ export interface NotebookStatus {
  */
 export interface Organization {
     /**
-     * unique id of organization
+     * unique ID of organization
      * @type {string}
      * @memberof Organization
      */
@@ -2207,13 +2459,13 @@ export interface Organization {
      */
     unpaid_subscription?: boolean;
     /**
-     * default s3 path to store newly created notebooks
+     * default S3 path to store newly created notebooks
      * @type {string}
      * @memberof Organization
      */
     default_s3_path?: string;
     /**
-     * Default s3 path credentials name is the credentials name to use along with default_s3_path
+     * Default S3 path credentials name is the credentials name to use along with default_s3_path
      * @type {string}
      * @memberof Organization
      */
@@ -2243,13 +2495,13 @@ export declare enum OrganizationRoles {
  */
 export interface OrganizationUser {
     /**
-     * unique id of user
+     * unique ID of user
      * @type {string}
      * @memberof OrganizationUser
      */
     user_id?: string;
     /**
-     * unique id of organization
+     * unique ID of organization
      * @type {string}
      * @memberof OrganizationUser
      */
@@ -2317,13 +2569,13 @@ export interface PaginationMetadata {
  */
 export interface Pricing {
     /**
-     * Unique id of plan as defined by Stripe
+     * Unique ID of plan as defined by Stripe
      * @type {string}
      * @memberof Pricing
      */
     id?: string;
     /**
-     * Unique id of registered array
+     * Unique ID of registered array
      * @type {string}
      * @memberof Pricing
      */
@@ -2508,7 +2760,7 @@ export interface Query {
     totalVarLenBufferBytes: number;
 }
 /**
- * Query returning results as json
+ * Query returning results as JSON
  * @export
  * @interface QueryJson
  */
@@ -2680,6 +2932,12 @@ export interface SQLParameters {
      * @memberof SQLParameters
      */
     store_results?: boolean;
+    /**
+     * Set to true to avoid downloading the results of this UDF. Useful for intermediate nodes in a task graph where you will not be using the results of your function. Defaults to false (\"yes download results\").
+     * @type {boolean}
+     * @memberof SQLParameters
+     */
+    dont_download_results?: boolean;
     /**
      *
      * @type {ResultFormat}
@@ -2866,19 +3124,19 @@ export interface SubarrayRanges {
  */
 export interface Subscription {
     /**
-     * Unique id of subscription as defined by Stripe
+     * Unique ID of subscription as defined by Stripe
      * @type {string}
      * @memberof Subscription
      */
     id?: string;
     /**
-     * Unique id of the array (product) owner
+     * Unique ID of the array (product) owner
      * @type {string}
      * @memberof Subscription
      */
     owner_namespace_uuid?: string;
     /**
-     * Unique id of the array (product) user (customer)
+     * Unique ID of the array (product) user (customer)
      * @type {string}
      * @memberof Subscription
      */
@@ -2889,6 +3147,131 @@ export interface Subscription {
      * @memberof Subscription
      */
     pricing?: Array<Pricing>;
+}
+/**
+ * Logging information about the execution of a task graph.
+ * @export
+ * @interface TaskGraphLog
+ */
+export interface TaskGraphLog {
+    /**
+     * The server-generated UUID of the task graph.
+     * @type {string}
+     * @memberof TaskGraphLog
+     */
+    uuid?: string;
+    /**
+     * The namespace that owns this task graph log. When creating a task graph log, this is used as the namespace to create the log in; thereafter it is read-only.
+     * @type {string}
+     * @memberof TaskGraphLog
+     */
+    namespace?: string;
+    /**
+     * The name of the user who created this task graph log.
+     * @type {string}
+     * @memberof TaskGraphLog
+     */
+    created_by?: string;
+    /**
+     * A name for this task graph log, displayed in the UI. Does not need to be unique.
+     * @type {string}
+     * @memberof TaskGraphLog
+     */
+    name?: string;
+    /**
+     * The date/time when this task graph log was originally created. This is distinct from the execution start_time.
+     * @type {string}
+     * @memberof TaskGraphLog
+     */
+    created_at?: string;
+    /**
+     * The start time of the task graph, recorded when the server starts executing the first node.
+     * @type {string}
+     * @memberof TaskGraphLog
+     */
+    start_time?: string | null;
+    /**
+     * The end time of the task graph, recorded when the client reports completion.
+     * @type {string}
+     * @memberof TaskGraphLog
+     */
+    end_time?: string | null;
+    /**
+     *
+     * @type {TaskGraphLogStatus}
+     * @memberof TaskGraphLog
+     */
+    status?: TaskGraphLogStatus;
+    /**
+     * The structure of the graph. This is provided by the client when first setting up the task graph. Thereafter, it is read-only. This must be topographically sorted; that is, each node must appear after all nodes that it depends upon.
+     * @type {Array<TaskGraphNodeMetadata>}
+     * @memberof TaskGraphLog
+     */
+    nodes?: Array<TaskGraphNodeMetadata>;
+}
+/**
+ * The status of a given task graph execution.
+ * @export
+ * @enum {string}
+ */
+export declare enum TaskGraphLogStatus {
+    Submitted = "submitted",
+    Running = "running",
+    Idle = "idle",
+    Abandoned = "abandoned",
+    Succeeded = "succeeded",
+    Failed = "failed",
+    Cancelled = "cancelled"
+}
+/**
+ * Response data for a task graph list, including pagination metadata.
+ * @export
+ * @interface TaskGraphLogsData
+ */
+export interface TaskGraphLogsData {
+    /**
+     * The requested task graph logs.
+     * @type {Array<TaskGraphLog>}
+     * @memberof TaskGraphLogsData
+     */
+    task_graph_logs?: Array<TaskGraphLog>;
+    /**
+     *
+     * @type {PaginationMetadata}
+     * @memberof TaskGraphLogsData
+     */
+    pagination_metadata?: PaginationMetadata;
+}
+/**
+ * Metadata about an individual node in a task graph.
+ * @export
+ * @interface TaskGraphNodeMetadata
+ */
+export interface TaskGraphNodeMetadata {
+    /**
+     * The client-generated UUID of the given graph node.
+     * @type {string}
+     * @memberof TaskGraphNodeMetadata
+     */
+    client_node_uuid?: string;
+    /**
+     * The client-generated name of the node. This is not guaranteed to be unique.
+     * @type {string}
+     * @memberof TaskGraphNodeMetadata
+     */
+    name?: string;
+    /**
+     * The client_node_uuid of each node that this node depends upon. Used to define the structure of the graph.
+     * @type {Array<string>}
+     * @memberof TaskGraphNodeMetadata
+     */
+    depends_on?: Array<string>;
+    /**
+     * ArrayTasks representing each execution attempt for this node. For nodes that have never been submitted, this will be empty. For nodes that have been retried, this may have multiple entries. The last one in the list represents the most recent execution. This is read-only and generated by the server based on the tasks it has actually executed.
+     * @type {Array<ArrayTask>}
+     * @memberof TaskGraphNodeMetadata
+     */
+    executions?: Array<ArrayTask>;
 }
 /**
  * user\'s TileDB config
@@ -2924,7 +3307,7 @@ export interface Token {
      */
     name?: string;
     /**
-     * datetime the token was created at
+     * datetime the token was created
      * @type {string}
      * @memberof Token
      */
@@ -2984,7 +3367,7 @@ export declare enum TokenScope {
     Arrayadmin = "array:admin"
 }
 /**
- * actions a user can take on an udf
+ * actions a user can take on a UDF
  * @export
  * @enum {string}
  */
@@ -3024,23 +3407,23 @@ export interface UDFArrayDetails {
  */
 export interface UDFFavorite {
     /**
-     * unique uuid of the favorite
-     * @type {string}
-     * @memberof UDFFavorite
-     */
-    id?: string;
-    /**
-     * Datetime the favorite was created in UTC
-     * @type {string}
-     * @memberof UDFFavorite
-     */
-    created_at?: string;
-    /**
-     * unique uuid of the UDF
+     * unique UUID of the UDF
      * @type {string}
      * @memberof UDFFavorite
      */
     udf_uuid?: string;
+    /**
+     * the namespace of the UDF
+     * @type {string}
+     * @memberof UDFFavorite
+     */
+    namespace?: string;
+    /**
+     * the name of the UDF
+     * @type {string}
+     * @memberof UDFFavorite
+     */
+    name?: string;
 }
 /**
  * Object including UDF favorites and pagination metadata
@@ -3068,13 +3451,13 @@ export interface UDFFavoritesData {
  */
 export interface UDFImage {
     /**
-     * Unique id of set of images
+     * Unique ID of set of images
      * @type {string}
      * @memberof UDFImage
      */
     id?: string;
     /**
-     * name of udf
+     * name of UDF
      * @type {string}
      * @memberof UDFImage
      */
@@ -3093,7 +3476,7 @@ export interface UDFImage {
  */
 export interface UDFImageVersion {
     /**
-     * Unique id of a versioned image
+     * Unique ID of a versioned image
      * @type {string}
      * @memberof UDFImageVersion
      */
@@ -3105,7 +3488,7 @@ export interface UDFImageVersion {
      */
     name?: string;
     /**
-     * Unique id of the udf image set
+     * Unique ID of the UDF image set
      * @type {string}
      * @memberof UDFImageVersion
      */
@@ -3142,13 +3525,13 @@ export interface UDFImageVersion {
  */
 export interface UDFInfo {
     /**
-     * Unique id of udf
+     * Unique ID of UDF
      * @type {string}
      * @memberof UDFInfo
      */
     id?: string;
     /**
-     * name of udf
+     * name of UDF
      * @type {string}
      * @memberof UDFInfo
      */
@@ -3166,7 +3549,7 @@ export interface UDFInfo {
      */
     type?: UDFType;
     /**
-     * Markdown readme of udfs
+     * Markdown readme of UDFs
      * @type {string}
      * @memberof UDFInfo
      */
@@ -3184,7 +3567,7 @@ export interface UDFInfo {
      */
     license_text?: string;
     /**
-     * optional tags for udf
+     * optional tags for UDF
      * @type {Array<string>}
      * @memberof UDFInfo
      */
@@ -3197,7 +3580,7 @@ export interface UDFInfo {
  */
 export interface UDFInfoUpdate {
     /**
-     * name of udf
+     * name of UDF
      * @type {string}
      * @memberof UDFInfoUpdate
      */
@@ -3215,7 +3598,7 @@ export interface UDFInfoUpdate {
      */
     version?: string;
     /**
-     * Docker image name to use for udf
+     * Docker image name to use for UDF
      * @type {string}
      * @memberof UDFInfoUpdate
      */
@@ -3239,7 +3622,7 @@ export interface UDFInfoUpdate {
      */
     exec_raw?: string;
     /**
-     * Markdown readme of udfs
+     * Markdown readme of UDFs
      * @type {string}
      * @memberof UDFInfoUpdate
      */
@@ -3257,7 +3640,7 @@ export interface UDFInfoUpdate {
      */
     license_text?: string;
     /**
-     * optional tags for udf
+     * optional tags for UDF
      * @type {Array<string>}
      * @memberof UDFInfoUpdate
      */
@@ -3273,7 +3656,7 @@ export declare enum UDFLanguage {
     R = "r"
 }
 /**
- * details for sharing a given udf
+ * details for sharing a given UDF
  * @export
  * @interface UDFSharing
  */
@@ -3347,6 +3730,7 @@ export interface UDFSubarrayRange {
  * @enum {string}
  */
 export declare enum UDFType {
+    MultiArray = "multi_array",
     SingleArray = "single_array",
     Generic = "generic"
 }
@@ -3357,7 +3741,7 @@ export declare enum UDFType {
  */
 export interface User {
     /**
-     * unique id of user
+     * unique ID of user
      * @type {string}
      * @memberof User
      */
@@ -3447,13 +3831,13 @@ export interface User {
      */
     unpaid_subscription?: boolean;
     /**
-     * default s3 path to store newly created notebooks
+     * default S3 path to store newly created notebooks
      * @type {string}
      * @memberof User
      */
     default_s3_path?: string;
     /**
-     * Default s3 path credentials name is the credentials name to use along with default_s3_path
+     * Default S3 path credentials name is the credentials name to use along with default_s3_path
      * @type {string}
      * @memberof User
      */
@@ -3508,8 +3892,8 @@ export declare const ArrayApiAxiosParamCreator: (configuration?: Configuration) 
      * @param {number} [start] Start time of window of fetch logs, unix epoch in seconds (default: seven days ago)
      * @param {number} [end] End time of window of fetch logs, unix epoch in seconds (default: current utc timestamp)
      * @param {string} [eventTypes] Event values can be one or more of the following read, write, create, delete, register, deregister, comma separated
-     * @param {string} [taskId] Array task id To filter activity to
-     * @param {boolean} [hasTaskId] Excludes activity log results that does not contain an array task uuid
+     * @param {string} [taskId] Array task ID To filter activity to
+     * @param {boolean} [hasTaskId] Excludes activity log results that do not contain an array task UUID
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -3631,10 +4015,10 @@ export declare const ArrayApiAxiosParamCreator: (configuration?: Configuration) 
      */
     deregisterArray: (namespace: string, array: string, options?: any) => Promise<RequestArgs>;
     /**
-     * get activity log by id
+     * get activity log by ID
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
      * @param {string} array name/uri of array that is url-encoded
-     * @param {string} id id of the activity
+     * @param {string} id ID of the activity
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -3667,7 +4051,7 @@ export declare const ArrayApiAxiosParamCreator: (configuration?: Configuration) 
      */
     getArrayMaxBufferSizes: (namespace: string, array: string, subarray: string, contentType: string, xPayer?: string, options?: any) => Promise<RequestArgs>;
     /**
-     * get metadata from the array in json format
+     * get metadata from the array in JSON format
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
      * @param {string} array name/uri of array that is url-encoded
      * @param {number} [length] (optional) limit character length of returned values
@@ -3762,7 +4146,7 @@ export declare const ArrayApiAxiosParamCreator: (configuration?: Configuration) 
      * Share an array with a user
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
      * @param {string} array name/uri of array that is url-encoded
-     * @param {ArraySharing} arraySharing Namespace and list of permissions to share with. An empty list of permissions will remove the namespace, if permissions already exist they will be deleted then new ones added. In the event of a failure, the new polcies will be rolled back to prevent partial policies, and its likely the array will not be shared with the namespace at all
+     * @param {ArraySharing} arraySharing Namespace and list of permissions to share with. An empty list of permissions will remove the namespace; if permissions already exist they will be deleted then new ones added. In the event of a failure, the new policies will be rolled back to prevent partial policies, and it\&#39;s likely the array will not be shared with the namespace at all.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -3807,8 +4191,8 @@ export declare const ArrayApiFp: (configuration?: Configuration) => {
      * @param {number} [start] Start time of window of fetch logs, unix epoch in seconds (default: seven days ago)
      * @param {number} [end] End time of window of fetch logs, unix epoch in seconds (default: current utc timestamp)
      * @param {string} [eventTypes] Event values can be one or more of the following read, write, create, delete, register, deregister, comma separated
-     * @param {string} [taskId] Array task id To filter activity to
-     * @param {boolean} [hasTaskId] Excludes activity log results that does not contain an array task uuid
+     * @param {string} [taskId] Array task ID To filter activity to
+     * @param {boolean} [hasTaskId] Excludes activity log results that do not contain an array task UUID
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -3930,10 +4314,10 @@ export declare const ArrayApiFp: (configuration?: Configuration) => {
      */
     deregisterArray(namespace: string, array: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
     /**
-     * get activity log by id
+     * get activity log by ID
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
      * @param {string} array name/uri of array that is url-encoded
-     * @param {string} id id of the activity
+     * @param {string} id ID of the activity
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -3966,7 +4350,7 @@ export declare const ArrayApiFp: (configuration?: Configuration) => {
      */
     getArrayMaxBufferSizes(namespace: string, array: string, subarray: string, contentType: string, xPayer?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<MaxBufferSizes>>;
     /**
-     * get metadata from the array in json format
+     * get metadata from the array in JSON format
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
      * @param {string} array name/uri of array that is url-encoded
      * @param {number} [length] (optional) limit character length of returned values
@@ -4061,7 +4445,7 @@ export declare const ArrayApiFp: (configuration?: Configuration) => {
      * Share an array with a user
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
      * @param {string} array name/uri of array that is url-encoded
-     * @param {ArraySharing} arraySharing Namespace and list of permissions to share with. An empty list of permissions will remove the namespace, if permissions already exist they will be deleted then new ones added. In the event of a failure, the new polcies will be rolled back to prevent partial policies, and its likely the array will not be shared with the namespace at all
+     * @param {ArraySharing} arraySharing Namespace and list of permissions to share with. An empty list of permissions will remove the namespace; if permissions already exist they will be deleted then new ones added. In the event of a failure, the new policies will be rolled back to prevent partial policies, and it\&#39;s likely the array will not be shared with the namespace at all.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -4106,8 +4490,8 @@ export declare const ArrayApiFactory: (configuration?: Configuration, basePath?:
      * @param {number} [start] Start time of window of fetch logs, unix epoch in seconds (default: seven days ago)
      * @param {number} [end] End time of window of fetch logs, unix epoch in seconds (default: current utc timestamp)
      * @param {string} [eventTypes] Event values can be one or more of the following read, write, create, delete, register, deregister, comma separated
-     * @param {string} [taskId] Array task id To filter activity to
-     * @param {boolean} [hasTaskId] Excludes activity log results that does not contain an array task uuid
+     * @param {string} [taskId] Array task ID To filter activity to
+     * @param {boolean} [hasTaskId] Excludes activity log results that do not contain an array task UUID
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -4229,10 +4613,10 @@ export declare const ArrayApiFactory: (configuration?: Configuration, basePath?:
      */
     deregisterArray(namespace: string, array: string, options?: any): AxiosPromise<void>;
     /**
-     * get activity log by id
+     * get activity log by ID
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
      * @param {string} array name/uri of array that is url-encoded
-     * @param {string} id id of the activity
+     * @param {string} id ID of the activity
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -4265,7 +4649,7 @@ export declare const ArrayApiFactory: (configuration?: Configuration, basePath?:
      */
     getArrayMaxBufferSizes(namespace: string, array: string, subarray: string, contentType: string, xPayer?: string, options?: any): AxiosPromise<MaxBufferSizes>;
     /**
-     * get metadata from the array in json format
+     * get metadata from the array in JSON format
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
      * @param {string} array name/uri of array that is url-encoded
      * @param {number} [length] (optional) limit character length of returned values
@@ -4360,7 +4744,7 @@ export declare const ArrayApiFactory: (configuration?: Configuration, basePath?:
      * Share an array with a user
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
      * @param {string} array name/uri of array that is url-encoded
-     * @param {ArraySharing} arraySharing Namespace and list of permissions to share with. An empty list of permissions will remove the namespace, if permissions already exist they will be deleted then new ones added. In the event of a failure, the new polcies will be rolled back to prevent partial policies, and its likely the array will not be shared with the namespace at all
+     * @param {ArraySharing} arraySharing Namespace and list of permissions to share with. An empty list of permissions will remove the namespace; if permissions already exist they will be deleted then new ones added. In the event of a failure, the new policies will be rolled back to prevent partial policies, and it\&#39;s likely the array will not be shared with the namespace at all.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -4407,8 +4791,8 @@ export declare class ArrayApi extends BaseAPI {
      * @param {number} [start] Start time of window of fetch logs, unix epoch in seconds (default: seven days ago)
      * @param {number} [end] End time of window of fetch logs, unix epoch in seconds (default: current utc timestamp)
      * @param {string} [eventTypes] Event values can be one or more of the following read, write, create, delete, register, deregister, comma separated
-     * @param {string} [taskId] Array task id To filter activity to
-     * @param {boolean} [hasTaskId] Excludes activity log results that does not contain an array task uuid
+     * @param {string} [taskId] Array task ID To filter activity to
+     * @param {boolean} [hasTaskId] Excludes activity log results that do not contain an array task UUID
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ArrayApi
@@ -4542,10 +4926,10 @@ export declare class ArrayApi extends BaseAPI {
      */
     deregisterArray(namespace: string, array: string, options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**
-     * get activity log by id
+     * get activity log by ID
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
      * @param {string} array name/uri of array that is url-encoded
-     * @param {string} id id of the activity
+     * @param {string} id ID of the activity
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ArrayApi
@@ -4582,7 +4966,7 @@ export declare class ArrayApi extends BaseAPI {
      */
     getArrayMaxBufferSizes(namespace: string, array: string, subarray: string, contentType: string, xPayer?: string, options?: any): Promise<import("axios").AxiosResponse<MaxBufferSizes>>;
     /**
-     * get metadata from the array in json format
+     * get metadata from the array in JSON format
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
      * @param {string} array name/uri of array that is url-encoded
      * @param {number} [length] (optional) limit character length of returned values
@@ -4688,7 +5072,7 @@ export declare class ArrayApi extends BaseAPI {
      * Share an array with a user
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
      * @param {string} array name/uri of array that is url-encoded
-     * @param {ArraySharing} arraySharing Namespace and list of permissions to share with. An empty list of permissions will remove the namespace, if permissions already exist they will be deleted then new ones added. In the event of a failure, the new polcies will be rolled back to prevent partial policies, and its likely the array will not be shared with the namespace at all
+     * @param {ArraySharing} arraySharing Namespace and list of permissions to share with. An empty list of permissions will remove the namespace; if permissions already exist they will be deleted then new ones added. In the event of a failure, the new policies will be rolled back to prevent partial policies, and it\&#39;s likely the array will not be shared with the namespace at all.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ArrayApi
@@ -4791,67 +5175,68 @@ export declare class ArrayTasksApi extends BaseAPI {
 export declare const FavoritesApiAxiosParamCreator: (configuration?: Configuration) => {
     /**
      * Add a new array favorite
-     * @param {FavoriteCreate} [body]
+     * @param {string} namespace The namespace of the array
+     * @param {string} name The name of the array
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    addArrayFavorite: (body?: FavoriteCreate, options?: any) => Promise<RequestArgs>;
+    addArrayFavorite: (namespace: string, name: string, options?: any) => Promise<RequestArgs>;
     /**
      * Add a new ML model favorite
-     * @param {FavoriteCreate} [body]
+     * @param {string} namespace The namespace of the ML model
+     * @param {string} name The name of the ML model
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    addMLModelFavorite: (body?: FavoriteCreate, options?: any) => Promise<RequestArgs>;
+    addMLModelFavorite: (namespace: string, name: string, options?: any) => Promise<RequestArgs>;
     /**
      * Add a new notebook favorite
-     * @param {FavoriteCreate} [body]
+     * @param {string} namespace The namespace of the notebook
+     * @param {string} name The name of the notebook
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    addNotebookFavorite: (body?: FavoriteCreate, options?: any) => Promise<RequestArgs>;
+    addNotebookFavorite: (namespace: string, name: string, options?: any) => Promise<RequestArgs>;
     /**
      * Add a new UDF favorite
-     * @param {FavoriteCreate} [body]
+     * @param {string} namespace The namespace of the UDF
+     * @param {string} name The name of the UDF
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    addUDFFavorite: (body?: FavoriteCreate, options?: any) => Promise<RequestArgs>;
+    addUDFFavorite: (namespace: string, name: string, options?: any) => Promise<RequestArgs>;
     /**
      * Delete specific array favorite
-     * @param {string} id The uuid of the array favorite
+     * @param {string} namespace The namespace of the array
+     * @param {string} name The name of the array
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    deleteArrayFavorite: (id: string, options?: any) => Promise<RequestArgs>;
+    deleteArrayFavorite: (namespace: string, name: string, options?: any) => Promise<RequestArgs>;
     /**
      * Delete specific ML model favorite
-     * @param {string} id The uuid of the ML model favorite
+     * @param {string} namespace The namespace of the ML model
+     * @param {string} name The name of the ML model
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    deleteMLModelFavorite: (id: string, options?: any) => Promise<RequestArgs>;
+    deleteMLModelFavorite: (namespace: string, name: string, options?: any) => Promise<RequestArgs>;
     /**
      * Delete specific notebook favorite
-     * @param {string} id The uuid of the notebook favorite
+     * @param {string} namespace The namespace of the notebook
+     * @param {string} name The name of the notebook
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    deleteNotebookFavorite: (id: string, options?: any) => Promise<RequestArgs>;
+    deleteNotebookFavorite: (namespace: string, name: string, options?: any) => Promise<RequestArgs>;
     /**
      * Delete specific UDF favorite
-     * @param {string} id The uuid of the UDF favorite
+     * @param {string} namespace The namespace of the UDF
+     * @param {string} name The name of the UDF
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    deleteUDFFavorite: (id: string, options?: any) => Promise<RequestArgs>;
-    /**
-     * Fetch specific array favorite of a user
-     * @param {string} id The uuid of the array favorite
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    getArrayFavorite: (id: string, options?: any) => Promise<RequestArgs>;
+    deleteUDFFavorite: (namespace: string, name: string, options?: any) => Promise<RequestArgs>;
     /**
      * Fetch array favorite of a specific array
      * @param {string} namespace The namespace of the array
@@ -4859,14 +5244,7 @@ export declare const FavoritesApiAxiosParamCreator: (configuration?: Configurati
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getArrayFavoriteForArray: (namespace: string, name: string, options?: any) => Promise<RequestArgs>;
-    /**
-     * Fetch specific ML model favorite of a user
-     * @param {string} id The uuid of the ML model favorite
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    getMLModelFavorite: (id: string, options?: any) => Promise<RequestArgs>;
+    getArrayFavorite: (namespace: string, name: string, options?: any) => Promise<RequestArgs>;
     /**
      * Fetch ML model favorite of a specific ML model
      * @param {string} namespace The namespace of the ML model
@@ -4874,14 +5252,7 @@ export declare const FavoritesApiAxiosParamCreator: (configuration?: Configurati
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getMLModelFavoriteForMLModel: (namespace: string, name: string, options?: any) => Promise<RequestArgs>;
-    /**
-     * Fetch specific notebook favorite of a user
-     * @param {string} id The uuid of the notebook favorite
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    getNotebookFavorite: (id: string, options?: any) => Promise<RequestArgs>;
+    getMLModelFavorite: (namespace: string, name: string, options?: any) => Promise<RequestArgs>;
     /**
      * Fetch notebook favorite of a specific notebook
      * @param {string} namespace The namespace of the notebook
@@ -4889,14 +5260,7 @@ export declare const FavoritesApiAxiosParamCreator: (configuration?: Configurati
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getNotebookFavoriteForNotebook: (namespace: string, name: string, options?: any) => Promise<RequestArgs>;
-    /**
-     * Fetch specific UDF favorite of a user
-     * @param {string} id The uuid of the UDF favorite
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    getUDFFavorite: (id: string, options?: any) => Promise<RequestArgs>;
+    getNotebookFavorite: (namespace: string, name: string, options?: any) => Promise<RequestArgs>;
     /**
      * Fetch UDF favorite of a specific UDF
      * @param {string} namespace The namespace of the UDF
@@ -4904,9 +5268,9 @@ export declare const FavoritesApiAxiosParamCreator: (configuration?: Configurati
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getUDFFavoriteForUDF: (namespace: string, name: string, options?: any) => Promise<RequestArgs>;
+    getUDFFavorite: (namespace: string, name: string, options?: any) => Promise<RequestArgs>;
     /**
-     * Fetch all array favorites of connected user
+     * Fetch a page of array favorites of connected user
      * @param {number} [page] pagination offset
      * @param {number} [perPage] pagination limit
      * @param {*} [options] Override http request option.
@@ -4920,7 +5284,7 @@ export declare const FavoritesApiAxiosParamCreator: (configuration?: Configurati
      */
     listArrayFavoritesUUIDs: (options?: any) => Promise<RequestArgs>;
     /**
-     * Fetch all ML models favorites of connected user
+     * Fetch a page of ML models favorites of connected user
      * @param {number} [page] pagination offset
      * @param {number} [perPage] pagination limit
      * @param {*} [options] Override http request option.
@@ -4934,13 +5298,14 @@ export declare const FavoritesApiAxiosParamCreator: (configuration?: Configurati
      */
     listMLModelFavoritesUUIDs: (options?: any) => Promise<RequestArgs>;
     /**
-     * Fetch all notebook favorites of connected user
+     * Fetch a page of notebook favorites of connected user
+     * @param {boolean} [isDashboard] return only dashboards
      * @param {number} [page] pagination offset
      * @param {number} [perPage] pagination limit
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    listNotebookFavorites: (page?: number, perPage?: number, options?: any) => Promise<RequestArgs>;
+    listNotebookFavorites: (isDashboard?: boolean, page?: number, perPage?: number, options?: any) => Promise<RequestArgs>;
     /**
      * Fetch all favorite notebook uuids of connected user
      * @param {*} [options] Override http request option.
@@ -4948,7 +5313,7 @@ export declare const FavoritesApiAxiosParamCreator: (configuration?: Configurati
      */
     listNotebookFavoritesUUIDs: (options?: any) => Promise<RequestArgs>;
     /**
-     * Fetch all UDF favorites of connected user
+     * Fetch a page of UDF favorites of connected user
      * @param {number} [page] pagination offset
      * @param {number} [perPage] pagination limit
      * @param {*} [options] Override http request option.
@@ -4969,67 +5334,68 @@ export declare const FavoritesApiAxiosParamCreator: (configuration?: Configurati
 export declare const FavoritesApiFp: (configuration?: Configuration) => {
     /**
      * Add a new array favorite
-     * @param {FavoriteCreate} [body]
+     * @param {string} namespace The namespace of the array
+     * @param {string} name The name of the array
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    addArrayFavorite(body?: FavoriteCreate, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
+    addArrayFavorite(namespace: string, name: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
     /**
      * Add a new ML model favorite
-     * @param {FavoriteCreate} [body]
+     * @param {string} namespace The namespace of the ML model
+     * @param {string} name The name of the ML model
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    addMLModelFavorite(body?: FavoriteCreate, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
+    addMLModelFavorite(namespace: string, name: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
     /**
      * Add a new notebook favorite
-     * @param {FavoriteCreate} [body]
+     * @param {string} namespace The namespace of the notebook
+     * @param {string} name The name of the notebook
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    addNotebookFavorite(body?: FavoriteCreate, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
+    addNotebookFavorite(namespace: string, name: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
     /**
      * Add a new UDF favorite
-     * @param {FavoriteCreate} [body]
+     * @param {string} namespace The namespace of the UDF
+     * @param {string} name The name of the UDF
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    addUDFFavorite(body?: FavoriteCreate, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
+    addUDFFavorite(namespace: string, name: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
     /**
      * Delete specific array favorite
-     * @param {string} id The uuid of the array favorite
+     * @param {string} namespace The namespace of the array
+     * @param {string} name The name of the array
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    deleteArrayFavorite(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
+    deleteArrayFavorite(namespace: string, name: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
     /**
      * Delete specific ML model favorite
-     * @param {string} id The uuid of the ML model favorite
+     * @param {string} namespace The namespace of the ML model
+     * @param {string} name The name of the ML model
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    deleteMLModelFavorite(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
+    deleteMLModelFavorite(namespace: string, name: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
     /**
      * Delete specific notebook favorite
-     * @param {string} id The uuid of the notebook favorite
+     * @param {string} namespace The namespace of the notebook
+     * @param {string} name The name of the notebook
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    deleteNotebookFavorite(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
+    deleteNotebookFavorite(namespace: string, name: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
     /**
      * Delete specific UDF favorite
-     * @param {string} id The uuid of the UDF favorite
+     * @param {string} namespace The namespace of the UDF
+     * @param {string} name The name of the UDF
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    deleteUDFFavorite(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
-    /**
-     * Fetch specific array favorite of a user
-     * @param {string} id The uuid of the array favorite
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    getArrayFavorite(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArrayFavorite>>;
+    deleteUDFFavorite(namespace: string, name: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
     /**
      * Fetch array favorite of a specific array
      * @param {string} namespace The namespace of the array
@@ -5037,14 +5403,7 @@ export declare const FavoritesApiFp: (configuration?: Configuration) => {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getArrayFavoriteForArray(namespace: string, name: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArrayFavorite>>;
-    /**
-     * Fetch specific ML model favorite of a user
-     * @param {string} id The uuid of the ML model favorite
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    getMLModelFavorite(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<MLModelFavorite>>;
+    getArrayFavorite(namespace: string, name: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArrayFavorite>>;
     /**
      * Fetch ML model favorite of a specific ML model
      * @param {string} namespace The namespace of the ML model
@@ -5052,14 +5411,7 @@ export declare const FavoritesApiFp: (configuration?: Configuration) => {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getMLModelFavoriteForMLModel(namespace: string, name: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<MLModelFavorite>>;
-    /**
-     * Fetch specific notebook favorite of a user
-     * @param {string} id The uuid of the notebook favorite
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    getNotebookFavorite(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<NotebookFavorite>>;
+    getMLModelFavorite(namespace: string, name: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<MLModelFavorite>>;
     /**
      * Fetch notebook favorite of a specific notebook
      * @param {string} namespace The namespace of the notebook
@@ -5067,14 +5419,7 @@ export declare const FavoritesApiFp: (configuration?: Configuration) => {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getNotebookFavoriteForNotebook(namespace: string, name: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<NotebookFavorite>>;
-    /**
-     * Fetch specific UDF favorite of a user
-     * @param {string} id The uuid of the UDF favorite
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    getUDFFavorite(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UDFFavorite>>;
+    getNotebookFavorite(namespace: string, name: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<NotebookFavorite>>;
     /**
      * Fetch UDF favorite of a specific UDF
      * @param {string} namespace The namespace of the UDF
@@ -5082,9 +5427,9 @@ export declare const FavoritesApiFp: (configuration?: Configuration) => {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getUDFFavoriteForUDF(namespace: string, name: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UDFFavorite>>;
+    getUDFFavorite(namespace: string, name: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UDFFavorite>>;
     /**
-     * Fetch all array favorites of connected user
+     * Fetch a page of array favorites of connected user
      * @param {number} [page] pagination offset
      * @param {number} [perPage] pagination limit
      * @param {*} [options] Override http request option.
@@ -5098,7 +5443,7 @@ export declare const FavoritesApiFp: (configuration?: Configuration) => {
      */
     listArrayFavoritesUUIDs(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ArrayFavorite>>>;
     /**
-     * Fetch all ML models favorites of connected user
+     * Fetch a page of ML models favorites of connected user
      * @param {number} [page] pagination offset
      * @param {number} [perPage] pagination limit
      * @param {*} [options] Override http request option.
@@ -5112,13 +5457,14 @@ export declare const FavoritesApiFp: (configuration?: Configuration) => {
      */
     listMLModelFavoritesUUIDs(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<MLModelFavorite>>>;
     /**
-     * Fetch all notebook favorites of connected user
+     * Fetch a page of notebook favorites of connected user
+     * @param {boolean} [isDashboard] return only dashboards
      * @param {number} [page] pagination offset
      * @param {number} [perPage] pagination limit
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    listNotebookFavorites(page?: number, perPage?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<NotebookFavoritesData>>;
+    listNotebookFavorites(isDashboard?: boolean, page?: number, perPage?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<NotebookFavoritesData>>;
     /**
      * Fetch all favorite notebook uuids of connected user
      * @param {*} [options] Override http request option.
@@ -5126,7 +5472,7 @@ export declare const FavoritesApiFp: (configuration?: Configuration) => {
      */
     listNotebookFavoritesUUIDs(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<NotebookFavorite>>>;
     /**
-     * Fetch all UDF favorites of connected user
+     * Fetch a page of UDF favorites of connected user
      * @param {number} [page] pagination offset
      * @param {number} [perPage] pagination limit
      * @param {*} [options] Override http request option.
@@ -5147,67 +5493,68 @@ export declare const FavoritesApiFp: (configuration?: Configuration) => {
 export declare const FavoritesApiFactory: (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) => {
     /**
      * Add a new array favorite
-     * @param {FavoriteCreate} [body]
+     * @param {string} namespace The namespace of the array
+     * @param {string} name The name of the array
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    addArrayFavorite(body?: FavoriteCreate, options?: any): AxiosPromise<void>;
+    addArrayFavorite(namespace: string, name: string, options?: any): AxiosPromise<void>;
     /**
      * Add a new ML model favorite
-     * @param {FavoriteCreate} [body]
+     * @param {string} namespace The namespace of the ML model
+     * @param {string} name The name of the ML model
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    addMLModelFavorite(body?: FavoriteCreate, options?: any): AxiosPromise<void>;
+    addMLModelFavorite(namespace: string, name: string, options?: any): AxiosPromise<void>;
     /**
      * Add a new notebook favorite
-     * @param {FavoriteCreate} [body]
+     * @param {string} namespace The namespace of the notebook
+     * @param {string} name The name of the notebook
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    addNotebookFavorite(body?: FavoriteCreate, options?: any): AxiosPromise<void>;
+    addNotebookFavorite(namespace: string, name: string, options?: any): AxiosPromise<void>;
     /**
      * Add a new UDF favorite
-     * @param {FavoriteCreate} [body]
+     * @param {string} namespace The namespace of the UDF
+     * @param {string} name The name of the UDF
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    addUDFFavorite(body?: FavoriteCreate, options?: any): AxiosPromise<void>;
+    addUDFFavorite(namespace: string, name: string, options?: any): AxiosPromise<void>;
     /**
      * Delete specific array favorite
-     * @param {string} id The uuid of the array favorite
+     * @param {string} namespace The namespace of the array
+     * @param {string} name The name of the array
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    deleteArrayFavorite(id: string, options?: any): AxiosPromise<void>;
+    deleteArrayFavorite(namespace: string, name: string, options?: any): AxiosPromise<void>;
     /**
      * Delete specific ML model favorite
-     * @param {string} id The uuid of the ML model favorite
+     * @param {string} namespace The namespace of the ML model
+     * @param {string} name The name of the ML model
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    deleteMLModelFavorite(id: string, options?: any): AxiosPromise<void>;
+    deleteMLModelFavorite(namespace: string, name: string, options?: any): AxiosPromise<void>;
     /**
      * Delete specific notebook favorite
-     * @param {string} id The uuid of the notebook favorite
+     * @param {string} namespace The namespace of the notebook
+     * @param {string} name The name of the notebook
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    deleteNotebookFavorite(id: string, options?: any): AxiosPromise<void>;
+    deleteNotebookFavorite(namespace: string, name: string, options?: any): AxiosPromise<void>;
     /**
      * Delete specific UDF favorite
-     * @param {string} id The uuid of the UDF favorite
+     * @param {string} namespace The namespace of the UDF
+     * @param {string} name The name of the UDF
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    deleteUDFFavorite(id: string, options?: any): AxiosPromise<void>;
-    /**
-     * Fetch specific array favorite of a user
-     * @param {string} id The uuid of the array favorite
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    getArrayFavorite(id: string, options?: any): AxiosPromise<ArrayFavorite>;
+    deleteUDFFavorite(namespace: string, name: string, options?: any): AxiosPromise<void>;
     /**
      * Fetch array favorite of a specific array
      * @param {string} namespace The namespace of the array
@@ -5215,14 +5562,7 @@ export declare const FavoritesApiFactory: (configuration?: Configuration, basePa
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getArrayFavoriteForArray(namespace: string, name: string, options?: any): AxiosPromise<ArrayFavorite>;
-    /**
-     * Fetch specific ML model favorite of a user
-     * @param {string} id The uuid of the ML model favorite
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    getMLModelFavorite(id: string, options?: any): AxiosPromise<MLModelFavorite>;
+    getArrayFavorite(namespace: string, name: string, options?: any): AxiosPromise<ArrayFavorite>;
     /**
      * Fetch ML model favorite of a specific ML model
      * @param {string} namespace The namespace of the ML model
@@ -5230,14 +5570,7 @@ export declare const FavoritesApiFactory: (configuration?: Configuration, basePa
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getMLModelFavoriteForMLModel(namespace: string, name: string, options?: any): AxiosPromise<MLModelFavorite>;
-    /**
-     * Fetch specific notebook favorite of a user
-     * @param {string} id The uuid of the notebook favorite
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    getNotebookFavorite(id: string, options?: any): AxiosPromise<NotebookFavorite>;
+    getMLModelFavorite(namespace: string, name: string, options?: any): AxiosPromise<MLModelFavorite>;
     /**
      * Fetch notebook favorite of a specific notebook
      * @param {string} namespace The namespace of the notebook
@@ -5245,14 +5578,7 @@ export declare const FavoritesApiFactory: (configuration?: Configuration, basePa
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getNotebookFavoriteForNotebook(namespace: string, name: string, options?: any): AxiosPromise<NotebookFavorite>;
-    /**
-     * Fetch specific UDF favorite of a user
-     * @param {string} id The uuid of the UDF favorite
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    getUDFFavorite(id: string, options?: any): AxiosPromise<UDFFavorite>;
+    getNotebookFavorite(namespace: string, name: string, options?: any): AxiosPromise<NotebookFavorite>;
     /**
      * Fetch UDF favorite of a specific UDF
      * @param {string} namespace The namespace of the UDF
@@ -5260,9 +5586,9 @@ export declare const FavoritesApiFactory: (configuration?: Configuration, basePa
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getUDFFavoriteForUDF(namespace: string, name: string, options?: any): AxiosPromise<UDFFavorite>;
+    getUDFFavorite(namespace: string, name: string, options?: any): AxiosPromise<UDFFavorite>;
     /**
-     * Fetch all array favorites of connected user
+     * Fetch a page of array favorites of connected user
      * @param {number} [page] pagination offset
      * @param {number} [perPage] pagination limit
      * @param {*} [options] Override http request option.
@@ -5276,7 +5602,7 @@ export declare const FavoritesApiFactory: (configuration?: Configuration, basePa
      */
     listArrayFavoritesUUIDs(options?: any): AxiosPromise<Array<ArrayFavorite>>;
     /**
-     * Fetch all ML models favorites of connected user
+     * Fetch a page of ML models favorites of connected user
      * @param {number} [page] pagination offset
      * @param {number} [perPage] pagination limit
      * @param {*} [options] Override http request option.
@@ -5290,13 +5616,14 @@ export declare const FavoritesApiFactory: (configuration?: Configuration, basePa
      */
     listMLModelFavoritesUUIDs(options?: any): AxiosPromise<Array<MLModelFavorite>>;
     /**
-     * Fetch all notebook favorites of connected user
+     * Fetch a page of notebook favorites of connected user
+     * @param {boolean} [isDashboard] return only dashboards
      * @param {number} [page] pagination offset
      * @param {number} [perPage] pagination limit
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    listNotebookFavorites(page?: number, perPage?: number, options?: any): AxiosPromise<NotebookFavoritesData>;
+    listNotebookFavorites(isDashboard?: boolean, page?: number, perPage?: number, options?: any): AxiosPromise<NotebookFavoritesData>;
     /**
      * Fetch all favorite notebook uuids of connected user
      * @param {*} [options] Override http request option.
@@ -5304,7 +5631,7 @@ export declare const FavoritesApiFactory: (configuration?: Configuration, basePa
      */
     listNotebookFavoritesUUIDs(options?: any): AxiosPromise<Array<NotebookFavorite>>;
     /**
-     * Fetch all UDF favorites of connected user
+     * Fetch a page of UDF favorites of connected user
      * @param {number} [page] pagination offset
      * @param {number} [perPage] pagination limit
      * @param {*} [options] Override http request option.
@@ -5327,76 +5654,76 @@ export declare const FavoritesApiFactory: (configuration?: Configuration, basePa
 export declare class FavoritesApi extends BaseAPI {
     /**
      * Add a new array favorite
-     * @param {FavoriteCreate} [body]
+     * @param {string} namespace The namespace of the array
+     * @param {string} name The name of the array
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof FavoritesApi
      */
-    addArrayFavorite(body?: FavoriteCreate, options?: any): Promise<import("axios").AxiosResponse<void>>;
+    addArrayFavorite(namespace: string, name: string, options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**
      * Add a new ML model favorite
-     * @param {FavoriteCreate} [body]
+     * @param {string} namespace The namespace of the ML model
+     * @param {string} name The name of the ML model
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof FavoritesApi
      */
-    addMLModelFavorite(body?: FavoriteCreate, options?: any): Promise<import("axios").AxiosResponse<void>>;
+    addMLModelFavorite(namespace: string, name: string, options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**
      * Add a new notebook favorite
-     * @param {FavoriteCreate} [body]
+     * @param {string} namespace The namespace of the notebook
+     * @param {string} name The name of the notebook
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof FavoritesApi
      */
-    addNotebookFavorite(body?: FavoriteCreate, options?: any): Promise<import("axios").AxiosResponse<void>>;
+    addNotebookFavorite(namespace: string, name: string, options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**
      * Add a new UDF favorite
-     * @param {FavoriteCreate} [body]
+     * @param {string} namespace The namespace of the UDF
+     * @param {string} name The name of the UDF
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof FavoritesApi
      */
-    addUDFFavorite(body?: FavoriteCreate, options?: any): Promise<import("axios").AxiosResponse<void>>;
+    addUDFFavorite(namespace: string, name: string, options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**
      * Delete specific array favorite
-     * @param {string} id The uuid of the array favorite
+     * @param {string} namespace The namespace of the array
+     * @param {string} name The name of the array
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof FavoritesApi
      */
-    deleteArrayFavorite(id: string, options?: any): Promise<import("axios").AxiosResponse<void>>;
+    deleteArrayFavorite(namespace: string, name: string, options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**
      * Delete specific ML model favorite
-     * @param {string} id The uuid of the ML model favorite
+     * @param {string} namespace The namespace of the ML model
+     * @param {string} name The name of the ML model
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof FavoritesApi
      */
-    deleteMLModelFavorite(id: string, options?: any): Promise<import("axios").AxiosResponse<void>>;
+    deleteMLModelFavorite(namespace: string, name: string, options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**
      * Delete specific notebook favorite
-     * @param {string} id The uuid of the notebook favorite
+     * @param {string} namespace The namespace of the notebook
+     * @param {string} name The name of the notebook
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof FavoritesApi
      */
-    deleteNotebookFavorite(id: string, options?: any): Promise<import("axios").AxiosResponse<void>>;
+    deleteNotebookFavorite(namespace: string, name: string, options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**
      * Delete specific UDF favorite
-     * @param {string} id The uuid of the UDF favorite
+     * @param {string} namespace The namespace of the UDF
+     * @param {string} name The name of the UDF
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof FavoritesApi
      */
-    deleteUDFFavorite(id: string, options?: any): Promise<import("axios").AxiosResponse<void>>;
-    /**
-     * Fetch specific array favorite of a user
-     * @param {string} id The uuid of the array favorite
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof FavoritesApi
-     */
-    getArrayFavorite(id: string, options?: any): Promise<import("axios").AxiosResponse<ArrayFavorite>>;
+    deleteUDFFavorite(namespace: string, name: string, options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**
      * Fetch array favorite of a specific array
      * @param {string} namespace The namespace of the array
@@ -5405,15 +5732,7 @@ export declare class FavoritesApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof FavoritesApi
      */
-    getArrayFavoriteForArray(namespace: string, name: string, options?: any): Promise<import("axios").AxiosResponse<ArrayFavorite>>;
-    /**
-     * Fetch specific ML model favorite of a user
-     * @param {string} id The uuid of the ML model favorite
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof FavoritesApi
-     */
-    getMLModelFavorite(id: string, options?: any): Promise<import("axios").AxiosResponse<MLModelFavorite>>;
+    getArrayFavorite(namespace: string, name: string, options?: any): Promise<import("axios").AxiosResponse<ArrayFavorite>>;
     /**
      * Fetch ML model favorite of a specific ML model
      * @param {string} namespace The namespace of the ML model
@@ -5422,15 +5741,7 @@ export declare class FavoritesApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof FavoritesApi
      */
-    getMLModelFavoriteForMLModel(namespace: string, name: string, options?: any): Promise<import("axios").AxiosResponse<MLModelFavorite>>;
-    /**
-     * Fetch specific notebook favorite of a user
-     * @param {string} id The uuid of the notebook favorite
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof FavoritesApi
-     */
-    getNotebookFavorite(id: string, options?: any): Promise<import("axios").AxiosResponse<NotebookFavorite>>;
+    getMLModelFavorite(namespace: string, name: string, options?: any): Promise<import("axios").AxiosResponse<MLModelFavorite>>;
     /**
      * Fetch notebook favorite of a specific notebook
      * @param {string} namespace The namespace of the notebook
@@ -5439,15 +5750,7 @@ export declare class FavoritesApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof FavoritesApi
      */
-    getNotebookFavoriteForNotebook(namespace: string, name: string, options?: any): Promise<import("axios").AxiosResponse<NotebookFavorite>>;
-    /**
-     * Fetch specific UDF favorite of a user
-     * @param {string} id The uuid of the UDF favorite
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof FavoritesApi
-     */
-    getUDFFavorite(id: string, options?: any): Promise<import("axios").AxiosResponse<UDFFavorite>>;
+    getNotebookFavorite(namespace: string, name: string, options?: any): Promise<import("axios").AxiosResponse<NotebookFavorite>>;
     /**
      * Fetch UDF favorite of a specific UDF
      * @param {string} namespace The namespace of the UDF
@@ -5456,9 +5759,9 @@ export declare class FavoritesApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof FavoritesApi
      */
-    getUDFFavoriteForUDF(namespace: string, name: string, options?: any): Promise<import("axios").AxiosResponse<UDFFavorite>>;
+    getUDFFavorite(namespace: string, name: string, options?: any): Promise<import("axios").AxiosResponse<UDFFavorite>>;
     /**
-     * Fetch all array favorites of connected user
+     * Fetch a page of array favorites of connected user
      * @param {number} [page] pagination offset
      * @param {number} [perPage] pagination limit
      * @param {*} [options] Override http request option.
@@ -5474,7 +5777,7 @@ export declare class FavoritesApi extends BaseAPI {
      */
     listArrayFavoritesUUIDs(options?: any): Promise<import("axios").AxiosResponse<ArrayFavorite[]>>;
     /**
-     * Fetch all ML models favorites of connected user
+     * Fetch a page of ML models favorites of connected user
      * @param {number} [page] pagination offset
      * @param {number} [perPage] pagination limit
      * @param {*} [options] Override http request option.
@@ -5490,14 +5793,15 @@ export declare class FavoritesApi extends BaseAPI {
      */
     listMLModelFavoritesUUIDs(options?: any): Promise<import("axios").AxiosResponse<MLModelFavorite[]>>;
     /**
-     * Fetch all notebook favorites of connected user
+     * Fetch a page of notebook favorites of connected user
+     * @param {boolean} [isDashboard] return only dashboards
      * @param {number} [page] pagination offset
      * @param {number} [perPage] pagination limit
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof FavoritesApi
      */
-    listNotebookFavorites(page?: number, perPage?: number, options?: any): Promise<import("axios").AxiosResponse<NotebookFavoritesData>>;
+    listNotebookFavorites(isDashboard?: boolean, page?: number, perPage?: number, options?: any): Promise<import("axios").AxiosResponse<NotebookFavoritesData>>;
     /**
      * Fetch all favorite notebook uuids of connected user
      * @param {*} [options] Override http request option.
@@ -5506,7 +5810,7 @@ export declare class FavoritesApi extends BaseAPI {
      */
     listNotebookFavoritesUUIDs(options?: any): Promise<import("axios").AxiosResponse<NotebookFavorite[]>>;
     /**
-     * Fetch all UDF favorites of connected user
+     * Fetch a page of UDF favorites of connected user
      * @param {number} [page] pagination offset
      * @param {number} [perPage] pagination limit
      * @param {*} [options] Override http request option.
@@ -5523,21 +5827,418 @@ export declare class FavoritesApi extends BaseAPI {
     listUDFFavoritesUUIDs(options?: any): Promise<import("axios").AxiosResponse<UDFFavorite[]>>;
 }
 /**
+ * FilesApi - axios parameter creator
+ * @export
+ */
+export declare const FilesApiAxiosParamCreator: (configuration?: Configuration) => {
+    /**
+     * Create a tiledb file at the specified location
+     * @param {string} namespace The namespace of the file
+     * @param {FileCreate} fileCreate Input/Output information to create a new TileDB file
+     * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    handleCreateFile: (namespace: string, fileCreate: FileCreate, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, options?: any) => Promise<RequestArgs>;
+    /**
+     * Export a TileDB File back to its original file format
+     * @param {string} namespace The namespace of the file
+     * @param {string} file The file identifier
+     * @param {FileExport} fileExport Export configuration information
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    handleExportFile: (namespace: string, file: string, fileExport: FileExport, options?: any) => Promise<RequestArgs>;
+};
+/**
+ * FilesApi - functional programming interface
+ * @export
+ */
+export declare const FilesApiFp: (configuration?: Configuration) => {
+    /**
+     * Create a tiledb file at the specified location
+     * @param {string} namespace The namespace of the file
+     * @param {FileCreate} fileCreate Input/Output information to create a new TileDB file
+     * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    handleCreateFile(namespace: string, fileCreate: FileCreate, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<FileCreated>>;
+    /**
+     * Export a TileDB File back to its original file format
+     * @param {string} namespace The namespace of the file
+     * @param {string} file The file identifier
+     * @param {FileExport} fileExport Export configuration information
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    handleExportFile(namespace: string, file: string, fileExport: FileExport, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<FileExported>>;
+};
+/**
+ * FilesApi - factory interface
+ * @export
+ */
+export declare const FilesApiFactory: (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) => {
+    /**
+     * Create a tiledb file at the specified location
+     * @param {string} namespace The namespace of the file
+     * @param {FileCreate} fileCreate Input/Output information to create a new TileDB file
+     * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    handleCreateFile(namespace: string, fileCreate: FileCreate, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, options?: any): AxiosPromise<FileCreated>;
+    /**
+     * Export a TileDB File back to its original file format
+     * @param {string} namespace The namespace of the file
+     * @param {string} file The file identifier
+     * @param {FileExport} fileExport Export configuration information
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    handleExportFile(namespace: string, file: string, fileExport: FileExport, options?: any): AxiosPromise<FileExported>;
+};
+/**
+ * FilesApi - object-oriented interface
+ * @export
+ * @class FilesApi
+ * @extends {BaseAPI}
+ */
+export declare class FilesApi extends BaseAPI {
+    /**
+     * Create a tiledb file at the specified location
+     * @param {string} namespace The namespace of the file
+     * @param {FileCreate} fileCreate Input/Output information to create a new TileDB file
+     * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof FilesApi
+     */
+    handleCreateFile(namespace: string, fileCreate: FileCreate, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, options?: any): Promise<import("axios").AxiosResponse<FileCreated>>;
+    /**
+     * Export a TileDB File back to its original file format
+     * @param {string} namespace The namespace of the file
+     * @param {string} file The file identifier
+     * @param {FileExport} fileExport Export configuration information
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof FilesApi
+     */
+    handleExportFile(namespace: string, file: string, fileExport: FileExport, options?: any): Promise<import("axios").AxiosResponse<FileExported>>;
+}
+/**
+ * GroupsApi - axios parameter creator
+ * @export
+ */
+export declare const GroupsApiAxiosParamCreator: (configuration?: Configuration) => {
+    /**
+     * Adds an asset(array, notebook, udf etc) to a group
+     * @param {string} namespace The namespace of the group
+     * @param {string} name The name of the group
+     * @param {string} assetNamespace The namespace of the asset
+     * @param {string} assetName The name of the asset
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    addAsset: (namespace: string, name: string, assetNamespace: string, assetName: string, options?: any) => Promise<RequestArgs>;
+    /**
+     * Creates a new, empty group in the namespace.
+     * @param {string} namespace The namespace of the group
+     * @param {string} name The name of the group
+     * @param {GroupCreate} [groupCreate]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    createGroup: (namespace: string, name: string, groupCreate?: GroupCreate, options?: any) => Promise<RequestArgs>;
+    /**
+     * Deletes the group and all the subgroups recursively. The assets are not deleted nor are not relocated to any other group
+     * @param {string} namespace The namespace of the group
+     * @param {string} name The name of the group
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    deleteGroup: (namespace: string, name: string, options?: any) => Promise<RequestArgs>;
+    /**
+     * Returns the contents, assets and subgroups, of the group
+     * @param {string} namespace The namespace of the group
+     * @param {string} name The name of the group
+     * @param {'attributes' | 'groups' | 'assets'} [output]
+     * @param {number} [page] pagination offset for assets
+     * @param {number} [perPage] pagination limit for assets
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    listGroup: (namespace: string, name: string, output?: 'attributes' | 'groups' | 'assets', page?: number, perPage?: number, options?: any) => Promise<RequestArgs>;
+    /**
+     * Returns one page of top level groups in namespace.
+     * @param {string} namespace The namespace to operate on
+     * @param {number} [page] pagination offset
+     * @param {number} [perPage] pagination limit
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    listTopLevelGroups: (namespace: string, page?: number, perPage?: number, options?: any) => Promise<RequestArgs>;
+    /**
+     * Removes an asset from a group
+     * @param {string} namespace The namespace of the group
+     * @param {string} name The name of the group
+     * @param {string} assetNamespace The namespace of the asset
+     * @param {string} assetName The name of the asset
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    removeAsset: (namespace: string, name: string, assetNamespace: string, assetName: string, options?: any) => Promise<RequestArgs>;
+    /**
+     * Changes attributes of the group
+     * @param {string} namespace The namespace of the group
+     * @param {string} name The name of the group
+     * @param {GroupUpdate} [groupUpdate]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    updateGroup: (namespace: string, name: string, groupUpdate?: GroupUpdate, options?: any) => Promise<RequestArgs>;
+};
+/**
+ * GroupsApi - functional programming interface
+ * @export
+ */
+export declare const GroupsApiFp: (configuration?: Configuration) => {
+    /**
+     * Adds an asset(array, notebook, udf etc) to a group
+     * @param {string} namespace The namespace of the group
+     * @param {string} name The name of the group
+     * @param {string} assetNamespace The namespace of the asset
+     * @param {string} assetName The name of the asset
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    addAsset(namespace: string, name: string, assetNamespace: string, assetName: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
+    /**
+     * Creates a new, empty group in the namespace.
+     * @param {string} namespace The namespace of the group
+     * @param {string} name The name of the group
+     * @param {GroupCreate} [groupCreate]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    createGroup(namespace: string, name: string, groupCreate?: GroupCreate, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
+    /**
+     * Deletes the group and all the subgroups recursively. The assets are not deleted nor are not relocated to any other group
+     * @param {string} namespace The namespace of the group
+     * @param {string} name The name of the group
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    deleteGroup(namespace: string, name: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
+    /**
+     * Returns the contents, assets and subgroups, of the group
+     * @param {string} namespace The namespace of the group
+     * @param {string} name The name of the group
+     * @param {'attributes' | 'groups' | 'assets'} [output]
+     * @param {number} [page] pagination offset for assets
+     * @param {number} [perPage] pagination limit for assets
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    listGroup(namespace: string, name: string, output?: 'attributes' | 'groups' | 'assets', page?: number, perPage?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GroupListing>>;
+    /**
+     * Returns one page of top level groups in namespace.
+     * @param {string} namespace The namespace to operate on
+     * @param {number} [page] pagination offset
+     * @param {number} [perPage] pagination limit
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    listTopLevelGroups(namespace: string, page?: number, perPage?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GroupListing>>;
+    /**
+     * Removes an asset from a group
+     * @param {string} namespace The namespace of the group
+     * @param {string} name The name of the group
+     * @param {string} assetNamespace The namespace of the asset
+     * @param {string} assetName The name of the asset
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    removeAsset(namespace: string, name: string, assetNamespace: string, assetName: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
+    /**
+     * Changes attributes of the group
+     * @param {string} namespace The namespace of the group
+     * @param {string} name The name of the group
+     * @param {GroupUpdate} [groupUpdate]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    updateGroup(namespace: string, name: string, groupUpdate?: GroupUpdate, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
+};
+/**
+ * GroupsApi - factory interface
+ * @export
+ */
+export declare const GroupsApiFactory: (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) => {
+    /**
+     * Adds an asset(array, notebook, udf etc) to a group
+     * @param {string} namespace The namespace of the group
+     * @param {string} name The name of the group
+     * @param {string} assetNamespace The namespace of the asset
+     * @param {string} assetName The name of the asset
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    addAsset(namespace: string, name: string, assetNamespace: string, assetName: string, options?: any): AxiosPromise<void>;
+    /**
+     * Creates a new, empty group in the namespace.
+     * @param {string} namespace The namespace of the group
+     * @param {string} name The name of the group
+     * @param {GroupCreate} [groupCreate]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    createGroup(namespace: string, name: string, groupCreate?: GroupCreate, options?: any): AxiosPromise<void>;
+    /**
+     * Deletes the group and all the subgroups recursively. The assets are not deleted nor are not relocated to any other group
+     * @param {string} namespace The namespace of the group
+     * @param {string} name The name of the group
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    deleteGroup(namespace: string, name: string, options?: any): AxiosPromise<void>;
+    /**
+     * Returns the contents, assets and subgroups, of the group
+     * @param {string} namespace The namespace of the group
+     * @param {string} name The name of the group
+     * @param {'attributes' | 'groups' | 'assets'} [output]
+     * @param {number} [page] pagination offset for assets
+     * @param {number} [perPage] pagination limit for assets
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    listGroup(namespace: string, name: string, output?: 'attributes' | 'groups' | 'assets', page?: number, perPage?: number, options?: any): AxiosPromise<GroupListing>;
+    /**
+     * Returns one page of top level groups in namespace.
+     * @param {string} namespace The namespace to operate on
+     * @param {number} [page] pagination offset
+     * @param {number} [perPage] pagination limit
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    listTopLevelGroups(namespace: string, page?: number, perPage?: number, options?: any): AxiosPromise<GroupListing>;
+    /**
+     * Removes an asset from a group
+     * @param {string} namespace The namespace of the group
+     * @param {string} name The name of the group
+     * @param {string} assetNamespace The namespace of the asset
+     * @param {string} assetName The name of the asset
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    removeAsset(namespace: string, name: string, assetNamespace: string, assetName: string, options?: any): AxiosPromise<void>;
+    /**
+     * Changes attributes of the group
+     * @param {string} namespace The namespace of the group
+     * @param {string} name The name of the group
+     * @param {GroupUpdate} [groupUpdate]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    updateGroup(namespace: string, name: string, groupUpdate?: GroupUpdate, options?: any): AxiosPromise<void>;
+};
+/**
+ * GroupsApi - object-oriented interface
+ * @export
+ * @class GroupsApi
+ * @extends {BaseAPI}
+ */
+export declare class GroupsApi extends BaseAPI {
+    /**
+     * Adds an asset(array, notebook, udf etc) to a group
+     * @param {string} namespace The namespace of the group
+     * @param {string} name The name of the group
+     * @param {string} assetNamespace The namespace of the asset
+     * @param {string} assetName The name of the asset
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof GroupsApi
+     */
+    addAsset(namespace: string, name: string, assetNamespace: string, assetName: string, options?: any): Promise<import("axios").AxiosResponse<void>>;
+    /**
+     * Creates a new, empty group in the namespace.
+     * @param {string} namespace The namespace of the group
+     * @param {string} name The name of the group
+     * @param {GroupCreate} [groupCreate]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof GroupsApi
+     */
+    createGroup(namespace: string, name: string, groupCreate?: GroupCreate, options?: any): Promise<import("axios").AxiosResponse<void>>;
+    /**
+     * Deletes the group and all the subgroups recursively. The assets are not deleted nor are not relocated to any other group
+     * @param {string} namespace The namespace of the group
+     * @param {string} name The name of the group
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof GroupsApi
+     */
+    deleteGroup(namespace: string, name: string, options?: any): Promise<import("axios").AxiosResponse<void>>;
+    /**
+     * Returns the contents, assets and subgroups, of the group
+     * @param {string} namespace The namespace of the group
+     * @param {string} name The name of the group
+     * @param {'attributes' | 'groups' | 'assets'} [output]
+     * @param {number} [page] pagination offset for assets
+     * @param {number} [perPage] pagination limit for assets
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof GroupsApi
+     */
+    listGroup(namespace: string, name: string, output?: 'attributes' | 'groups' | 'assets', page?: number, perPage?: number, options?: any): Promise<import("axios").AxiosResponse<GroupListing>>;
+    /**
+     * Returns one page of top level groups in namespace.
+     * @param {string} namespace The namespace to operate on
+     * @param {number} [page] pagination offset
+     * @param {number} [perPage] pagination limit
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof GroupsApi
+     */
+    listTopLevelGroups(namespace: string, page?: number, perPage?: number, options?: any): Promise<import("axios").AxiosResponse<GroupListing>>;
+    /**
+     * Removes an asset from a group
+     * @param {string} namespace The namespace of the group
+     * @param {string} name The name of the group
+     * @param {string} assetNamespace The namespace of the asset
+     * @param {string} assetName The name of the asset
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof GroupsApi
+     */
+    removeAsset(namespace: string, name: string, assetNamespace: string, assetName: string, options?: any): Promise<import("axios").AxiosResponse<void>>;
+    /**
+     * Changes attributes of the group
+     * @param {string} namespace The namespace of the group
+     * @param {string} name The name of the group
+     * @param {GroupUpdate} [groupUpdate]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof GroupsApi
+     */
+    updateGroup(namespace: string, name: string, groupUpdate?: GroupUpdate, options?: any): Promise<import("axios").AxiosResponse<void>>;
+}
+/**
  * InvitationApi - axios parameter creator
  * @export
  */
 export declare const InvitationApiAxiosParamCreator: (configuration?: Configuration) => {
     /**
      * Accepts invitation
-     * @param {string} invitation the id of invitation about to be accepted
+     * @param {string} invitation the ID of invitation about to be accepted
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     acceptInvitation: (invitation: string, options?: any) => Promise<RequestArgs>;
     /**
      * Cancels join organization invitation
-     * @param {string} invitation the id of invitation about to be cancelled
-     * @param {string} organization name or uuid of organization
+     * @param {string} invitation the ID of invitation about to be cancelled
+     * @param {string} organization name or UUID of organization
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -5545,7 +6246,7 @@ export declare const InvitationApiAxiosParamCreator: (configuration?: Configurat
     /**
      * Cancels array sharing invitation
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
-     * @param {string} invitation the id of invitation about to be cancelled
+     * @param {string} invitation the ID of invitation about to be cancelled
      * @param {string} array name/uri of array that is url-encoded
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -5553,7 +6254,7 @@ export declare const InvitationApiAxiosParamCreator: (configuration?: Configurat
     cancelShareArrayByInvite: (namespace: string, invitation: string, array: string, options?: any) => Promise<RequestArgs>;
     /**
      * Fetch a list of invitations
-     * @param {string} [organization] name or id of organization to filter
+     * @param {string} [organization] name or ID of organization to filter
      * @param {string} [array] name/uri of array that is url-encoded to filter
      * @param {number} [start] start time for tasks to filter by
      * @param {number} [end] end time for tasks to filter by
@@ -5568,7 +6269,7 @@ export declare const InvitationApiAxiosParamCreator: (configuration?: Configurat
     fetchInvitations: (organization?: string, array?: string, start?: number, end?: number, page?: number, perPage?: number, type?: string, status?: string, orderby?: string, options?: any) => Promise<RequestArgs>;
     /**
      * Sends email to multiple recipients with joining information regarding an organization
-     * @param {string} organization name or uuid of organization
+     * @param {string} organization name or UUID of organization
      * @param {InvitationOrganizationJoinEmail} emailInvite list of email recipients
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -5591,15 +6292,15 @@ export declare const InvitationApiAxiosParamCreator: (configuration?: Configurat
 export declare const InvitationApiFp: (configuration?: Configuration) => {
     /**
      * Accepts invitation
-     * @param {string} invitation the id of invitation about to be accepted
+     * @param {string} invitation the ID of invitation about to be accepted
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     acceptInvitation(invitation: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
     /**
      * Cancels join organization invitation
-     * @param {string} invitation the id of invitation about to be cancelled
-     * @param {string} organization name or uuid of organization
+     * @param {string} invitation the ID of invitation about to be cancelled
+     * @param {string} organization name or UUID of organization
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -5607,7 +6308,7 @@ export declare const InvitationApiFp: (configuration?: Configuration) => {
     /**
      * Cancels array sharing invitation
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
-     * @param {string} invitation the id of invitation about to be cancelled
+     * @param {string} invitation the ID of invitation about to be cancelled
      * @param {string} array name/uri of array that is url-encoded
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -5615,7 +6316,7 @@ export declare const InvitationApiFp: (configuration?: Configuration) => {
     cancelShareArrayByInvite(namespace: string, invitation: string, array: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
     /**
      * Fetch a list of invitations
-     * @param {string} [organization] name or id of organization to filter
+     * @param {string} [organization] name or ID of organization to filter
      * @param {string} [array] name/uri of array that is url-encoded to filter
      * @param {number} [start] start time for tasks to filter by
      * @param {number} [end] end time for tasks to filter by
@@ -5630,7 +6331,7 @@ export declare const InvitationApiFp: (configuration?: Configuration) => {
     fetchInvitations(organization?: string, array?: string, start?: number, end?: number, page?: number, perPage?: number, type?: string, status?: string, orderby?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InvitationData>>;
     /**
      * Sends email to multiple recipients with joining information regarding an organization
-     * @param {string} organization name or uuid of organization
+     * @param {string} organization name or UUID of organization
      * @param {InvitationOrganizationJoinEmail} emailInvite list of email recipients
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -5653,15 +6354,15 @@ export declare const InvitationApiFp: (configuration?: Configuration) => {
 export declare const InvitationApiFactory: (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) => {
     /**
      * Accepts invitation
-     * @param {string} invitation the id of invitation about to be accepted
+     * @param {string} invitation the ID of invitation about to be accepted
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     acceptInvitation(invitation: string, options?: any): AxiosPromise<void>;
     /**
      * Cancels join organization invitation
-     * @param {string} invitation the id of invitation about to be cancelled
-     * @param {string} organization name or uuid of organization
+     * @param {string} invitation the ID of invitation about to be cancelled
+     * @param {string} organization name or UUID of organization
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -5669,7 +6370,7 @@ export declare const InvitationApiFactory: (configuration?: Configuration, baseP
     /**
      * Cancels array sharing invitation
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
-     * @param {string} invitation the id of invitation about to be cancelled
+     * @param {string} invitation the ID of invitation about to be cancelled
      * @param {string} array name/uri of array that is url-encoded
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -5677,7 +6378,7 @@ export declare const InvitationApiFactory: (configuration?: Configuration, baseP
     cancelShareArrayByInvite(namespace: string, invitation: string, array: string, options?: any): AxiosPromise<void>;
     /**
      * Fetch a list of invitations
-     * @param {string} [organization] name or id of organization to filter
+     * @param {string} [organization] name or ID of organization to filter
      * @param {string} [array] name/uri of array that is url-encoded to filter
      * @param {number} [start] start time for tasks to filter by
      * @param {number} [end] end time for tasks to filter by
@@ -5692,7 +6393,7 @@ export declare const InvitationApiFactory: (configuration?: Configuration, baseP
     fetchInvitations(organization?: string, array?: string, start?: number, end?: number, page?: number, perPage?: number, type?: string, status?: string, orderby?: string, options?: any): AxiosPromise<InvitationData>;
     /**
      * Sends email to multiple recipients with joining information regarding an organization
-     * @param {string} organization name or uuid of organization
+     * @param {string} organization name or UUID of organization
      * @param {InvitationOrganizationJoinEmail} emailInvite list of email recipients
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -5717,7 +6418,7 @@ export declare const InvitationApiFactory: (configuration?: Configuration, baseP
 export declare class InvitationApi extends BaseAPI {
     /**
      * Accepts invitation
-     * @param {string} invitation the id of invitation about to be accepted
+     * @param {string} invitation the ID of invitation about to be accepted
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof InvitationApi
@@ -5725,8 +6426,8 @@ export declare class InvitationApi extends BaseAPI {
     acceptInvitation(invitation: string, options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**
      * Cancels join organization invitation
-     * @param {string} invitation the id of invitation about to be cancelled
-     * @param {string} organization name or uuid of organization
+     * @param {string} invitation the ID of invitation about to be cancelled
+     * @param {string} organization name or UUID of organization
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof InvitationApi
@@ -5735,7 +6436,7 @@ export declare class InvitationApi extends BaseAPI {
     /**
      * Cancels array sharing invitation
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
-     * @param {string} invitation the id of invitation about to be cancelled
+     * @param {string} invitation the ID of invitation about to be cancelled
      * @param {string} array name/uri of array that is url-encoded
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -5744,7 +6445,7 @@ export declare class InvitationApi extends BaseAPI {
     cancelShareArrayByInvite(namespace: string, invitation: string, array: string, options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**
      * Fetch a list of invitations
-     * @param {string} [organization] name or id of organization to filter
+     * @param {string} [organization] name or ID of organization to filter
      * @param {string} [array] name/uri of array that is url-encoded to filter
      * @param {number} [start] start time for tasks to filter by
      * @param {number} [end] end time for tasks to filter by
@@ -5760,7 +6461,7 @@ export declare class InvitationApi extends BaseAPI {
     fetchInvitations(organization?: string, array?: string, start?: number, end?: number, page?: number, perPage?: number, type?: string, status?: string, orderby?: string, options?: any): Promise<import("axios").AxiosResponse<InvitationData>>;
     /**
      * Sends email to multiple recipients with joining information regarding an organization
-     * @param {string} organization name or uuid of organization
+     * @param {string} organization name or UUID of organization
      * @param {InvitationOrganizationJoinEmail} emailInvite list of email recipients
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -5798,7 +6499,7 @@ export declare const NotebookApiAxiosParamCreator: (configuration?: Configuratio
      */
     shutdownNotebookServer: (namespace: string, options?: any) => Promise<RequestArgs>;
     /**
-     * update name on a notebok, moving related s3 object to new location
+     * update name on a notebok, moving related S3 object to new location
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
      * @param {string} array name/uri of notebook (array) that is url-encoded
      * @param {ArrayInfoUpdate} notebookMetadata notebook (array) metadata to update
@@ -5827,7 +6528,7 @@ export declare const NotebookApiFp: (configuration?: Configuration) => {
      */
     shutdownNotebookServer(namespace: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
     /**
-     * update name on a notebok, moving related s3 object to new location
+     * update name on a notebok, moving related S3 object to new location
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
      * @param {string} array name/uri of notebook (array) that is url-encoded
      * @param {ArrayInfoUpdate} notebookMetadata notebook (array) metadata to update
@@ -5856,7 +6557,7 @@ export declare const NotebookApiFactory: (configuration?: Configuration, basePat
      */
     shutdownNotebookServer(namespace: string, options?: any): AxiosPromise<void>;
     /**
-     * update name on a notebok, moving related s3 object to new location
+     * update name on a notebok, moving related S3 object to new location
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
      * @param {string} array name/uri of notebook (array) that is url-encoded
      * @param {ArrayInfoUpdate} notebookMetadata notebook (array) metadata to update
@@ -5889,7 +6590,7 @@ export declare class NotebookApi extends BaseAPI {
      */
     shutdownNotebookServer(namespace: string, options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**
-     * update name on a notebok, moving related s3 object to new location
+     * update name on a notebok, moving related S3 object to new location
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
      * @param {string} array name/uri of notebook (array) that is url-encoded
      * @param {ArrayInfoUpdate} notebookMetadata notebook (array) metadata to update
@@ -6019,7 +6720,7 @@ export declare const OrganizationApiAxiosParamCreator: (configuration?: Configur
     deleteAWSAccessCredentials: (namespace: string, name: string, options?: any) => Promise<RequestArgs>;
     /**
      * delete a organization
-     * @param {string} organization organization name or id
+     * @param {string} organization organization name or ID
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -6040,7 +6741,7 @@ export declare const OrganizationApiAxiosParamCreator: (configuration?: Configur
     getAllOrganizations: (options?: any) => Promise<RequestArgs>;
     /**
      * get a organization
-     * @param {string} organization organization name or id
+     * @param {string} organization organization name or ID
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -6064,7 +6765,7 @@ export declare const OrganizationApiAxiosParamCreator: (configuration?: Configur
     updateAWSAccessCredentials: (namespace: string, name: string, awsAccessCredentials: AWSAccessCredentials, options?: any) => Promise<RequestArgs>;
     /**
      * update a organization
-     * @param {string} organization organization name or id
+     * @param {string} organization organization name or ID
      * @param {Organization} organizationDetails organization details to update
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -6133,7 +6834,7 @@ export declare const OrganizationApiFp: (configuration?: Configuration) => {
     deleteAWSAccessCredentials(namespace: string, name: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
     /**
      * delete a organization
-     * @param {string} organization organization name or id
+     * @param {string} organization organization name or ID
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -6154,7 +6855,7 @@ export declare const OrganizationApiFp: (configuration?: Configuration) => {
     getAllOrganizations(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Organization>>>;
     /**
      * get a organization
-     * @param {string} organization organization name or id
+     * @param {string} organization organization name or ID
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -6178,7 +6879,7 @@ export declare const OrganizationApiFp: (configuration?: Configuration) => {
     updateAWSAccessCredentials(namespace: string, name: string, awsAccessCredentials: AWSAccessCredentials, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
     /**
      * update a organization
-     * @param {string} organization organization name or id
+     * @param {string} organization organization name or ID
      * @param {Organization} organizationDetails organization details to update
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -6247,7 +6948,7 @@ export declare const OrganizationApiFactory: (configuration?: Configuration, bas
     deleteAWSAccessCredentials(namespace: string, name: string, options?: any): AxiosPromise<void>;
     /**
      * delete a organization
-     * @param {string} organization organization name or id
+     * @param {string} organization organization name or ID
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -6268,7 +6969,7 @@ export declare const OrganizationApiFactory: (configuration?: Configuration, bas
     getAllOrganizations(options?: any): AxiosPromise<Array<Organization>>;
     /**
      * get a organization
-     * @param {string} organization organization name or id
+     * @param {string} organization organization name or ID
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -6292,7 +6993,7 @@ export declare const OrganizationApiFactory: (configuration?: Configuration, bas
     updateAWSAccessCredentials(namespace: string, name: string, awsAccessCredentials: AWSAccessCredentials, options?: any): AxiosPromise<void>;
     /**
      * update a organization
-     * @param {string} organization organization name or id
+     * @param {string} organization organization name or ID
      * @param {Organization} organizationDetails organization details to update
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -6369,7 +7070,7 @@ export declare class OrganizationApi extends BaseAPI {
     deleteAWSAccessCredentials(namespace: string, name: string, options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**
      * delete a organization
-     * @param {string} organization organization name or id
+     * @param {string} organization organization name or ID
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof OrganizationApi
@@ -6393,7 +7094,7 @@ export declare class OrganizationApi extends BaseAPI {
     getAllOrganizations(options?: any): Promise<import("axios").AxiosResponse<Organization[]>>;
     /**
      * get a organization
-     * @param {string} organization organization name or id
+     * @param {string} organization organization name or ID
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof OrganizationApi
@@ -6420,7 +7121,7 @@ export declare class OrganizationApi extends BaseAPI {
     updateAWSAccessCredentials(namespace: string, name: string, awsAccessCredentials: AWSAccessCredentials, options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**
      * update a organization
-     * @param {string} organization organization name or id
+     * @param {string} organization organization name or ID
      * @param {Organization} organizationDetails organization details to update
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -6493,7 +7194,7 @@ export declare const QueryApiAxiosParamCreator: (configuration?: Configuration) 
      */
     submitQuery: (namespace: string, array: string, type: string, contentType: string, query: Query, xPayer?: string, openAt?: number, options?: any) => Promise<RequestArgs>;
     /**
-     * send a query to run against a specified array/URI registered to a group/project, returns json results
+     * send a query to run against a specified array/URI registered to a group/project, returns JSON results
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
      * @param {string} array name/uri of array that is url-encoded
      * @param {string} contentType Content Type of input and return mime
@@ -6559,7 +7260,7 @@ export declare const QueryApiFp: (configuration?: Configuration) => {
      */
     submitQuery(namespace: string, array: string, type: string, contentType: string, query: Query, xPayer?: string, openAt?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Query>>;
     /**
-     * send a query to run against a specified array/URI registered to a group/project, returns json results
+     * send a query to run against a specified array/URI registered to a group/project, returns JSON results
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
      * @param {string} array name/uri of array that is url-encoded
      * @param {string} contentType Content Type of input and return mime
@@ -6625,7 +7326,7 @@ export declare const QueryApiFactory: (configuration?: Configuration, basePath?:
      */
     submitQuery(namespace: string, array: string, type: string, contentType: string, query: Query, xPayer?: string, openAt?: number, options?: any): AxiosPromise<Query>;
     /**
-     * send a query to run against a specified array/URI registered to a group/project, returns json results
+     * send a query to run against a specified array/URI registered to a group/project, returns JSON results
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
      * @param {string} array name/uri of array that is url-encoded
      * @param {string} contentType Content Type of input and return mime
@@ -6697,7 +7398,7 @@ export declare class QueryApi extends BaseAPI {
      */
     submitQuery(namespace: string, array: string, type: string, contentType: string, query: Query, xPayer?: string, openAt?: number, options?: any): Promise<import("axios").AxiosResponse<Query>>;
     /**
-     * send a query to run against a specified array/URI registered to a group/project, returns json results
+     * send a query to run against a specified array/URI registered to a group/project, returns JSON results
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
      * @param {string} array name/uri of array that is url-encoded
      * @param {string} contentType Content Type of input and return mime
@@ -6824,6 +7525,188 @@ export declare class StatsApi extends BaseAPI {
     getTiledbStats(options?: any): Promise<import("axios").AxiosResponse<InlineResponse200>>;
 }
 /**
+ * TaskGraphLogsApi - axios parameter creator
+ * @export
+ */
+export declare const TaskGraphLogsApiAxiosParamCreator: (configuration?: Configuration) => {
+    /**
+     * Create a task graph log.
+     * @param {string} namespace The namespace that will own this task graph log.
+     * @param {TaskGraphLog} log
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    createTaskGraphLog: (namespace: string, log: TaskGraphLog, options?: any) => Promise<RequestArgs>;
+    /**
+     * Fetch information about a single task graph execution.
+     * @param {string} namespace The namespace that owns this task graph log.
+     * @param {string} id The UUID of the task graph log entry.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getTaskGraphLog: (namespace: string, id: string, options?: any) => Promise<RequestArgs>;
+    /**
+     * Fetch the task graph logs of a namespace the user has access to. The returned entries will include only summary data, and will not include information about the individual tasks that were executed. (This information is available when requesting an individual task graph log.) Entries in the response are ordered from newest to oldest. Pagination parameters work as in other API methods; see PaginationMetadata.
+     * @param {string} [namespace] Include logs for this namespace.
+     * @param {string} [createdBy] Include logs from only this user.
+     * @param {string} [search] search string that will look at name.
+     * @param {string} [startTime] Include logs created after this time.
+     * @param {string} [endTime] Include logs created before this time.
+     * @param {number} [page] pagination offset
+     * @param {number} [perPage] pagination limit
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    listTaskGraphLogs: (namespace?: string, createdBy?: string, search?: string, startTime?: string, endTime?: string, page?: number, perPage?: number, options?: any) => Promise<RequestArgs>;
+    /**
+     * Update information about a single task graph execution.
+     * @param {string} namespace The namespace that owns this task graph log.
+     * @param {string} id The UUID of the task graph log entry.
+     * @param {TaskGraphLog} log Updates to make to the task graph log. The only manual update that a client should need to make to a task graph log is to update its completion status to &#x60;succeeded&#x60;, &#x60;failed&#x60;, or &#x60;cancelled&#x60;.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    updateTaskGraphLog: (namespace: string, id: string, log: TaskGraphLog, options?: any) => Promise<RequestArgs>;
+};
+/**
+ * TaskGraphLogsApi - functional programming interface
+ * @export
+ */
+export declare const TaskGraphLogsApiFp: (configuration?: Configuration) => {
+    /**
+     * Create a task graph log.
+     * @param {string} namespace The namespace that will own this task graph log.
+     * @param {TaskGraphLog} log
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    createTaskGraphLog(namespace: string, log: TaskGraphLog, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TaskGraphLog>>;
+    /**
+     * Fetch information about a single task graph execution.
+     * @param {string} namespace The namespace that owns this task graph log.
+     * @param {string} id The UUID of the task graph log entry.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getTaskGraphLog(namespace: string, id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TaskGraphLog>>;
+    /**
+     * Fetch the task graph logs of a namespace the user has access to. The returned entries will include only summary data, and will not include information about the individual tasks that were executed. (This information is available when requesting an individual task graph log.) Entries in the response are ordered from newest to oldest. Pagination parameters work as in other API methods; see PaginationMetadata.
+     * @param {string} [namespace] Include logs for this namespace.
+     * @param {string} [createdBy] Include logs from only this user.
+     * @param {string} [search] search string that will look at name.
+     * @param {string} [startTime] Include logs created after this time.
+     * @param {string} [endTime] Include logs created before this time.
+     * @param {number} [page] pagination offset
+     * @param {number} [perPage] pagination limit
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    listTaskGraphLogs(namespace?: string, createdBy?: string, search?: string, startTime?: string, endTime?: string, page?: number, perPage?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TaskGraphLogsData>>;
+    /**
+     * Update information about a single task graph execution.
+     * @param {string} namespace The namespace that owns this task graph log.
+     * @param {string} id The UUID of the task graph log entry.
+     * @param {TaskGraphLog} log Updates to make to the task graph log. The only manual update that a client should need to make to a task graph log is to update its completion status to &#x60;succeeded&#x60;, &#x60;failed&#x60;, or &#x60;cancelled&#x60;.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    updateTaskGraphLog(namespace: string, id: string, log: TaskGraphLog, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
+};
+/**
+ * TaskGraphLogsApi - factory interface
+ * @export
+ */
+export declare const TaskGraphLogsApiFactory: (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) => {
+    /**
+     * Create a task graph log.
+     * @param {string} namespace The namespace that will own this task graph log.
+     * @param {TaskGraphLog} log
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    createTaskGraphLog(namespace: string, log: TaskGraphLog, options?: any): AxiosPromise<TaskGraphLog>;
+    /**
+     * Fetch information about a single task graph execution.
+     * @param {string} namespace The namespace that owns this task graph log.
+     * @param {string} id The UUID of the task graph log entry.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getTaskGraphLog(namespace: string, id: string, options?: any): AxiosPromise<TaskGraphLog>;
+    /**
+     * Fetch the task graph logs of a namespace the user has access to. The returned entries will include only summary data, and will not include information about the individual tasks that were executed. (This information is available when requesting an individual task graph log.) Entries in the response are ordered from newest to oldest. Pagination parameters work as in other API methods; see PaginationMetadata.
+     * @param {string} [namespace] Include logs for this namespace.
+     * @param {string} [createdBy] Include logs from only this user.
+     * @param {string} [search] search string that will look at name.
+     * @param {string} [startTime] Include logs created after this time.
+     * @param {string} [endTime] Include logs created before this time.
+     * @param {number} [page] pagination offset
+     * @param {number} [perPage] pagination limit
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    listTaskGraphLogs(namespace?: string, createdBy?: string, search?: string, startTime?: string, endTime?: string, page?: number, perPage?: number, options?: any): AxiosPromise<TaskGraphLogsData>;
+    /**
+     * Update information about a single task graph execution.
+     * @param {string} namespace The namespace that owns this task graph log.
+     * @param {string} id The UUID of the task graph log entry.
+     * @param {TaskGraphLog} log Updates to make to the task graph log. The only manual update that a client should need to make to a task graph log is to update its completion status to &#x60;succeeded&#x60;, &#x60;failed&#x60;, or &#x60;cancelled&#x60;.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    updateTaskGraphLog(namespace: string, id: string, log: TaskGraphLog, options?: any): AxiosPromise<void>;
+};
+/**
+ * TaskGraphLogsApi - object-oriented interface
+ * @export
+ * @class TaskGraphLogsApi
+ * @extends {BaseAPI}
+ */
+export declare class TaskGraphLogsApi extends BaseAPI {
+    /**
+     * Create a task graph log.
+     * @param {string} namespace The namespace that will own this task graph log.
+     * @param {TaskGraphLog} log
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof TaskGraphLogsApi
+     */
+    createTaskGraphLog(namespace: string, log: TaskGraphLog, options?: any): Promise<import("axios").AxiosResponse<TaskGraphLog>>;
+    /**
+     * Fetch information about a single task graph execution.
+     * @param {string} namespace The namespace that owns this task graph log.
+     * @param {string} id The UUID of the task graph log entry.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof TaskGraphLogsApi
+     */
+    getTaskGraphLog(namespace: string, id: string, options?: any): Promise<import("axios").AxiosResponse<TaskGraphLog>>;
+    /**
+     * Fetch the task graph logs of a namespace the user has access to. The returned entries will include only summary data, and will not include information about the individual tasks that were executed. (This information is available when requesting an individual task graph log.) Entries in the response are ordered from newest to oldest. Pagination parameters work as in other API methods; see PaginationMetadata.
+     * @param {string} [namespace] Include logs for this namespace.
+     * @param {string} [createdBy] Include logs from only this user.
+     * @param {string} [search] search string that will look at name.
+     * @param {string} [startTime] Include logs created after this time.
+     * @param {string} [endTime] Include logs created before this time.
+     * @param {number} [page] pagination offset
+     * @param {number} [perPage] pagination limit
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof TaskGraphLogsApi
+     */
+    listTaskGraphLogs(namespace?: string, createdBy?: string, search?: string, startTime?: string, endTime?: string, page?: number, perPage?: number, options?: any): Promise<import("axios").AxiosResponse<TaskGraphLogsData>>;
+    /**
+     * Update information about a single task graph execution.
+     * @param {string} namespace The namespace that owns this task graph log.
+     * @param {string} id The UUID of the task graph log entry.
+     * @param {TaskGraphLog} log Updates to make to the task graph log. The only manual update that a client should need to make to a task graph log is to update its completion status to &#x60;succeeded&#x60;, &#x60;failed&#x60;, or &#x60;cancelled&#x60;.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof TaskGraphLogsApi
+     */
+    updateTaskGraphLog(namespace: string, id: string, log: TaskGraphLog, options?: any): Promise<import("axios").AxiosResponse<void>>;
+}
+/**
  * TasksApi - axios parameter creator
  * @export
  */
@@ -6839,14 +7722,14 @@ export declare const TasksApiAxiosParamCreator: (configuration?: Configuration) 
     runSQL: (namespace: string, sql: SQLParameters, acceptEncoding?: string, options?: any) => Promise<RequestArgs>;
     /**
      * Fetch an array task
-     * @param {string} id task id to fetch
+     * @param {string} id task ID to fetch
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     taskIdGet: (id: string, options?: any) => Promise<RequestArgs>;
     /**
      * Retrieve results of an array task
-     * @param {string} id task id to retrieve stored results
+     * @param {string} id task ID to retrieve stored results
      * @param {string} [acceptEncoding] Encoding to use
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -6889,14 +7772,14 @@ export declare const TasksApiFp: (configuration?: Configuration) => {
     runSQL(namespace: string, sql: SQLParameters, acceptEncoding?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<object>>>;
     /**
      * Fetch an array task
-     * @param {string} id task id to fetch
+     * @param {string} id task ID to fetch
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     taskIdGet(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArrayTask>>;
     /**
      * Retrieve results of an array task
-     * @param {string} id task id to retrieve stored results
+     * @param {string} id task ID to retrieve stored results
      * @param {string} [acceptEncoding] Encoding to use
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -6939,14 +7822,14 @@ export declare const TasksApiFactory: (configuration?: Configuration, basePath?:
     runSQL(namespace: string, sql: SQLParameters, acceptEncoding?: string, options?: any): AxiosPromise<Array<object>>;
     /**
      * Fetch an array task
-     * @param {string} id task id to fetch
+     * @param {string} id task ID to fetch
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     taskIdGet(id: string, options?: any): AxiosPromise<ArrayTask>;
     /**
      * Retrieve results of an array task
-     * @param {string} id task id to retrieve stored results
+     * @param {string} id task ID to retrieve stored results
      * @param {string} [acceptEncoding] Encoding to use
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -6992,7 +7875,7 @@ export declare class TasksApi extends BaseAPI {
     runSQL(namespace: string, sql: SQLParameters, acceptEncoding?: string, options?: any): Promise<import("axios").AxiosResponse<object[]>>;
     /**
      * Fetch an array task
-     * @param {string} id task id to fetch
+     * @param {string} id task ID to fetch
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof TasksApi
@@ -7000,7 +7883,7 @@ export declare class TasksApi extends BaseAPI {
     taskIdGet(id: string, options?: any): Promise<import("axios").AxiosResponse<ArrayTask>>;
     /**
      * Retrieve results of an array task
-     * @param {string} id task id to retrieve stored results
+     * @param {string} id task ID to retrieve stored results
      * @param {string} [acceptEncoding] Encoding to use
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -7035,9 +7918,9 @@ export declare class TasksApi extends BaseAPI {
  */
 export declare const UdfApiAxiosParamCreator: (configuration?: Configuration) => {
     /**
-     * delete a registerd UDF, this will remove all sharing and can not be undone
+     * delete a registered UDF -- this will remove all sharing and can not be undone
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
-     * @param {string} name name to register udf under
+     * @param {string} name name to register UDF under
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -7045,13 +7928,13 @@ export declare const UdfApiAxiosParamCreator: (configuration?: Configuration) =>
     /**
      * get a specific UDF in the given namespace
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
-     * @param {string} name name to register udf under
+     * @param {string} name name to register UDF under
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     getUDFInfo: (namespace: string, name: string, options?: any) => Promise<RequestArgs>;
     /**
-     * Get all sharing details of the udf
+     * Get all sharing details of the UDF
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
      * @param {string} name name of UDFInfo
      * @param {*} [options] Override http request option.
@@ -7061,8 +7944,8 @@ export declare const UdfApiAxiosParamCreator: (configuration?: Configuration) =>
     /**
      * register a UDF in the given namespace
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
-     * @param {string} name name to register udf under
-     * @param {UDFInfoUpdate} udf udf to register
+     * @param {string} name name to register UDF under
+     * @param {UDFInfoUpdate} udf UDF to register
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -7071,7 +7954,7 @@ export declare const UdfApiAxiosParamCreator: (configuration?: Configuration) =>
      * Share a UDF with a user
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
      * @param {string} name name of UDFInfo
-     * @param {UDFSharing} udfSharing Namespace and list of permissions to share with. An empty list of permissions will remove the namespace, if permissions already exist they will be deleted then new ones added. In the event of a failure, the new polcies will be rolled back to prevent partial policies, and its likely the udf will not be shared with the namespace at all
+     * @param {UDFSharing} udfSharing Namespace and list of permissions to share with. An empty list of permissions will remove the namespace; if permissions already exist they will be deleted then new ones added. In the event of a failure, the new policies will be rolled back to prevent partial policies, and it\&#39;s likely the UDF will not be shared with the namespace at all.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -7079,7 +7962,7 @@ export declare const UdfApiAxiosParamCreator: (configuration?: Configuration) =>
     /**
      * submit a generic UDF in the given namespace
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
-     * @param {GenericUDF} udf udf to run
+     * @param {GenericUDF} udf UDF to run
      * @param {string} [acceptEncoding] Encoding to use
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -7088,7 +7971,7 @@ export declare const UdfApiAxiosParamCreator: (configuration?: Configuration) =>
     /**
      * submit a multi-array UDF in the given namespace
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
-     * @param {MultiArrayUDF} udf udf to run
+     * @param {MultiArrayUDF} udf UDF to run
      * @param {string} [acceptEncoding] Encoding to use
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -7098,10 +7981,10 @@ export declare const UdfApiAxiosParamCreator: (configuration?: Configuration) =>
      * send a UDF to run against a specified array/URI registered to a group/project
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
      * @param {string} array name/uri of array that is url-encoded
-     * @param {MultiArrayUDF} udf udf to run
+     * @param {MultiArrayUDF} udf UDF to run
      * @param {string} [xPayer] Name of organization or user who should be charged for this request
      * @param {string} [acceptEncoding] Encoding to use
-     * @param {string} [v2] flag to indicate if v2 array udfs should be used, currently in beta testing. Setting any value will enable v2 array udfs
+     * @param {string} [v2] flag to indicate if v2 array UDFs should be used, currently in beta testing. Setting any value will enable v2 array UDFs.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -7117,10 +8000,10 @@ export declare const UdfApiAxiosParamCreator: (configuration?: Configuration) =>
      */
     udfNamespaceArrayEndTimestampsGet: (namespace: string, array: string, page?: number, perPage?: number, options?: any) => Promise<RequestArgs>;
     /**
-     * updated an existing registerd UDF in the given namespace
+     * update an existing registered UDF in the given namespace
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
-     * @param {string} name name to register udf under
-     * @param {UDFInfoUpdate} udf udf to update
+     * @param {string} name name to register UDF under
+     * @param {UDFInfoUpdate} udf UDF to update
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -7132,9 +8015,9 @@ export declare const UdfApiAxiosParamCreator: (configuration?: Configuration) =>
  */
 export declare const UdfApiFp: (configuration?: Configuration) => {
     /**
-     * delete a registerd UDF, this will remove all sharing and can not be undone
+     * delete a registered UDF -- this will remove all sharing and can not be undone
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
-     * @param {string} name name to register udf under
+     * @param {string} name name to register UDF under
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -7142,13 +8025,13 @@ export declare const UdfApiFp: (configuration?: Configuration) => {
     /**
      * get a specific UDF in the given namespace
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
-     * @param {string} name name to register udf under
+     * @param {string} name name to register UDF under
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     getUDFInfo(namespace: string, name: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UDFInfo>>;
     /**
-     * Get all sharing details of the udf
+     * Get all sharing details of the UDF
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
      * @param {string} name name of UDFInfo
      * @param {*} [options] Override http request option.
@@ -7158,8 +8041,8 @@ export declare const UdfApiFp: (configuration?: Configuration) => {
     /**
      * register a UDF in the given namespace
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
-     * @param {string} name name to register udf under
-     * @param {UDFInfoUpdate} udf udf to register
+     * @param {string} name name to register UDF under
+     * @param {UDFInfoUpdate} udf UDF to register
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -7168,7 +8051,7 @@ export declare const UdfApiFp: (configuration?: Configuration) => {
      * Share a UDF with a user
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
      * @param {string} name name of UDFInfo
-     * @param {UDFSharing} udfSharing Namespace and list of permissions to share with. An empty list of permissions will remove the namespace, if permissions already exist they will be deleted then new ones added. In the event of a failure, the new polcies will be rolled back to prevent partial policies, and its likely the udf will not be shared with the namespace at all
+     * @param {UDFSharing} udfSharing Namespace and list of permissions to share with. An empty list of permissions will remove the namespace; if permissions already exist they will be deleted then new ones added. In the event of a failure, the new policies will be rolled back to prevent partial policies, and it\&#39;s likely the UDF will not be shared with the namespace at all.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -7176,7 +8059,7 @@ export declare const UdfApiFp: (configuration?: Configuration) => {
     /**
      * submit a generic UDF in the given namespace
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
-     * @param {GenericUDF} udf udf to run
+     * @param {GenericUDF} udf UDF to run
      * @param {string} [acceptEncoding] Encoding to use
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -7185,7 +8068,7 @@ export declare const UdfApiFp: (configuration?: Configuration) => {
     /**
      * submit a multi-array UDF in the given namespace
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
-     * @param {MultiArrayUDF} udf udf to run
+     * @param {MultiArrayUDF} udf UDF to run
      * @param {string} [acceptEncoding] Encoding to use
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -7195,10 +8078,10 @@ export declare const UdfApiFp: (configuration?: Configuration) => {
      * send a UDF to run against a specified array/URI registered to a group/project
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
      * @param {string} array name/uri of array that is url-encoded
-     * @param {MultiArrayUDF} udf udf to run
+     * @param {MultiArrayUDF} udf UDF to run
      * @param {string} [xPayer] Name of organization or user who should be charged for this request
      * @param {string} [acceptEncoding] Encoding to use
-     * @param {string} [v2] flag to indicate if v2 array udfs should be used, currently in beta testing. Setting any value will enable v2 array udfs
+     * @param {string} [v2] flag to indicate if v2 array UDFs should be used, currently in beta testing. Setting any value will enable v2 array UDFs.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -7214,10 +8097,10 @@ export declare const UdfApiFp: (configuration?: Configuration) => {
      */
     udfNamespaceArrayEndTimestampsGet(namespace: string, array: string, page?: number, perPage?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArrayEndTimestampData>>;
     /**
-     * updated an existing registerd UDF in the given namespace
+     * update an existing registered UDF in the given namespace
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
-     * @param {string} name name to register udf under
-     * @param {UDFInfoUpdate} udf udf to update
+     * @param {string} name name to register UDF under
+     * @param {UDFInfoUpdate} udf UDF to update
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -7229,9 +8112,9 @@ export declare const UdfApiFp: (configuration?: Configuration) => {
  */
 export declare const UdfApiFactory: (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) => {
     /**
-     * delete a registerd UDF, this will remove all sharing and can not be undone
+     * delete a registered UDF -- this will remove all sharing and can not be undone
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
-     * @param {string} name name to register udf under
+     * @param {string} name name to register UDF under
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -7239,13 +8122,13 @@ export declare const UdfApiFactory: (configuration?: Configuration, basePath?: s
     /**
      * get a specific UDF in the given namespace
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
-     * @param {string} name name to register udf under
+     * @param {string} name name to register UDF under
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     getUDFInfo(namespace: string, name: string, options?: any): AxiosPromise<UDFInfo>;
     /**
-     * Get all sharing details of the udf
+     * Get all sharing details of the UDF
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
      * @param {string} name name of UDFInfo
      * @param {*} [options] Override http request option.
@@ -7255,8 +8138,8 @@ export declare const UdfApiFactory: (configuration?: Configuration, basePath?: s
     /**
      * register a UDF in the given namespace
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
-     * @param {string} name name to register udf under
-     * @param {UDFInfoUpdate} udf udf to register
+     * @param {string} name name to register UDF under
+     * @param {UDFInfoUpdate} udf UDF to register
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -7265,7 +8148,7 @@ export declare const UdfApiFactory: (configuration?: Configuration, basePath?: s
      * Share a UDF with a user
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
      * @param {string} name name of UDFInfo
-     * @param {UDFSharing} udfSharing Namespace and list of permissions to share with. An empty list of permissions will remove the namespace, if permissions already exist they will be deleted then new ones added. In the event of a failure, the new polcies will be rolled back to prevent partial policies, and its likely the udf will not be shared with the namespace at all
+     * @param {UDFSharing} udfSharing Namespace and list of permissions to share with. An empty list of permissions will remove the namespace; if permissions already exist they will be deleted then new ones added. In the event of a failure, the new policies will be rolled back to prevent partial policies, and it\&#39;s likely the UDF will not be shared with the namespace at all.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -7273,7 +8156,7 @@ export declare const UdfApiFactory: (configuration?: Configuration, basePath?: s
     /**
      * submit a generic UDF in the given namespace
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
-     * @param {GenericUDF} udf udf to run
+     * @param {GenericUDF} udf UDF to run
      * @param {string} [acceptEncoding] Encoding to use
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -7282,7 +8165,7 @@ export declare const UdfApiFactory: (configuration?: Configuration, basePath?: s
     /**
      * submit a multi-array UDF in the given namespace
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
-     * @param {MultiArrayUDF} udf udf to run
+     * @param {MultiArrayUDF} udf UDF to run
      * @param {string} [acceptEncoding] Encoding to use
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -7292,10 +8175,10 @@ export declare const UdfApiFactory: (configuration?: Configuration, basePath?: s
      * send a UDF to run against a specified array/URI registered to a group/project
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
      * @param {string} array name/uri of array that is url-encoded
-     * @param {MultiArrayUDF} udf udf to run
+     * @param {MultiArrayUDF} udf UDF to run
      * @param {string} [xPayer] Name of organization or user who should be charged for this request
      * @param {string} [acceptEncoding] Encoding to use
-     * @param {string} [v2] flag to indicate if v2 array udfs should be used, currently in beta testing. Setting any value will enable v2 array udfs
+     * @param {string} [v2] flag to indicate if v2 array UDFs should be used, currently in beta testing. Setting any value will enable v2 array UDFs.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -7311,10 +8194,10 @@ export declare const UdfApiFactory: (configuration?: Configuration, basePath?: s
      */
     udfNamespaceArrayEndTimestampsGet(namespace: string, array: string, page?: number, perPage?: number, options?: any): AxiosPromise<ArrayEndTimestampData>;
     /**
-     * updated an existing registerd UDF in the given namespace
+     * update an existing registered UDF in the given namespace
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
-     * @param {string} name name to register udf under
-     * @param {UDFInfoUpdate} udf udf to update
+     * @param {string} name name to register UDF under
+     * @param {UDFInfoUpdate} udf UDF to update
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -7328,9 +8211,9 @@ export declare const UdfApiFactory: (configuration?: Configuration, basePath?: s
  */
 export declare class UdfApi extends BaseAPI {
     /**
-     * delete a registerd UDF, this will remove all sharing and can not be undone
+     * delete a registered UDF -- this will remove all sharing and can not be undone
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
-     * @param {string} name name to register udf under
+     * @param {string} name name to register UDF under
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UdfApi
@@ -7339,14 +8222,14 @@ export declare class UdfApi extends BaseAPI {
     /**
      * get a specific UDF in the given namespace
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
-     * @param {string} name name to register udf under
+     * @param {string} name name to register UDF under
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UdfApi
      */
     getUDFInfo(namespace: string, name: string, options?: any): Promise<import("axios").AxiosResponse<UDFInfo>>;
     /**
-     * Get all sharing details of the udf
+     * Get all sharing details of the UDF
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
      * @param {string} name name of UDFInfo
      * @param {*} [options] Override http request option.
@@ -7357,8 +8240,8 @@ export declare class UdfApi extends BaseAPI {
     /**
      * register a UDF in the given namespace
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
-     * @param {string} name name to register udf under
-     * @param {UDFInfoUpdate} udf udf to register
+     * @param {string} name name to register UDF under
+     * @param {UDFInfoUpdate} udf UDF to register
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UdfApi
@@ -7368,7 +8251,7 @@ export declare class UdfApi extends BaseAPI {
      * Share a UDF with a user
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
      * @param {string} name name of UDFInfo
-     * @param {UDFSharing} udfSharing Namespace and list of permissions to share with. An empty list of permissions will remove the namespace, if permissions already exist they will be deleted then new ones added. In the event of a failure, the new polcies will be rolled back to prevent partial policies, and its likely the udf will not be shared with the namespace at all
+     * @param {UDFSharing} udfSharing Namespace and list of permissions to share with. An empty list of permissions will remove the namespace; if permissions already exist they will be deleted then new ones added. In the event of a failure, the new policies will be rolled back to prevent partial policies, and it\&#39;s likely the UDF will not be shared with the namespace at all.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UdfApi
@@ -7377,7 +8260,7 @@ export declare class UdfApi extends BaseAPI {
     /**
      * submit a generic UDF in the given namespace
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
-     * @param {GenericUDF} udf udf to run
+     * @param {GenericUDF} udf UDF to run
      * @param {string} [acceptEncoding] Encoding to use
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -7387,7 +8270,7 @@ export declare class UdfApi extends BaseAPI {
     /**
      * submit a multi-array UDF in the given namespace
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
-     * @param {MultiArrayUDF} udf udf to run
+     * @param {MultiArrayUDF} udf UDF to run
      * @param {string} [acceptEncoding] Encoding to use
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -7398,10 +8281,10 @@ export declare class UdfApi extends BaseAPI {
      * send a UDF to run against a specified array/URI registered to a group/project
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
      * @param {string} array name/uri of array that is url-encoded
-     * @param {MultiArrayUDF} udf udf to run
+     * @param {MultiArrayUDF} udf UDF to run
      * @param {string} [xPayer] Name of organization or user who should be charged for this request
      * @param {string} [acceptEncoding] Encoding to use
-     * @param {string} [v2] flag to indicate if v2 array udfs should be used, currently in beta testing. Setting any value will enable v2 array udfs
+     * @param {string} [v2] flag to indicate if v2 array UDFs should be used, currently in beta testing. Setting any value will enable v2 array UDFs.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UdfApi
@@ -7419,10 +8302,10 @@ export declare class UdfApi extends BaseAPI {
      */
     udfNamespaceArrayEndTimestampsGet(namespace: string, array: string, page?: number, perPage?: number, options?: any): Promise<import("axios").AxiosResponse<ArrayEndTimestampData>>;
     /**
-     * updated an existing registerd UDF in the given namespace
+     * update an existing registered UDF in the given namespace
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
-     * @param {string} name name to register udf under
-     * @param {UDFInfoUpdate} udf udf to update
+     * @param {string} name name to register UDF under
+     * @param {UDFInfoUpdate} udf UDF to update
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UdfApi
@@ -7488,7 +8371,7 @@ export declare const UserApiAxiosParamCreator: (configuration?: Configuration) =
     deleteAWSAccessCredentials: (namespace: string, name: string, options?: any) => Promise<RequestArgs>;
     /**
      * delete a user
-     * @param {string} username username or id
+     * @param {string} username username or ID
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -7530,7 +8413,7 @@ export declare const UserApiAxiosParamCreator: (configuration?: Configuration) =
     getUser: (options?: any) => Promise<RequestArgs>;
     /**
      * get a user
-     * @param {string} username username or id
+     * @param {string} username username or ID
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -7579,7 +8462,7 @@ export declare const UserApiAxiosParamCreator: (configuration?: Configuration) =
     updateAWSAccessCredentials: (namespace: string, name: string, awsAccessCredentials: AWSAccessCredentials, options?: any) => Promise<RequestArgs>;
     /**
      * update a user
-     * @param {string} username username or id
+     * @param {string} username username or ID
      * @param {User} user user details to update
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -7654,7 +8537,7 @@ export declare const UserApiFp: (configuration?: Configuration) => {
     deleteAWSAccessCredentials(namespace: string, name: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
     /**
      * delete a user
-     * @param {string} username username or id
+     * @param {string} username username or ID
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -7696,7 +8579,7 @@ export declare const UserApiFp: (configuration?: Configuration) => {
     getUser(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<User>>;
     /**
      * get a user
-     * @param {string} username username or id
+     * @param {string} username username or ID
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -7745,7 +8628,7 @@ export declare const UserApiFp: (configuration?: Configuration) => {
     updateAWSAccessCredentials(namespace: string, name: string, awsAccessCredentials: AWSAccessCredentials, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
     /**
      * update a user
-     * @param {string} username username or id
+     * @param {string} username username or ID
      * @param {User} user user details to update
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -7820,7 +8703,7 @@ export declare const UserApiFactory: (configuration?: Configuration, basePath?: 
     deleteAWSAccessCredentials(namespace: string, name: string, options?: any): AxiosPromise<void>;
     /**
      * delete a user
-     * @param {string} username username or id
+     * @param {string} username username or ID
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -7862,7 +8745,7 @@ export declare const UserApiFactory: (configuration?: Configuration, basePath?: 
     getUser(options?: any): AxiosPromise<User>;
     /**
      * get a user
-     * @param {string} username username or id
+     * @param {string} username username or ID
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -7911,7 +8794,7 @@ export declare const UserApiFactory: (configuration?: Configuration, basePath?: 
     updateAWSAccessCredentials(namespace: string, name: string, awsAccessCredentials: AWSAccessCredentials, options?: any): AxiosPromise<void>;
     /**
      * update a user
-     * @param {string} username username or id
+     * @param {string} username username or ID
      * @param {User} user user details to update
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -7995,7 +8878,7 @@ export declare class UserApi extends BaseAPI {
     deleteAWSAccessCredentials(namespace: string, name: string, options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**
      * delete a user
-     * @param {string} username username or id
+     * @param {string} username username or ID
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UserApi
@@ -8043,7 +8926,7 @@ export declare class UserApi extends BaseAPI {
     getUser(options?: any): Promise<import("axios").AxiosResponse<User>>;
     /**
      * get a user
-     * @param {string} username username or id
+     * @param {string} username username or ID
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UserApi
@@ -8099,7 +8982,7 @@ export declare class UserApi extends BaseAPI {
     updateAWSAccessCredentials(namespace: string, name: string, awsAccessCredentials: AWSAccessCredentials, options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**
      * update a user
-     * @param {string} username username or id
+     * @param {string} username username or ID
      * @param {User} user user details to update
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}

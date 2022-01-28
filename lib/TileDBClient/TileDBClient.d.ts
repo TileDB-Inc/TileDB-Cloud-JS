@@ -93,6 +93,11 @@ declare class TileDBClient {
     task(id: string, options?: any): Promise<import("axios").AxiosResponse<import("../v1").ArrayTask>>;
     downloadNotebookContents(namespace: string, notebook: string): Promise<string>;
     downloadNotebookToFile(namespace: string, notebook: string): Promise<void>;
+    getFileContents(namespace: string, file: string): Promise<{
+        buffer: ArrayBufferLike;
+        originalFileName: string;
+        mimeType: string;
+    }>;
     downloadFile(namespace: string, file: string): Promise<void>;
     uploadNotebookContents(): void;
     uploadNotebookFromFile(): void;

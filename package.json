@@ -1,6 +1,6 @@
 {
   "name": "@tiledb-inc/tiledb-cloud",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "JavaScript client for the TileDB Cloud Service.",
   "main": "lib/index.js",
   "files": [
