@@ -18,6 +18,19 @@ interface NotebookOrFileDimensions {
   position: number[];
 }
 
+const defaultConfig: Configuration = {};
+
+const isNode = typeof process === "object";
+
+if (isNode) {
+  if (process.env.TILEDB_REST_HOST) {
+    defaultConfig.basePath = process.env.TILEDB_REST_HOST;
+  }
+  if (process.env.TILEDB_REST_TOKEN) {
+    defaultConfig.apiKey = process.env.TILEDB_REST_TOKEN;
+  }
+}
+
 class TileDBClient {
   config: Configuration;
   configV2: Configuration;
@@ -31,10 +44,15 @@ class TileDBClient {
   query: TileDBQuery;
 
   constructor(params: ConfigurationParameters) {
-    const config = new Configuration(params);
+    const config = new Configuration({
+      ...defaultConfig,
+      ...params,
+    });
+
     const baseV2Path = config.basePath?.replace("v1", "v2");
     // Add versioning if basePath exists
     this.configV2 = new Configuration({
+      ...defaultConfig,
       ...params,
       // Override basePath v2 for v1 to make calls to get ArraySchema (from v1 API)
       ...(baseV2Path ? { basePath: baseV2Path } : {}),
