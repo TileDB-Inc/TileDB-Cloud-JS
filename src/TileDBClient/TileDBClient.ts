@@ -375,7 +375,7 @@ class TileDBClient {
     await save(contents, `${notebook}.ipynb`);
   }
 
-  public async downloadFile(namespace: string, file: string) {
+  public async getFileContents(namespace: string, file: string) {
     interface FileMetadata {
       original_file_name: string;
       file_size: number;
@@ -383,7 +383,8 @@ class TileDBClient {
       mime_type: string;
     }
     const res = await this.ArrayApi.getArrayMetaDataJson(namespace, file);
-    const { original_file_name, file_size } = res.data as FileMetadata;
+    const { original_file_name, file_size, mime_type } =
+      res.data as FileMetadata;
 
     if (!original_file_name || !file_size) {
       throw new Error(
@@ -410,7 +411,20 @@ class TileDBClient {
 
     const buffer = Uint8Array.from(fileContents).buffer;
 
-    await save(buffer, original_file_name);
+    return {
+      buffer,
+      originalFileName: original_file_name,
+      mimeType: mime_type,
+    };
+  }
+
+  public async downloadFile(namespace: string, file: string) {
+    const { buffer, originalFileName } = await this.getFileContents(
+      namespace,
+      file
+    );
+
+    await save(buffer, originalFileName);
   }
 
   // TODO: We need a way to create an array and save contents as "contents" attribute
