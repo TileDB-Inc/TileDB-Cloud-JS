@@ -1,10 +1,10 @@
 import save from "save-file";
-import { NotebookApi } from "./../v1/api";
 import {
   ArrayApi,
   ArrayInfoUpdate,
   ArraySharing,
   OrganizationApi,
+  NotebookApi,
   TasksApi,
   UserApi,
 } from "../v1";
@@ -18,13 +18,15 @@ interface NotebookOrFileDimensions {
   position: number[];
 }
 
-const defaultConfig: Configuration = {};
+const defaultConfig: ConfigurationParameters = {
+  basePath: "https://api.tiledb.com",
+};
 
 const isNode = typeof process === "object";
 
 if (isNode) {
   if (process.env.TILEDB_REST_HOST) {
-    defaultConfig.basePath = process.env.TILEDB_REST_HOST + "/v1";
+    defaultConfig.basePath = process.env.TILEDB_REST_HOST;
   }
   if (process.env.TILEDB_REST_TOKEN) {
     defaultConfig.apiKey = process.env.TILEDB_REST_TOKEN;
@@ -43,27 +45,31 @@ class TileDBClient {
   sql: Sql;
   query: TileDBQuery;
 
-  constructor(params: ConfigurationParameters) {
-    const config = new Configuration({
+  constructor(params: ConfigurationParameters = defaultConfig) {
+    const config = {
       ...defaultConfig,
       ...params,
+    };
+
+    this.config = new Configuration({
+      ...config,
+      // for v1 API calls basePath needs /v1 suffix
+      basePath: config.basePath + "/v1",
     });
 
-    const baseV2Path = config.basePath?.replace("v1", "v2");
     // Add versioning if basePath exists
     this.configV2 = new Configuration({
       ...defaultConfig,
       ...params,
-      // Override basePath v2 for v1 to make calls to get ArraySchema (from v1 API)
-      ...(baseV2Path ? { basePath: baseV2Path } : {}),
+      // for v2 API calls, basePath needs /v2 suffix
+      basePath: config.basePath + "/v2",
     });
 
-    this.config = config;
-    this.ArrayApi = new ArrayApi(params);
-    this.OrganizationApi = new OrganizationApi(params);
-    this.UserApi = new UserApi(params);
-    this.NotebookApi = new NotebookApi(params);
-    this.TasksApi = new TasksApi(params);
+    this.ArrayApi = new ArrayApi(this.config);
+    this.OrganizationApi = new OrganizationApi(this.config);
+    this.UserApi = new UserApi(this.config);
+    this.NotebookApi = new NotebookApi(this.config);
+    this.TasksApi = new TasksApi(this.config);
     this.udf = new UDF(this.config);
     this.sql = new Sql(this.config);
     this.query = new TileDBQuery(this.configV2);
