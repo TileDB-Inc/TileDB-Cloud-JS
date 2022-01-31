@@ -7,8 +7,15 @@ const BASE_PATH = "https://api.tiledb.com";
 const client = new TileDBClient({});
 
 describe("TileDBClient", () => {
+  const OLD_ENV = process.env;
+
   beforeEach(() => {
     mock.reset();
+    jest.resetModules();
+  });
+
+  afterEach(() => {
+    process.env = OLD_ENV;
   });
   it("Should get array metadata", async () => {
     mock.onGet(`${BASE_PATH}/v1/arrays/demo/demo/metadata`).reply(200);
@@ -163,5 +170,67 @@ describe("TileDBClient", () => {
     await client.task("12345");
     expect(mock.history.get).toHaveLength(1);
     expect(mock.history.get[0].url).toBe(`${BASE_PATH}/v1/task/12345`);
+  });
+
+  it("Should add default basePath if no config is passed", () => {
+    const client = new TileDBClient();
+    expect(client.config.basePath).toBe(BASE_PATH + "/v1");
+    expect(client.configV2.basePath).toBe(BASE_PATH + "/v2");
+  });
+
+  it("Should add default basePath if empty config is passed", () => {
+    const client = new TileDBClient({});
+    expect(client.config.basePath).toBe(BASE_PATH + "/v1");
+    expect(client.configV2.basePath).toBe(BASE_PATH + "/v2");
+  });
+
+  it("Should add API versions if env variable is set", () => {
+    process.env.TILEDB_REST_HOST = "https://api.dev.tiledb.io";
+    const TileDBClient = require("./TileDBClient").default;
+    const client = new TileDBClient();
+    expect(client.config.basePath).toBe("https://api.dev.tiledb.io/v1");
+    expect(client.configV2.basePath).toBe("https://api.dev.tiledb.io/v2");
+  });
+
+  it("Should add API versions if env variable is set and pass empty config", () => {
+    process.env.TILEDB_REST_HOST = "https://api.dev.tiledb.io";
+    const TileDBClient = require("./TileDBClient").default;
+    const client = new TileDBClient({});
+    expect(client.config.basePath).toBe("https://api.dev.tiledb.io/v1");
+    expect(client.configV2.basePath).toBe("https://api.dev.tiledb.io/v2");
+  });
+
+  it("Should add API versions if basePath is set", () => {
+    const client = new TileDBClient({
+      basePath: "https://api.dev.tiledb.io",
+    });
+    expect(client.config.basePath).toBe("https://api.dev.tiledb.io/v1");
+    expect(client.configV2.basePath).toBe("https://api.dev.tiledb.io/v2");
+  });
+
+  it("Should initiate APIs with correct basePath", () => {
+    const client = new TileDBClient({
+      basePath: "https://api.dev.tiledb.io",
+    });
+    expect((client.ArrayApi as any).basePath).toBe(
+      "https://api.dev.tiledb.io/v1"
+    );
+    expect((client.OrganizationApi as any).basePath).toBe(
+      "https://api.dev.tiledb.io/v1"
+    );
+    expect((client.UserApi as any).basePath).toBe(
+      "https://api.dev.tiledb.io/v1"
+    );
+    expect((client.NotebookApi as any).basePath).toBe(
+      "https://api.dev.tiledb.io/v1"
+    );
+    expect((client.TasksApi as any).basePath).toBe(
+      "https://api.dev.tiledb.io/v1"
+    );
+    expect(client.udf.config.basePath).toBe("https://api.dev.tiledb.io/v1");
+    expect(client.sql.config.basePath).toBe("https://api.dev.tiledb.io/v1");
+    expect(client.query.configurationParams.basePath).toBe(
+      "https://api.dev.tiledb.io/v2"
+    );
   });
 });
