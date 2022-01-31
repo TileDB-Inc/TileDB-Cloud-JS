@@ -24,7 +24,7 @@ const isNode = typeof process === "object";
 
 if (isNode) {
   if (process.env.TILEDB_REST_HOST) {
-    defaultConfig.basePath = process.env.TILEDB_REST_HOST;
+    defaultConfig.basePath = process.env.TILEDB_REST_HOST + "/v1";
   }
   if (process.env.TILEDB_REST_TOKEN) {
     defaultConfig.apiKey = process.env.TILEDB_REST_TOKEN;
