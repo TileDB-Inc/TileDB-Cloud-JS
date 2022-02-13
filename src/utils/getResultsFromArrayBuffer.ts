@@ -45,9 +45,6 @@ export const getResultsFromArrayBuffer = async (
   /**
    * We start from the last attribute which is at the end of the buffer
    */
-  // const attributeHeadersReversed = attributeBufferHeaders.reverse();
-  // for await (let attribute of attributeHeadersReversed) {
-  // }
   await attributeBufferHeaders
     .reverse()
     .reduce(async (offsetPromise, attribute) => {
@@ -148,7 +145,7 @@ export const getResultsFromArrayBuffer = async (
           convertToArray(result),
           offsets
         )) as string[][];
-        result = groupedValues.map((s: any) => s?.join(""));
+        result = groupedValues.map((s) => s?.join(""));
       }
 
       data[attribute.name] = isArrayOfArrays(result) ? flatten(result) : result;

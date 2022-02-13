@@ -180,6 +180,7 @@ export class TileDBQuery {
       // Override basePath v2 for v1 to make calls to get ArraySchema (from v1 API)
       ...(baseV1 ? { basePath: baseV1 } : {}),
     });
+
     const queryAPI = new QueryApi(config);
     const arrayAPI = new ArrayApi(configV1);
     try {

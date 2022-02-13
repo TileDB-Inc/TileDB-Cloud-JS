@@ -63,7 +63,7 @@ describe("groupValuesByOffsets()", () => {
     ]);
   });
 
-  it.only("Should group values by offsets for strings", async () => {
+  it("Should group values by offsets for strings", async () => {
     const txt = "TileDB";
     const limit = 100000;
     const strings = Array(limit).fill(txt);
