@@ -17,6 +17,7 @@
     "axios": "^0.21.1",
     "capnp-ts": "^0.4.0",
     "capnpc-ts": "^0.4.0",
+    "paralleljs": "^1.1.0",
     "save-file": "^2.3.1"
   },
   "devDependencies": {

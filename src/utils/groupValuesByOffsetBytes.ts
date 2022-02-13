@@ -1,31 +1,37 @@
+import Parallel from "paralleljs";
+
+function range(start: number, end: number): number[] {
+  return new Array(end - start + 1).fill(undefined).map((_, i) => i + start);
+}
+
 /**
  * Group values together according to offsets
  * @param vals [1, 2, 3, 4]
  * @param offsets e.g. [0, 3, 4]
  * @returns [[1,2,3], 4]
  */
-const groupValuesByOffsetBytes = <T>(
-  vals: T[],
-  offsets: number[]
-): Array<T[] | T> => {
-  const valueArray: Array<T[] | T> = vals;
+const groupValuesByOffsetBytes = <T>(values: T[], offsets: number[]) => {
   const offsetsLength = offsets.length;
+  const offsetIndex = range(0, offsetsLength);
+  const offsetIndexTuple = offsets.map((off, i) => [off, offsetIndex[i]]);
+  const offsetsP = new Parallel(offsetIndexTuple, {
+    env: {
+      values,
+      offsets,
+    },
+  });
+  return new Promise((resolve) => {
+    offsetsP
+      .map(([offset, i]) => {
+        const vals = (global as any).env.values as T[];
+        const globalOffsets = (global as any).env.offsets as number[];
+        const nextOffset = globalOffsets[i + 1];
 
-  if (offsetsLength) {
-    for (let i = 0; i <= offsetsLength; i++) {
-      const nextOffset = offsets[i + 1];
-      if (!nextOffset) {
-        const restItems = vals.slice(i);
-        valueArray.splice(i, restItems.length, restItems);
-        break;
-      }
-      const offsetDifference = nextOffset - offsets[i];
-      const valuesWithinOffset = vals.slice(i, i + offsetDifference);
-      valueArray.splice(i, offsetDifference, valuesWithinOffset);
-    }
-  }
-
-  return valueArray;
+        const grpoupedValues = vals.slice(offset, nextOffset);
+        return grpoupedValues;
+      })
+      .then(resolve);
+  });
 };
 
 export default groupValuesByOffsetBytes;
