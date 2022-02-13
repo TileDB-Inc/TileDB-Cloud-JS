@@ -7,13 +7,22 @@ import groupValuesByOffsetBytes from "./groupValuesByOffsetBytes";
  * @param offsets []
  * @returns [NULL, 15, 22, NULL, 8]
  */
-const setNullables = <T>(vals: T[], nullables: number[], offsets: number[]) => {
+const setNullables = async <T>(
+  values: T[],
+  nullables: number[],
+  offsets: number[]
+) => {
   // If values have offsets we group values together by offset
-  const valueArray = offsets.length
-    ? groupValuesByOffsetBytes(vals, offsets)
-    : vals;
+  if (offsets.length) {
+    const groupedValues = (await groupValuesByOffsetBytes(
+      values,
+      offsets
+    )) as T[];
+
+    return groupedValues.map((val, i) => (nullables[i] ? val : null));
+  }
   // We explicitly set as NULL index where nullable array is 0
-  return valueArray.map((val, i) => (nullables[i] ? val : null));
+  return values.map((val, i) => (nullables[i] ? val : null));
 };
 
 export default setNullables;

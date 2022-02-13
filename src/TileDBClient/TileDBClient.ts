@@ -50,7 +50,6 @@ class TileDBClient {
       ...defaultConfig,
       ...params,
     };
-
     this.config = new Configuration({
       ...config,
       // for v1 API calls basePath needs /v1 suffix

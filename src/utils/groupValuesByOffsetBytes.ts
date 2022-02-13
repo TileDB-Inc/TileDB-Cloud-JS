@@ -12,6 +12,9 @@ function range(start: number, end: number): number[] {
  */
 const groupValuesByOffsetBytes = <T>(values: T[], offsets: number[]) => {
   const offsetsLength = offsets.length;
+  if (!offsetsLength) {
+    return Promise.resolve(values);
+  }
   const offsetIndex = range(0, offsetsLength);
   const offsetIndexTuple = offsets.map((off, i) => [off, offsetIndex[i]]);
   const offsetsP = new Parallel(offsetIndexTuple, {

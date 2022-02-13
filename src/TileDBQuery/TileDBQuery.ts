@@ -157,7 +157,7 @@ export class TileDBQuery {
 
     const attributeHeaders = queryObject.attributeBufferHeaders;
 
-    const results = this.getResultsFromArrayBuffer(
+    const results = await this.getResultsFromArrayBuffer(
       arraySchema,
       bufferWithoutFirstEightBytes,
       attributeHeaders,
@@ -242,7 +242,7 @@ export class TileDBQuery {
       // Case it's incomplete query
       if (queryObject.status === Querystatus.Incomplete) {
         try {
-          yield this.getResultsFromArrayBuffer(
+          yield await this.getResultsFromArrayBuffer(
             arraySchema,
             bufferWithoutFirstEightBytes,
             attributeHeaders,
@@ -286,7 +286,7 @@ export class TileDBQuery {
     }
   }
 
-  private getResultsFromArrayBuffer(
+  private async getResultsFromArrayBuffer(
     arraySchema: ArraySchema,
     bufferResults: ArrayBuffer,
     attributeHeaders: AttributeBufferHeader[],
@@ -308,7 +308,7 @@ export class TileDBQuery {
     ];
 
     // Calculate results
-    const results = getResultsFromArrayBuffer(
+    const results = await getResultsFromArrayBuffer(
       resultsBuffer,
       attributeHeaders,
       mergeAttributesAndDimensions,

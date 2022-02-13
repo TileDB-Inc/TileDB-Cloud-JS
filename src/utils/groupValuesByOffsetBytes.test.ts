@@ -68,15 +68,14 @@ describe("groupValuesByOffsets()", () => {
     const limit = 100000;
     const strings = Array(limit).fill(txt);
     const str = strings.join("");
-    // console.log(str);
     const offsets = Array(limit)
       .fill(0)
       .map((v, i) => i * txt.length);
-    // console.log(offsets);
-    const result: any = await groupValuesByOffsetBytes(
+
+    const result = (await groupValuesByOffsetBytes(
       convertToArray(str),
       offsets
-    );
+    )) as string[][];
     expect(result.map((s) => s.join(""))).toEqual(strings);
   });
 });
