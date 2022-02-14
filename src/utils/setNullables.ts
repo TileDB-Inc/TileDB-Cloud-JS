@@ -14,10 +14,7 @@ const setNullables = async <T>(
 ) => {
   // If values have offsets we group values together by offset
   if (offsets.length) {
-    const groupedValues = (await groupValuesByOffsetBytes(
-      values,
-      offsets
-    )) as T[];
+    const groupedValues = await groupValuesByOffsetBytes(values, offsets);
 
     return groupedValues.map((val, i) => (nullables[i] ? val : null));
   }

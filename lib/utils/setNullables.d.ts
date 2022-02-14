@@ -5,5 +5,5 @@
  * @param offsets []
  * @returns [NULL, 15, 22, NULL, 8]
  */
-declare const setNullables: <T>(values: T[], nullables: number[], offsets: number[]) => Promise<T[]>;
+declare const setNullables: <T>(values: T[], nullables: number[], offsets: number[]) => Promise<T[] | T[][]>;
 export default setNullables;

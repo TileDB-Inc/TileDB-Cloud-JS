@@ -1,2 +1,2 @@
-declare const convertToArray: (arrayLike: ArrayLike<any>) => Array<any>;
+declare function convertToArray(arrayLike: any): any[];
 export default convertToArray;

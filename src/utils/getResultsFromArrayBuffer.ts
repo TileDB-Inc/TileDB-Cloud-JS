@@ -27,6 +27,8 @@ export interface Options {
   attributes?: string[];
 }
 
+type Result = string[] | string | number[] | BigInt[] | number[][] | BigInt[][];
+
 /**
  * Convert an ArrayBuffer to a map of attributes with their results
  * @param arrayBuffer The slice ArrayBuffer that contains the results
@@ -85,10 +87,10 @@ export const getResultsFromArrayBuffer = async (
         (isNullable ? attribute.validityLenBufferSizeInBytes : 0);
       const end = ending ? ending : undefined;
 
-      let result: string[] | string | number[] | bigint[] = getAttributeResult(
+      let result: Result = getAttributeResult(
         arrayBuffer.slice(start, end),
         selectedAttributeSchema.type
-      ) as string | number[] | bigint[];
+      ) as string | number[] | BigInt[];
 
       let offsets = [];
       if (isVarLengthSized && !options.ignoreOffsets) {
@@ -127,12 +129,14 @@ export const getResultsFromArrayBuffer = async (
          * Every zero represents that in that specific index the attribute is NULL
          */
         const nullablesArray = Array.from(nullablesTypedArray);
+        const values = convertToArray(result) as Array<
+          string | BigInt | number
+        >;
 
-        result = await setNullables(
-          convertToArray(result),
-          nullablesArray,
-          offsets
-        );
+        result = (await setNullables(values, nullablesArray, offsets)) as
+          | number[]
+          | string[]
+          | BigInt[];
       }
 
       // If result is a String slice the String by the offsets to make it an array
@@ -141,10 +145,10 @@ export const getResultsFromArrayBuffer = async (
         !options.ignoreOffsets &&
         typeof result === "string"
       ) {
-        const groupedValues = (await groupValuesByOffsetBytes(
-          convertToArray(result),
+        const groupedValues = await groupValuesByOffsetBytes(
+          convertToArray(result) as string[],
           offsets
-        )) as string[][];
+        );
         result = groupedValues.map((s) => s?.join(""));
       }
 

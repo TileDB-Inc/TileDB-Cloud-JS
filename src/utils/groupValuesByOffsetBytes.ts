@@ -10,10 +10,13 @@ function range(start: number, end: number): number[] {
  * @param offsets e.g. [0, 3, 4]
  * @returns [[1,2,3], 4]
  */
-const groupValuesByOffsetBytes = <T>(values: T[], offsets: number[]) => {
+const groupValuesByOffsetBytes = <T>(
+  values: T[],
+  offsets: number[]
+): Promise<T[][]> => {
   const offsetsLength = offsets.length;
   if (!offsetsLength) {
-    return Promise.resolve(values);
+    return Promise.resolve([values]);
   }
   const offsetIndex = range(0, offsetsLength);
   const offsetIndexTuple = offsets.map((off, i) => [off, offsetIndex[i]]);
@@ -26,8 +29,8 @@ const groupValuesByOffsetBytes = <T>(values: T[], offsets: number[]) => {
   return new Promise((resolve) => {
     offsetsP
       .map(([offset, i]) => {
-        const vals = (global as any).env.values as T[];
-        const globalOffsets = (global as any).env.offsets as number[];
+        const vals = global.env.values as T[];
+        const globalOffsets = global.env.offsets;
         const nextOffset = globalOffsets[i + 1];
 
         const grpoupedValues = vals.slice(offset, nextOffset);
