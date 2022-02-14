@@ -7,7 +7,7 @@ import getByteLengthOfDatatype from "./getByteLengthOfDatatype";
 import setNullables from "./setNullables";
 import isArrayOfArrays from "./isArrayOfArrays";
 import groupValuesByOffsetBytes from "./groupValuesByOffsetBytes";
-import flatten from "./flatten";
+import concatChars from "./concatChars";
 import convertToArray from "./convertToArray";
 
 export interface Options {
@@ -139,7 +139,10 @@ export const getResultsFromArrayBuffer = async (
           | BigInt[];
       }
 
-      // If result is a String slice the String by the offsets to make it an array
+      /**
+       * If result is a String we convert it to array in order
+       * to group by offsets and create an array of strings
+       */
       if (
         isVarLengthSized &&
         !options.ignoreOffsets &&
@@ -149,10 +152,18 @@ export const getResultsFromArrayBuffer = async (
           convertToArray(result) as string[],
           offsets
         );
-        result = groupedValues.map((s) => s?.join(""));
+        result = concatChars(groupedValues);
       }
 
-      data[attribute.name] = isArrayOfArrays(result) ? flatten(result) : result;
+      /**
+       * After grouping strings by offsets the result look like this:
+       * [['T', 'i', 'l', 'e', 'D', 'B']]
+       * We concat characters to create an array of strings
+       */
+      if (isArrayOfArrays(result) && typeof result[0][0] === "string") {
+        result = concatChars(result);
+      }
+      data[attribute.name] = result;
 
       return offset + totalNumberOfBytesOfAttribute;
     }, Promise.resolve(0));
