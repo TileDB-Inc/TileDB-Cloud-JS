@@ -18,7 +18,7 @@ describe("getResultsFromArrayBuffer()", () => {
     const arrayBufferOfFixedLengthAttributes =
       convertToArrayBufferIfNodeBuffer(rawBuffer);
 
-    const results = getResultsFromArrayBuffer(
+    const results = await getResultsFromArrayBuffer(
       arrayBufferOfFixedLengthAttributes,
       fixedAttrBufferHeaders,
       fixedLenAttributesSchema
@@ -38,7 +38,7 @@ describe("getResultsFromArrayBuffer()", () => {
     const arrayBufferOfFixedLengthAttributes =
       convertToArrayBufferIfNodeBuffer(rawBuffer);
 
-    const results = getResultsFromArrayBuffer(
+    const results = await getResultsFromArrayBuffer(
       arrayBufferOfFixedLengthAttributes,
       nullableVarLengthAttrBufferHeaders,
       varLenNullableAttributesSchema
@@ -47,23 +47,7 @@ describe("getResultsFromArrayBuffer()", () => {
     expect(results).toEqual({
       a1: [100, null, null, 400],
       a2: [null, [20], [30, 30, 30], null],
-      a3: [
-        "a",
-        "b",
-        "c",
-        null,
-        null,
-        "d",
-        "d",
-        "d",
-        "d",
-        "d",
-        "e",
-        "w",
-        "x",
-        "y",
-        "z",
-      ],
+      a3: ["abc", undefined, undefined, "dddddewxyz"],
       cols: [1, 2, 1, 2],
       rows: [1, 1, 2, 2],
     });
