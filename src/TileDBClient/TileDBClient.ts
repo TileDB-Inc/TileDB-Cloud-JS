@@ -45,11 +45,17 @@ class TileDBClient {
   sql: Sql;
   query: TileDBQuery;
 
-  constructor(params: ConfigurationParameters = defaultConfig) {
+  constructor(
+    params: Omit<
+      ConfigurationParameters,
+      "username" | "password"
+    > = defaultConfig
+  ) {
     const config = {
       ...defaultConfig,
       ...params,
     };
+
     this.config = new Configuration({
       ...config,
       // for v1 API calls basePath needs /v1 suffix
