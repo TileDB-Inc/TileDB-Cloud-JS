@@ -43,11 +43,12 @@ describe("getResultsFromArrayBuffer()", () => {
       nullableVarLengthAttrBufferHeaders,
       varLenNullableAttributesSchema
     );
+    // expect(results).toEqual("");
 
     expect(results).toEqual({
       a1: [100, null, null, 400],
       a2: [null, [20], [30, 30, 30], null],
-      a3: ["abc", undefined, undefined, "dddddewxyz"],
+      a3: ["abc", null, null, "dddddewxyz"],
       cols: [1, 2, 1, 2],
       rows: [1, 1, 2, 2],
     });

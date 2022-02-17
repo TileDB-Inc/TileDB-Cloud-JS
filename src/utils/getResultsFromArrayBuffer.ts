@@ -5,7 +5,6 @@ import getAttributeSchema from "./getAttributeSchema";
 import getAttributeResult, { bufferToInt8 } from "./bufferToData";
 import getByteLengthOfDatatype from "./getByteLengthOfDatatype";
 import setNullables from "./setNullables";
-import isArrayOfArrays from "./isArrayOfArrays";
 import groupValuesByOffsetBytes from "./groupValuesByOffsetBytes";
 import concatChars from "./concatChars";
 import convertToArray from "./convertToArray";
@@ -110,6 +109,16 @@ export const getResultsFromArrayBuffer = async (
         const byteOffsets = Array.from(new BigUint64Array(offsetsBuffer));
         // Convert byte offsets to offsets
         offsets = byteOffsets.map((o) => Number(o) / BYTE_PER_ELEMENT);
+
+        const isString = typeof result === "string";
+        const groupedValues = await groupValuesByOffsetBytes(
+          convertToArray(result),
+          offsets
+        );
+        // If it's a string we concat all the characters to create array of strings
+        result = isString
+          ? concatChars(groupedValues as string[][])
+          : (groupedValues as number[][] | BigInt[][]);
       }
 
       if (isNullable && !options.ignoreNullables) {
@@ -133,36 +142,12 @@ export const getResultsFromArrayBuffer = async (
           string | BigInt | number
         >;
 
-        result = (await setNullables(values, nullablesArray, offsets)) as
+        result = (await setNullables(values, nullablesArray)) as
           | number[]
           | string[]
           | BigInt[];
       }
 
-      /**
-       * If result is a String we convert it to array in order
-       * to group by offsets and create an array of strings
-       */
-      if (
-        isVarLengthSized &&
-        !options.ignoreOffsets &&
-        typeof result === "string"
-      ) {
-        const groupedValues = await groupValuesByOffsetBytes(
-          convertToArray(result) as string[],
-          offsets
-        );
-        result = concatChars(groupedValues);
-      }
-
-      /**
-       * After grouping strings by offsets the result look like this:
-       * [['T', 'i', 'l', 'e', 'D', 'B']]
-       * We concat characters to create an array of strings
-       */
-      if (isArrayOfArrays(result) && typeof result[0][0] === "string") {
-        result = concatChars(result);
-      }
       data[attribute.name] = result;
 
       return offset + totalNumberOfBytesOfAttribute;
