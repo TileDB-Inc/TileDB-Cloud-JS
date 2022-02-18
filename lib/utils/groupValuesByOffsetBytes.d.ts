@@ -4,5 +4,5 @@
  * @param offsets e.g. [0, 3, 4]
  * @returns [[1,2,3], 4]
  */
-declare const groupValuesByOffsetBytes: <T>(vals: T[], offsets: number[]) => (T | T[])[];
+declare const groupValuesByOffsetBytes: <T>(values: T[], offsets: number[]) => Promise<T[][]>;
 export default groupValuesByOffsetBytes;

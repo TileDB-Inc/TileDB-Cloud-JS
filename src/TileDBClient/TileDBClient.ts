@@ -45,7 +45,12 @@ class TileDBClient {
   sql: Sql;
   query: TileDBQuery;
 
-  constructor(params: ConfigurationParameters = defaultConfig) {
+  constructor(
+    params: Omit<
+      ConfigurationParameters,
+      "username" | "password"
+    > = defaultConfig
+  ) {
     const config = {
       ...defaultConfig,
       ...params,

@@ -23,5 +23,5 @@ export interface Options {
  * @param attributesSchema
  * @returns A map of attribute names with the results of every attribute
  */
-export declare const getResultsFromArrayBuffer: (arrayBuffer: ArrayBuffer, attributeBufferHeaders: AttributeBufferHeader[], attributesSchema: Array<Dimension | Attribute>, options?: Options) => {};
+export declare const getResultsFromArrayBuffer: (arrayBuffer: ArrayBuffer, attributeBufferHeaders: AttributeBufferHeader[], attributesSchema: Array<Dimension | Attribute>, options?: Options) => Promise<{}>;
 export default getResultsFromArrayBuffer;
