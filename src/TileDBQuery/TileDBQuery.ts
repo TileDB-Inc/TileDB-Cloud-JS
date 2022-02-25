@@ -114,14 +114,13 @@ export class TileDBQuery {
     queryAsArrayBuffer: ArrayBuffer,
     namespace: string,
     arrayName: string,
-    options: Options
+    options: Options,
+    queryAPI: QueryApi,
   ): Promise<{
     query: Query;
     results: Record<string, any>;
     queryAsArrayBuffer: ArrayBuffer;
   }> {
-    const config = new Configuration(this.configurationParams);
-    const queryAPI = new QueryApi(config);
     const queryResponse = await queryAPI.submitQuery(
       namespace,
       arrayName,
@@ -257,7 +256,8 @@ export class TileDBQuery {
                 bufferWithoutFirstEightBytes,
                 namespace,
                 arrayName,
-                options
+                options,
+                queryAPI
               );
             // Override query object with the new one returned from `ReadIncompleteQuery`
             bufferWithoutFirstEightBytes = queryAsArrayBuffer;

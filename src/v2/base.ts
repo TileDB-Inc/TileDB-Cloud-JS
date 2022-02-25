@@ -16,9 +16,10 @@
 import { Configuration } from "./configuration";
 // Some imports not used depending on template conditions
 // @ts-ignore
-import globalAxios, { AxiosPromise, AxiosInstance } from 'axios';
+import globalAxios, { AxiosPromise, AxiosInstance, AxiosRequestConfig } from 'axios';
 
 export const BASE_PATH = "https://api.tiledb.com/v2".replace(/\/+$/, "");
+export let REDIRECT_PATH;
 
 /**
  *
@@ -38,7 +39,7 @@ export const COLLECTION_FORMATS = {
  */
 export interface RequestArgs {
     url: string;
-    options: any;
+    options: AxiosRequestConfig;
 }
 
 /**
@@ -54,6 +55,24 @@ export class BaseAPI {
             this.configuration = configuration;
             this.basePath = configuration.basePath || this.basePath;
         }
+        // Reset REDIRECT_PATH in case client is initiated with another basePath
+        REDIRECT_PATH = undefined;
+        axios.interceptors.response.use(
+          (response) => {
+            const responseURL = response?.request.responseURL as string | undefined;
+            if (responseURL) {
+              const url = new URL(responseURL);
+              const version = new URL(BASE_PATH).pathname;
+              REDIRECT_PATH = url.origin + version;
+            }
+            return response;
+          },
+          function (error) {
+            // Any status codes that falls outside the range of 2xx cause this function to trigger
+            // Do something with response error
+            return Promise.reject(error);
+          }
+        );
     }
 };
 

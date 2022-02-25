@@ -10,8 +10,9 @@
  * Do not edit the class manually.
  */
 import { Configuration } from "./configuration";
-import { AxiosInstance } from 'axios';
+import { AxiosInstance, AxiosRequestConfig } from 'axios';
 export declare const BASE_PATH: string;
+export declare let REDIRECT_PATH: any;
 /**
  *
  * @export
@@ -29,7 +30,7 @@ export declare const COLLECTION_FORMATS: {
  */
 export interface RequestArgs {
     url: string;
-    options: any;
+    options: AxiosRequestConfig;
 }
 /**
  *

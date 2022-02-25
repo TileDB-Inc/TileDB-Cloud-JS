@@ -1,5 +1,5 @@
 import { ArraySchema } from "../v1";
-import { ConfigurationParameters, Query } from "../v2";
+import { ConfigurationParameters, Query, QueryApi } from "../v2";
 import { Options } from "../utils/getResultsFromArrayBuffer";
 declare type Range = number[] | string[];
 export interface QueryData extends Pick<Query, "layout">, Options {
@@ -154,9 +154,7 @@ export declare class TileDBQuery {
                                 bufferSizes: number[];
                                 bufferStartSizes: number[];
                             }[];
-                        }; /**
-                         * Deserialize buffer to a Query object
-                         */
+                        };
                         start: number;
                         end: number;
                         splitMultiRange: boolean;
@@ -271,7 +269,7 @@ export declare class TileDBQuery {
             }[];
         };
     }>;
-    ReadIncompleteQuery(arraySchema: ArraySchema, queryAsArrayBuffer: ArrayBuffer, namespace: string, arrayName: string, options: Options): Promise<{
+    ReadIncompleteQuery(arraySchema: ArraySchema, queryAsArrayBuffer: ArrayBuffer, namespace: string, arrayName: string, options: Options, queryAPI: QueryApi): Promise<{
         query: Query;
         results: Record<string, any>;
         queryAsArrayBuffer: ArrayBuffer;
