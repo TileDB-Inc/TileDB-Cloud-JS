@@ -19,7 +19,7 @@ import globalAxios, { AxiosPromise, AxiosInstance } from 'axios';
 // @ts-ignore
 import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObject, setBearerAuthToObject, setOAuthToObject, setSearchParams, serializeDataIfNeeded, toPathString, createRequestFunction } from './common';
 // @ts-ignore
-import { BASE_PATH, REDIRECT_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } from './base';
+import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } from './base';
 
 /**
  * Model representing aws keys or service role, service roles are currently ignored, but will be preferred option in the future
@@ -5704,7 +5704,6 @@ export const ArrayApiFp = function(configuration?: Configuration) {
          */
         async arrayActivityLog(namespace: string, array: string, start?: number, end?: number, eventTypes?: string, taskId?: string, hasTaskId?: boolean, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ArrayActivityLog>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.arrayActivityLog(namespace, array, start, end, eventTypes, taskId, hasTaskId, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -5725,7 +5724,6 @@ export const ArrayApiFp = function(configuration?: Configuration) {
          */
         async arraysBrowserOwnedGet(page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, fileType?: Array<string>, excludeFileType?: Array<string>, fileProperty?: Array<string>, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArrayBrowserData>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.arraysBrowserOwnedGet(page, perPage, search, namespace, orderby, permissions, tag, excludeTag, fileType, excludeFileType, fileProperty, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -5735,7 +5733,6 @@ export const ArrayApiFp = function(configuration?: Configuration) {
          */
         async arraysBrowserOwnedSidebarGet(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArrayBrowserSidebar>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.arraysBrowserOwnedSidebarGet(options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -5756,7 +5753,6 @@ export const ArrayApiFp = function(configuration?: Configuration) {
          */
         async arraysBrowserPublicGet(page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, fileType?: Array<string>, excludeFileType?: Array<string>, fileProperty?: Array<string>, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArrayBrowserData>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.arraysBrowserPublicGet(page, perPage, search, namespace, orderby, permissions, tag, excludeTag, fileType, excludeFileType, fileProperty, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -5766,7 +5762,6 @@ export const ArrayApiFp = function(configuration?: Configuration) {
          */
         async arraysBrowserPublicSidebarGet(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArrayBrowserSidebar>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.arraysBrowserPublicSidebarGet(options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -5787,7 +5782,6 @@ export const ArrayApiFp = function(configuration?: Configuration) {
          */
         async arraysBrowserSharedGet(page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, fileType?: Array<string>, excludeFileType?: Array<string>, fileProperty?: Array<string>, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArrayBrowserData>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.arraysBrowserSharedGet(page, perPage, search, namespace, orderby, permissions, tag, excludeTag, fileType, excludeFileType, fileProperty, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -5797,7 +5791,6 @@ export const ArrayApiFp = function(configuration?: Configuration) {
          */
         async arraysBrowserSharedSidebarGet(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArrayBrowserSidebar>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.arraysBrowserSharedSidebarGet(options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -5811,7 +5804,6 @@ export const ArrayApiFp = function(configuration?: Configuration) {
          */
         async arraysNamespaceArrayEndTimestampsGet(namespace: string, array: string, page?: number, perPage?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArrayEndTimestampData>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.arraysNamespaceArrayEndTimestampsGet(namespace, array, page, perPage, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -5824,7 +5816,6 @@ export const ArrayApiFp = function(configuration?: Configuration) {
          */
         async consolidateArray(namespace: string, array: string, tiledbConfig: TileDBConfig, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.consolidateArray(namespace, array, tiledbConfig, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -5839,7 +5830,6 @@ export const ArrayApiFp = function(configuration?: Configuration) {
          */
         async createArray(namespace: string, array: string, contentType: string, arraySchema: ArraySchema, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.createArray(namespace, array, contentType, arraySchema, xTILEDBCLOUDACCESSCREDENTIALSNAME, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -5852,7 +5842,6 @@ export const ArrayApiFp = function(configuration?: Configuration) {
          */
         async deleteArray(namespace: string, array: string, contentType: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.deleteArray(namespace, array, contentType, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -5864,7 +5853,6 @@ export const ArrayApiFp = function(configuration?: Configuration) {
          */
         async deregisterArray(namespace: string, array: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.deregisterArray(namespace, array, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -5877,7 +5865,6 @@ export const ArrayApiFp = function(configuration?: Configuration) {
          */
         async getActivityLogById(namespace: string, array: string, id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArrayActivityLog>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getActivityLogById(namespace, array, id, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -5888,7 +5875,6 @@ export const ArrayApiFp = function(configuration?: Configuration) {
          */
         async getAllArrayMetadata(publicShare?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ArrayInfo>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getAllArrayMetadata(publicShare, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -5901,7 +5887,6 @@ export const ArrayApiFp = function(configuration?: Configuration) {
          */
         async getArray(namespace: string, array: string, contentType: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArraySchema>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getArray(namespace, array, contentType, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -5916,7 +5901,6 @@ export const ArrayApiFp = function(configuration?: Configuration) {
          */
         async getArrayMaxBufferSizes(namespace: string, array: string, subarray: string, contentType: string, xPayer?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<MaxBufferSizes>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getArrayMaxBufferSizes(namespace, array, subarray, contentType, xPayer, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -5930,7 +5914,6 @@ export const ArrayApiFp = function(configuration?: Configuration) {
          */
         async getArrayMetaDataJson(namespace: string, array: string, length?: number, endTimestamp?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getArrayMetaDataJson(namespace, array, length, endTimestamp, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -5942,7 +5925,6 @@ export const ArrayApiFp = function(configuration?: Configuration) {
          */
         async getArrayMetadata(namespace: string, array: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArrayInfo>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getArrayMetadata(namespace, array, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -5954,7 +5936,6 @@ export const ArrayApiFp = function(configuration?: Configuration) {
          */
         async getArrayMetadataCapnp(namespace: string, array: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArrayMetadata>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getArrayMetadataCapnp(namespace, array, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -5968,7 +5949,6 @@ export const ArrayApiFp = function(configuration?: Configuration) {
          */
         async getArrayNonEmptyDomain(namespace: string, array: string, contentType: string, xPayer?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<NonEmptyDomain>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getArrayNonEmptyDomain(namespace, array, contentType, xPayer, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -5980,7 +5960,6 @@ export const ArrayApiFp = function(configuration?: Configuration) {
          */
         async getArrayNonEmptyDomainJson(namespace: string, array: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getArrayNonEmptyDomainJson(namespace, array, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -5993,7 +5972,6 @@ export const ArrayApiFp = function(configuration?: Configuration) {
          */
         async getArraySampleData(namespace: string, array: string, samples?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArraySample>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getArraySampleData(namespace, array, samples, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -6005,7 +5983,6 @@ export const ArrayApiFp = function(configuration?: Configuration) {
          */
         async getArraySharingPolicies(namespace: string, array: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ArraySharing>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getArraySharingPolicies(namespace, array, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -6016,7 +5993,6 @@ export const ArrayApiFp = function(configuration?: Configuration) {
          */
         async getArraysInNamespace(namespace: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ArrayInfo>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getArraysInNamespace(namespace, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -6029,7 +6005,6 @@ export const ArrayApiFp = function(configuration?: Configuration) {
          */
         async getFragmentEndTimestamp(namespace: string, array: string, endTimestamp?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<number>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getFragmentEndTimestamp(namespace, array, endTimestamp, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -6039,7 +6014,6 @@ export const ArrayApiFp = function(configuration?: Configuration) {
          */
         async getLastAccessedArrays(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<LastAccessedArray>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getLastAccessedArrays(options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -6052,7 +6026,6 @@ export const ArrayApiFp = function(configuration?: Configuration) {
          */
         async registerArray(namespace: string, array: string, arrayMetadata: ArrayInfoUpdate, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.registerArray(namespace, array, arrayMetadata, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -6065,7 +6038,6 @@ export const ArrayApiFp = function(configuration?: Configuration) {
          */
         async shareArray(namespace: string, array: string, arraySharing: ArraySharing, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.shareArray(namespace, array, arraySharing, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -6078,7 +6050,6 @@ export const ArrayApiFp = function(configuration?: Configuration) {
          */
         async updateArrayMetadata(namespace: string, array: string, arrayMetadata: ArrayInfoUpdate, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.updateArrayMetadata(namespace, array, arrayMetadata, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -6091,7 +6062,6 @@ export const ArrayApiFp = function(configuration?: Configuration) {
          */
         async updateArrayMetadataCapnp(namespace: string, array: string, arrayMetadataEntries: ArrayMetadata, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.updateArrayMetadataCapnp(namespace, array, arrayMetadataEntries, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -6104,7 +6074,6 @@ export const ArrayApiFp = function(configuration?: Configuration) {
          */
         async vacuumArray(namespace: string, array: string, tiledbConfig: TileDBConfig, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.vacuumArray(namespace, array, tiledbConfig, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
     }
@@ -6976,7 +6945,6 @@ export const ArrayTasksApiFp = function(configuration?: Configuration) {
          */
         async getArrayTasksSidebar(start?: number, end?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArrayTaskBrowserSidebar>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getArrayTasksSidebar(start, end, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
     }
@@ -7989,7 +7957,6 @@ export const FavoritesApiFp = function(configuration?: Configuration) {
          */
         async addArrayFavorite(namespace: string, name: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.addArrayFavorite(namespace, name, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -8001,7 +7968,6 @@ export const FavoritesApiFp = function(configuration?: Configuration) {
          */
         async addMLModelFavorite(namespace: string, name: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.addMLModelFavorite(namespace, name, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -8013,7 +7979,6 @@ export const FavoritesApiFp = function(configuration?: Configuration) {
          */
         async addNotebookFavorite(namespace: string, name: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.addNotebookFavorite(namespace, name, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -8025,7 +7990,6 @@ export const FavoritesApiFp = function(configuration?: Configuration) {
          */
         async addUDFFavorite(namespace: string, name: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.addUDFFavorite(namespace, name, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -8037,7 +8001,6 @@ export const FavoritesApiFp = function(configuration?: Configuration) {
          */
         async deleteArrayFavorite(namespace: string, name: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.deleteArrayFavorite(namespace, name, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -8049,7 +8012,6 @@ export const FavoritesApiFp = function(configuration?: Configuration) {
          */
         async deleteMLModelFavorite(namespace: string, name: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.deleteMLModelFavorite(namespace, name, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -8061,7 +8023,6 @@ export const FavoritesApiFp = function(configuration?: Configuration) {
          */
         async deleteNotebookFavorite(namespace: string, name: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.deleteNotebookFavorite(namespace, name, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -8073,7 +8034,6 @@ export const FavoritesApiFp = function(configuration?: Configuration) {
          */
         async deleteUDFFavorite(namespace: string, name: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.deleteUDFFavorite(namespace, name, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -8085,7 +8045,6 @@ export const FavoritesApiFp = function(configuration?: Configuration) {
          */
         async getArrayFavorite(namespace: string, name: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArrayFavorite>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getArrayFavorite(namespace, name, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -8097,7 +8056,6 @@ export const FavoritesApiFp = function(configuration?: Configuration) {
          */
         async getMLModelFavorite(namespace: string, name: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<MLModelFavorite>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getMLModelFavorite(namespace, name, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -8109,7 +8067,6 @@ export const FavoritesApiFp = function(configuration?: Configuration) {
          */
         async getNotebookFavorite(namespace: string, name: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<NotebookFavorite>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getNotebookFavorite(namespace, name, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -8121,7 +8078,6 @@ export const FavoritesApiFp = function(configuration?: Configuration) {
          */
         async getUDFFavorite(namespace: string, name: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UDFFavorite>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getUDFFavorite(namespace, name, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -8133,7 +8089,6 @@ export const FavoritesApiFp = function(configuration?: Configuration) {
          */
         async listArrayFavorites(page?: number, perPage?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArrayFavoritesData>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.listArrayFavorites(page, perPage, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -8143,7 +8098,6 @@ export const FavoritesApiFp = function(configuration?: Configuration) {
          */
         async listArrayFavoritesUUIDs(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ArrayFavorite>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.listArrayFavoritesUUIDs(options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -8155,7 +8109,6 @@ export const FavoritesApiFp = function(configuration?: Configuration) {
          */
         async listMLModelFavorites(page?: number, perPage?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<MLModelFavoritesData>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.listMLModelFavorites(page, perPage, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -8165,7 +8118,6 @@ export const FavoritesApiFp = function(configuration?: Configuration) {
          */
         async listMLModelFavoritesUUIDs(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<MLModelFavorite>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.listMLModelFavoritesUUIDs(options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -8178,7 +8130,6 @@ export const FavoritesApiFp = function(configuration?: Configuration) {
          */
         async listNotebookFavorites(isDashboard?: boolean, page?: number, perPage?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<NotebookFavoritesData>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.listNotebookFavorites(isDashboard, page, perPage, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -8188,7 +8139,6 @@ export const FavoritesApiFp = function(configuration?: Configuration) {
          */
         async listNotebookFavoritesUUIDs(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<NotebookFavorite>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.listNotebookFavoritesUUIDs(options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -8200,7 +8150,6 @@ export const FavoritesApiFp = function(configuration?: Configuration) {
          */
         async listUDFFavorites(page?: number, perPage?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UDFFavoritesData>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.listUDFFavorites(page, perPage, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -8210,7 +8159,6 @@ export const FavoritesApiFp = function(configuration?: Configuration) {
          */
         async listUDFFavoritesUUIDs(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<UDFFavorite>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.listUDFFavoritesUUIDs(options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
     }
@@ -8796,7 +8744,6 @@ export const FilesApiFp = function(configuration?: Configuration) {
          */
         async handleCreateFile(namespace: string, fileCreate: FileCreate, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<FileCreated>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.handleCreateFile(namespace, fileCreate, xTILEDBCLOUDACCESSCREDENTIALSNAME, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -8809,7 +8756,6 @@ export const FilesApiFp = function(configuration?: Configuration) {
          */
         async handleExportFile(namespace: string, file: string, fileExport: FileExport, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<FileExported>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.handleExportFile(namespace, file, fileExport, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
     }
@@ -9290,7 +9236,6 @@ export const GroupsApiFp = function(configuration?: Configuration) {
          */
         async addAsset(namespace: string, name: string, assetNamespace: string, assetName: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.addAsset(namespace, name, assetNamespace, assetName, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -9303,7 +9248,6 @@ export const GroupsApiFp = function(configuration?: Configuration) {
          */
         async createGroup(namespace: string, name: string, groupCreate?: GroupCreate, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.createGroup(namespace, name, groupCreate, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -9315,7 +9259,6 @@ export const GroupsApiFp = function(configuration?: Configuration) {
          */
         async deleteGroup(namespace: string, name: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.deleteGroup(namespace, name, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -9330,7 +9273,6 @@ export const GroupsApiFp = function(configuration?: Configuration) {
          */
         async listGroup(namespace: string, name: string, output?: 'attributes' | 'groups' | 'assets', page?: number, perPage?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GroupListing>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.listGroup(namespace, name, output, page, perPage, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -9343,7 +9285,6 @@ export const GroupsApiFp = function(configuration?: Configuration) {
          */
         async listTopLevelGroups(namespace: string, page?: number, perPage?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GroupListing>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.listTopLevelGroups(namespace, page, perPage, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -9357,7 +9298,6 @@ export const GroupsApiFp = function(configuration?: Configuration) {
          */
         async removeAsset(namespace: string, name: string, assetNamespace: string, assetName: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.removeAsset(namespace, name, assetNamespace, assetName, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -9370,7 +9310,6 @@ export const GroupsApiFp = function(configuration?: Configuration) {
          */
         async updateGroup(namespace: string, name: string, groupUpdate?: GroupUpdate, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.updateGroup(namespace, name, groupUpdate, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
     }
@@ -9926,7 +9865,6 @@ export const InvitationApiFp = function(configuration?: Configuration) {
          */
         async acceptInvitation(invitation: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.acceptInvitation(invitation, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -9938,7 +9876,6 @@ export const InvitationApiFp = function(configuration?: Configuration) {
          */
         async cancelJoinOrganization(invitation: string, organization: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.cancelJoinOrganization(invitation, organization, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -9951,7 +9888,6 @@ export const InvitationApiFp = function(configuration?: Configuration) {
          */
         async cancelShareArrayByInvite(namespace: string, invitation: string, array: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.cancelShareArrayByInvite(namespace, invitation, array, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -9970,7 +9906,6 @@ export const InvitationApiFp = function(configuration?: Configuration) {
          */
         async fetchInvitations(organization?: string, array?: string, start?: number, end?: number, page?: number, perPage?: number, type?: string, status?: string, orderby?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InvitationData>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.fetchInvitations(organization, array, start, end, page, perPage, type, status, orderby, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -9982,7 +9917,6 @@ export const InvitationApiFp = function(configuration?: Configuration) {
          */
         async joinOrganization(organization: string, emailInvite: InvitationOrganizationJoinEmail, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.joinOrganization(organization, emailInvite, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -9995,7 +9929,6 @@ export const InvitationApiFp = function(configuration?: Configuration) {
          */
         async shareArrayByInvite(namespace: string, array: string, emailInvite: InvitationArrayShareEmail, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.shareArrayByInvite(namespace, array, emailInvite, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
     }
@@ -10334,7 +10267,6 @@ export const NotebookApiFp = function(configuration?: Configuration) {
          */
         async getNotebookServerStatus(namespace: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<NotebookStatus>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getNotebookServerStatus(namespace, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -10345,7 +10277,6 @@ export const NotebookApiFp = function(configuration?: Configuration) {
          */
         async shutdownNotebookServer(namespace: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.shutdownNotebookServer(namespace, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -10358,7 +10289,6 @@ export const NotebookApiFp = function(configuration?: Configuration) {
          */
         async updateNotebookName(namespace: string, array: string, notebookMetadata: ArrayInfoUpdate, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.updateNotebookName(namespace, array, notebookMetadata, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
     }
@@ -10532,7 +10462,6 @@ export const NotebooksApiFp = function(configuration?: Configuration) {
          */
         async notebooksNamespaceArrayEndTimestampsGet(namespace: string, array: string, page?: number, perPage?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArrayEndTimestampData>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.notebooksNamespaceArrayEndTimestampsGet(namespace, array, page, perPage, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
     }
@@ -11276,7 +11205,6 @@ export const OrganizationApiFp = function(configuration?: Configuration) {
          */
         async addAWSAccessCredentials(namespace: string, awsAccessCredentials: AWSAccessCredentials, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.addAWSAccessCredentials(namespace, awsAccessCredentials, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -11288,7 +11216,6 @@ export const OrganizationApiFp = function(configuration?: Configuration) {
          */
         async addUserToOrganization(organization: string, user: OrganizationUser, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.addUserToOrganization(organization, user, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -11299,7 +11226,6 @@ export const OrganizationApiFp = function(configuration?: Configuration) {
          */
         async checkAWSAccessCredentials(namespace: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<AWSAccessCredentials>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.checkAWSAccessCredentials(namespace, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -11311,7 +11237,6 @@ export const OrganizationApiFp = function(configuration?: Configuration) {
          */
         async checkAWSAccessCredentialsByName(namespace: string, name: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AWSAccessCredentials>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.checkAWSAccessCredentialsByName(namespace, name, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -11322,7 +11247,6 @@ export const OrganizationApiFp = function(configuration?: Configuration) {
          */
         async createOrganization(organization: Organization, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.createOrganization(organization, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -11334,7 +11258,6 @@ export const OrganizationApiFp = function(configuration?: Configuration) {
          */
         async deleteAWSAccessCredentials(namespace: string, name: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.deleteAWSAccessCredentials(namespace, name, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -11345,7 +11268,6 @@ export const OrganizationApiFp = function(configuration?: Configuration) {
          */
         async deleteOrganization(organization: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.deleteOrganization(organization, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -11357,7 +11279,6 @@ export const OrganizationApiFp = function(configuration?: Configuration) {
          */
         async deleteUserFromOrganization(organization: string, username: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.deleteUserFromOrganization(organization, username, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -11367,7 +11288,6 @@ export const OrganizationApiFp = function(configuration?: Configuration) {
          */
         async getAllOrganizations(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Organization>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getAllOrganizations(options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -11378,7 +11298,6 @@ export const OrganizationApiFp = function(configuration?: Configuration) {
          */
         async getOrganization(organization: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Organization>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getOrganization(organization, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -11390,7 +11309,6 @@ export const OrganizationApiFp = function(configuration?: Configuration) {
          */
         async getOrganizationUser(organization: string, username: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<OrganizationUser>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getOrganizationUser(organization, username, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -11403,7 +11321,6 @@ export const OrganizationApiFp = function(configuration?: Configuration) {
          */
         async updateAWSAccessCredentials(namespace: string, name: string, awsAccessCredentials: AWSAccessCredentials, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.updateAWSAccessCredentials(namespace, name, awsAccessCredentials, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -11415,7 +11332,6 @@ export const OrganizationApiFp = function(configuration?: Configuration) {
          */
         async updateOrganization(organization: string, organizationDetails: Organization, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.updateOrganization(organization, organizationDetails, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -11428,7 +11344,6 @@ export const OrganizationApiFp = function(configuration?: Configuration) {
          */
         async updateUserInOrganization(organization: string, username: string, user: OrganizationUser, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.updateUserInOrganization(organization, username, user, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
     }
@@ -12143,7 +12058,6 @@ export const QueryApiFp = function(configuration?: Configuration) {
          */
         async finalizeQuery(namespace: string, array: string, type: string, contentType: string, query: Query, xPayer?: string, openAt?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Query>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.finalizeQuery(namespace, array, type, contentType, query, xPayer, openAt, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -12160,7 +12074,6 @@ export const QueryApiFp = function(configuration?: Configuration) {
          */
         async getEstResultSizes(namespace: string, array: string, type: string, contentType: string, query: Query, xPayer?: string, openAt?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Query>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getEstResultSizes(namespace, array, type, contentType, query, xPayer, openAt, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -12174,7 +12087,6 @@ export const QueryApiFp = function(configuration?: Configuration) {
          */
         async getFile(namespace: string, array: string, contentType: string, xPayer?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getFile(namespace, array, contentType, xPayer, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -12191,7 +12103,6 @@ export const QueryApiFp = function(configuration?: Configuration) {
          */
         async submitQuery(namespace: string, array: string, type: string, contentType: string, query: Query, xPayer?: string, openAt?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Query>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.submitQuery(namespace, array, type, contentType, query, xPayer, openAt, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -12206,7 +12117,6 @@ export const QueryApiFp = function(configuration?: Configuration) {
          */
         async submitQueryJson(namespace: string, array: string, contentType: string, queryJson: QueryJson, xPayer?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.submitQueryJson(namespace, array, contentType, queryJson, xPayer, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
     }
@@ -12462,7 +12372,6 @@ export const SqlApiFp = function(configuration?: Configuration) {
          */
         async runSQL(namespace: string, sql: SQLParameters, acceptEncoding?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<object>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.runSQL(namespace, sql, acceptEncoding, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
     }
@@ -12574,7 +12483,6 @@ export const StatsApiFp = function(configuration?: Configuration) {
          */
         async getTiledbStats(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse200>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getTiledbStats(options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
     }
@@ -12873,7 +12781,6 @@ export const TaskGraphLogsApiFp = function(configuration?: Configuration) {
          */
         async createTaskGraphLog(namespace: string, log: TaskGraphLog, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TaskGraphLog>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.createTaskGraphLog(namespace, log, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -12885,7 +12792,6 @@ export const TaskGraphLogsApiFp = function(configuration?: Configuration) {
          */
         async getTaskGraphLog(namespace: string, id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TaskGraphLog>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getTaskGraphLog(namespace, id, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -12902,7 +12808,6 @@ export const TaskGraphLogsApiFp = function(configuration?: Configuration) {
          */
         async listTaskGraphLogs(namespace?: string, createdBy?: string, search?: string, startTime?: string, endTime?: string, page?: number, perPage?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TaskGraphLogsData>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.listTaskGraphLogs(namespace, createdBy, search, startTime, endTime, page, perPage, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -12915,7 +12820,6 @@ export const TaskGraphLogsApiFp = function(configuration?: Configuration) {
          */
         async updateTaskGraphLog(namespace: string, id: string, log: TaskGraphLog, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.updateTaskGraphLog(namespace, id, log, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
     }
@@ -13324,7 +13228,6 @@ export const TasksApiFp = function(configuration?: Configuration) {
          */
         async runSQL(namespace: string, sql: SQLParameters, acceptEncoding?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<object>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.runSQL(namespace, sql, acceptEncoding, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -13335,7 +13238,6 @@ export const TasksApiFp = function(configuration?: Configuration) {
          */
         async taskIdGet(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArrayTask>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.taskIdGet(id, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -13347,7 +13249,6 @@ export const TasksApiFp = function(configuration?: Configuration) {
          */
         async taskIdResultGet(id: string, acceptEncoding?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.taskIdResultGet(id, acceptEncoding, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -13371,7 +13272,6 @@ export const TasksApiFp = function(configuration?: Configuration) {
          */
         async tasksGet(namespace?: string, createdBy?: string, array?: string, start?: number, end?: number, page?: number, perPage?: number, type?: string, excludeType?: Array<string>, fileType?: Array<string>, excludeFileType?: Array<string>, status?: string, search?: string, orderby?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArrayTaskData>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.tasksGet(namespace, createdBy, array, start, end, page, perPage, type, excludeType, fileType, excludeFileType, status, search, orderby, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
     }
@@ -14076,7 +13976,6 @@ export const UdfApiFp = function(configuration?: Configuration) {
          */
         async deleteUDFInfo(namespace: string, name: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.deleteUDFInfo(namespace, name, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -14088,7 +13987,6 @@ export const UdfApiFp = function(configuration?: Configuration) {
          */
         async getUDFInfo(namespace: string, name: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UDFInfo>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getUDFInfo(namespace, name, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -14100,7 +13998,6 @@ export const UdfApiFp = function(configuration?: Configuration) {
          */
         async getUDFInfoSharingPolicies(namespace: string, name: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<UDFSharing>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getUDFInfoSharingPolicies(namespace, name, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -14113,7 +14010,6 @@ export const UdfApiFp = function(configuration?: Configuration) {
          */
         async registerUDFInfo(namespace: string, name: string, udf: UDFInfoUpdate, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.registerUDFInfo(namespace, name, udf, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -14126,7 +14022,6 @@ export const UdfApiFp = function(configuration?: Configuration) {
          */
         async shareUDFInfo(namespace: string, name: string, udfSharing: UDFSharing, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.shareUDFInfo(namespace, name, udfSharing, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -14139,7 +14034,6 @@ export const UdfApiFp = function(configuration?: Configuration) {
          */
         async submitGenericUDF(namespace: string, udf: GenericUDF, acceptEncoding?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.submitGenericUDF(namespace, udf, acceptEncoding, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -14152,7 +14046,6 @@ export const UdfApiFp = function(configuration?: Configuration) {
          */
         async submitMultiArrayUDF(namespace: string, udf: MultiArrayUDF, acceptEncoding?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.submitMultiArrayUDF(namespace, udf, acceptEncoding, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -14168,7 +14061,6 @@ export const UdfApiFp = function(configuration?: Configuration) {
          */
         async submitUDF(namespace: string, array: string, udf: MultiArrayUDF, xPayer?: string, acceptEncoding?: string, v2?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.submitUDF(namespace, array, udf, xPayer, acceptEncoding, v2, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -14182,7 +14074,6 @@ export const UdfApiFp = function(configuration?: Configuration) {
          */
         async udfNamespaceArrayEndTimestampsGet(namespace: string, array: string, page?: number, perPage?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArrayEndTimestampData>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.udfNamespaceArrayEndTimestampsGet(namespace, array, page, perPage, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -14195,7 +14086,6 @@ export const UdfApiFp = function(configuration?: Configuration) {
          */
         async updateUDFInfo(namespace: string, name: string, udf: UDFInfoUpdate, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.updateUDFInfo(namespace, name, udf, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
     }
@@ -15494,7 +15384,6 @@ export const UserApiFp = function(configuration?: Configuration) {
          */
         async addAWSAccessCredentials(namespace: string, awsAccessCredentials: AWSAccessCredentials, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.addAWSAccessCredentials(namespace, awsAccessCredentials, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -15506,7 +15395,6 @@ export const UserApiFp = function(configuration?: Configuration) {
          */
         async addUserToOrganization(organization: string, user: OrganizationUser, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.addUserToOrganization(organization, user, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -15517,7 +15405,6 @@ export const UserApiFp = function(configuration?: Configuration) {
          */
         async checkAWSAccessCredentials(namespace: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<AWSAccessCredentials>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.checkAWSAccessCredentials(namespace, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -15529,7 +15416,6 @@ export const UserApiFp = function(configuration?: Configuration) {
          */
         async checkAWSAccessCredentialsByName(namespace: string, name: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AWSAccessCredentials>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.checkAWSAccessCredentialsByName(namespace, name, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -15539,7 +15425,6 @@ export const UserApiFp = function(configuration?: Configuration) {
          */
         async confirmEmail(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.confirmEmail(options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -15550,7 +15435,6 @@ export const UserApiFp = function(configuration?: Configuration) {
          */
         async createUser(user: User, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.createUser(user, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -15562,7 +15446,6 @@ export const UserApiFp = function(configuration?: Configuration) {
          */
         async deleteAWSAccessCredentials(namespace: string, name: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.deleteAWSAccessCredentials(namespace, name, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -15573,7 +15456,6 @@ export const UserApiFp = function(configuration?: Configuration) {
          */
         async deleteUser(username: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.deleteUser(username, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -15585,7 +15467,6 @@ export const UserApiFp = function(configuration?: Configuration) {
          */
         async deleteUserFromOrganization(organization: string, username: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.deleteUserFromOrganization(organization, username, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -15597,7 +15478,6 @@ export const UserApiFp = function(configuration?: Configuration) {
          */
         async getOrganizationUser(organization: string, username: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<OrganizationUser>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getOrganizationUser(organization, username, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -15608,7 +15488,6 @@ export const UserApiFp = function(configuration?: Configuration) {
          */
         async getSession(rememberMe?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Token>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getSession(rememberMe, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -15618,7 +15497,6 @@ export const UserApiFp = function(configuration?: Configuration) {
          */
         async getTokenScopes(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<TokenScope>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getTokenScopes(options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -15628,7 +15506,6 @@ export const UserApiFp = function(configuration?: Configuration) {
          */
         async getUser(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<User>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getUser(options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -15639,7 +15516,6 @@ export const UserApiFp = function(configuration?: Configuration) {
          */
         async getUserWithUsername(username: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<User>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getUserWithUsername(username, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -15650,7 +15526,6 @@ export const UserApiFp = function(configuration?: Configuration) {
          */
         async requestToken(tokenRequest?: TokenRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Token>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.requestToken(tokenRequest, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -15661,7 +15536,6 @@ export const UserApiFp = function(configuration?: Configuration) {
          */
         async resetUserPassword(user: InlineObject, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.resetUserPassword(user, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -15672,7 +15546,6 @@ export const UserApiFp = function(configuration?: Configuration) {
          */
         async revokeToken(token: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.revokeToken(token, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -15682,7 +15555,6 @@ export const UserApiFp = function(configuration?: Configuration) {
          */
         async tokensGet(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Token>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.tokensGet(options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -15692,7 +15564,6 @@ export const UserApiFp = function(configuration?: Configuration) {
          */
         async tokensSessionGet(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Token>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.tokensSessionGet(options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -15705,7 +15576,6 @@ export const UserApiFp = function(configuration?: Configuration) {
          */
         async updateAWSAccessCredentials(namespace: string, name: string, awsAccessCredentials: AWSAccessCredentials, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.updateAWSAccessCredentials(namespace, name, awsAccessCredentials, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -15717,7 +15587,6 @@ export const UserApiFp = function(configuration?: Configuration) {
          */
         async updateUser(username: string, user: User, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.updateUser(username, user, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -15730,7 +15599,6 @@ export const UserApiFp = function(configuration?: Configuration) {
          */
         async updateUserInOrganization(organization: string, username: string, user: OrganizationUser, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.updateUserInOrganization(organization, username, user, options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
     }

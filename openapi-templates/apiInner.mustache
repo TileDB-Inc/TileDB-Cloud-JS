@@ -9,7 +9,7 @@ import { Configuration } from '{{apiRelativeToRoot}}configuration';
 // @ts-ignore
 import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObject, setBearerAuthToObject, setOAuthToObject, setSearchParams, serializeDataIfNeeded, toPathString, createRequestFunction } from '{{apiRelativeToRoot}}common';
 // @ts-ignore
-import { BASE_PATH, REDIRECT_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } from '{{apiRelativeToRoot}}base';
+import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } from '{{apiRelativeToRoot}}base';
 {{#imports}}
 // @ts-ignore
 import { {{classname}} } from '{{apiRelativeToRoot}}{{tsModelPackage}}';
@@ -228,7 +228,6 @@ export const {{classname}}Fp = function(configuration?: Configuration) {
          */
         async {{nickname}}({{#allParams}}{{paramName}}{{^required}}?{{/required}}: {{{dataType}}}, {{/allParams}}options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<{{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}void{{/returnType}}>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.{{nickname}}({{#allParams}}{{paramName}}, {{/allParams}}options);
-            configuration.basePath = REDIRECT_PATH || configuration.basePath;
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
     {{/operation}}

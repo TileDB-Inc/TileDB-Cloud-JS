@@ -16,6 +16,7 @@ import getSizeInBytesOfAllAttributes from "../utils/getSizeInBytesOfAllAttribute
 import getResultsFromArrayBuffer, {
   Options,
 } from "../utils/getResultsFromArrayBuffer";
+import globalAxios, { AxiosInstance } from "axios";
 
 type Range = number[] | string[];
 export interface QueryData extends Pick<Query, "layout">, Options {
@@ -39,12 +40,13 @@ export interface QueryWrite extends Pick<Query, "layout"> {
 
 export class TileDBQuery {
   configurationParams: ConfigurationParameters;
+  private axios: AxiosInstance;
+  private queryAPI: QueryApi;
+  private arrayAPI: ArrayApi;
 
-  constructor(params: ConfigurationParameters) {
+  constructor(params: ConfigurationParameters, axios: AxiosInstance = globalAxios) {
     this.configurationParams = params;
-  }
 
-  async WriteQuery(namespace: string, arrayName: string, data: QueryWrite) {
     const config = new Configuration(this.configurationParams);
     const baseV1 = config.basePath?.replace("v2", "v1");
     // Add versioning if basePath exists
@@ -53,11 +55,15 @@ export class TileDBQuery {
       // Override basePath v2 for v1 to make calls to get ArraySchema (from v1 API)
       ...(baseV1 ? { basePath: baseV1 } : {}),
     });
-    const queryAPI = new QueryApi(config);
-    const arrayAPI = new ArrayApi(configV1);
+    this.queryAPI = new QueryApi(config, undefined, this.axios);
+    this.arrayAPI = new ArrayApi(configV1, undefined, this.axios);
+  }
+
+  async WriteQuery(namespace: string, arrayName: string, data: QueryWrite) {
+    
 
     try {
-      const arraySchemaResponse = await arrayAPI.getArray(
+      const arraySchemaResponse = await this.arrayAPI.getArray(
         namespace,
         arrayName,
         "application/json"
@@ -65,7 +71,7 @@ export class TileDBQuery {
       const arraySchema = arraySchemaResponse.data;
       const body = getWriterBody(data, arraySchema);
 
-      const queryResponse = await queryAPI.submitQuery(
+      const queryResponse = await this.queryAPI.submitQuery(
         namespace,
         arrayName,
         Querytype.Write,
@@ -115,13 +121,12 @@ export class TileDBQuery {
     namespace: string,
     arrayName: string,
     options: Options,
-    queryAPI: QueryApi,
   ): Promise<{
     query: Query;
     results: Record<string, any>;
     queryAsArrayBuffer: ArrayBuffer;
   }> {
-    const queryResponse = await queryAPI.submitQuery(
+    const queryResponse = await this.queryAPI.submitQuery(
       namespace,
       arrayName,
       Querytype.Read,
@@ -171,20 +176,9 @@ export class TileDBQuery {
   }
 
   async *ReadQuery(namespace: string, arrayName: string, body: QueryData) {
-    const config = new Configuration(this.configurationParams);
-    const baseV1 = config.basePath?.replace("v2", "v1");
-    // Add versioning if basePath exists
-    const configV1 = new Configuration({
-      ...this.configurationParams,
-      // Override basePath v2 for v1 to make calls to get ArraySchema (from v1 API)
-      ...(baseV1 ? { basePath: baseV1 } : {}),
-    });
-
-    const queryAPI = new QueryApi(config);
-    const arrayAPI = new ArrayApi(configV1);
     try {
       // Get ArraySchema of arrray, to get type information of the dimensions and the attributes
-      const arraySchemaResponse = await arrayAPI.getArray(
+      const arraySchemaResponse = await this.arrayAPI.getArray(
         namespace,
         arrayName,
         "application/json"
@@ -199,7 +193,7 @@ export class TileDBQuery {
        * Get the query response in capnp, we set responseType to arraybuffer instead of JSON
        * in order to deserialize the query capnp object.
        */
-      const queryResponse = await queryAPI.submitQuery(
+      const queryResponse = await this.queryAPI.submitQuery(
         namespace,
         arrayName,
         Querytype.Read,
@@ -257,7 +251,6 @@ export class TileDBQuery {
                 namespace,
                 arrayName,
                 options,
-                queryAPI
               );
             // Override query object with the new one returned from `ReadIncompleteQuery`
             bufferWithoutFirstEightBytes = queryAsArrayBuffer;

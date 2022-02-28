@@ -19,7 +19,6 @@ import { Configuration } from "./configuration";
 import globalAxios, { AxiosPromise, AxiosInstance, AxiosRequestConfig } from 'axios';
 
 export const BASE_PATH = "https://api.tiledb.com/v2".replace(/\/+$/, "");
-export let REDIRECT_PATH;
 
 /**
  *
@@ -55,15 +54,22 @@ export class BaseAPI {
             this.configuration = configuration;
             this.basePath = configuration.basePath || this.basePath;
         }
-        // Reset REDIRECT_PATH in case client is initiated with another basePath
-        REDIRECT_PATH = undefined;
+
         axios.interceptors.response.use(
           (response) => {
             const responseURL = response?.request.responseURL as string | undefined;
             if (responseURL) {
               const url = new URL(responseURL);
               const version = new URL(BASE_PATH).pathname;
-              REDIRECT_PATH = url.origin + version;
+              const REDIRECTED_BASE_PATH = url.origin + version;
+              this.basePath = REDIRECTED_BASE_PATH;
+
+              if (this.configuration) {
+                this.configuration.basePath = REDIRECTED_BASE_PATH;
+              } else {
+                this.configuration = { basePath: REDIRECTED_BASE_PATH }
+              }
+              
             }
             return response;
           },

@@ -1,4 +1,5 @@
 import save from "save-file";
+import axios, { AxiosInstance } from 'axios';
 import {
   ArrayApi,
   ArrayInfoUpdate,
@@ -44,6 +45,7 @@ class TileDBClient {
   udf: UDF;
   sql: Sql;
   query: TileDBQuery;
+  private axios: AxiosInstance;
 
   constructor(
     params: Omit<
@@ -55,6 +57,8 @@ class TileDBClient {
       ...defaultConfig,
       ...params,
     };
+
+    this.axios = axios.create();
 
     this.config = new Configuration({
       ...config,
@@ -70,14 +74,14 @@ class TileDBClient {
       basePath: config.basePath + "/v2",
     });
 
-    this.ArrayApi = new ArrayApi(this.config);
-    this.OrganizationApi = new OrganizationApi(this.config);
-    this.UserApi = new UserApi(this.config);
-    this.NotebookApi = new NotebookApi(this.config);
-    this.TasksApi = new TasksApi(this.config);
-    this.udf = new UDF(this.config);
-    this.sql = new Sql(this.config);
-    this.query = new TileDBQuery(this.configV2);
+    this.ArrayApi = new ArrayApi(this.config, undefined, this.axios);
+    this.OrganizationApi = new OrganizationApi(this.config, undefined, this.axios);
+    this.UserApi = new UserApi(this.config, undefined, this.axios);
+    this.NotebookApi = new NotebookApi(this.config, undefined, this.axios);
+    this.TasksApi = new TasksApi(this.config, undefined, this.axios);
+    this.udf = new UDF(this.config, this.axios);
+    this.sql = new Sql(this.config, this.axios);
+    this.query = new TileDBQuery(this.configV2, this.axios);
   }
 
   public info(namespace: string, array: string, options?: any) {
@@ -347,7 +351,6 @@ class TileDBClient {
       file_size: number;
     }
     const res = await this.ArrayApi.getArrayMetaDataJson(namespace, notebook);
-    const tiledbQuery = new TileDBQuery(this.configV2);
     const notebookSize = (res.data as NotebookMetadata).file_size;
     if (!notebookSize) {
       throw new Error(
@@ -363,7 +366,7 @@ class TileDBClient {
     // NotebookContents is an Array of Uint8
     let notebookContents: number[] = [];
 
-    for await (let results of tiledbQuery.ReadQuery(
+    for await (let results of this.query.ReadQuery(
       namespace,
       notebook,
       query
@@ -403,7 +406,6 @@ class TileDBClient {
       );
     }
 
-    const tiledbQuery = new TileDBQuery(this.configV2);
     // FileContents is an Array of Uint8
     let fileContents: number[] = [];
 
@@ -414,7 +416,7 @@ class TileDBClient {
       attributes: ["contents"],
     };
 
-    for await (let results of tiledbQuery.ReadQuery(namespace, file, query)) {
+    for await (let results of this.query.ReadQuery(namespace, file, query)) {
       fileContents = fileContents.concat(
         (results as NotebookOrFileDimensions).contents
       );

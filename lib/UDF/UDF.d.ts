@@ -1,8 +1,9 @@
 import { Configuration, ConfigurationParameters, GenericUDF, UdfApi, UDFInfoUpdate, UDFSharing } from "../v1";
+import { AxiosInstance } from "axios";
 declare class UDF {
     config: Configuration;
     API: UdfApi;
-    constructor(params: ConfigurationParameters);
+    constructor(params: ConfigurationParameters, axios?: AxiosInstance);
     registerUdf(namespace: string, name: string, udf: UDFInfoUpdate): Promise<import("axios").AxiosResponse<void>>;
     registerGenericUdf(namespace: string, name: string, udf: Omit<UDFInfoUpdate, "type">): Promise<import("axios").AxiosResponse<void>>;
     registerSingleArrayUdf(namespace: string, name: string, udf: Omit<UDFInfoUpdate, "type">): Promise<import("axios").AxiosResponse<void>>;

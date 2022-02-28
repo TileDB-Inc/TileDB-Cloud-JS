@@ -12,7 +12,6 @@
 import { Configuration } from "./configuration";
 import { AxiosInstance, AxiosRequestConfig } from 'axios';
 export declare const BASE_PATH: string;
-export declare let REDIRECT_PATH: any;
 /**
  *
  * @export
