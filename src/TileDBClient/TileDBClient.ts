@@ -57,7 +57,6 @@ class TileDBClient {
       ...defaultConfig,
       ...params,
     };
-
     this.axios = axios.create();
 
     this.config = new Configuration({
