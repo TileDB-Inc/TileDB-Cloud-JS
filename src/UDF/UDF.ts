@@ -7,15 +7,16 @@ import {
   UDFSharing,
   UDFType,
 } from "../v1";
+import globalAxios, { AxiosInstance } from "axios";
 
 class UDF {
   config: Configuration;
   API: UdfApi;
 
-  constructor(params: ConfigurationParameters) {
+  constructor(params: ConfigurationParameters, axios: AxiosInstance = globalAxios) {
     const config = new Configuration(params);
     this.config = config;
-    this.API = new UdfApi(config);
+    this.API = new UdfApi(config, undefined, axios);
   }
 
   //NOTE: TDB: We could use `btoa` to encode64 the `exec` field.

@@ -14,6 +14,7 @@ declare class TileDBClient {
     udf: UDF;
     sql: Sql;
     query: TileDBQuery;
+    private axios;
     constructor(params?: Omit<ConfigurationParameters, "username" | "password">);
     info(namespace: string, array: string, options?: any): Promise<import("axios").AxiosResponse<import("../v1").ArrayInfo>>;
     arrayActivity(namespace: string, array: string, start?: number, end?: number, eventTypes?: string, taskId?: string, hasTaskId?: boolean, options?: any): Promise<import("axios").AxiosResponse<import("../v1").ArrayActivityLog[]>>;

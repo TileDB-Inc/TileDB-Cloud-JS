@@ -16,7 +16,8 @@
 import { Configuration } from "./configuration";
 // Some imports not used depending on template conditions
 // @ts-ignore
-import globalAxios, { AxiosPromise, AxiosInstance } from 'axios';
+import globalAxios, { AxiosPromise, AxiosInstance, AxiosRequestConfig } from 'axios';
+import updateBasePathAfterRedirect from '../utils/updateBasePathAfterRedirect';
 
 export const BASE_PATH = "https://api.tiledb.com/v1".replace(/\/+$/, "");
 
@@ -38,7 +39,7 @@ export const COLLECTION_FORMATS = {
  */
 export interface RequestArgs {
     url: string;
-    options: any;
+    options: AxiosRequestConfig;
 }
 
 /**
@@ -54,6 +55,7 @@ export class BaseAPI {
             this.configuration = configuration;
             this.basePath = configuration.basePath || this.basePath;
         }
+        updateBasePathAfterRedirect(axios, BASE_PATH, this);
     }
 };
 

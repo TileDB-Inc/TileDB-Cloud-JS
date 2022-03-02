@@ -1,6 +1,7 @@
 import { ArraySchema } from "../v1";
 import { ConfigurationParameters, Query } from "../v2";
 import { Options } from "../utils/getResultsFromArrayBuffer";
+import { AxiosInstance } from "axios";
 declare type Range = number[] | string[];
 export interface QueryData extends Pick<Query, "layout">, Options {
     ranges: Array<Range | Array<Range>>;
@@ -21,7 +22,10 @@ export interface QueryWrite extends Pick<Query, "layout"> {
 }
 export declare class TileDBQuery {
     configurationParams: ConfigurationParameters;
-    constructor(params: ConfigurationParameters);
+    private axios;
+    private queryAPI;
+    private arrayAPI;
+    constructor(params: ConfigurationParameters, axios?: AxiosInstance);
     WriteQuery(namespace: string, arrayName: string, data: QueryWrite): Promise<{
         attributeBufferHeaders: {
             name: string;
@@ -32,9 +36,7 @@ export declare class TileDBQuery {
             originalVarLenBufferSizeInBytes: number;
             originalValidityLenBufferSizeInBytes: number;
         }[];
-        layout: string; /**
-         * Number of bytes allocated to the server for the query.
-         */
+        layout: string;
         status: string;
         type: string;
         writer: {
@@ -154,9 +156,7 @@ export declare class TileDBQuery {
                                 bufferSizes: number[];
                                 bufferStartSizes: number[];
                             }[];
-                        }; /**
-                         * Deserialize buffer to a Query object
-                         */
+                        };
                         start: number;
                         end: number;
                         splitMultiRange: boolean;
@@ -224,10 +224,7 @@ export declare class TileDBQuery {
                 clauses: {
                     fieldName: string;
                     value: number[];
-                    op: string; /**
-                     * Since we set the responseType to "arrayBuffer", in case the
-                     * response error message is a buffer, we deserialize the message before throwing
-                     */
+                    op: string;
                 }[];
                 clauseCombinationOps: string[];
             };

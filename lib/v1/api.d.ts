@@ -2956,6 +2956,18 @@ export interface SQLParameters {
      * @memberof SQLParameters
      */
     parameters?: Array<object>;
+    /**
+     * If set, the ID of the log for the task graph that this was part of.
+     * @type {string}
+     * @memberof SQLParameters
+     */
+    task_graph_uuid?: string;
+    /**
+     * If set, the client-defined ID of the node within this task\'s graph.
+     * @type {string}
+     * @memberof SQLParameters
+     */
+    client_node_uuid?: string;
 }
 /**
  * Single sign on provider
