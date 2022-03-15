@@ -56,11 +56,12 @@ describe("UDF", () => {
   });
 
   it("Should exec a udf", async () => {
-    mock.onPost(`${BASE_PATH}/v1/udfs/generic/demo`).reply(200);
+    mock.onPost(`${BASE_PATH}/v1/udfs/generic/TileDB-inc`).reply(200);
 
-    await client.exec("demo", {});
+    await client.exec("TileDB-inc/demoUDF");
+    
     expect(mock.history.post).toHaveLength(1);
-    expect(mock.history.post[0].url).toBe(`${BASE_PATH}/v1/udfs/generic/demo`);
+    expect(mock.history.post[0].url).toBe(`${BASE_PATH}/v1/udfs/generic/TileDB-inc`);
   });
 
   it("Should get a udf info", async () => {
