@@ -13,7 +13,10 @@ class UDF {
   config: Configuration;
   API: UdfApi;
 
-  constructor(params: ConfigurationParameters, axios: AxiosInstance = globalAxios) {
+  constructor(
+    params: ConfigurationParameters,
+    axios: AxiosInstance = globalAxios
+  ) {
     const config = new Configuration(params);
     this.config = config;
     this.API = new UdfApi(config, undefined, axios);
@@ -76,8 +79,26 @@ class UDF {
     return this.API.updateUDFInfo(namespace, name, udfObject);
   }
 
-  public exec(namespace: string, udf: GenericUDF) {
-    return this.API.submitGenericUDF(namespace, udf);
+  public async exec(
+    namespaceAndUdf: string,
+    args?: Array<any>,
+    options?: Omit<GenericUDF, "argument" | "udf_info_name">
+  ) {
+    if (!namespaceAndUdf.includes('/')) {
+      throw new Error("First argument should include namespace and the udf name separated by a '/' e.g. TileDB/myUDF");
+    }
+
+    if (args && !Array.isArray(args)) {
+      throw new Error("Arguments should be contained in an array");
+    }
+    const [namespace] = namespaceAndUdf.split("/");
+    const udf: GenericUDF = {
+      udf_info_name: namespaceAndUdf,
+      ...(args ? { argument: JSON.stringify(args) } : {}),
+      ...options,
+    };
+    const result = await this.API.submitGenericUDF(namespace, udf);
+    return result.data;
   }
 
   public info(namespace: string, udfName: string) {
