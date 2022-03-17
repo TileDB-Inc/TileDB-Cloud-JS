@@ -16,9 +16,10 @@ class Sql {
     this.API = new SqlApi(config, undefined, axios);
   }
 
-  exec(namespace: string, query: string) {
+  exec(namespace: string, query: string, options?: Omit<SQLParameters, "query">) {
     const sql: SQLParameters = {
       query,
+      ...options,
     };
     return this.API.runSQL(namespace, sql);
   }
