@@ -11,6 +11,7 @@ import {
 } from "../v1";
 import UDF from "../UDF";
 import Sql from "../Sql";
+import Groups from "../Groups";
 import { ConfigurationParameters, Configuration, Layout } from "../v2";
 import TileDBQuery from "../TileDBQuery";
 
@@ -43,6 +44,7 @@ class TileDBClient {
   NotebookApi: NotebookApi;
   TasksApi: TasksApi;
   udf: UDF;
+  groups: Groups;
   sql: Sql;
   query: TileDBQuery;
   private axios: AxiosInstance;
@@ -80,6 +82,7 @@ class TileDBClient {
     this.TasksApi = new TasksApi(this.config, undefined, this.axios);
     this.udf = new UDF(this.config, this.axios);
     this.sql = new Sql(this.config, this.axios);
+    this.groups = new Groups(this.config, this.configV2, this.axios);
     this.query = new TileDBQuery(this.configV2, this.axios);
   }
 

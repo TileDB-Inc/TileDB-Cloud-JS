@@ -1,6 +1,7 @@
 import { ArrayApi, ArrayInfoUpdate, ArraySharing, OrganizationApi, NotebookApi, TasksApi, UserApi } from "../v1";
 import UDF from "../UDF";
 import Sql from "../Sql";
+import Groups from "../Groups";
 import { ConfigurationParameters, Configuration } from "../v2";
 import TileDBQuery from "../TileDBQuery";
 declare class TileDBClient {
@@ -12,6 +13,7 @@ declare class TileDBClient {
     NotebookApi: NotebookApi;
     TasksApi: TasksApi;
     udf: UDF;
+    groups: Groups;
     sql: Sql;
     query: TileDBQuery;
     private axios;
@@ -19,7 +21,7 @@ declare class TileDBClient {
     info(namespace: string, array: string, options?: any): Promise<import("axios").AxiosResponse<import("../v1").ArrayInfo>>;
     arrayActivity(namespace: string, array: string, start?: number, end?: number, eventTypes?: string, taskId?: string, hasTaskId?: boolean, options?: any): Promise<import("axios").AxiosResponse<import("../v1").ArrayActivityLog[]>>;
     deregisterArray(namespace: string, array: string, options?: any): Promise<import("axios").AxiosResponse<void>>;
-    registerArray(namespace: string, array: string, arrayMetadata: ArrayInfoUpdate, options?: any): Promise<import("axios").AxiosResponse<void>>;
+    registerArray(namespace: string, array: string, arrayMetadata: ArrayInfoUpdate, options?: any): Promise<import("axios").AxiosResponse<import("../v1").ArrayInfo>>;
     listSharedWith(namespace: string, array: string, options?: any): Promise<import("axios").AxiosResponse<ArraySharing[]>>;
     shareArray(namespace: string, array: string, arraySharing: ArraySharing, options?: any): Promise<import("axios").AxiosResponse<void>>;
     unshareArray(namespace: string, array: string, namespaceToUnshare: string, options?: any): Promise<import("axios").AxiosResponse<void>>;
