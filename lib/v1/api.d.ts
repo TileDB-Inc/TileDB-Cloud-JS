@@ -311,7 +311,7 @@ export interface ArrayInfo {
      * @type {number}
      * @memberof ArrayInfo
      */
-    size?: number;
+    size?: number | null;
     /**
      * Datetime array was last accessed in UTC
      * @type {string}
@@ -899,8 +899,10 @@ export declare enum ArrayTaskStatus {
     Failed = "FAILED",
     Completed = "COMPLETED",
     Running = "RUNNING",
-    Denied = "DENIED",
-    Unknown = "UNKNOWN"
+    ResourcesUnavailable = "RESOURCES_UNAVAILABLE",
+    Unknown = "UNKNOWN",
+    Cancelled = "CANCELLED",
+    Denied = "DENIED"
 }
 /**
  * Synchronous Task Type
@@ -911,7 +913,8 @@ export declare enum ArrayTaskType {
     Sql = "SQL",
     Udf = "UDF",
     Query = "QUERY",
-    GenericUdf = "GENERIC_UDF"
+    GenericUdf = "GENERIC_UDF",
+    ClientComputation = "CLIENT_COMPUTATION"
 }
 /**
  * TileDB array type
@@ -1406,7 +1409,33 @@ export declare enum FileType {
     Notebook = "notebook",
     UserDefinedFunction = "user_defined_function",
     MlModel = "ml_model",
-    File = "file"
+    File = "file",
+    RegisteredTaskGraph = "registered_task_graph"
+}
+/**
+ * Uploaded file name and information
+ * @export
+ * @interface FileUploaded
+ */
+export interface FileUploaded {
+    /**
+     * output location of the TileDB File
+     * @type {string}
+     * @memberof FileUploaded
+     */
+    output_uri?: string;
+    /**
+     * name of the file uploaded
+     * @type {string}
+     * @memberof FileUploaded
+     */
+    file_name?: string;
+    /**
+     * unique ID of the uploaded file
+     * @type {string}
+     * @memberof FileUploaded
+     */
+    id: string;
 }
 /**
  * Filter
@@ -1566,6 +1595,12 @@ export interface GenericUDF {
      */
     image_name?: string;
     /**
+     * The resource class to use for the UDF execution. Resource classes define resource limits for memory and CPUs. If this is empty, then the UDF will execute in the standard resource class of the TileDB Cloud provider.
+     * @type {string}
+     * @memberof GenericUDF
+     */
+    resource_class?: string;
+    /**
      * Type-specific executable text
      * @type {string}
      * @memberof GenericUDF
@@ -1633,128 +1668,457 @@ export interface GenericUDF {
     client_node_uuid?: string;
 }
 /**
- * Attributes that describe the group itself, not any of the subgroups or assets
+ * actions a user can take on a group
  * @export
- * @interface Group
+ * @enum {string}
  */
-export interface Group {
-    /**
-     * the globally unique id of the group
-     * @type {string}
-     * @memberof Group
-     */
-    id?: string;
-    /**
-     * The namespace of the group
-     * @type {string}
-     * @memberof Group
-     */
-    namespace?: string;
-    /**
-     * The name of the group. It is unique within the namespace. No 2 groups can have the same name
-     * @type {string}
-     * @memberof Group
-     */
-    name?: string;
-    /**
-     * A human readable description of the content of the group
-     * @type {string}
-     * @memberof Group
-     */
-    description?: string;
+export declare enum GroupActions {
+    Read = "read",
+    Write = "write",
+    Edit = "edit"
 }
 /**
- * Initial attributes for the creation of a new group
+ * Object including group info and pagination metadata
+ * @export
+ * @interface GroupBrowserData
+ */
+export interface GroupBrowserData {
+    /**
+     * Groups Info
+     * @type {Array<GroupInfo>}
+     * @memberof GroupBrowserData
+     */
+    groups?: Array<GroupInfo>;
+    /**
+     *
+     * @type {PaginationMetadata}
+     * @memberof GroupBrowserData
+     */
+    pagination_metadata?: PaginationMetadata;
+}
+/**
+ * Object with data to fill browser filter
+ * @export
+ * @interface GroupBrowserFilterData
+ */
+export interface GroupBrowserFilterData {
+    /**
+     * list of all unique namespaces to display
+     * @type {Array<string>}
+     * @memberof GroupBrowserFilterData
+     */
+    namespaces?: Array<string>;
+}
+/**
+ * A request to change the members of a group. Contains assets to add or remove.
+ * @export
+ * @interface GroupChanges
+ */
+export interface GroupChanges {
+    /**
+     * the assets, arrays or groups, to add to the group.
+     * @type {Array<GroupMember>}
+     * @memberof GroupChanges
+     */
+    add?: Array<GroupMember>;
+    /**
+     * the assets, arrays or groups, to remove from the group.
+     * @type {Array<GroupMember>}
+     * @memberof GroupChanges
+     */
+    remove?: Array<GroupMember>;
+}
+/**
+ * Object including a page of members of a group and pagination metadata
+ * @export
+ * @interface GroupContents
+ */
+export interface GroupContents {
+    /**
+     * Groups members
+     * @type {Array<GroupEntry>}
+     * @memberof GroupContents
+     */
+    entries?: Array<GroupEntry>;
+    /**
+     *
+     * @type {PaginationMetadata}
+     * @memberof GroupContents
+     */
+    pagination_metadata?: PaginationMetadata;
+}
+/**
+ * Object with data to fill contents filter
+ * @export
+ * @interface GroupContentsFilterData
+ */
+export interface GroupContentsFilterData {
+    /**
+     * list of all unique namespaces to display
+     * @type {Array<string>}
+     * @memberof GroupContentsFilterData
+     */
+    namespaces?: Array<string>;
+}
+/**
+ * Initial attributes for the creation of a group.
  * @export
  * @interface GroupCreate
  */
 export interface GroupCreate {
     /**
-     * The name of the parent of the group. If empty, then the new group will be a top level group.
+     * A human readable description of the contents of the group.
+     * @type {string}
+     * @memberof GroupCreate
+     */
+    description?: string;
+    /**
+     * The name of the group. If must be unique within the group.
+     * @type {string}
+     * @memberof GroupCreate
+     */
+    name?: string;
+    /**
+     * The unique name or id of the parent of the group. If empty, then the new group will be a top level group.
      * @type {string}
      * @memberof GroupCreate
      */
     parent?: string;
     /**
-     * A human readable description of the content of the group
+     * uri of group.
      * @type {string}
      * @memberof GroupCreate
      */
-    description?: string;
+    uri?: string;
+    /**
+     * logo (base64 encoded) for the group. Optional
+     * @type {string}
+     * @memberof GroupCreate
+     */
+    logo?: string;
+    /**
+     * the name of the access credentials to use. if unset, the default credentials will be used.
+     * @type {string}
+     * @memberof GroupCreate
+     */
+    access_credentials_name?: string;
+    /**
+     * optional tags for groups.
+     * @type {Array<string>}
+     * @memberof GroupCreate
+     */
+    tags?: Array<string>;
+    /**
+     * License identifier from SPDX License List or Custom.
+     * @type {string}
+     * @memberof GroupCreate
+     */
+    license_id?: string;
+    /**
+     * License text
+     * @type {string}
+     * @memberof GroupCreate
+     */
+    license_text?: string;
 }
 /**
- * The contents of a group i.e attributes, subgroups and assets
+ * Object describing a single member of a group, which can be an array or a group
  * @export
- * @interface GroupListing
+ * @interface GroupEntry
  */
-export interface GroupListing {
+export interface GroupEntry {
     /**
-     * the globally unique id of the group
+     *
+     * @type {GroupInfo}
+     * @memberof GroupEntry
+     */
+    group?: GroupInfo;
+    /**
+     *
+     * @type {ArrayInfo}
+     * @memberof GroupEntry
+     */
+    array?: ArrayInfo;
+}
+/**
+ * metadata of a group
+ * @export
+ * @interface GroupInfo
+ */
+export interface GroupInfo {
+    /**
+     * unique ID of registered group
      * @type {string}
-     * @memberof GroupListing
+     * @memberof GroupInfo
      */
     id?: string;
     /**
-     * The namespace of the group
+     * namespace group is in
      * @type {string}
-     * @memberof GroupListing
+     * @memberof GroupInfo
      */
     namespace?: string;
     /**
-     * The name of the group. It is unique within the namespace. No 2 groups can have the same name
+     * name of group
      * @type {string}
-     * @memberof GroupListing
+     * @memberof GroupInfo
      */
     name?: string;
     /**
-     * A human readable description of the content of the group
+     * description of group
      * @type {string}
-     * @memberof GroupListing
+     * @memberof GroupInfo
+     */
+    description?: string | null;
+    /**
+     * uri of group
+     * @type {string}
+     * @memberof GroupInfo
+     */
+    uri?: string;
+    /**
+     * uri for access through TileDB cloud
+     * @type {string}
+     * @memberof GroupInfo
+     */
+    tiledb_uri?: string;
+    /**
+     * A count of direct array members
+     * @type {number}
+     * @memberof GroupInfo
+     */
+    asset_count?: number;
+    /**
+     * A count of direct group members
+     * @type {number}
+     * @memberof GroupInfo
+     */
+    group_count?: number;
+    /**
+     * A count of direct members. This is the sum of asset_count and group_count
+     * @type {number}
+     * @memberof GroupInfo
+     */
+    size?: number;
+    /**
+     * Datetime groups was last accessed in UTC
+     * @type {string}
+     * @memberof GroupInfo
+     */
+    last_accessed?: string;
+    /**
+     * list of actions user is allowed to do on this group
+     * @type {Array<GroupActions>}
+     * @memberof GroupInfo
+     */
+    allowed_actions?: Array<GroupActions>;
+    /**
+     * logo (base64 encoded) for the gruop. Optional
+     * @type {string}
+     * @memberof GroupInfo
+     */
+    logo?: string;
+    /**
+     * the name of the access credentials to use. if unset, the default credentials will be used
+     * @type {string}
+     * @memberof GroupInfo
+     */
+    access_credentials_name?: string;
+    /**
+     * number of unique namespaces this group is shared with
+     * @type {number}
+     * @memberof GroupInfo
+     */
+    share_count?: number;
+    /**
+     * Suggests if the group was shared to public by owner
+     * @type {boolean}
+     * @memberof GroupInfo
+     */
+    public_share?: boolean;
+    /**
+     * optional tags for group
+     * @type {Array<string>}
+     * @memberof GroupInfo
+     */
+    tags?: Array<string>;
+    /**
+     * License identifier from SPDX License List or Custom
+     * @type {string}
+     * @memberof GroupInfo
+     */
+    license_id?: string;
+    /**
+     * License text
+     * @type {string}
+     * @memberof GroupInfo
+     */
+    license_text?: string;
+}
+/**
+ * A groups member, array or another groups, to add or remove from an existing group.
+ * @export
+ * @interface GroupMember
+ */
+export interface GroupMember {
+    /**
+     * The namespace of the asset.
+     * @type {string}
+     * @memberof GroupMember
+     */
+    namespace?: string;
+    /**
+     * The name or id of the asset.
+     * @type {string}
+     * @memberof GroupMember
+     */
+    name?: string;
+    /**
+     *
+     * @type {GroupMemberType}
+     * @memberof GroupMember
+     */
+    member_type?: GroupMemberType;
+}
+/**
+ * Specific file types of group members
+ * @export
+ * @enum {string}
+ */
+export declare enum GroupMemberAssetType {
+    Group = "group",
+    Array = "array",
+    Notebook = "notebook",
+    Dashboard = "dashboard",
+    UserDefinedFunction = "user_defined_function",
+    MlModel = "ml_model",
+    File = "file"
+}
+/**
+ * File types that can be included in groups
+ * @export
+ * @enum {string}
+ */
+export declare enum GroupMemberType {
+    Group = "group",
+    Array = "array"
+}
+/**
+ * Initial attributes for the registration of a an existing group.
+ * @export
+ * @interface GroupRegister
+ */
+export interface GroupRegister {
+    /**
+     * A human readable description of the contents of the group.
+     * @type {string}
+     * @memberof GroupRegister
      */
     description?: string;
     /**
-     * Contains one page of subgroups of the group.
-     * @type {Array<Group>}
-     * @memberof GroupListing
+     * The name of the group. If must be unique within the group.
+     * @type {string}
+     * @memberof GroupRegister
      */
-    groups?: Array<Group>;
+    name?: string;
     /**
-     * Contains one page of assets of the group as ArrayInfos
-     * @type {Array<ArrayInfo>}
-     * @memberof GroupListing
+     * The unique name or id of the parent of the group. If empty, then the new group will be a top level group.
+     * @type {string}
+     * @memberof GroupRegister
      */
-    assets?: Array<ArrayInfo>;
+    parent?: string;
     /**
-     *
-     * @type {PaginationMetadata}
-     * @memberof GroupListing
+     * uri of group.
+     * @type {string}
+     * @memberof GroupRegister
      */
-    pagination_metadata?: PaginationMetadata;
+    uri?: string;
+    /**
+     * logo (base64 encoded) for the group. Optional
+     * @type {string}
+     * @memberof GroupRegister
+     */
+    logo?: string;
+    /**
+     * the name of the access credentials to use. if unset, the default credentials will be used.
+     * @type {string}
+     * @memberof GroupRegister
+     */
+    access_credentials_name?: string;
+    /**
+     * optional tags for groups.
+     * @type {Array<string>}
+     * @memberof GroupRegister
+     */
+    tags?: Array<string>;
+    /**
+     * License identifier from SPDX License List or Custom.
+     * @type {string}
+     * @memberof GroupRegister
+     */
+    license_id?: string;
+    /**
+     * License text
+     * @type {string}
+     * @memberof GroupRegister
+     */
+    license_text?: string;
 }
 /**
- *
+ * sharing state of a group with a namespace
  * @export
- * @interface GroupListingAllOf
+ * @interface GroupSharing
  */
-export interface GroupListingAllOf {
+export interface GroupSharing {
     /**
-     * Contains one page of subgroups of the group.
-     * @type {Array<Group>}
-     * @memberof GroupListingAllOf
+     * List of permitted actions for the group and all subgroups
+     * @type {Array<GroupActions>}
+     * @memberof GroupSharing
      */
-    groups?: Array<Group>;
+    group_actions?: Array<GroupActions>;
     /**
-     * Contains one page of assets of the group as ArrayInfos
-     * @type {Array<ArrayInfo>}
-     * @memberof GroupListingAllOf
+     * List of permitted actions for all the subarrays of the group
+     * @type {Array<ArrayActions>}
+     * @memberof GroupSharing
      */
-    assets?: Array<ArrayInfo>;
+    array_actions?: Array<ArrayActions>;
     /**
-     *
-     * @type {PaginationMetadata}
-     * @memberof GroupListingAllOf
+     * namespace being granted group access can be a user or organization
+     * @type {string}
+     * @memberof GroupSharing
      */
-    pagination_metadata?: PaginationMetadata;
+    namespace?: string;
+    /**
+     * details on if the namespace is a organization or user
+     * @type {string}
+     * @memberof GroupSharing
+     */
+    namespace_type?: string;
+}
+/**
+ * a request to share a group and all the contents with a namespace
+ * @export
+ * @interface GroupSharingRequest
+ */
+export interface GroupSharingRequest {
+    /**
+     * List of permitted actions for the group and all subgroups
+     * @type {Array<GroupActions>}
+     * @memberof GroupSharingRequest
+     */
+    group_actions?: Array<GroupActions>;
+    /**
+     * List of permitted actions for all the subarrays of the group
+     * @type {Array<ArrayActions>}
+     * @memberof GroupSharingRequest
+     */
+    array_actions?: Array<ArrayActions>;
+    /**
+     * namespace being granted group access can be a user or organization
+     * @type {string}
+     * @memberof GroupSharingRequest
+     */
+    namespace?: string;
 }
 /**
  * Updates for a group. New values for the attributes.
@@ -1763,17 +2127,47 @@ export interface GroupListingAllOf {
  */
 export interface GroupUpdate {
     /**
-     * The new name of the group
+     * A human readable description of the content of the group
+     * @type {string}
+     * @memberof GroupUpdate
+     */
+    description?: string | null;
+    /**
+     * The name of the group. If must be unique within the group.
      * @type {string}
      * @memberof GroupUpdate
      */
     name?: string;
     /**
-     * A new human readable description of the content of the group
+     * logo (base64 encoded) for the group. Optional
      * @type {string}
      * @memberof GroupUpdate
      */
-    description?: string;
+    logo?: string;
+    /**
+     * the name of the access credentials to use. if unset, the default credentials will be used
+     * @type {string}
+     * @memberof GroupUpdate
+     */
+    access_credentials_name?: string;
+    /**
+     * optional tags for groups
+     * @type {Array<string>}
+     * @memberof GroupUpdate
+     */
+    tags?: Array<string>;
+    /**
+     * License identifier from SPDX License List or Custom
+     * @type {string}
+     * @memberof GroupUpdate
+     */
+    license_id?: string;
+    /**
+     * License text
+     * @type {string}
+     * @memberof GroupUpdate
+     */
+    license_text?: string;
 }
 /**
  * Password to update
@@ -2165,6 +2559,12 @@ export interface MultiArrayUDF {
      */
     image_name?: string;
     /**
+     * The resource class to use for the UDF execution. Resource classes define resource limits for memory and CPUs. If this is empty, then the UDF will execute in the standard resource class of the TileDB Cloud provider.
+     * @type {string}
+     * @memberof MultiArrayUDF
+     */
+    resource_class?: string;
+    /**
      * Type-specific executable text
      * @type {string}
      * @memberof MultiArrayUDF
@@ -2189,11 +2589,17 @@ export interface MultiArrayUDF {
      */
     task_name?: string;
     /**
-     * Argument(s) to pass to UDF function, tuple or list of args/kwargs which can be in native or JSON format
+     * Deprecated: Prefer to use `argument_json` instead. Argument(s) to pass to UDF function, tuple or list of args/kwargs which can be in native or JSON format
      * @type {string}
      * @memberof MultiArrayUDF
      */
     argument?: string;
+    /**
+     * A series of key-value pairs to be passed as arguments into the UDF. See `TGUDFNodeData.arguments` for more information. If this format is used to pass arguments, arrays will be passed into the UDF as specified by the Node placeholders passed in here, rather than the classic method of putting all array arguments in the first parameter. Either this or `argument` should be set.
+     * @type {Array<TGUDFArgument>}
+     * @memberof MultiArrayUDF
+     */
+    arguments_json?: Array<TGUDFArgument> | null;
     /**
      * The UUIDs of stored input parameters (passed in a language-specific format within \"argument\") to be retrieved from the server-side cache. Serialized in standard hex format with no {}.
      * @type {Array<string>}
@@ -2292,6 +2698,62 @@ export interface NonEmptyDomain {
      * @memberof NonEmptyDomain
      */
     isEmpty: boolean;
+}
+/**
+ * Copied notebook uri and information
+ * @export
+ * @interface NotebookCopied
+ */
+export interface NotebookCopied {
+    /**
+     * output location of the TileDB Notebook
+     * @type {string}
+     * @memberof NotebookCopied
+     */
+    output_uri?: string;
+    /**
+     * name of the notebook created
+     * @type {string}
+     * @memberof NotebookCopied
+     */
+    name?: string;
+    /**
+     * namespace copied to
+     * @type {string}
+     * @memberof NotebookCopied
+     */
+    namespace?: string;
+    /**
+     * unique ID of the copied notebook
+     * @type {string}
+     * @memberof NotebookCopied
+     */
+    id: string;
+}
+/**
+ * Output information required to copy a notebook
+ * @export
+ * @interface NotebookCopy
+ */
+export interface NotebookCopy {
+    /**
+     * output location of the TileDB File
+     * @type {string}
+     * @memberof NotebookCopy
+     */
+    output_uri?: string;
+    /**
+     * name to set for registered notebook
+     * @type {string}
+     * @memberof NotebookCopy
+     */
+    name?: string;
+    /**
+     * namespace to copy to
+     * @type {string}
+     * @memberof NotebookCopy
+     */
+    namespace?: string;
 }
 /**
  * A user-favorite notebook item
@@ -2427,7 +2889,7 @@ export interface Organization {
      * @type {string}
      * @memberof Organization
      */
-    description?: string;
+    description?: string | null;
     /**
      *
      * @type {Array<OrganizationUser>}
@@ -2893,14 +3355,122 @@ export interface ReadState {
     subarrayPartitioner?: SubarrayPartitioner;
 }
 /**
- * Results type
+ * The structure and metadata of a task graph that can be stored on TileDB Cloud and executed by users who have access to it.
+ * @export
+ * @interface RegisteredTaskGraph
+ */
+export interface RegisteredTaskGraph {
+    /**
+     * A server-assigned unique ID for the UDF, in UUID format.
+     * @type {string}
+     * @memberof RegisteredTaskGraph
+     */
+    uuid?: string;
+    /**
+     * The namespace that owns this task graph log.
+     * @type {string}
+     * @memberof RegisteredTaskGraph
+     */
+    namespace?: string;
+    /**
+     * The name of this graph, to appear in URLs. Must be unique per-namespace.
+     * @type {string}
+     * @memberof RegisteredTaskGraph
+     */
+    name?: string;
+    /**
+     * Documentation for the task graph, in Markdown format.
+     * @type {string}
+     * @memberof RegisteredTaskGraph
+     */
+    readme?: string;
+    /**
+     * SPDX license identifier.
+     * @type {string}
+     * @memberof RegisteredTaskGraph
+     */
+    license_id?: string | null;
+    /**
+     * Full text of the license.
+     * @type {string}
+     * @memberof RegisteredTaskGraph
+     */
+    license_text?: string | null;
+    /**
+     * Optional tags to classify the graph.
+     * @type {Array<string>}
+     * @memberof RegisteredTaskGraph
+     */
+    tags?: Array<string>;
+    /**
+     * The structure of the graph, in the form of the nodes that make it up. As with `TaskGraphLog`, nodes must topologically sorted, so that any node appears after all the nodes it depends on.
+     * @type {Array<RegisteredTaskGraphNode>}
+     * @memberof RegisteredTaskGraph
+     */
+    nodes?: Array<RegisteredTaskGraphNode>;
+}
+/**
+ * Information about a single node within a registered task graph. A single node represents one piece of data or a computational step; either as an input value, a data source, or a computation that acts upon earlier nodes. The structure parallels the existing `TaskGraphNodeMetadata`.
+ * @export
+ * @interface RegisteredTaskGraphNode
+ */
+export interface RegisteredTaskGraphNode {
+    /**
+     * The client-generated UUID of the given graph node.
+     * @type {string}
+     * @memberof RegisteredTaskGraphNode
+     */
+    client_node_id?: string;
+    /**
+     * A client-specified name for the node. If provided, this must be unique.
+     * @type {string}
+     * @memberof RegisteredTaskGraphNode
+     */
+    name?: string | null;
+    /**
+     * The client_node_uuid of each node that this node depends upon. Used to define the structure of the graph.
+     * @type {Array<string>}
+     * @memberof RegisteredTaskGraphNode
+     */
+    depends_on?: Array<string>;
+    /**
+     *
+     * @type {UDFArrayDetails}
+     * @memberof RegisteredTaskGraphNode
+     */
+    array_node?: UDFArrayDetails;
+    /**
+     *
+     * @type {TGInputNodeData}
+     * @memberof RegisteredTaskGraphNode
+     */
+    input_node?: TGInputNodeData | null;
+    /**
+     *
+     * @type {TGSQLNodeData}
+     * @memberof RegisteredTaskGraphNode
+     */
+    sql_node?: TGSQLNodeData | null;
+    /**
+     *
+     * @type {TGUDFNodeData}
+     * @memberof RegisteredTaskGraphNode
+     */
+    udf_node?: TGUDFNodeData | null;
+}
+/**
+ * Data format of a result
  * @export
  * @enum {string}
  */
 export declare enum ResultFormat {
-    Native = "native",
+    PythonPickle = "python_pickle",
+    RSerialization = "r_serialization",
     Json = "json",
-    Arrow = "arrow"
+    Arrow = "arrow",
+    Bytes = "bytes",
+    TiledbJson = "tiledb_json",
+    Native = "native"
 }
 /**
  * Parameters for running sql query
@@ -2938,6 +3508,12 @@ export interface SQLParameters {
      * @memberof SQLParameters
      */
     dont_download_results?: boolean;
+    /**
+     * The resource class to use for the SQL execution. Resource classes define resource limits for memory and CPUs. If this is empty, then the SQL will execute in the standard resource class of the TileDB Cloud provider.
+     * @type {string}
+     * @memberof SQLParameters
+     */
+    resource_class?: string;
     /**
      *
      * @type {ResultFormat}
@@ -3161,6 +3737,177 @@ export interface Subscription {
     pricing?: Array<Pricing>;
 }
 /**
+ * Specifies that a node is an “input value”, allowing for parameterized task graphs. An input node may not depend upon any other nodes.
+ * @export
+ * @interface TGInputNodeData
+ */
+export interface TGInputNodeData {
+    /**
+     * An argument provided to a node. This is one of a direct value (i.e., a raw JSON value) or a `TGSentinel`. For example this Python value:      {\"a\": [1, \"pipe\", range(30), None], \"b\": b\"bytes\"}  is encoded thusly (with included comments):      {  // A dictionary with string keys is JSON-encodable.       \"a\": [  // As is a list.         1,         \"pipe\",         {  // A `range` is replaced with its pickle.           \"__tdbudf__\": \"immediate\",           \"format\": \"python_pickle\",           \"base64_data\": \"gASVIAAAAAAAAACMCGJ1aWx0aW5zlIwFcmFuZ2WUk5RLAEseSwGHlFKULg==\"         },         null       ],       \"b\": {  // Raw binary data is encoded into base64.         \"__tdbudf__\": \"immediate\"         \"format\": \"bytes\",         \"base64_data\": \"Ynl0ZXM=\"       }     }
+     * @type {object}
+     * @memberof TGInputNodeData
+     */
+    default_value?: object;
+    /**
+     * An annotation of what datatype this node is supposed to be. Conventionally, this is a Python-format type annotation, but it’s purely for documentation purposes and not validated.
+     * @type {string}
+     * @memberof TGInputNodeData
+     */
+    datatype?: string | null;
+}
+/**
+ * A node specifying an SQL query to execute in TileDB Cloud.
+ * @export
+ * @interface TGSQLNodeData
+ */
+export interface TGSQLNodeData {
+    /**
+     * The commands to execute before running the query itself.
+     * @type {Array<string>}
+     * @memberof TGSQLNodeData
+     */
+    init_commands?: Array<string>;
+    /**
+     * The text of the SQL query to execute. Parameters are substituted in for `?`s, just as in a regular MariaDB query.
+     * @type {string}
+     * @memberof TGSQLNodeData
+     */
+    query?: string;
+    /**
+     * The parameters to substitute in for arguments in the `query`. Fixed-length. Arguments must be in JSON format.
+     * @type {Array<object>}
+     * @memberof TGSQLNodeData
+     */
+    parameters?: Array<object>;
+    /**
+     *
+     * @type {ResultFormat}
+     * @memberof TGSQLNodeData
+     */
+    result_format?: ResultFormat;
+}
+/**
+ * A single argument to a UDF. This may represent a positional argument or a named argument, depending upon whether `name` is set.
+ * @export
+ * @interface TGUDFArgument
+ */
+export interface TGUDFArgument {
+    /**
+     * The name of the argument, if present.
+     * @type {string}
+     * @memberof TGUDFArgument
+     */
+    name?: string | null;
+    /**
+     * An argument provided to a node. This is one of a direct value (i.e., a raw JSON value) or a `TGSentinel`. For example this Python value:      {\"a\": [1, \"pipe\", range(30), None], \"b\": b\"bytes\"}  is encoded thusly (with included comments):      {  // A dictionary with string keys is JSON-encodable.       \"a\": [  // As is a list.         1,         \"pipe\",         {  // A `range` is replaced with its pickle.           \"__tdbudf__\": \"immediate\",           \"format\": \"python_pickle\",           \"base64_data\": \"gASVIAAAAAAAAACMCGJ1aWx0aW5zlIwFcmFuZ2WUk5RLAEseSwGHlFKULg==\"         },         null       ],       \"b\": {  // Raw binary data is encoded into base64.         \"__tdbudf__\": \"immediate\"         \"format\": \"bytes\",         \"base64_data\": \"Ynl0ZXM=\"       }     }
+     * @type {object}
+     * @memberof TGUDFArgument
+     */
+    value?: object;
+}
+/**
+ * Metadata about the environment where we want to execute a UDF.
+ * @export
+ * @interface TGUDFEnvironment
+ */
+export interface TGUDFEnvironment {
+    /**
+     *
+     * @type {UDFLanguage}
+     * @memberof TGUDFEnvironment
+     */
+    language?: UDFLanguage;
+    /**
+     * The language version used to execute this UDF. Neither this nor `language` needs to be set for registered UDFs, since the language and version are stored server-side with the UDF itself.
+     * @type {string}
+     * @memberof TGUDFEnvironment
+     */
+    language_version?: string;
+    /**
+     * The name of the image to use for the execution environment.
+     * @type {string}
+     * @memberof TGUDFEnvironment
+     */
+    image_name?: string;
+    /**
+     * The resource class to use for the UDF execution. Resource classes define resource limits for memory and CPUs. If this is empty, then the UDF will execute in the standard resource class of the TileDB Cloud provider.
+     * @type {string}
+     * @memberof TGUDFEnvironment
+     */
+    resource_class?: string;
+}
+/**
+ * A node specifying the execution of a user-defined function.
+ * @export
+ * @interface TGUDFNodeData
+ */
+export interface TGUDFNodeData {
+    /**
+     * If set, the name of the registered UDF to execute, in the format `namespace/name`. Either this or `executable_code` should be set, but not both.
+     * @type {string}
+     * @memberof TGUDFNodeData
+     */
+    registered_udf_name?: string | null;
+    /**
+     * If set, the base64 serialization of the code for this step, encoded in a language-specific format (e.g. Pickle for Python, serialization for R).
+     * @type {string}
+     * @memberof TGUDFNodeData
+     */
+    executable_code?: string | null;
+    /**
+     * Optionally, the source text for the code passed in `executable_code`. *For reference only; only the code in `executable_code` is actually executed.* This will be included in activity logs and may be useful for debugging.
+     * @type {string}
+     * @memberof TGUDFNodeData
+     */
+    source_text?: string;
+    /**
+     *
+     * @type {TGUDFEnvironment}
+     * @memberof TGUDFNodeData
+     */
+    environment?: TGUDFEnvironment;
+    /**
+     * The arguments to a UDF function. This encompasses both named and positional arguments. The format is designed to provide compatibility across languages like Python which have a fairly traditional split between positional arguments and named arguments, and languages like R which has a rather unique way of specifying arguments. For Python (and most other languages), all positional arguments will come before all named arguments (if any are present):      // fn(arg1, arg2, arg3)     [       {value: arg1},       {value: arg2},       {value: arg3},     ]     // fn(arg1, arg2, n=kw1, a=kw2)     [       {value: arg1},       {value: arg2},       {name: \"n\", value: kw1},       {name: \"a\", value: kw2},     ]     // fn(kw=k1, only=k2)     [       {name: \"kw\", value: k1},       {name: \"only\", value: k2},     ]  However, in R, named and positional arguments may be intermixed freely:      // fn(arg, n=kw1, arg2)     [       {value: arg},       {name: \"n\", value: kw1},       {value: arg2},     ]
+     * @type {Array<TGUDFArgument>}
+     * @memberof TGUDFNodeData
+     */
+    arguments?: Array<TGUDFArgument>;
+    /**
+     *
+     * @type {ResultFormat}
+     * @memberof TGUDFNodeData
+     */
+    result_format?: ResultFormat;
+}
+/**
+ * actions a user can take on a UDF
+ * @export
+ * @enum {string}
+ */
+export declare enum TaskGraphActions {
+    FetchTaskGraph = "fetch_task_graph",
+    ShareTaskGraph = "share_task_graph"
+}
+/**
+ * A report of the execution status of a node that ran on the client side.
+ * @export
+ * @interface TaskGraphClientNodeStatus
+ */
+export interface TaskGraphClientNodeStatus {
+    /**
+     *
+     * @type {string}
+     * @memberof TaskGraphClientNodeStatus
+     */
+    client_node_uuid?: string;
+    /**
+     *
+     * @type {ArrayTaskStatus}
+     * @memberof TaskGraphClientNodeStatus
+     */
+    status?: ArrayTaskStatus;
+}
+/**
  * Logging information about the execution of a task graph.
  * @export
  * @interface TaskGraphLog
@@ -3215,11 +3962,53 @@ export interface TaskGraphLog {
      */
     status?: TaskGraphLogStatus;
     /**
+     * If present, the total cost of executing all nodes in this task graph.
+     * @type {number}
+     * @memberof TaskGraphLog
+     */
+    total_cost?: number | null;
+    /**
+     * If present, the total cost of access from execution of the nodes in this task graph.
+     * @type {number}
+     * @memberof TaskGraphLog
+     */
+    access_cost?: number | null;
+    /**
+     * If present, the total cost of access from execution of the nodes in this task graph.
+     * @type {number}
+     * @memberof TaskGraphLog
+     */
+    egress_cost?: number | null;
+    /**
+     * The total execution time of all the nodes in this graph, in ISO 8601 format with hours, minutes, and seconds.
+     * @type {string}
+     * @memberof TaskGraphLog
+     */
+    execution_time?: string;
+    /**
+     * A mapping from `ArrayTaskStatus` string value to the number of nodes in this graph that are in that status.
+     * @type {{ [key: string]: number; }}
+     * @memberof TaskGraphLog
+     */
+    status_count?: {
+        [key: string]: number;
+    };
+    /**
      * The structure of the graph. This is provided by the client when first setting up the task graph. Thereafter, it is read-only. This must be topographically sorted; that is, each node must appear after all nodes that it depends upon.
      * @type {Array<TaskGraphNodeMetadata>}
      * @memberof TaskGraphLog
      */
     nodes?: Array<TaskGraphNodeMetadata>;
+}
+/**
+ * The location where an individual node of a task graph is executed.
+ * @export
+ * @enum {string}
+ */
+export declare enum TaskGraphLogRunLocation {
+    Server = "server",
+    Client = "client",
+    Virtual = "virtual"
 }
 /**
  * The status of a given task graph execution.
@@ -3279,11 +4068,48 @@ export interface TaskGraphNodeMetadata {
      */
     depends_on?: Array<string>;
     /**
+     *
+     * @type {TaskGraphLogRunLocation}
+     * @memberof TaskGraphNodeMetadata
+     */
+    run_location?: TaskGraphLogRunLocation;
+    /**
+     *
+     * @type {ArrayTaskStatus}
+     * @memberof TaskGraphNodeMetadata
+     */
+    status?: ArrayTaskStatus;
+    /**
      * ArrayTasks representing each execution attempt for this node. For nodes that have never been submitted, this will be empty. For nodes that have been retried, this may have multiple entries. The last one in the list represents the most recent execution. This is read-only and generated by the server based on the tasks it has actually executed.
      * @type {Array<ArrayTask>}
      * @memberof TaskGraphNodeMetadata
      */
     executions?: Array<ArrayTask>;
+}
+/**
+ * details for sharing a given registered task graph
+ * @export
+ * @interface TaskGraphSharing
+ */
+export interface TaskGraphSharing {
+    /**
+     * List of permitted actions
+     * @type {Array<TaskGraphActions>}
+     * @memberof TaskGraphSharing
+     */
+    actions?: Array<TaskGraphActions>;
+    /**
+     * namespace being granted array access can be a user or organization
+     * @type {string}
+     * @memberof TaskGraphSharing
+     */
+    namespace?: string;
+    /**
+     * details on if the namespace is a organization or user
+     * @type {string}
+     * @memberof TaskGraphSharing
+     */
+    namespace_type?: string;
 }
 /**
  * user\'s TileDB config
@@ -3376,7 +4202,13 @@ export declare enum TokenScope {
     Useradmin = "user:admin",
     Arrayread = "array:read",
     ArrayreadWrite = "array:read-write",
-    Arrayadmin = "array:admin"
+    Arrayadmin = "array:admin",
+    Organizationread = "organization:read",
+    OrganizationreadWrite = "organization:read-write",
+    Organizationadmin = "organization:admin",
+    Groupread = "group:read",
+    GroupreadWrite = "group:read-write",
+    Groupadmin = "group:admin"
 }
 /**
  * actions a user can take on a UDF
@@ -3393,6 +4225,12 @@ export declare enum UDFActions {
  * @interface UDFArrayDetails
  */
 export interface UDFArrayDetails {
+    /**
+     * An optional client-generated identifier to distinguish between multiple range/buffer requests from the same array in the same call. This may be set for MultiArrayUDFs that use the `argument_json` style of passing arrays.
+     * @type {string}
+     * @memberof UDFArrayDetails
+     */
+    parameter_id?: string | null;
     /**
      * array to set ranges and buffers on, must be in tiledb:// format
      * @type {string}
@@ -3411,6 +4249,62 @@ export interface UDFArrayDetails {
      * @memberof UDFArrayDetails
      */
     buffers?: Array<string>;
+}
+/**
+ * Copied udf uri and information
+ * @export
+ * @interface UDFCopied
+ */
+export interface UDFCopied {
+    /**
+     * output location of the TileDB udf
+     * @type {string}
+     * @memberof UDFCopied
+     */
+    output_uri?: string;
+    /**
+     * namespace of the copied udf
+     * @type {string}
+     * @memberof UDFCopied
+     */
+    namespace?: string;
+    /**
+     * name of the copied udf
+     * @type {string}
+     * @memberof UDFCopied
+     */
+    name?: string;
+    /**
+     * unique ID of the copied udf
+     * @type {string}
+     * @memberof UDFCopied
+     */
+    id: string;
+}
+/**
+ * information required to copy a udf
+ * @export
+ * @interface UDFCopy
+ */
+export interface UDFCopy {
+    /**
+     * output location of the TileDB File
+     * @type {string}
+     * @memberof UDFCopy
+     */
+    output_uri?: string;
+    /**
+     * namespace to register the copy. If empty use the namespace of the request user
+     * @type {string}
+     * @memberof UDFCopy
+     */
+    namespace?: string;
+    /**
+     * name to set for the copy. If empty use the name as the original udf, if it not already used in the namespace
+     * @type {string}
+     * @memberof UDFCopy
+     */
+    name?: string;
 }
 /**
  * A user-favorite UDF item
@@ -4452,7 +5346,7 @@ export declare const ArrayApiFp: (configuration?: Configuration) => {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    registerArray(namespace: string, array: string, arrayMetadata: ArrayInfoUpdate, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
+    registerArray(namespace: string, array: string, arrayMetadata: ArrayInfoUpdate, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArrayInfo>>;
     /**
      * Share an array with a user
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
@@ -4751,7 +5645,7 @@ export declare const ArrayApiFactory: (configuration?: Configuration, basePath?:
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    registerArray(namespace: string, array: string, arrayMetadata: ArrayInfoUpdate, options?: any): AxiosPromise<void>;
+    registerArray(namespace: string, array: string, arrayMetadata: ArrayInfoUpdate, options?: any): AxiosPromise<ArrayInfo>;
     /**
      * Share an array with a user
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
@@ -5079,7 +5973,7 @@ export declare class ArrayApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ArrayApi
      */
-    registerArray(namespace: string, array: string, arrayMetadata: ArrayInfoUpdate, options?: any): Promise<import("axios").AxiosResponse<void>>;
+    registerArray(namespace: string, array: string, arrayMetadata: ArrayInfoUpdate, options?: any): Promise<import("axios").AxiosResponse<ArrayInfo>>;
     /**
      * Share an array with a user
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
@@ -5861,6 +6755,17 @@ export declare const FilesApiAxiosParamCreator: (configuration?: Configuration) 
      * @throws {RequiredError}
      */
     handleExportFile: (namespace: string, file: string, fileExport: FileExport, options?: any) => Promise<RequestArgs>;
+    /**
+     * Upload a tiledb file at the specified location
+     * @param {string} namespace The namespace of the file
+     * @param {any} inputFile the file to upload
+     * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+     * @param {string} [outputUri] output location of the TileDB File
+     * @param {string} [name] name to set for registered file
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    handleUploadFile: (namespace: string, inputFile: any, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, outputUri?: string, name?: string, options?: any) => Promise<RequestArgs>;
 };
 /**
  * FilesApi - functional programming interface
@@ -5885,6 +6790,17 @@ export declare const FilesApiFp: (configuration?: Configuration) => {
      * @throws {RequiredError}
      */
     handleExportFile(namespace: string, file: string, fileExport: FileExport, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<FileExported>>;
+    /**
+     * Upload a tiledb file at the specified location
+     * @param {string} namespace The namespace of the file
+     * @param {any} inputFile the file to upload
+     * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+     * @param {string} [outputUri] output location of the TileDB File
+     * @param {string} [name] name to set for registered file
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    handleUploadFile(namespace: string, inputFile: any, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, outputUri?: string, name?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<FileUploaded>>;
 };
 /**
  * FilesApi - factory interface
@@ -5909,6 +6825,17 @@ export declare const FilesApiFactory: (configuration?: Configuration, basePath?:
      * @throws {RequiredError}
      */
     handleExportFile(namespace: string, file: string, fileExport: FileExport, options?: any): AxiosPromise<FileExported>;
+    /**
+     * Upload a tiledb file at the specified location
+     * @param {string} namespace The namespace of the file
+     * @param {any} inputFile the file to upload
+     * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+     * @param {string} [outputUri] output location of the TileDB File
+     * @param {string} [name] name to set for registered file
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    handleUploadFile(namespace: string, inputFile: any, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, outputUri?: string, name?: string, options?: any): AxiosPromise<FileUploaded>;
 };
 /**
  * FilesApi - object-oriented interface
@@ -5937,6 +6864,18 @@ export declare class FilesApi extends BaseAPI {
      * @memberof FilesApi
      */
     handleExportFile(namespace: string, file: string, fileExport: FileExport, options?: any): Promise<import("axios").AxiosResponse<FileExported>>;
+    /**
+     * Upload a tiledb file at the specified location
+     * @param {string} namespace The namespace of the file
+     * @param {any} inputFile the file to upload
+     * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+     * @param {string} [outputUri] output location of the TileDB File
+     * @param {string} [name] name to set for registered file
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof FilesApi
+     */
+    handleUploadFile(namespace: string, inputFile: any, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, outputUri?: string, name?: string, options?: any): Promise<import("axios").AxiosResponse<FileUploaded>>;
 }
 /**
  * GroupsApi - axios parameter creator
@@ -5944,71 +6883,164 @@ export declare class FilesApi extends BaseAPI {
  */
 export declare const GroupsApiAxiosParamCreator: (configuration?: Configuration) => {
     /**
-     * Adds an asset(array, notebook, udf etc) to a group
-     * @param {string} namespace The namespace of the group
-     * @param {string} name The name of the group
-     * @param {string} assetNamespace The namespace of the asset
-     * @param {string} assetName The name of the asset
+     * Changes the contents of the group by adding/removing members.
+     * @param {string} groupNamespace The namespace of the group
+     * @param {string} groupName The unique name or id of the group
+     * @param {GroupChanges} [groupChanges]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    addAsset: (namespace: string, name: string, assetNamespace: string, assetName: string, options?: any) => Promise<RequestArgs>;
+    changeGroupContents: (groupNamespace: string, groupName: string, groupChanges?: GroupChanges, options?: any) => Promise<RequestArgs>;
     /**
-     * Creates a new, empty group in the namespace.
+     * Creates a new group in the namespace.
      * @param {string} namespace The namespace of the group
-     * @param {string} name The name of the group
      * @param {GroupCreate} [groupCreate]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    createGroup: (namespace: string, name: string, groupCreate?: GroupCreate, options?: any) => Promise<RequestArgs>;
+    createGroup: (namespace: string, groupCreate?: GroupCreate, options?: any) => Promise<RequestArgs>;
     /**
-     * Deletes the group and all the subgroups recursively. The assets are not deleted nor are not relocated to any other group
-     * @param {string} namespace The namespace of the group
-     * @param {string} name The name of the group
+     * Deletes the group. The assets are not deleted nor are not relocated to any other group
+     * @param {string} groupNamespace The namespace of the group
+     * @param {string} groupName The unique name or id of the group
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    deleteGroup: (namespace: string, name: string, options?: any) => Promise<RequestArgs>;
+    deleteGroup: (groupNamespace: string, groupName: string, options?: any) => Promise<RequestArgs>;
     /**
-     * Returns the contents, assets and subgroups, of the group
-     * @param {string} namespace The namespace of the group
-     * @param {string} name The name of the group
-     * @param {'attributes' | 'groups' | 'assets'} [output]
+     * Returns the the group
+     * @param {string} groupNamespace The namespace of the group
+     * @param {string} groupName The unique name or id of the group
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getGroup: (groupNamespace: string, groupName: string, options?: any) => Promise<RequestArgs>;
+    /**
+     * Returns the contents of the group
+     * @param {string} groupNamespace The namespace of the group
+     * @param {string} groupName The unique name or id of the group
      * @param {number} [page] pagination offset for assets
      * @param {number} [perPage] pagination limit for assets
+     * @param {string} [namespace] namespace to search for
+     * @param {string} [search] search string that will look at name, namespace or description fields
+     * @param {string} [orderby] sort by which field valid values include last_accessed, size, name
+     * @param {Array<string>} [tag] tag to search for, more than one can be included
+     * @param {Array<string>} [excludeTag] tags to exclude matching array in results, more than one can be included
+     * @param {Array<string>} [memberType] member type to search for, more than one can be included
+     * @param {Array<string>} [excludeMemberType] member type to exclude matching groups in results, more than one can be included
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    listGroup: (namespace: string, name: string, output?: 'attributes' | 'groups' | 'assets', page?: number, perPage?: number, options?: any) => Promise<RequestArgs>;
+    getGroupContents: (groupNamespace: string, groupName: string, page?: number, perPage?: number, namespace?: string, search?: string, orderby?: string, tag?: Array<string>, excludeTag?: Array<string>, memberType?: Array<string>, excludeMemberType?: Array<string>, options?: any) => Promise<RequestArgs>;
     /**
-     * Returns one page of top level groups in namespace.
-     * @param {string} namespace The namespace to operate on
+     * Get all sharing details of the group
+     * @param {string} groupNamespace The namespace of the group
+     * @param {string} groupName The unique name or id of the group
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getGroupSharingPolicies: (groupNamespace: string, groupName: string, options?: any) => Promise<RequestArgs>;
+    /**
+     * Fetch data to initialize filters for the groups browser
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    groupsBrowserOwnedFiltersGet: (options?: any) => Promise<RequestArgs>;
+    /**
+     * Fetch data to initialize filters for the groups browser
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    groupsBrowserPublicFiltersGet: (options?: any) => Promise<RequestArgs>;
+    /**
+     * Fetch data to initialize filters for the groups browser
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    groupsBrowserSharedFiltersGet: (options?: any) => Promise<RequestArgs>;
+    /**
+     * Fetch data to initialize filters for the group contents
+     * @param {string} groupNamespace The namespace of the group
+     * @param {string} groupName The unique name or id of the group
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    groupsGroupNamespaceGroupNameContentsFiltersGet: (groupNamespace: string, groupName: string, options?: any) => Promise<RequestArgs>;
+    /**
+     * Returns one page of owned groups.
      * @param {number} [page] pagination offset
      * @param {number} [perPage] pagination limit
+     * @param {string} [search] search string that will look at name, namespace or description fields
+     * @param {string} [namespace] namespace
+     * @param {string} [orderby] sort by which field valid values include last_accessed, size, name
+     * @param {string} [permissions] permissions valid values include read, read_write, write, admin
+     * @param {Array<string>} [tag] tag to search for, more than one can be included
+     * @param {Array<string>} [excludeTag] tags to exclude matching array in results, more than one can be included
+     * @param {boolean} [flat] if true, ignores the nesting of groups and searches all of them
+     * @param {string} [parent] search only the children of the groups with this uuid
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    listTopLevelGroups: (namespace: string, page?: number, perPage?: number, options?: any) => Promise<RequestArgs>;
+    listOwnedGroups: (page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, flat?: boolean, parent?: string, options?: any) => Promise<RequestArgs>;
     /**
-     * Removes an asset from a group
-     * @param {string} namespace The namespace of the group
-     * @param {string} name The name of the group
-     * @param {string} assetNamespace The namespace of the asset
-     * @param {string} assetName The name of the asset
+     * Returns one page of public groups.
+     * @param {number} [page] pagination offset
+     * @param {number} [perPage] pagination limit
+     * @param {string} [search] search string that will look at name, namespace or description fields
+     * @param {string} [namespace] namespace
+     * @param {string} [orderby] sort by which field valid values include last_accessed, size, name
+     * @param {string} [permissions] permissions valid values include read, read_write, write, admin
+     * @param {Array<string>} [tag] tag to search for, more than one can be included
+     * @param {Array<string>} [excludeTag] tags to exclude matching array in results, more than one can be included
+     * @param {boolean} [flat] if true, ignores the nesting of groups and searches all of them
+     * @param {string} [parent] search only the children of the groups with this uuid
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    removeAsset: (namespace: string, name: string, assetNamespace: string, assetName: string, options?: any) => Promise<RequestArgs>;
+    listPublicGroups: (page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, flat?: boolean, parent?: string, options?: any) => Promise<RequestArgs>;
+    /**
+     * Returns one page of shared groups.
+     * @param {number} [page] pagination offset
+     * @param {number} [perPage] pagination limit
+     * @param {string} [search] search string that will look at name, namespace or description fields
+     * @param {string} [namespace] namespace
+     * @param {string} [orderby] sort by which field valid values include last_accessed, size, name
+     * @param {string} [permissions] permissions valid values include read, read_write, write, admin
+     * @param {Array<string>} [tag] tag to search for, more than one can be included
+     * @param {Array<string>} [excludeTag] tags to exclude matching array in results, more than one can be included
+     * @param {boolean} [flat] if true, ignores the nesting of groups and searches all of them
+     * @param {string} [parent] search only the children of the groups with this uuid
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    listSharedGroups: (page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, flat?: boolean, parent?: string, options?: any) => Promise<RequestArgs>;
+    /**
+     * Registers an existing group in the namespace.
+     * @param {string} namespace The namespace of the group
+     * @param {string} array The unique name or id of the group
+     * @param {GroupRegister} [groupRegister]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    registerGroup: (namespace: string, array: string, groupRegister?: GroupRegister, options?: any) => Promise<RequestArgs>;
+    /**
+     * Share a group with a namespace
+     * @param {string} groupNamespace The namespace of the group
+     * @param {string} groupName The unique name or id of the group
+     * @param {GroupSharingRequest} groupSharingRequest Namespace and list of permissions to share with. Sharing is recursive, it is applied to all reachable subgroups and arrays of the group. An empty list of permissions will remove the namespace; if permissions already exist they will be deleted then new ones added. In the event of a failure, the new policies will be rolled back to prevent partial policies, and it\&#39;s likely the group will not be shared with the namespace at all.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    shareGroup: (groupNamespace: string, groupName: string, groupSharingRequest: GroupSharingRequest, options?: any) => Promise<RequestArgs>;
     /**
      * Changes attributes of the group
-     * @param {string} namespace The namespace of the group
-     * @param {string} name The name of the group
+     * @param {string} groupNamespace The namespace of the group
+     * @param {string} groupName The unique name or id of the group
      * @param {GroupUpdate} [groupUpdate]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    updateGroup: (namespace: string, name: string, groupUpdate?: GroupUpdate, options?: any) => Promise<RequestArgs>;
+    updateGroup: (groupNamespace: string, groupName: string, groupUpdate?: GroupUpdate, options?: any) => Promise<RequestArgs>;
 };
 /**
  * GroupsApi - functional programming interface
@@ -6016,71 +7048,164 @@ export declare const GroupsApiAxiosParamCreator: (configuration?: Configuration)
  */
 export declare const GroupsApiFp: (configuration?: Configuration) => {
     /**
-     * Adds an asset(array, notebook, udf etc) to a group
-     * @param {string} namespace The namespace of the group
-     * @param {string} name The name of the group
-     * @param {string} assetNamespace The namespace of the asset
-     * @param {string} assetName The name of the asset
+     * Changes the contents of the group by adding/removing members.
+     * @param {string} groupNamespace The namespace of the group
+     * @param {string} groupName The unique name or id of the group
+     * @param {GroupChanges} [groupChanges]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    addAsset(namespace: string, name: string, assetNamespace: string, assetName: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
+    changeGroupContents(groupNamespace: string, groupName: string, groupChanges?: GroupChanges, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
     /**
-     * Creates a new, empty group in the namespace.
+     * Creates a new group in the namespace.
      * @param {string} namespace The namespace of the group
-     * @param {string} name The name of the group
      * @param {GroupCreate} [groupCreate]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    createGroup(namespace: string, name: string, groupCreate?: GroupCreate, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
+    createGroup(namespace: string, groupCreate?: GroupCreate, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
     /**
-     * Deletes the group and all the subgroups recursively. The assets are not deleted nor are not relocated to any other group
-     * @param {string} namespace The namespace of the group
-     * @param {string} name The name of the group
+     * Deletes the group. The assets are not deleted nor are not relocated to any other group
+     * @param {string} groupNamespace The namespace of the group
+     * @param {string} groupName The unique name or id of the group
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    deleteGroup(namespace: string, name: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
+    deleteGroup(groupNamespace: string, groupName: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
     /**
-     * Returns the contents, assets and subgroups, of the group
-     * @param {string} namespace The namespace of the group
-     * @param {string} name The name of the group
-     * @param {'attributes' | 'groups' | 'assets'} [output]
+     * Returns the the group
+     * @param {string} groupNamespace The namespace of the group
+     * @param {string} groupName The unique name or id of the group
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getGroup(groupNamespace: string, groupName: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GroupInfo>>;
+    /**
+     * Returns the contents of the group
+     * @param {string} groupNamespace The namespace of the group
+     * @param {string} groupName The unique name or id of the group
      * @param {number} [page] pagination offset for assets
      * @param {number} [perPage] pagination limit for assets
+     * @param {string} [namespace] namespace to search for
+     * @param {string} [search] search string that will look at name, namespace or description fields
+     * @param {string} [orderby] sort by which field valid values include last_accessed, size, name
+     * @param {Array<string>} [tag] tag to search for, more than one can be included
+     * @param {Array<string>} [excludeTag] tags to exclude matching array in results, more than one can be included
+     * @param {Array<string>} [memberType] member type to search for, more than one can be included
+     * @param {Array<string>} [excludeMemberType] member type to exclude matching groups in results, more than one can be included
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    listGroup(namespace: string, name: string, output?: 'attributes' | 'groups' | 'assets', page?: number, perPage?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GroupListing>>;
+    getGroupContents(groupNamespace: string, groupName: string, page?: number, perPage?: number, namespace?: string, search?: string, orderby?: string, tag?: Array<string>, excludeTag?: Array<string>, memberType?: Array<string>, excludeMemberType?: Array<string>, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GroupContents>>;
     /**
-     * Returns one page of top level groups in namespace.
-     * @param {string} namespace The namespace to operate on
+     * Get all sharing details of the group
+     * @param {string} groupNamespace The namespace of the group
+     * @param {string} groupName The unique name or id of the group
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getGroupSharingPolicies(groupNamespace: string, groupName: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<GroupSharing>>>;
+    /**
+     * Fetch data to initialize filters for the groups browser
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    groupsBrowserOwnedFiltersGet(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GroupBrowserFilterData>>;
+    /**
+     * Fetch data to initialize filters for the groups browser
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    groupsBrowserPublicFiltersGet(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GroupBrowserFilterData>>;
+    /**
+     * Fetch data to initialize filters for the groups browser
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    groupsBrowserSharedFiltersGet(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GroupBrowserFilterData>>;
+    /**
+     * Fetch data to initialize filters for the group contents
+     * @param {string} groupNamespace The namespace of the group
+     * @param {string} groupName The unique name or id of the group
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    groupsGroupNamespaceGroupNameContentsFiltersGet(groupNamespace: string, groupName: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GroupContentsFilterData>>;
+    /**
+     * Returns one page of owned groups.
      * @param {number} [page] pagination offset
      * @param {number} [perPage] pagination limit
+     * @param {string} [search] search string that will look at name, namespace or description fields
+     * @param {string} [namespace] namespace
+     * @param {string} [orderby] sort by which field valid values include last_accessed, size, name
+     * @param {string} [permissions] permissions valid values include read, read_write, write, admin
+     * @param {Array<string>} [tag] tag to search for, more than one can be included
+     * @param {Array<string>} [excludeTag] tags to exclude matching array in results, more than one can be included
+     * @param {boolean} [flat] if true, ignores the nesting of groups and searches all of them
+     * @param {string} [parent] search only the children of the groups with this uuid
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    listTopLevelGroups(namespace: string, page?: number, perPage?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GroupListing>>;
+    listOwnedGroups(page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, flat?: boolean, parent?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GroupBrowserData>>;
     /**
-     * Removes an asset from a group
-     * @param {string} namespace The namespace of the group
-     * @param {string} name The name of the group
-     * @param {string} assetNamespace The namespace of the asset
-     * @param {string} assetName The name of the asset
+     * Returns one page of public groups.
+     * @param {number} [page] pagination offset
+     * @param {number} [perPage] pagination limit
+     * @param {string} [search] search string that will look at name, namespace or description fields
+     * @param {string} [namespace] namespace
+     * @param {string} [orderby] sort by which field valid values include last_accessed, size, name
+     * @param {string} [permissions] permissions valid values include read, read_write, write, admin
+     * @param {Array<string>} [tag] tag to search for, more than one can be included
+     * @param {Array<string>} [excludeTag] tags to exclude matching array in results, more than one can be included
+     * @param {boolean} [flat] if true, ignores the nesting of groups and searches all of them
+     * @param {string} [parent] search only the children of the groups with this uuid
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    removeAsset(namespace: string, name: string, assetNamespace: string, assetName: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
+    listPublicGroups(page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, flat?: boolean, parent?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GroupBrowserData>>;
+    /**
+     * Returns one page of shared groups.
+     * @param {number} [page] pagination offset
+     * @param {number} [perPage] pagination limit
+     * @param {string} [search] search string that will look at name, namespace or description fields
+     * @param {string} [namespace] namespace
+     * @param {string} [orderby] sort by which field valid values include last_accessed, size, name
+     * @param {string} [permissions] permissions valid values include read, read_write, write, admin
+     * @param {Array<string>} [tag] tag to search for, more than one can be included
+     * @param {Array<string>} [excludeTag] tags to exclude matching array in results, more than one can be included
+     * @param {boolean} [flat] if true, ignores the nesting of groups and searches all of them
+     * @param {string} [parent] search only the children of the groups with this uuid
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    listSharedGroups(page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, flat?: boolean, parent?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GroupBrowserData>>;
+    /**
+     * Registers an existing group in the namespace.
+     * @param {string} namespace The namespace of the group
+     * @param {string} array The unique name or id of the group
+     * @param {GroupRegister} [groupRegister]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    registerGroup(namespace: string, array: string, groupRegister?: GroupRegister, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
+    /**
+     * Share a group with a namespace
+     * @param {string} groupNamespace The namespace of the group
+     * @param {string} groupName The unique name or id of the group
+     * @param {GroupSharingRequest} groupSharingRequest Namespace and list of permissions to share with. Sharing is recursive, it is applied to all reachable subgroups and arrays of the group. An empty list of permissions will remove the namespace; if permissions already exist they will be deleted then new ones added. In the event of a failure, the new policies will be rolled back to prevent partial policies, and it\&#39;s likely the group will not be shared with the namespace at all.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    shareGroup(groupNamespace: string, groupName: string, groupSharingRequest: GroupSharingRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
     /**
      * Changes attributes of the group
-     * @param {string} namespace The namespace of the group
-     * @param {string} name The name of the group
+     * @param {string} groupNamespace The namespace of the group
+     * @param {string} groupName The unique name or id of the group
      * @param {GroupUpdate} [groupUpdate]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    updateGroup(namespace: string, name: string, groupUpdate?: GroupUpdate, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
+    updateGroup(groupNamespace: string, groupName: string, groupUpdate?: GroupUpdate, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
 };
 /**
  * GroupsApi - factory interface
@@ -6088,71 +7213,164 @@ export declare const GroupsApiFp: (configuration?: Configuration) => {
  */
 export declare const GroupsApiFactory: (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) => {
     /**
-     * Adds an asset(array, notebook, udf etc) to a group
-     * @param {string} namespace The namespace of the group
-     * @param {string} name The name of the group
-     * @param {string} assetNamespace The namespace of the asset
-     * @param {string} assetName The name of the asset
+     * Changes the contents of the group by adding/removing members.
+     * @param {string} groupNamespace The namespace of the group
+     * @param {string} groupName The unique name or id of the group
+     * @param {GroupChanges} [groupChanges]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    addAsset(namespace: string, name: string, assetNamespace: string, assetName: string, options?: any): AxiosPromise<void>;
+    changeGroupContents(groupNamespace: string, groupName: string, groupChanges?: GroupChanges, options?: any): AxiosPromise<void>;
     /**
-     * Creates a new, empty group in the namespace.
+     * Creates a new group in the namespace.
      * @param {string} namespace The namespace of the group
-     * @param {string} name The name of the group
      * @param {GroupCreate} [groupCreate]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    createGroup(namespace: string, name: string, groupCreate?: GroupCreate, options?: any): AxiosPromise<void>;
+    createGroup(namespace: string, groupCreate?: GroupCreate, options?: any): AxiosPromise<void>;
     /**
-     * Deletes the group and all the subgroups recursively. The assets are not deleted nor are not relocated to any other group
-     * @param {string} namespace The namespace of the group
-     * @param {string} name The name of the group
+     * Deletes the group. The assets are not deleted nor are not relocated to any other group
+     * @param {string} groupNamespace The namespace of the group
+     * @param {string} groupName The unique name or id of the group
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    deleteGroup(namespace: string, name: string, options?: any): AxiosPromise<void>;
+    deleteGroup(groupNamespace: string, groupName: string, options?: any): AxiosPromise<void>;
     /**
-     * Returns the contents, assets and subgroups, of the group
-     * @param {string} namespace The namespace of the group
-     * @param {string} name The name of the group
-     * @param {'attributes' | 'groups' | 'assets'} [output]
+     * Returns the the group
+     * @param {string} groupNamespace The namespace of the group
+     * @param {string} groupName The unique name or id of the group
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getGroup(groupNamespace: string, groupName: string, options?: any): AxiosPromise<GroupInfo>;
+    /**
+     * Returns the contents of the group
+     * @param {string} groupNamespace The namespace of the group
+     * @param {string} groupName The unique name or id of the group
      * @param {number} [page] pagination offset for assets
      * @param {number} [perPage] pagination limit for assets
+     * @param {string} [namespace] namespace to search for
+     * @param {string} [search] search string that will look at name, namespace or description fields
+     * @param {string} [orderby] sort by which field valid values include last_accessed, size, name
+     * @param {Array<string>} [tag] tag to search for, more than one can be included
+     * @param {Array<string>} [excludeTag] tags to exclude matching array in results, more than one can be included
+     * @param {Array<string>} [memberType] member type to search for, more than one can be included
+     * @param {Array<string>} [excludeMemberType] member type to exclude matching groups in results, more than one can be included
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    listGroup(namespace: string, name: string, output?: 'attributes' | 'groups' | 'assets', page?: number, perPage?: number, options?: any): AxiosPromise<GroupListing>;
+    getGroupContents(groupNamespace: string, groupName: string, page?: number, perPage?: number, namespace?: string, search?: string, orderby?: string, tag?: Array<string>, excludeTag?: Array<string>, memberType?: Array<string>, excludeMemberType?: Array<string>, options?: any): AxiosPromise<GroupContents>;
     /**
-     * Returns one page of top level groups in namespace.
-     * @param {string} namespace The namespace to operate on
+     * Get all sharing details of the group
+     * @param {string} groupNamespace The namespace of the group
+     * @param {string} groupName The unique name or id of the group
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getGroupSharingPolicies(groupNamespace: string, groupName: string, options?: any): AxiosPromise<Array<GroupSharing>>;
+    /**
+     * Fetch data to initialize filters for the groups browser
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    groupsBrowserOwnedFiltersGet(options?: any): AxiosPromise<GroupBrowserFilterData>;
+    /**
+     * Fetch data to initialize filters for the groups browser
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    groupsBrowserPublicFiltersGet(options?: any): AxiosPromise<GroupBrowserFilterData>;
+    /**
+     * Fetch data to initialize filters for the groups browser
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    groupsBrowserSharedFiltersGet(options?: any): AxiosPromise<GroupBrowserFilterData>;
+    /**
+     * Fetch data to initialize filters for the group contents
+     * @param {string} groupNamespace The namespace of the group
+     * @param {string} groupName The unique name or id of the group
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    groupsGroupNamespaceGroupNameContentsFiltersGet(groupNamespace: string, groupName: string, options?: any): AxiosPromise<GroupContentsFilterData>;
+    /**
+     * Returns one page of owned groups.
      * @param {number} [page] pagination offset
      * @param {number} [perPage] pagination limit
+     * @param {string} [search] search string that will look at name, namespace or description fields
+     * @param {string} [namespace] namespace
+     * @param {string} [orderby] sort by which field valid values include last_accessed, size, name
+     * @param {string} [permissions] permissions valid values include read, read_write, write, admin
+     * @param {Array<string>} [tag] tag to search for, more than one can be included
+     * @param {Array<string>} [excludeTag] tags to exclude matching array in results, more than one can be included
+     * @param {boolean} [flat] if true, ignores the nesting of groups and searches all of them
+     * @param {string} [parent] search only the children of the groups with this uuid
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    listTopLevelGroups(namespace: string, page?: number, perPage?: number, options?: any): AxiosPromise<GroupListing>;
+    listOwnedGroups(page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, flat?: boolean, parent?: string, options?: any): AxiosPromise<GroupBrowserData>;
     /**
-     * Removes an asset from a group
-     * @param {string} namespace The namespace of the group
-     * @param {string} name The name of the group
-     * @param {string} assetNamespace The namespace of the asset
-     * @param {string} assetName The name of the asset
+     * Returns one page of public groups.
+     * @param {number} [page] pagination offset
+     * @param {number} [perPage] pagination limit
+     * @param {string} [search] search string that will look at name, namespace or description fields
+     * @param {string} [namespace] namespace
+     * @param {string} [orderby] sort by which field valid values include last_accessed, size, name
+     * @param {string} [permissions] permissions valid values include read, read_write, write, admin
+     * @param {Array<string>} [tag] tag to search for, more than one can be included
+     * @param {Array<string>} [excludeTag] tags to exclude matching array in results, more than one can be included
+     * @param {boolean} [flat] if true, ignores the nesting of groups and searches all of them
+     * @param {string} [parent] search only the children of the groups with this uuid
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    removeAsset(namespace: string, name: string, assetNamespace: string, assetName: string, options?: any): AxiosPromise<void>;
+    listPublicGroups(page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, flat?: boolean, parent?: string, options?: any): AxiosPromise<GroupBrowserData>;
+    /**
+     * Returns one page of shared groups.
+     * @param {number} [page] pagination offset
+     * @param {number} [perPage] pagination limit
+     * @param {string} [search] search string that will look at name, namespace or description fields
+     * @param {string} [namespace] namespace
+     * @param {string} [orderby] sort by which field valid values include last_accessed, size, name
+     * @param {string} [permissions] permissions valid values include read, read_write, write, admin
+     * @param {Array<string>} [tag] tag to search for, more than one can be included
+     * @param {Array<string>} [excludeTag] tags to exclude matching array in results, more than one can be included
+     * @param {boolean} [flat] if true, ignores the nesting of groups and searches all of them
+     * @param {string} [parent] search only the children of the groups with this uuid
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    listSharedGroups(page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, flat?: boolean, parent?: string, options?: any): AxiosPromise<GroupBrowserData>;
+    /**
+     * Registers an existing group in the namespace.
+     * @param {string} namespace The namespace of the group
+     * @param {string} array The unique name or id of the group
+     * @param {GroupRegister} [groupRegister]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    registerGroup(namespace: string, array: string, groupRegister?: GroupRegister, options?: any): AxiosPromise<void>;
+    /**
+     * Share a group with a namespace
+     * @param {string} groupNamespace The namespace of the group
+     * @param {string} groupName The unique name or id of the group
+     * @param {GroupSharingRequest} groupSharingRequest Namespace and list of permissions to share with. Sharing is recursive, it is applied to all reachable subgroups and arrays of the group. An empty list of permissions will remove the namespace; if permissions already exist they will be deleted then new ones added. In the event of a failure, the new policies will be rolled back to prevent partial policies, and it\&#39;s likely the group will not be shared with the namespace at all.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    shareGroup(groupNamespace: string, groupName: string, groupSharingRequest: GroupSharingRequest, options?: any): AxiosPromise<void>;
     /**
      * Changes attributes of the group
-     * @param {string} namespace The namespace of the group
-     * @param {string} name The name of the group
+     * @param {string} groupNamespace The namespace of the group
+     * @param {string} groupName The unique name or id of the group
      * @param {GroupUpdate} [groupUpdate]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    updateGroup(namespace: string, name: string, groupUpdate?: GroupUpdate, options?: any): AxiosPromise<void>;
+    updateGroup(groupNamespace: string, groupName: string, groupUpdate?: GroupUpdate, options?: any): AxiosPromise<void>;
 };
 /**
  * GroupsApi - object-oriented interface
@@ -6162,78 +7380,180 @@ export declare const GroupsApiFactory: (configuration?: Configuration, basePath?
  */
 export declare class GroupsApi extends BaseAPI {
     /**
-     * Adds an asset(array, notebook, udf etc) to a group
-     * @param {string} namespace The namespace of the group
-     * @param {string} name The name of the group
-     * @param {string} assetNamespace The namespace of the asset
-     * @param {string} assetName The name of the asset
+     * Changes the contents of the group by adding/removing members.
+     * @param {string} groupNamespace The namespace of the group
+     * @param {string} groupName The unique name or id of the group
+     * @param {GroupChanges} [groupChanges]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof GroupsApi
      */
-    addAsset(namespace: string, name: string, assetNamespace: string, assetName: string, options?: any): Promise<import("axios").AxiosResponse<void>>;
+    changeGroupContents(groupNamespace: string, groupName: string, groupChanges?: GroupChanges, options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**
-     * Creates a new, empty group in the namespace.
+     * Creates a new group in the namespace.
      * @param {string} namespace The namespace of the group
-     * @param {string} name The name of the group
      * @param {GroupCreate} [groupCreate]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof GroupsApi
      */
-    createGroup(namespace: string, name: string, groupCreate?: GroupCreate, options?: any): Promise<import("axios").AxiosResponse<void>>;
+    createGroup(namespace: string, groupCreate?: GroupCreate, options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**
-     * Deletes the group and all the subgroups recursively. The assets are not deleted nor are not relocated to any other group
-     * @param {string} namespace The namespace of the group
-     * @param {string} name The name of the group
+     * Deletes the group. The assets are not deleted nor are not relocated to any other group
+     * @param {string} groupNamespace The namespace of the group
+     * @param {string} groupName The unique name or id of the group
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof GroupsApi
      */
-    deleteGroup(namespace: string, name: string, options?: any): Promise<import("axios").AxiosResponse<void>>;
+    deleteGroup(groupNamespace: string, groupName: string, options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**
-     * Returns the contents, assets and subgroups, of the group
-     * @param {string} namespace The namespace of the group
-     * @param {string} name The name of the group
-     * @param {'attributes' | 'groups' | 'assets'} [output]
+     * Returns the the group
+     * @param {string} groupNamespace The namespace of the group
+     * @param {string} groupName The unique name or id of the group
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof GroupsApi
+     */
+    getGroup(groupNamespace: string, groupName: string, options?: any): Promise<import("axios").AxiosResponse<GroupInfo>>;
+    /**
+     * Returns the contents of the group
+     * @param {string} groupNamespace The namespace of the group
+     * @param {string} groupName The unique name or id of the group
      * @param {number} [page] pagination offset for assets
      * @param {number} [perPage] pagination limit for assets
+     * @param {string} [namespace] namespace to search for
+     * @param {string} [search] search string that will look at name, namespace or description fields
+     * @param {string} [orderby] sort by which field valid values include last_accessed, size, name
+     * @param {Array<string>} [tag] tag to search for, more than one can be included
+     * @param {Array<string>} [excludeTag] tags to exclude matching array in results, more than one can be included
+     * @param {Array<string>} [memberType] member type to search for, more than one can be included
+     * @param {Array<string>} [excludeMemberType] member type to exclude matching groups in results, more than one can be included
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof GroupsApi
      */
-    listGroup(namespace: string, name: string, output?: 'attributes' | 'groups' | 'assets', page?: number, perPage?: number, options?: any): Promise<import("axios").AxiosResponse<GroupListing>>;
+    getGroupContents(groupNamespace: string, groupName: string, page?: number, perPage?: number, namespace?: string, search?: string, orderby?: string, tag?: Array<string>, excludeTag?: Array<string>, memberType?: Array<string>, excludeMemberType?: Array<string>, options?: any): Promise<import("axios").AxiosResponse<GroupContents>>;
     /**
-     * Returns one page of top level groups in namespace.
-     * @param {string} namespace The namespace to operate on
+     * Get all sharing details of the group
+     * @param {string} groupNamespace The namespace of the group
+     * @param {string} groupName The unique name or id of the group
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof GroupsApi
+     */
+    getGroupSharingPolicies(groupNamespace: string, groupName: string, options?: any): Promise<import("axios").AxiosResponse<GroupSharing[]>>;
+    /**
+     * Fetch data to initialize filters for the groups browser
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof GroupsApi
+     */
+    groupsBrowserOwnedFiltersGet(options?: any): Promise<import("axios").AxiosResponse<GroupBrowserFilterData>>;
+    /**
+     * Fetch data to initialize filters for the groups browser
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof GroupsApi
+     */
+    groupsBrowserPublicFiltersGet(options?: any): Promise<import("axios").AxiosResponse<GroupBrowserFilterData>>;
+    /**
+     * Fetch data to initialize filters for the groups browser
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof GroupsApi
+     */
+    groupsBrowserSharedFiltersGet(options?: any): Promise<import("axios").AxiosResponse<GroupBrowserFilterData>>;
+    /**
+     * Fetch data to initialize filters for the group contents
+     * @param {string} groupNamespace The namespace of the group
+     * @param {string} groupName The unique name or id of the group
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof GroupsApi
+     */
+    groupsGroupNamespaceGroupNameContentsFiltersGet(groupNamespace: string, groupName: string, options?: any): Promise<import("axios").AxiosResponse<GroupContentsFilterData>>;
+    /**
+     * Returns one page of owned groups.
      * @param {number} [page] pagination offset
      * @param {number} [perPage] pagination limit
+     * @param {string} [search] search string that will look at name, namespace or description fields
+     * @param {string} [namespace] namespace
+     * @param {string} [orderby] sort by which field valid values include last_accessed, size, name
+     * @param {string} [permissions] permissions valid values include read, read_write, write, admin
+     * @param {Array<string>} [tag] tag to search for, more than one can be included
+     * @param {Array<string>} [excludeTag] tags to exclude matching array in results, more than one can be included
+     * @param {boolean} [flat] if true, ignores the nesting of groups and searches all of them
+     * @param {string} [parent] search only the children of the groups with this uuid
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof GroupsApi
      */
-    listTopLevelGroups(namespace: string, page?: number, perPage?: number, options?: any): Promise<import("axios").AxiosResponse<GroupListing>>;
+    listOwnedGroups(page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, flat?: boolean, parent?: string, options?: any): Promise<import("axios").AxiosResponse<GroupBrowserData>>;
     /**
-     * Removes an asset from a group
-     * @param {string} namespace The namespace of the group
-     * @param {string} name The name of the group
-     * @param {string} assetNamespace The namespace of the asset
-     * @param {string} assetName The name of the asset
+     * Returns one page of public groups.
+     * @param {number} [page] pagination offset
+     * @param {number} [perPage] pagination limit
+     * @param {string} [search] search string that will look at name, namespace or description fields
+     * @param {string} [namespace] namespace
+     * @param {string} [orderby] sort by which field valid values include last_accessed, size, name
+     * @param {string} [permissions] permissions valid values include read, read_write, write, admin
+     * @param {Array<string>} [tag] tag to search for, more than one can be included
+     * @param {Array<string>} [excludeTag] tags to exclude matching array in results, more than one can be included
+     * @param {boolean} [flat] if true, ignores the nesting of groups and searches all of them
+     * @param {string} [parent] search only the children of the groups with this uuid
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof GroupsApi
      */
-    removeAsset(namespace: string, name: string, assetNamespace: string, assetName: string, options?: any): Promise<import("axios").AxiosResponse<void>>;
+    listPublicGroups(page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, flat?: boolean, parent?: string, options?: any): Promise<import("axios").AxiosResponse<GroupBrowserData>>;
+    /**
+     * Returns one page of shared groups.
+     * @param {number} [page] pagination offset
+     * @param {number} [perPage] pagination limit
+     * @param {string} [search] search string that will look at name, namespace or description fields
+     * @param {string} [namespace] namespace
+     * @param {string} [orderby] sort by which field valid values include last_accessed, size, name
+     * @param {string} [permissions] permissions valid values include read, read_write, write, admin
+     * @param {Array<string>} [tag] tag to search for, more than one can be included
+     * @param {Array<string>} [excludeTag] tags to exclude matching array in results, more than one can be included
+     * @param {boolean} [flat] if true, ignores the nesting of groups and searches all of them
+     * @param {string} [parent] search only the children of the groups with this uuid
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof GroupsApi
+     */
+    listSharedGroups(page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, flat?: boolean, parent?: string, options?: any): Promise<import("axios").AxiosResponse<GroupBrowserData>>;
+    /**
+     * Registers an existing group in the namespace.
+     * @param {string} namespace The namespace of the group
+     * @param {string} array The unique name or id of the group
+     * @param {GroupRegister} [groupRegister]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof GroupsApi
+     */
+    registerGroup(namespace: string, array: string, groupRegister?: GroupRegister, options?: any): Promise<import("axios").AxiosResponse<void>>;
+    /**
+     * Share a group with a namespace
+     * @param {string} groupNamespace The namespace of the group
+     * @param {string} groupName The unique name or id of the group
+     * @param {GroupSharingRequest} groupSharingRequest Namespace and list of permissions to share with. Sharing is recursive, it is applied to all reachable subgroups and arrays of the group. An empty list of permissions will remove the namespace; if permissions already exist they will be deleted then new ones added. In the event of a failure, the new policies will be rolled back to prevent partial policies, and it\&#39;s likely the group will not be shared with the namespace at all.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof GroupsApi
+     */
+    shareGroup(groupNamespace: string, groupName: string, groupSharingRequest: GroupSharingRequest, options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**
      * Changes attributes of the group
-     * @param {string} namespace The namespace of the group
-     * @param {string} name The name of the group
+     * @param {string} groupNamespace The namespace of the group
+     * @param {string} groupName The unique name or id of the group
      * @param {GroupUpdate} [groupUpdate]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof GroupsApi
      */
-    updateGroup(namespace: string, name: string, groupUpdate?: GroupUpdate, options?: any): Promise<import("axios").AxiosResponse<void>>;
+    updateGroup(groupNamespace: string, groupName: string, groupUpdate?: GroupUpdate, options?: any): Promise<import("axios").AxiosResponse<void>>;
 }
 /**
  * InvitationApi - axios parameter creator
@@ -6504,6 +7824,28 @@ export declare const NotebookApiAxiosParamCreator: (configuration?: Configuratio
      */
     getNotebookServerStatus: (namespace: string, options?: any) => Promise<RequestArgs>;
     /**
+     * Copy a tiledb notebook at the specified location
+     * @param {string} namespace The namespace of the notebook
+     * @param {string} array The name of the notebook
+     * @param {NotebookCopy} notebookCopy Input/Output information to create a new TileDB file
+     * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+     * @param {number} [endTimestamp] Milliseconds since Unix epoch, copy will use open_at functionality to copy notebook created at the specific timestamp
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    handleCopyNotebook: (namespace: string, array: string, notebookCopy: NotebookCopy, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, endTimestamp?: number, options?: any) => Promise<RequestArgs>;
+    /**
+     * Upload a notebook at the specified location
+     * @param {string} namespace The namespace of the notebook
+     * @param {any} inputFile the notebook to upload
+     * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+     * @param {string} [outputUri] output location of the TileDB File
+     * @param {string} [name] name to set for registered file
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    handleUploadNotebook: (namespace: string, inputFile: any, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, outputUri?: string, name?: string, options?: any) => Promise<RequestArgs>;
+    /**
      * Shutdown a notebook server
      * @param {string} namespace namespace notebook is in (an organization name or user\&#39;s username)
      * @param {*} [options] Override http request option.
@@ -6533,6 +7875,28 @@ export declare const NotebookApiFp: (configuration?: Configuration) => {
      */
     getNotebookServerStatus(namespace: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<NotebookStatus>>;
     /**
+     * Copy a tiledb notebook at the specified location
+     * @param {string} namespace The namespace of the notebook
+     * @param {string} array The name of the notebook
+     * @param {NotebookCopy} notebookCopy Input/Output information to create a new TileDB file
+     * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+     * @param {number} [endTimestamp] Milliseconds since Unix epoch, copy will use open_at functionality to copy notebook created at the specific timestamp
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    handleCopyNotebook(namespace: string, array: string, notebookCopy: NotebookCopy, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, endTimestamp?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<NotebookCopied>>;
+    /**
+     * Upload a notebook at the specified location
+     * @param {string} namespace The namespace of the notebook
+     * @param {any} inputFile the notebook to upload
+     * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+     * @param {string} [outputUri] output location of the TileDB File
+     * @param {string} [name] name to set for registered file
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    handleUploadNotebook(namespace: string, inputFile: any, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, outputUri?: string, name?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<FileUploaded>>;
+    /**
      * Shutdown a notebook server
      * @param {string} namespace namespace notebook is in (an organization name or user\&#39;s username)
      * @param {*} [options] Override http request option.
@@ -6561,6 +7925,28 @@ export declare const NotebookApiFactory: (configuration?: Configuration, basePat
      * @throws {RequiredError}
      */
     getNotebookServerStatus(namespace: string, options?: any): AxiosPromise<NotebookStatus>;
+    /**
+     * Copy a tiledb notebook at the specified location
+     * @param {string} namespace The namespace of the notebook
+     * @param {string} array The name of the notebook
+     * @param {NotebookCopy} notebookCopy Input/Output information to create a new TileDB file
+     * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+     * @param {number} [endTimestamp] Milliseconds since Unix epoch, copy will use open_at functionality to copy notebook created at the specific timestamp
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    handleCopyNotebook(namespace: string, array: string, notebookCopy: NotebookCopy, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, endTimestamp?: number, options?: any): AxiosPromise<NotebookCopied>;
+    /**
+     * Upload a notebook at the specified location
+     * @param {string} namespace The namespace of the notebook
+     * @param {any} inputFile the notebook to upload
+     * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+     * @param {string} [outputUri] output location of the TileDB File
+     * @param {string} [name] name to set for registered file
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    handleUploadNotebook(namespace: string, inputFile: any, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, outputUri?: string, name?: string, options?: any): AxiosPromise<FileUploaded>;
     /**
      * Shutdown a notebook server
      * @param {string} namespace namespace notebook is in (an organization name or user\&#39;s username)
@@ -6593,6 +7979,30 @@ export declare class NotebookApi extends BaseAPI {
      * @memberof NotebookApi
      */
     getNotebookServerStatus(namespace: string, options?: any): Promise<import("axios").AxiosResponse<NotebookStatus>>;
+    /**
+     * Copy a tiledb notebook at the specified location
+     * @param {string} namespace The namespace of the notebook
+     * @param {string} array The name of the notebook
+     * @param {NotebookCopy} notebookCopy Input/Output information to create a new TileDB file
+     * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+     * @param {number} [endTimestamp] Milliseconds since Unix epoch, copy will use open_at functionality to copy notebook created at the specific timestamp
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof NotebookApi
+     */
+    handleCopyNotebook(namespace: string, array: string, notebookCopy: NotebookCopy, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, endTimestamp?: number, options?: any): Promise<import("axios").AxiosResponse<NotebookCopied>>;
+    /**
+     * Upload a notebook at the specified location
+     * @param {string} namespace The namespace of the notebook
+     * @param {any} inputFile the notebook to upload
+     * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+     * @param {string} [outputUri] output location of the TileDB File
+     * @param {string} [name] name to set for registered file
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof NotebookApi
+     */
+    handleUploadNotebook(namespace: string, inputFile: any, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, outputUri?: string, name?: string, options?: any): Promise<import("axios").AxiosResponse<FileUploaded>>;
     /**
      * Shutdown a notebook server
      * @param {string} namespace namespace notebook is in (an organization name or user\&#39;s username)
@@ -7423,6 +8833,242 @@ export declare class QueryApi extends BaseAPI {
     submitQueryJson(namespace: string, array: string, contentType: string, queryJson: QueryJson, xPayer?: string, options?: any): Promise<import("axios").AxiosResponse<object>>;
 }
 /**
+ * RegisteredTaskGraphsApi - axios parameter creator
+ * @export
+ */
+export declare const RegisteredTaskGraphsApiAxiosParamCreator: (configuration?: Configuration) => {
+    /**
+     * Delete the given registered task graph.
+     * @param {string} namespace The namespace that owns this registered UDF.
+     * @param {string} name The name of the registered task graph.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    deleteRegisteredTaskGraph: (namespace: string, name: string, options?: any) => Promise<RequestArgs>;
+    /**
+     * Fetch the contents of this registered task graph.
+     * @param {string} namespace The namespace that owns this registered UDF.
+     * @param {string} name The name of the registered task graph.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getRegisteredTaskGraph: (namespace: string, name: string, options?: any) => Promise<RequestArgs>;
+    /**
+     * Get sharing policies for the task graph.
+     * @param {string} namespace The namespace that owns the registered task graph.
+     * @param {string} name The name of the task graph.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getRegisteredTaskGraphSharingPolicies: (namespace: string, name: string, options?: any) => Promise<RequestArgs>;
+    /**
+     * Register a task graph in the given namespace, with the given name.
+     * @param {string} namespace The namespace that owns this registered UDF.
+     * @param {string} name The name of the registered task graph.
+     * @param {RegisteredTaskGraph} [graph] Task graph to register.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    registerRegisteredTaskGraph: (namespace: string, name: string, graph?: RegisteredTaskGraph, options?: any) => Promise<RequestArgs>;
+    /**
+     * Share a task graph.
+     * @param {string} namespace The namespace that owns the registered task graph.
+     * @param {string} name The name of the task graph.
+     * @param {TaskGraphSharing} taskGraphSharing Namespace and list of permissions to share with. An empty list of permissions will remove the namespace; if permissions already exist they will be deleted then new ones added. In the event of a failure, the new policies will be rolled back to prevent partial policies, and it\&#39;s likely the UDF will not be shared with the namespace at all.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    shareRegisteredTaskGraph: (namespace: string, name: string, taskGraphSharing: TaskGraphSharing, options?: any) => Promise<RequestArgs>;
+    /**
+     * Update the contents of an existing registered task graph.
+     * @param {string} namespace The namespace that owns this registered UDF.
+     * @param {string} name The name of the registered task graph.
+     * @param {RegisteredTaskGraph} [graph] The new contents of the task graph.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    updateRegisteredTaskGraph: (namespace: string, name: string, graph?: RegisteredTaskGraph, options?: any) => Promise<RequestArgs>;
+};
+/**
+ * RegisteredTaskGraphsApi - functional programming interface
+ * @export
+ */
+export declare const RegisteredTaskGraphsApiFp: (configuration?: Configuration) => {
+    /**
+     * Delete the given registered task graph.
+     * @param {string} namespace The namespace that owns this registered UDF.
+     * @param {string} name The name of the registered task graph.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    deleteRegisteredTaskGraph(namespace: string, name: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
+    /**
+     * Fetch the contents of this registered task graph.
+     * @param {string} namespace The namespace that owns this registered UDF.
+     * @param {string} name The name of the registered task graph.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getRegisteredTaskGraph(namespace: string, name: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<RegisteredTaskGraph>>;
+    /**
+     * Get sharing policies for the task graph.
+     * @param {string} namespace The namespace that owns the registered task graph.
+     * @param {string} name The name of the task graph.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getRegisteredTaskGraphSharingPolicies(namespace: string, name: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<TaskGraphSharing>>>;
+    /**
+     * Register a task graph in the given namespace, with the given name.
+     * @param {string} namespace The namespace that owns this registered UDF.
+     * @param {string} name The name of the registered task graph.
+     * @param {RegisteredTaskGraph} [graph] Task graph to register.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    registerRegisteredTaskGraph(namespace: string, name: string, graph?: RegisteredTaskGraph, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
+    /**
+     * Share a task graph.
+     * @param {string} namespace The namespace that owns the registered task graph.
+     * @param {string} name The name of the task graph.
+     * @param {TaskGraphSharing} taskGraphSharing Namespace and list of permissions to share with. An empty list of permissions will remove the namespace; if permissions already exist they will be deleted then new ones added. In the event of a failure, the new policies will be rolled back to prevent partial policies, and it\&#39;s likely the UDF will not be shared with the namespace at all.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    shareRegisteredTaskGraph(namespace: string, name: string, taskGraphSharing: TaskGraphSharing, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
+    /**
+     * Update the contents of an existing registered task graph.
+     * @param {string} namespace The namespace that owns this registered UDF.
+     * @param {string} name The name of the registered task graph.
+     * @param {RegisteredTaskGraph} [graph] The new contents of the task graph.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    updateRegisteredTaskGraph(namespace: string, name: string, graph?: RegisteredTaskGraph, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
+};
+/**
+ * RegisteredTaskGraphsApi - factory interface
+ * @export
+ */
+export declare const RegisteredTaskGraphsApiFactory: (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) => {
+    /**
+     * Delete the given registered task graph.
+     * @param {string} namespace The namespace that owns this registered UDF.
+     * @param {string} name The name of the registered task graph.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    deleteRegisteredTaskGraph(namespace: string, name: string, options?: any): AxiosPromise<void>;
+    /**
+     * Fetch the contents of this registered task graph.
+     * @param {string} namespace The namespace that owns this registered UDF.
+     * @param {string} name The name of the registered task graph.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getRegisteredTaskGraph(namespace: string, name: string, options?: any): AxiosPromise<RegisteredTaskGraph>;
+    /**
+     * Get sharing policies for the task graph.
+     * @param {string} namespace The namespace that owns the registered task graph.
+     * @param {string} name The name of the task graph.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getRegisteredTaskGraphSharingPolicies(namespace: string, name: string, options?: any): AxiosPromise<Array<TaskGraphSharing>>;
+    /**
+     * Register a task graph in the given namespace, with the given name.
+     * @param {string} namespace The namespace that owns this registered UDF.
+     * @param {string} name The name of the registered task graph.
+     * @param {RegisteredTaskGraph} [graph] Task graph to register.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    registerRegisteredTaskGraph(namespace: string, name: string, graph?: RegisteredTaskGraph, options?: any): AxiosPromise<void>;
+    /**
+     * Share a task graph.
+     * @param {string} namespace The namespace that owns the registered task graph.
+     * @param {string} name The name of the task graph.
+     * @param {TaskGraphSharing} taskGraphSharing Namespace and list of permissions to share with. An empty list of permissions will remove the namespace; if permissions already exist they will be deleted then new ones added. In the event of a failure, the new policies will be rolled back to prevent partial policies, and it\&#39;s likely the UDF will not be shared with the namespace at all.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    shareRegisteredTaskGraph(namespace: string, name: string, taskGraphSharing: TaskGraphSharing, options?: any): AxiosPromise<void>;
+    /**
+     * Update the contents of an existing registered task graph.
+     * @param {string} namespace The namespace that owns this registered UDF.
+     * @param {string} name The name of the registered task graph.
+     * @param {RegisteredTaskGraph} [graph] The new contents of the task graph.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    updateRegisteredTaskGraph(namespace: string, name: string, graph?: RegisteredTaskGraph, options?: any): AxiosPromise<void>;
+};
+/**
+ * RegisteredTaskGraphsApi - object-oriented interface
+ * @export
+ * @class RegisteredTaskGraphsApi
+ * @extends {BaseAPI}
+ */
+export declare class RegisteredTaskGraphsApi extends BaseAPI {
+    /**
+     * Delete the given registered task graph.
+     * @param {string} namespace The namespace that owns this registered UDF.
+     * @param {string} name The name of the registered task graph.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof RegisteredTaskGraphsApi
+     */
+    deleteRegisteredTaskGraph(namespace: string, name: string, options?: any): Promise<import("axios").AxiosResponse<void>>;
+    /**
+     * Fetch the contents of this registered task graph.
+     * @param {string} namespace The namespace that owns this registered UDF.
+     * @param {string} name The name of the registered task graph.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof RegisteredTaskGraphsApi
+     */
+    getRegisteredTaskGraph(namespace: string, name: string, options?: any): Promise<import("axios").AxiosResponse<RegisteredTaskGraph>>;
+    /**
+     * Get sharing policies for the task graph.
+     * @param {string} namespace The namespace that owns the registered task graph.
+     * @param {string} name The name of the task graph.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof RegisteredTaskGraphsApi
+     */
+    getRegisteredTaskGraphSharingPolicies(namespace: string, name: string, options?: any): Promise<import("axios").AxiosResponse<TaskGraphSharing[]>>;
+    /**
+     * Register a task graph in the given namespace, with the given name.
+     * @param {string} namespace The namespace that owns this registered UDF.
+     * @param {string} name The name of the registered task graph.
+     * @param {RegisteredTaskGraph} [graph] Task graph to register.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof RegisteredTaskGraphsApi
+     */
+    registerRegisteredTaskGraph(namespace: string, name: string, graph?: RegisteredTaskGraph, options?: any): Promise<import("axios").AxiosResponse<void>>;
+    /**
+     * Share a task graph.
+     * @param {string} namespace The namespace that owns the registered task graph.
+     * @param {string} name The name of the task graph.
+     * @param {TaskGraphSharing} taskGraphSharing Namespace and list of permissions to share with. An empty list of permissions will remove the namespace; if permissions already exist they will be deleted then new ones added. In the event of a failure, the new policies will be rolled back to prevent partial policies, and it\&#39;s likely the UDF will not be shared with the namespace at all.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof RegisteredTaskGraphsApi
+     */
+    shareRegisteredTaskGraph(namespace: string, name: string, taskGraphSharing: TaskGraphSharing, options?: any): Promise<import("axios").AxiosResponse<void>>;
+    /**
+     * Update the contents of an existing registered task graph.
+     * @param {string} namespace The namespace that owns this registered UDF.
+     * @param {string} name The name of the registered task graph.
+     * @param {RegisteredTaskGraph} [graph] The new contents of the task graph.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof RegisteredTaskGraphsApi
+     */
+    updateRegisteredTaskGraph(namespace: string, name: string, graph?: RegisteredTaskGraph, options?: any): Promise<import("axios").AxiosResponse<void>>;
+}
+/**
  * SqlApi - axios parameter creator
  * @export
  */
@@ -7571,6 +9217,15 @@ export declare const TaskGraphLogsApiAxiosParamCreator: (configuration?: Configu
      */
     listTaskGraphLogs: (namespace?: string, createdBy?: string, search?: string, startTime?: string, endTime?: string, page?: number, perPage?: number, options?: any) => Promise<RequestArgs>;
     /**
+     *
+     * @param {string} namespace The namespace that owns this task graph log.
+     * @param {string} id The UUID of the task graph log entry.
+     * @param {TaskGraphClientNodeStatus} report The node status to report.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    reportClientNode: (namespace: string, id: string, report: TaskGraphClientNodeStatus, options?: any) => Promise<RequestArgs>;
+    /**
      * Update information about a single task graph execution.
      * @param {string} namespace The namespace that owns this task graph log.
      * @param {string} id The UUID of the task graph log entry.
@@ -7615,6 +9270,15 @@ export declare const TaskGraphLogsApiFp: (configuration?: Configuration) => {
      */
     listTaskGraphLogs(namespace?: string, createdBy?: string, search?: string, startTime?: string, endTime?: string, page?: number, perPage?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TaskGraphLogsData>>;
     /**
+     *
+     * @param {string} namespace The namespace that owns this task graph log.
+     * @param {string} id The UUID of the task graph log entry.
+     * @param {TaskGraphClientNodeStatus} report The node status to report.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    reportClientNode(namespace: string, id: string, report: TaskGraphClientNodeStatus, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
+    /**
      * Update information about a single task graph execution.
      * @param {string} namespace The namespace that owns this task graph log.
      * @param {string} id The UUID of the task graph log entry.
@@ -7658,6 +9322,15 @@ export declare const TaskGraphLogsApiFactory: (configuration?: Configuration, ba
      * @throws {RequiredError}
      */
     listTaskGraphLogs(namespace?: string, createdBy?: string, search?: string, startTime?: string, endTime?: string, page?: number, perPage?: number, options?: any): AxiosPromise<TaskGraphLogsData>;
+    /**
+     *
+     * @param {string} namespace The namespace that owns this task graph log.
+     * @param {string} id The UUID of the task graph log entry.
+     * @param {TaskGraphClientNodeStatus} report The node status to report.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    reportClientNode(namespace: string, id: string, report: TaskGraphClientNodeStatus, options?: any): AxiosPromise<void>;
     /**
      * Update information about a single task graph execution.
      * @param {string} namespace The namespace that owns this task graph log.
@@ -7707,6 +9380,16 @@ export declare class TaskGraphLogsApi extends BaseAPI {
      * @memberof TaskGraphLogsApi
      */
     listTaskGraphLogs(namespace?: string, createdBy?: string, search?: string, startTime?: string, endTime?: string, page?: number, perPage?: number, options?: any): Promise<import("axios").AxiosResponse<TaskGraphLogsData>>;
+    /**
+     *
+     * @param {string} namespace The namespace that owns this task graph log.
+     * @param {string} id The UUID of the task graph log entry.
+     * @param {TaskGraphClientNodeStatus} report The node status to report.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof TaskGraphLogsApi
+     */
+    reportClientNode(namespace: string, id: string, report: TaskGraphClientNodeStatus, options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**
      * Update information about a single task graph execution.
      * @param {string} namespace The namespace that owns this task graph log.
@@ -7954,6 +9637,17 @@ export declare const UdfApiAxiosParamCreator: (configuration?: Configuration) =>
      */
     getUDFInfoSharingPolicies: (namespace: string, name: string, options?: any) => Promise<RequestArgs>;
     /**
+     * Copy a tiledb udf at the specified location
+     * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
+     * @param {string} name name of UDFInfo
+     * @param {UDFCopy} uDFCopy Input/Output information to copy a UDF
+     * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+     * @param {number} [endTimestamp] Milliseconds since Unix epoch
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    handleCopyUDF: (namespace: string, name: string, uDFCopy: UDFCopy, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, endTimestamp?: number, options?: any) => Promise<RequestArgs>;
+    /**
      * register a UDF in the given namespace
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
      * @param {string} name name to register UDF under
@@ -8051,6 +9745,17 @@ export declare const UdfApiFp: (configuration?: Configuration) => {
      */
     getUDFInfoSharingPolicies(namespace: string, name: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<UDFSharing>>>;
     /**
+     * Copy a tiledb udf at the specified location
+     * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
+     * @param {string} name name of UDFInfo
+     * @param {UDFCopy} uDFCopy Input/Output information to copy a UDF
+     * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+     * @param {number} [endTimestamp] Milliseconds since Unix epoch
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    handleCopyUDF(namespace: string, name: string, uDFCopy: UDFCopy, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, endTimestamp?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UDFCopied>>;
+    /**
      * register a UDF in the given namespace
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
      * @param {string} name name to register UDF under
@@ -8147,6 +9852,17 @@ export declare const UdfApiFactory: (configuration?: Configuration, basePath?: s
      * @throws {RequiredError}
      */
     getUDFInfoSharingPolicies(namespace: string, name: string, options?: any): AxiosPromise<Array<UDFSharing>>;
+    /**
+     * Copy a tiledb udf at the specified location
+     * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
+     * @param {string} name name of UDFInfo
+     * @param {UDFCopy} uDFCopy Input/Output information to copy a UDF
+     * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+     * @param {number} [endTimestamp] Milliseconds since Unix epoch
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    handleCopyUDF(namespace: string, name: string, uDFCopy: UDFCopy, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, endTimestamp?: number, options?: any): AxiosPromise<UDFCopied>;
     /**
      * register a UDF in the given namespace
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
@@ -8249,6 +9965,18 @@ export declare class UdfApi extends BaseAPI {
      * @memberof UdfApi
      */
     getUDFInfoSharingPolicies(namespace: string, name: string, options?: any): Promise<import("axios").AxiosResponse<UDFSharing[]>>;
+    /**
+     * Copy a tiledb udf at the specified location
+     * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
+     * @param {string} name name of UDFInfo
+     * @param {UDFCopy} uDFCopy Input/Output information to copy a UDF
+     * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+     * @param {number} [endTimestamp] Milliseconds since Unix epoch
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UdfApi
+     */
+    handleCopyUDF(namespace: string, name: string, uDFCopy: UDFCopy, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, endTimestamp?: number, options?: any): Promise<import("axios").AxiosResponse<UDFCopied>>;
     /**
      * register a UDF in the given namespace
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)

@@ -423,6 +423,310 @@ export interface DomainArray {
     float64?: Array<number>;
 }
 /**
+ * Updates the contents group
+ * @export
+ * @interface GroupContentsChangesRequest
+ */
+export interface GroupContentsChangesRequest {
+    /**
+     *
+     * @type {TileDBConfig}
+     * @memberof GroupContentsChangesRequest
+     */
+    config?: TileDBConfig;
+    /**
+     *
+     * @type {GroupContentsChangesRequestGroupChanges}
+     * @memberof GroupContentsChangesRequest
+     */
+    group_changes?: GroupContentsChangesRequestGroupChanges;
+}
+/**
+ *
+ * @export
+ * @interface GroupContentsChangesRequestGroupChanges
+ */
+export interface GroupContentsChangesRequestGroupChanges {
+    /**
+     * optional series of members to remove
+     * @type {Array<string>}
+     * @memberof GroupContentsChangesRequestGroupChanges
+     */
+    members_to_remove?: Array<string>;
+    /**
+     * optional series of members to add
+     * @type {Array<GroupMember>}
+     * @memberof GroupContentsChangesRequestGroupChanges
+     */
+    members_to_add?: Array<GroupMember>;
+}
+/**
+ * Request the contents of a group
+ * @export
+ * @interface GroupContentsRetrievalRequest
+ */
+export interface GroupContentsRetrievalRequest {
+    /**
+     *
+     * @type {TileDBConfig}
+     * @memberof GroupContentsRetrievalRequest
+     */
+    config?: TileDBConfig;
+}
+/**
+ * Object including a page of members of a group and pagination metadata
+ * @export
+ * @interface GroupContentsRetrievalResponse
+ */
+export interface GroupContentsRetrievalResponse {
+    /**
+     * Groups members
+     * @type {Array<GroupMember>}
+     * @memberof GroupContentsRetrievalResponse
+     */
+    members?: Array<GroupMember>;
+    /**
+     *
+     * @type {Metadata}
+     * @memberof GroupContentsRetrievalResponse
+     */
+    metadata?: Metadata;
+}
+/**
+ * information for creating a new group with the passed configuration
+ * @export
+ * @interface GroupCreationRequest
+ */
+export interface GroupCreationRequest {
+    /**
+     *
+     * @type {TileDBConfig}
+     * @memberof GroupCreationRequest
+     */
+    config?: TileDBConfig;
+    /**
+     *
+     * @type {GroupCreationRequestGroupDetails}
+     * @memberof GroupCreationRequest
+     */
+    group_details: GroupCreationRequestGroupDetails;
+}
+/**
+ * Initial attributes for the creation of a group.
+ * @export
+ * @interface GroupCreationRequestGroupDetails
+ */
+export interface GroupCreationRequestGroupDetails {
+    /**
+     * A human readable description of the contents of the group.
+     * @type {string}
+     * @memberof GroupCreationRequestGroupDetails
+     */
+    description?: string;
+    /**
+     * The name of the group. If must be unique within the group.
+     * @type {string}
+     * @memberof GroupCreationRequestGroupDetails
+     */
+    name?: string;
+    /**
+     * uri of group.
+     * @type {string}
+     * @memberof GroupCreationRequestGroupDetails
+     */
+    uri?: string;
+    /**
+     * logo (base64 encoded) for the group. Optional
+     * @type {string}
+     * @memberof GroupCreationRequestGroupDetails
+     */
+    logo?: string;
+    /**
+     * optional tags for groups.
+     * @type {Array<string>}
+     * @memberof GroupCreationRequestGroupDetails
+     */
+    tags?: Array<string>;
+    /**
+     * License identifier from SPDX License List or Custom.
+     * @type {string}
+     * @memberof GroupCreationRequestGroupDetails
+     */
+    license_id?: string;
+    /**
+     * License text
+     * @type {string}
+     * @memberof GroupCreationRequestGroupDetails
+     */
+    license_text?: string;
+}
+/**
+ * A groups member, array or another groups, to add or remove from an existing group.
+ * @export
+ * @interface GroupMember
+ */
+export interface GroupMember {
+    /**
+     * The name of the member
+     * @type {string}
+     * @memberof GroupMember
+     */
+    name?: string;
+    /**
+     * The uri of the member
+     * @type {string}
+     * @memberof GroupMember
+     */
+    uri?: string;
+    /**
+     *
+     * @type {GroupMemberType}
+     * @memberof GroupMember
+     */
+    type?: GroupMemberType;
+}
+/**
+ * Specific file types of group members
+ * @export
+ * @enum {string}
+ */
+export declare enum GroupMemberAssetType {
+    Group = "group",
+    Array = "array",
+    Notebook = "notebook",
+    Dashboard = "dashboard",
+    UserDefinedFunction = "user_defined_function",
+    MlModel = "ml_model",
+    File = "file"
+}
+/**
+ * File types that can be included in groups
+ * @export
+ * @enum {string}
+ */
+export declare enum GroupMemberType {
+    Group = "GROUP",
+    Array = "ARRAY"
+}
+/**
+ * Retrieves the metadata of a group
+ * @export
+ * @interface GroupMetadataRetrievalRequest
+ */
+export interface GroupMetadataRetrievalRequest {
+    /**
+     *
+     * @type {TileDBConfig}
+     * @memberof GroupMetadataRetrievalRequest
+     */
+    config?: TileDBConfig;
+}
+/**
+ * Updates the metadata of a group
+ * @export
+ * @interface GroupMetadataUpdateRequest
+ */
+export interface GroupMetadataUpdateRequest {
+    /**
+     *
+     * @type {TileDBConfig}
+     * @memberof GroupMetadataUpdateRequest
+     */
+    config?: TileDBConfig;
+    /**
+     *
+     * @type {Metadata}
+     * @memberof GroupMetadataUpdateRequest
+     */
+    metadata: Metadata;
+}
+/**
+ * information for creating a new group with the passed configuration
+ * @export
+ * @interface GroupRegistrationRequest
+ */
+export interface GroupRegistrationRequest {
+    /**
+     *
+     * @type {TileDBConfig}
+     * @memberof GroupRegistrationRequest
+     */
+    config?: TileDBConfig;
+    /**
+     *
+     * @type {GroupRegistrationRequestGroupDetails}
+     * @memberof GroupRegistrationRequest
+     */
+    group_details: GroupRegistrationRequestGroupDetails;
+}
+/**
+ * Initial attributes for the creation of a group.
+ * @export
+ * @interface GroupRegistrationRequestGroupDetails
+ */
+export interface GroupRegistrationRequestGroupDetails {
+    /**
+     * A human readable description of the contents of the group.
+     * @type {string}
+     * @memberof GroupRegistrationRequestGroupDetails
+     */
+    description?: string;
+    /**
+     * The name of the group. If must be unique within the group.
+     * @type {string}
+     * @memberof GroupRegistrationRequestGroupDetails
+     */
+    name?: string;
+    /**
+     * The unique name or id of the parent of the group. If empty, then the new group will be a top level group.
+     * @type {string}
+     * @memberof GroupRegistrationRequestGroupDetails
+     */
+    parent?: string;
+    /**
+     * uri of group.
+     * @type {string}
+     * @memberof GroupRegistrationRequestGroupDetails
+     */
+    uri?: string;
+    /**
+     * logo (base64 encoded) for the group. Optional
+     * @type {string}
+     * @memberof GroupRegistrationRequestGroupDetails
+     */
+    logo?: string;
+    /**
+     * optional tags for groups.
+     * @type {Array<string>}
+     * @memberof GroupRegistrationRequestGroupDetails
+     */
+    tags?: Array<string>;
+    /**
+     * License identifier from SPDX License List or Custom.
+     * @type {string}
+     * @memberof GroupRegistrationRequestGroupDetails
+     */
+    license_id?: string;
+    /**
+     * License text
+     * @type {string}
+     * @memberof GroupRegistrationRequestGroupDetails
+     */
+    license_text?: string;
+    /**
+     * region of the group
+     * @type {string}
+     * @memberof GroupRegistrationRequestGroupDetails
+     */
+    region?: string;
+    /**
+     * the name of the access credentials to use. if unset, the default credentials will be used.
+     * @type {string}
+     * @memberof GroupRegistrationRequestGroupDetails
+     */
+    access_credentials_name?: string;
+}
+/**
  * Layout of array
  * @export
  * @enum {string}
@@ -432,6 +736,56 @@ export declare enum Layout {
     ColMajor = "col-major",
     GlobalOrder = "global-order",
     Unordered = "unordered"
+}
+/**
+ * user\'s TileDB metadata
+ * @export
+ * @interface Metadata
+ */
+export interface Metadata {
+    /**
+     * List of metadata entries
+     * @type {Array<MetadataEntry>}
+     * @memberof Metadata
+     */
+    entries?: Array<MetadataEntry>;
+}
+/**
+ * key/value pair representing a group metadata map entry
+ * @export
+ * @interface MetadataEntry
+ */
+export interface MetadataEntry {
+    /**
+     *
+     * @type {string}
+     * @memberof MetadataEntry
+     */
+    key?: string;
+    /**
+     *
+     * @type {string}
+     * @memberof MetadataEntry
+     */
+    type?: string;
+    /**
+     *
+     * @type {number}
+     * @memberof MetadataEntry
+     */
+    valueNum?: number;
+    /**
+     *
+     * @type {object}
+     * @memberof MetadataEntry
+     */
+    value?: object;
+    /**
+     *
+     * @type {boolean}
+     * @memberof MetadataEntry
+     */
+    del?: boolean;
 }
 /**
  * Represents an open array
@@ -814,6 +1168,38 @@ export interface SubarrayRanges {
     bufferStartSizes?: Array<number>;
 }
 /**
+ * TileDB config used for interaction with the embedded library
+ * @export
+ * @interface TileDBConfig
+ */
+export interface TileDBConfig {
+    /**
+     *
+     * @type {Array<TileDBConfigEntries>}
+     * @memberof TileDBConfig
+     */
+    entries?: Array<TileDBConfigEntries>;
+}
+/**
+ *
+ * @export
+ * @interface TileDBConfigEntries
+ */
+export interface TileDBConfigEntries {
+    /**
+     *
+     * @type {string}
+     * @memberof TileDBConfigEntries
+     */
+    key?: string;
+    /**
+     *
+     * @type {string}
+     * @memberof TileDBConfigEntries
+     */
+    value?: string;
+}
+/**
  *
  * @export
  * @interface Writer
@@ -936,6 +1322,336 @@ export declare class ArrayApi extends BaseAPI {
      * @memberof ArrayApi
      */
     arrayActivityLog(namespace: string, array: string, start?: number, end?: number, eventTypes?: Array<string>, taskId?: string, hasTaskId?: boolean, page?: number, perPage?: number, options?: any): Promise<import("axios").AxiosResponse<ArrayActivityLogData>>;
+}
+/**
+ * GroupsApi - axios parameter creator
+ * @export
+ */
+export declare const GroupsApiAxiosParamCreator: (configuration?: Configuration) => {
+    /**
+     * Creates an empty group
+     * @param {string} groupNamespace The namespace of the group
+     * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+     * @param {GroupCreationRequest} [groupCreation]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    createGroup: (groupNamespace: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, groupCreation?: GroupCreationRequest, options?: any) => Promise<RequestArgs>;
+    /**
+     * Deregisters a group
+     * @param {string} groupNamespace The namespace of the group
+     * @param {string} groupName The unique name or id of the group
+     * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    deregisterGroup: (groupNamespace: string, groupName: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, options?: any) => Promise<RequestArgs>;
+    /**
+     * get metadata on a group using the requested config
+     * @param {string} groupNamespace The namespace of the group
+     * @param {string} groupName The unique name or id of the group
+     * @param {GroupMetadataRetrievalRequest} [metadataRetrieval]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getGroupMetadata: (groupNamespace: string, groupName: string, metadataRetrieval?: GroupMetadataRetrievalRequest, options?: any) => Promise<RequestArgs>;
+    /**
+     * can be used to check if the resource exists
+     * @param {string} groupNamespace The namespace of the group
+     * @param {string} groupName The unique name or id of the group
+     * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    groupsGroupNamespaceGroupNameOptions: (groupNamespace: string, groupName: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, options?: any) => Promise<RequestArgs>;
+    /**
+     * Registers an already existing group
+     * @param {string} groupNamespace The namespace of the group
+     * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+     * @param {GroupRegistrationRequest} [groupRegistration]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    registerGroup: (groupNamespace: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, groupRegistration?: GroupRegistrationRequest, options?: any) => Promise<RequestArgs>;
+    /**
+     * Retrieves the contents of a group
+     * @param {string} groupNamespace The namespace of the group
+     * @param {string} groupName The unique name or id of the group
+     * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+     * @param {GroupContentsRetrievalRequest} [groupRetrieval]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    retrieveGroup: (groupNamespace: string, groupName: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, groupRetrieval?: GroupContentsRetrievalRequest, options?: any) => Promise<RequestArgs>;
+    /**
+     * Change the contents of the group
+     * @param {string} groupNamespace The namespace of the group
+     * @param {string} groupName The unique name or id of the group
+     * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+     * @param {GroupContentsChangesRequest} [groupUpdateContents]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    updateGroupContents: (groupNamespace: string, groupName: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, groupUpdateContents?: GroupContentsChangesRequest, options?: any) => Promise<RequestArgs>;
+    /**
+     * update metadata on a group
+     * @param {string} groupNamespace The namespace of the group
+     * @param {string} groupName The unique name or id of the group
+     * @param {GroupMetadataUpdateRequest} [metadataUpdating]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    updateGroupMetadata: (groupNamespace: string, groupName: string, metadataUpdating?: GroupMetadataUpdateRequest, options?: any) => Promise<RequestArgs>;
+};
+/**
+ * GroupsApi - functional programming interface
+ * @export
+ */
+export declare const GroupsApiFp: (configuration?: Configuration) => {
+    /**
+     * Creates an empty group
+     * @param {string} groupNamespace The namespace of the group
+     * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+     * @param {GroupCreationRequest} [groupCreation]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    createGroup(groupNamespace: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, groupCreation?: GroupCreationRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
+    /**
+     * Deregisters a group
+     * @param {string} groupNamespace The namespace of the group
+     * @param {string} groupName The unique name or id of the group
+     * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    deregisterGroup(groupNamespace: string, groupName: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
+    /**
+     * get metadata on a group using the requested config
+     * @param {string} groupNamespace The namespace of the group
+     * @param {string} groupName The unique name or id of the group
+     * @param {GroupMetadataRetrievalRequest} [metadataRetrieval]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getGroupMetadata(groupNamespace: string, groupName: string, metadataRetrieval?: GroupMetadataRetrievalRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Metadata>>;
+    /**
+     * can be used to check if the resource exists
+     * @param {string} groupNamespace The namespace of the group
+     * @param {string} groupName The unique name or id of the group
+     * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    groupsGroupNamespaceGroupNameOptions(groupNamespace: string, groupName: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
+    /**
+     * Registers an already existing group
+     * @param {string} groupNamespace The namespace of the group
+     * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+     * @param {GroupRegistrationRequest} [groupRegistration]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    registerGroup(groupNamespace: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, groupRegistration?: GroupRegistrationRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
+    /**
+     * Retrieves the contents of a group
+     * @param {string} groupNamespace The namespace of the group
+     * @param {string} groupName The unique name or id of the group
+     * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+     * @param {GroupContentsRetrievalRequest} [groupRetrieval]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    retrieveGroup(groupNamespace: string, groupName: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, groupRetrieval?: GroupContentsRetrievalRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GroupContentsRetrievalResponse>>;
+    /**
+     * Change the contents of the group
+     * @param {string} groupNamespace The namespace of the group
+     * @param {string} groupName The unique name or id of the group
+     * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+     * @param {GroupContentsChangesRequest} [groupUpdateContents]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    updateGroupContents(groupNamespace: string, groupName: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, groupUpdateContents?: GroupContentsChangesRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
+    /**
+     * update metadata on a group
+     * @param {string} groupNamespace The namespace of the group
+     * @param {string} groupName The unique name or id of the group
+     * @param {GroupMetadataUpdateRequest} [metadataUpdating]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    updateGroupMetadata(groupNamespace: string, groupName: string, metadataUpdating?: GroupMetadataUpdateRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
+};
+/**
+ * GroupsApi - factory interface
+ * @export
+ */
+export declare const GroupsApiFactory: (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) => {
+    /**
+     * Creates an empty group
+     * @param {string} groupNamespace The namespace of the group
+     * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+     * @param {GroupCreationRequest} [groupCreation]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    createGroup(groupNamespace: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, groupCreation?: GroupCreationRequest, options?: any): AxiosPromise<void>;
+    /**
+     * Deregisters a group
+     * @param {string} groupNamespace The namespace of the group
+     * @param {string} groupName The unique name or id of the group
+     * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    deregisterGroup(groupNamespace: string, groupName: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, options?: any): AxiosPromise<void>;
+    /**
+     * get metadata on a group using the requested config
+     * @param {string} groupNamespace The namespace of the group
+     * @param {string} groupName The unique name or id of the group
+     * @param {GroupMetadataRetrievalRequest} [metadataRetrieval]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getGroupMetadata(groupNamespace: string, groupName: string, metadataRetrieval?: GroupMetadataRetrievalRequest, options?: any): AxiosPromise<Metadata>;
+    /**
+     * can be used to check if the resource exists
+     * @param {string} groupNamespace The namespace of the group
+     * @param {string} groupName The unique name or id of the group
+     * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    groupsGroupNamespaceGroupNameOptions(groupNamespace: string, groupName: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, options?: any): AxiosPromise<void>;
+    /**
+     * Registers an already existing group
+     * @param {string} groupNamespace The namespace of the group
+     * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+     * @param {GroupRegistrationRequest} [groupRegistration]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    registerGroup(groupNamespace: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, groupRegistration?: GroupRegistrationRequest, options?: any): AxiosPromise<void>;
+    /**
+     * Retrieves the contents of a group
+     * @param {string} groupNamespace The namespace of the group
+     * @param {string} groupName The unique name or id of the group
+     * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+     * @param {GroupContentsRetrievalRequest} [groupRetrieval]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    retrieveGroup(groupNamespace: string, groupName: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, groupRetrieval?: GroupContentsRetrievalRequest, options?: any): AxiosPromise<GroupContentsRetrievalResponse>;
+    /**
+     * Change the contents of the group
+     * @param {string} groupNamespace The namespace of the group
+     * @param {string} groupName The unique name or id of the group
+     * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+     * @param {GroupContentsChangesRequest} [groupUpdateContents]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    updateGroupContents(groupNamespace: string, groupName: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, groupUpdateContents?: GroupContentsChangesRequest, options?: any): AxiosPromise<void>;
+    /**
+     * update metadata on a group
+     * @param {string} groupNamespace The namespace of the group
+     * @param {string} groupName The unique name or id of the group
+     * @param {GroupMetadataUpdateRequest} [metadataUpdating]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    updateGroupMetadata(groupNamespace: string, groupName: string, metadataUpdating?: GroupMetadataUpdateRequest, options?: any): AxiosPromise<void>;
+};
+/**
+ * GroupsApi - object-oriented interface
+ * @export
+ * @class GroupsApi
+ * @extends {BaseAPI}
+ */
+export declare class GroupsApi extends BaseAPI {
+    /**
+     * Creates an empty group
+     * @param {string} groupNamespace The namespace of the group
+     * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+     * @param {GroupCreationRequest} [groupCreation]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof GroupsApi
+     */
+    createGroup(groupNamespace: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, groupCreation?: GroupCreationRequest, options?: any): Promise<import("axios").AxiosResponse<void>>;
+    /**
+     * Deregisters a group
+     * @param {string} groupNamespace The namespace of the group
+     * @param {string} groupName The unique name or id of the group
+     * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof GroupsApi
+     */
+    deregisterGroup(groupNamespace: string, groupName: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, options?: any): Promise<import("axios").AxiosResponse<void>>;
+    /**
+     * get metadata on a group using the requested config
+     * @param {string} groupNamespace The namespace of the group
+     * @param {string} groupName The unique name or id of the group
+     * @param {GroupMetadataRetrievalRequest} [metadataRetrieval]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof GroupsApi
+     */
+    getGroupMetadata(groupNamespace: string, groupName: string, metadataRetrieval?: GroupMetadataRetrievalRequest, options?: any): Promise<import("axios").AxiosResponse<Metadata>>;
+    /**
+     * can be used to check if the resource exists
+     * @param {string} groupNamespace The namespace of the group
+     * @param {string} groupName The unique name or id of the group
+     * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof GroupsApi
+     */
+    groupsGroupNamespaceGroupNameOptions(groupNamespace: string, groupName: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, options?: any): Promise<import("axios").AxiosResponse<void>>;
+    /**
+     * Registers an already existing group
+     * @param {string} groupNamespace The namespace of the group
+     * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+     * @param {GroupRegistrationRequest} [groupRegistration]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof GroupsApi
+     */
+    registerGroup(groupNamespace: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, groupRegistration?: GroupRegistrationRequest, options?: any): Promise<import("axios").AxiosResponse<void>>;
+    /**
+     * Retrieves the contents of a group
+     * @param {string} groupNamespace The namespace of the group
+     * @param {string} groupName The unique name or id of the group
+     * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+     * @param {GroupContentsRetrievalRequest} [groupRetrieval]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof GroupsApi
+     */
+    retrieveGroup(groupNamespace: string, groupName: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, groupRetrieval?: GroupContentsRetrievalRequest, options?: any): Promise<import("axios").AxiosResponse<GroupContentsRetrievalResponse>>;
+    /**
+     * Change the contents of the group
+     * @param {string} groupNamespace The namespace of the group
+     * @param {string} groupName The unique name or id of the group
+     * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+     * @param {GroupContentsChangesRequest} [groupUpdateContents]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof GroupsApi
+     */
+    updateGroupContents(groupNamespace: string, groupName: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, groupUpdateContents?: GroupContentsChangesRequest, options?: any): Promise<import("axios").AxiosResponse<void>>;
+    /**
+     * update metadata on a group
+     * @param {string} groupNamespace The namespace of the group
+     * @param {string} groupName The unique name or id of the group
+     * @param {GroupMetadataUpdateRequest} [metadataUpdating]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof GroupsApi
+     */
+    updateGroupMetadata(groupNamespace: string, groupName: string, metadataUpdating?: GroupMetadataUpdateRequest, options?: any): Promise<import("axios").AxiosResponse<void>>;
 }
 /**
  * OrganizationApi - axios parameter creator

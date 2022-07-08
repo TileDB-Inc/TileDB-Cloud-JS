@@ -435,6 +435,312 @@ export interface DomainArray {
     float64?: Array<number>;
 }
 /**
+ * Updates the contents group
+ * @export
+ * @interface GroupContentsChangesRequest
+ */
+export interface GroupContentsChangesRequest {
+    /**
+     * 
+     * @type {TileDBConfig}
+     * @memberof GroupContentsChangesRequest
+     */
+    config?: TileDBConfig;
+    /**
+     * 
+     * @type {GroupContentsChangesRequestGroupChanges}
+     * @memberof GroupContentsChangesRequest
+     */
+    group_changes?: GroupContentsChangesRequestGroupChanges;
+}
+/**
+ * 
+ * @export
+ * @interface GroupContentsChangesRequestGroupChanges
+ */
+export interface GroupContentsChangesRequestGroupChanges {
+    /**
+     * optional series of members to remove
+     * @type {Array<string>}
+     * @memberof GroupContentsChangesRequestGroupChanges
+     */
+    members_to_remove?: Array<string>;
+    /**
+     * optional series of members to add
+     * @type {Array<GroupMember>}
+     * @memberof GroupContentsChangesRequestGroupChanges
+     */
+    members_to_add?: Array<GroupMember>;
+}
+/**
+ * Request the contents of a group
+ * @export
+ * @interface GroupContentsRetrievalRequest
+ */
+export interface GroupContentsRetrievalRequest {
+    /**
+     * 
+     * @type {TileDBConfig}
+     * @memberof GroupContentsRetrievalRequest
+     */
+    config?: TileDBConfig;
+}
+/**
+ * Object including a page of members of a group and pagination metadata
+ * @export
+ * @interface GroupContentsRetrievalResponse
+ */
+export interface GroupContentsRetrievalResponse {
+    /**
+     * Groups members
+     * @type {Array<GroupMember>}
+     * @memberof GroupContentsRetrievalResponse
+     */
+    members?: Array<GroupMember>;
+    /**
+     * 
+     * @type {Metadata}
+     * @memberof GroupContentsRetrievalResponse
+     */
+    metadata?: Metadata;
+}
+/**
+ * information for creating a new group with the passed configuration
+ * @export
+ * @interface GroupCreationRequest
+ */
+export interface GroupCreationRequest {
+    /**
+     * 
+     * @type {TileDBConfig}
+     * @memberof GroupCreationRequest
+     */
+    config?: TileDBConfig;
+    /**
+     * 
+     * @type {GroupCreationRequestGroupDetails}
+     * @memberof GroupCreationRequest
+     */
+    group_details: GroupCreationRequestGroupDetails;
+}
+/**
+ * Initial attributes for the creation of a group.
+ * @export
+ * @interface GroupCreationRequestGroupDetails
+ */
+export interface GroupCreationRequestGroupDetails {
+    /**
+     * A human readable description of the contents of the group.
+     * @type {string}
+     * @memberof GroupCreationRequestGroupDetails
+     */
+    description?: string;
+    /**
+     * The name of the group. If must be unique within the group.
+     * @type {string}
+     * @memberof GroupCreationRequestGroupDetails
+     */
+    name?: string;
+    /**
+     * uri of group.
+     * @type {string}
+     * @memberof GroupCreationRequestGroupDetails
+     */
+    uri?: string;
+    /**
+     * logo (base64 encoded) for the group. Optional
+     * @type {string}
+     * @memberof GroupCreationRequestGroupDetails
+     */
+    logo?: string;
+    /**
+     * optional tags for groups.
+     * @type {Array<string>}
+     * @memberof GroupCreationRequestGroupDetails
+     */
+    tags?: Array<string>;
+    /**
+     * License identifier from SPDX License List or Custom.
+     * @type {string}
+     * @memberof GroupCreationRequestGroupDetails
+     */
+    license_id?: string;
+    /**
+     * License text
+     * @type {string}
+     * @memberof GroupCreationRequestGroupDetails
+     */
+    license_text?: string;
+}
+/**
+ * A groups member, array or another groups, to add or remove from an existing group.
+ * @export
+ * @interface GroupMember
+ */
+export interface GroupMember {
+    /**
+     * The name of the member
+     * @type {string}
+     * @memberof GroupMember
+     */
+    name?: string;
+    /**
+     * The uri of the member
+     * @type {string}
+     * @memberof GroupMember
+     */
+    uri?: string;
+    /**
+     * 
+     * @type {GroupMemberType}
+     * @memberof GroupMember
+     */
+    type?: GroupMemberType;
+}
+/**
+ * Specific file types of group members
+ * @export
+ * @enum {string}
+ */
+export enum GroupMemberAssetType {
+    Group = 'group',
+    Array = 'array',
+    Notebook = 'notebook',
+    Dashboard = 'dashboard',
+    UserDefinedFunction = 'user_defined_function',
+    MlModel = 'ml_model',
+    File = 'file'
+}
+
+/**
+ * File types that can be included in groups
+ * @export
+ * @enum {string}
+ */
+export enum GroupMemberType {
+    Group = 'GROUP',
+    Array = 'ARRAY'
+}
+
+/**
+ * Retrieves the metadata of a group
+ * @export
+ * @interface GroupMetadataRetrievalRequest
+ */
+export interface GroupMetadataRetrievalRequest {
+    /**
+     * 
+     * @type {TileDBConfig}
+     * @memberof GroupMetadataRetrievalRequest
+     */
+    config?: TileDBConfig;
+}
+/**
+ * Updates the metadata of a group
+ * @export
+ * @interface GroupMetadataUpdateRequest
+ */
+export interface GroupMetadataUpdateRequest {
+    /**
+     * 
+     * @type {TileDBConfig}
+     * @memberof GroupMetadataUpdateRequest
+     */
+    config?: TileDBConfig;
+    /**
+     * 
+     * @type {Metadata}
+     * @memberof GroupMetadataUpdateRequest
+     */
+    metadata: Metadata;
+}
+/**
+ * information for creating a new group with the passed configuration
+ * @export
+ * @interface GroupRegistrationRequest
+ */
+export interface GroupRegistrationRequest {
+    /**
+     * 
+     * @type {TileDBConfig}
+     * @memberof GroupRegistrationRequest
+     */
+    config?: TileDBConfig;
+    /**
+     * 
+     * @type {GroupRegistrationRequestGroupDetails}
+     * @memberof GroupRegistrationRequest
+     */
+    group_details: GroupRegistrationRequestGroupDetails;
+}
+/**
+ * Initial attributes for the creation of a group.
+ * @export
+ * @interface GroupRegistrationRequestGroupDetails
+ */
+export interface GroupRegistrationRequestGroupDetails {
+    /**
+     * A human readable description of the contents of the group.
+     * @type {string}
+     * @memberof GroupRegistrationRequestGroupDetails
+     */
+    description?: string;
+    /**
+     * The name of the group. If must be unique within the group.
+     * @type {string}
+     * @memberof GroupRegistrationRequestGroupDetails
+     */
+    name?: string;
+    /**
+     * The unique name or id of the parent of the group. If empty, then the new group will be a top level group.
+     * @type {string}
+     * @memberof GroupRegistrationRequestGroupDetails
+     */
+    parent?: string;
+    /**
+     * uri of group.
+     * @type {string}
+     * @memberof GroupRegistrationRequestGroupDetails
+     */
+    uri?: string;
+    /**
+     * logo (base64 encoded) for the group. Optional
+     * @type {string}
+     * @memberof GroupRegistrationRequestGroupDetails
+     */
+    logo?: string;
+    /**
+     * optional tags for groups.
+     * @type {Array<string>}
+     * @memberof GroupRegistrationRequestGroupDetails
+     */
+    tags?: Array<string>;
+    /**
+     * License identifier from SPDX License List or Custom.
+     * @type {string}
+     * @memberof GroupRegistrationRequestGroupDetails
+     */
+    license_id?: string;
+    /**
+     * License text
+     * @type {string}
+     * @memberof GroupRegistrationRequestGroupDetails
+     */
+    license_text?: string;
+    /**
+     * region of the group
+     * @type {string}
+     * @memberof GroupRegistrationRequestGroupDetails
+     */
+    region?: string;
+    /**
+     * the name of the access credentials to use. if unset, the default credentials will be used.
+     * @type {string}
+     * @memberof GroupRegistrationRequestGroupDetails
+     */
+    access_credentials_name?: string;
+}
+/**
  * Layout of array
  * @export
  * @enum {string}
@@ -446,6 +752,56 @@ export enum Layout {
     Unordered = 'unordered'
 }
 
+/**
+ * user\'s TileDB metadata
+ * @export
+ * @interface Metadata
+ */
+export interface Metadata {
+    /**
+     * List of metadata entries
+     * @type {Array<MetadataEntry>}
+     * @memberof Metadata
+     */
+    entries?: Array<MetadataEntry>;
+}
+/**
+ * key/value pair representing a group metadata map entry
+ * @export
+ * @interface MetadataEntry
+ */
+export interface MetadataEntry {
+    /**
+     * 
+     * @type {string}
+     * @memberof MetadataEntry
+     */
+    key?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof MetadataEntry
+     */
+    type?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof MetadataEntry
+     */
+    valueNum?: number;
+    /**
+     * 
+     * @type {object}
+     * @memberof MetadataEntry
+     */
+    value?: object;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof MetadataEntry
+     */
+    del?: boolean;
+}
 /**
  * Represents an open array
  * @export
@@ -829,6 +1185,38 @@ export interface SubarrayRanges {
     bufferStartSizes?: Array<number>;
 }
 /**
+ * TileDB config used for interaction with the embedded library
+ * @export
+ * @interface TileDBConfig
+ */
+export interface TileDBConfig {
+    /**
+     * 
+     * @type {Array<TileDBConfigEntries>}
+     * @memberof TileDBConfig
+     */
+    entries?: Array<TileDBConfigEntries>;
+}
+/**
+ * 
+ * @export
+ * @interface TileDBConfigEntries
+ */
+export interface TileDBConfigEntries {
+    /**
+     * 
+     * @type {string}
+     * @memberof TileDBConfigEntries
+     */
+    key?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof TileDBConfigEntries
+     */
+    value?: string;
+}
+/**
  * 
  * @export
  * @interface Writer
@@ -1037,6 +1425,768 @@ export class ArrayApi extends BaseAPI {
      */
     public arrayActivityLog(namespace: string, array: string, start?: number, end?: number, eventTypes?: Array<string>, taskId?: string, hasTaskId?: boolean, page?: number, perPage?: number, options?: any) {
         return ArrayApiFp(this.configuration).arrayActivityLog(namespace, array, start, end, eventTypes, taskId, hasTaskId, page, perPage, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+/**
+ * GroupsApi - axios parameter creator
+ * @export
+ */
+export const GroupsApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * Creates an empty group
+         * @param {string} groupNamespace The namespace of the group
+         * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+         * @param {GroupCreationRequest} [groupCreation] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createGroup: async (groupNamespace: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, groupCreation?: GroupCreationRequest, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'groupNamespace' is not null or undefined
+            assertParamExists('createGroup', 'groupNamespace', groupNamespace)
+            const localVarPath = `/groups/{group_namespace}`
+                .replace(`{${"group_namespace"}}`, encodeURIComponent(String(groupNamespace)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+
+            // authentication BasicAuth required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            if (xTILEDBCLOUDACCESSCREDENTIALSNAME !== undefined && xTILEDBCLOUDACCESSCREDENTIALSNAME !== null) {
+                localVarHeaderParameter['X-TILEDB-CLOUD-ACCESS-CREDENTIALS-NAME'] = String(xTILEDBCLOUDACCESSCREDENTIALSNAME);
+            }
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
+            localVarRequestOptions.data = serializeDataIfNeeded(groupCreation, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Deregisters a group
+         * @param {string} groupNamespace The namespace of the group
+         * @param {string} groupName The unique name or id of the group
+         * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deregisterGroup: async (groupNamespace: string, groupName: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'groupNamespace' is not null or undefined
+            assertParamExists('deregisterGroup', 'groupNamespace', groupNamespace)
+            // verify required parameter 'groupName' is not null or undefined
+            assertParamExists('deregisterGroup', 'groupName', groupName)
+            const localVarPath = `/groups/{group_namespace}/{group_name}`
+                .replace(`{${"group_namespace"}}`, encodeURIComponent(String(groupNamespace)))
+                .replace(`{${"group_name"}}`, encodeURIComponent(String(groupName)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+
+            // authentication BasicAuth required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            if (xTILEDBCLOUDACCESSCREDENTIALSNAME !== undefined && xTILEDBCLOUDACCESSCREDENTIALSNAME !== null) {
+                localVarHeaderParameter['X-TILEDB-CLOUD-ACCESS-CREDENTIALS-NAME'] = String(xTILEDBCLOUDACCESSCREDENTIALSNAME);
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * get metadata on a group using the requested config
+         * @param {string} groupNamespace The namespace of the group
+         * @param {string} groupName The unique name or id of the group
+         * @param {GroupMetadataRetrievalRequest} [metadataRetrieval] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getGroupMetadata: async (groupNamespace: string, groupName: string, metadataRetrieval?: GroupMetadataRetrievalRequest, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'groupNamespace' is not null or undefined
+            assertParamExists('getGroupMetadata', 'groupNamespace', groupNamespace)
+            // verify required parameter 'groupName' is not null or undefined
+            assertParamExists('getGroupMetadata', 'groupName', groupName)
+            const localVarPath = `/groups/{group_namespace}/{group_name}/metadata`
+                .replace(`{${"group_namespace"}}`, encodeURIComponent(String(groupNamespace)))
+                .replace(`{${"group_name"}}`, encodeURIComponent(String(groupName)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+
+            // authentication BasicAuth required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
+            localVarRequestOptions.data = serializeDataIfNeeded(metadataRetrieval, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * can be used to check if the resource exists
+         * @param {string} groupNamespace The namespace of the group
+         * @param {string} groupName The unique name or id of the group
+         * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        groupsGroupNamespaceGroupNameOptions: async (groupNamespace: string, groupName: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'groupNamespace' is not null or undefined
+            assertParamExists('groupsGroupNamespaceGroupNameOptions', 'groupNamespace', groupNamespace)
+            // verify required parameter 'groupName' is not null or undefined
+            assertParamExists('groupsGroupNamespaceGroupNameOptions', 'groupName', groupName)
+            const localVarPath = `/groups/{group_namespace}/{group_name}`
+                .replace(`{${"group_namespace"}}`, encodeURIComponent(String(groupNamespace)))
+                .replace(`{${"group_name"}}`, encodeURIComponent(String(groupName)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'OPTIONS', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+
+            // authentication BasicAuth required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            if (xTILEDBCLOUDACCESSCREDENTIALSNAME !== undefined && xTILEDBCLOUDACCESSCREDENTIALSNAME !== null) {
+                localVarHeaderParameter['X-TILEDB-CLOUD-ACCESS-CREDENTIALS-NAME'] = String(xTILEDBCLOUDACCESSCREDENTIALSNAME);
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Registers an already existing group
+         * @param {string} groupNamespace The namespace of the group
+         * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+         * @param {GroupRegistrationRequest} [groupRegistration] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        registerGroup: async (groupNamespace: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, groupRegistration?: GroupRegistrationRequest, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'groupNamespace' is not null or undefined
+            assertParamExists('registerGroup', 'groupNamespace', groupNamespace)
+            const localVarPath = `/groups/{group_namespace}`
+                .replace(`{${"group_namespace"}}`, encodeURIComponent(String(groupNamespace)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+
+            // authentication BasicAuth required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            if (xTILEDBCLOUDACCESSCREDENTIALSNAME !== undefined && xTILEDBCLOUDACCESSCREDENTIALSNAME !== null) {
+                localVarHeaderParameter['X-TILEDB-CLOUD-ACCESS-CREDENTIALS-NAME'] = String(xTILEDBCLOUDACCESSCREDENTIALSNAME);
+            }
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
+            localVarRequestOptions.data = serializeDataIfNeeded(groupRegistration, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Retrieves the contents of a group
+         * @param {string} groupNamespace The namespace of the group
+         * @param {string} groupName The unique name or id of the group
+         * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+         * @param {GroupContentsRetrievalRequest} [groupRetrieval] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        retrieveGroup: async (groupNamespace: string, groupName: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, groupRetrieval?: GroupContentsRetrievalRequest, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'groupNamespace' is not null or undefined
+            assertParamExists('retrieveGroup', 'groupNamespace', groupNamespace)
+            // verify required parameter 'groupName' is not null or undefined
+            assertParamExists('retrieveGroup', 'groupName', groupName)
+            const localVarPath = `/groups/{group_namespace}/{group_name}`
+                .replace(`{${"group_namespace"}}`, encodeURIComponent(String(groupNamespace)))
+                .replace(`{${"group_name"}}`, encodeURIComponent(String(groupName)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+
+            // authentication BasicAuth required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            if (xTILEDBCLOUDACCESSCREDENTIALSNAME !== undefined && xTILEDBCLOUDACCESSCREDENTIALSNAME !== null) {
+                localVarHeaderParameter['X-TILEDB-CLOUD-ACCESS-CREDENTIALS-NAME'] = String(xTILEDBCLOUDACCESSCREDENTIALSNAME);
+            }
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
+            localVarRequestOptions.data = serializeDataIfNeeded(groupRetrieval, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Change the contents of the group
+         * @param {string} groupNamespace The namespace of the group
+         * @param {string} groupName The unique name or id of the group
+         * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+         * @param {GroupContentsChangesRequest} [groupUpdateContents] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateGroupContents: async (groupNamespace: string, groupName: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, groupUpdateContents?: GroupContentsChangesRequest, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'groupNamespace' is not null or undefined
+            assertParamExists('updateGroupContents', 'groupNamespace', groupNamespace)
+            // verify required parameter 'groupName' is not null or undefined
+            assertParamExists('updateGroupContents', 'groupName', groupName)
+            const localVarPath = `/groups/{group_namespace}/{group_name}`
+                .replace(`{${"group_namespace"}}`, encodeURIComponent(String(groupNamespace)))
+                .replace(`{${"group_name"}}`, encodeURIComponent(String(groupName)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+
+            // authentication BasicAuth required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            if (xTILEDBCLOUDACCESSCREDENTIALSNAME !== undefined && xTILEDBCLOUDACCESSCREDENTIALSNAME !== null) {
+                localVarHeaderParameter['X-TILEDB-CLOUD-ACCESS-CREDENTIALS-NAME'] = String(xTILEDBCLOUDACCESSCREDENTIALSNAME);
+            }
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
+            localVarRequestOptions.data = serializeDataIfNeeded(groupUpdateContents, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * update metadata on a group
+         * @param {string} groupNamespace The namespace of the group
+         * @param {string} groupName The unique name or id of the group
+         * @param {GroupMetadataUpdateRequest} [metadataUpdating] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateGroupMetadata: async (groupNamespace: string, groupName: string, metadataUpdating?: GroupMetadataUpdateRequest, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'groupNamespace' is not null or undefined
+            assertParamExists('updateGroupMetadata', 'groupNamespace', groupNamespace)
+            // verify required parameter 'groupName' is not null or undefined
+            assertParamExists('updateGroupMetadata', 'groupName', groupName)
+            const localVarPath = `/groups/{group_namespace}/{group_name}/metadata`
+                .replace(`{${"group_namespace"}}`, encodeURIComponent(String(groupNamespace)))
+                .replace(`{${"group_name"}}`, encodeURIComponent(String(groupName)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+
+            // authentication BasicAuth required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
+            localVarRequestOptions.data = serializeDataIfNeeded(metadataUpdating, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * GroupsApi - functional programming interface
+ * @export
+ */
+export const GroupsApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = GroupsApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * Creates an empty group
+         * @param {string} groupNamespace The namespace of the group
+         * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+         * @param {GroupCreationRequest} [groupCreation] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async createGroup(groupNamespace: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, groupCreation?: GroupCreationRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createGroup(groupNamespace, xTILEDBCLOUDACCESSCREDENTIALSNAME, groupCreation, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Deregisters a group
+         * @param {string} groupNamespace The namespace of the group
+         * @param {string} groupName The unique name or id of the group
+         * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async deregisterGroup(groupNamespace: string, groupName: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deregisterGroup(groupNamespace, groupName, xTILEDBCLOUDACCESSCREDENTIALSNAME, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * get metadata on a group using the requested config
+         * @param {string} groupNamespace The namespace of the group
+         * @param {string} groupName The unique name or id of the group
+         * @param {GroupMetadataRetrievalRequest} [metadataRetrieval] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getGroupMetadata(groupNamespace: string, groupName: string, metadataRetrieval?: GroupMetadataRetrievalRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Metadata>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getGroupMetadata(groupNamespace, groupName, metadataRetrieval, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * can be used to check if the resource exists
+         * @param {string} groupNamespace The namespace of the group
+         * @param {string} groupName The unique name or id of the group
+         * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async groupsGroupNamespaceGroupNameOptions(groupNamespace: string, groupName: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.groupsGroupNamespaceGroupNameOptions(groupNamespace, groupName, xTILEDBCLOUDACCESSCREDENTIALSNAME, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Registers an already existing group
+         * @param {string} groupNamespace The namespace of the group
+         * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+         * @param {GroupRegistrationRequest} [groupRegistration] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async registerGroup(groupNamespace: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, groupRegistration?: GroupRegistrationRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.registerGroup(groupNamespace, xTILEDBCLOUDACCESSCREDENTIALSNAME, groupRegistration, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Retrieves the contents of a group
+         * @param {string} groupNamespace The namespace of the group
+         * @param {string} groupName The unique name or id of the group
+         * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+         * @param {GroupContentsRetrievalRequest} [groupRetrieval] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async retrieveGroup(groupNamespace: string, groupName: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, groupRetrieval?: GroupContentsRetrievalRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GroupContentsRetrievalResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.retrieveGroup(groupNamespace, groupName, xTILEDBCLOUDACCESSCREDENTIALSNAME, groupRetrieval, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Change the contents of the group
+         * @param {string} groupNamespace The namespace of the group
+         * @param {string} groupName The unique name or id of the group
+         * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+         * @param {GroupContentsChangesRequest} [groupUpdateContents] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async updateGroupContents(groupNamespace: string, groupName: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, groupUpdateContents?: GroupContentsChangesRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateGroupContents(groupNamespace, groupName, xTILEDBCLOUDACCESSCREDENTIALSNAME, groupUpdateContents, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * update metadata on a group
+         * @param {string} groupNamespace The namespace of the group
+         * @param {string} groupName The unique name or id of the group
+         * @param {GroupMetadataUpdateRequest} [metadataUpdating] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async updateGroupMetadata(groupNamespace: string, groupName: string, metadataUpdating?: GroupMetadataUpdateRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateGroupMetadata(groupNamespace, groupName, metadataUpdating, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+    }
+};
+
+/**
+ * GroupsApi - factory interface
+ * @export
+ */
+export const GroupsApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = GroupsApiFp(configuration)
+    return {
+        /**
+         * Creates an empty group
+         * @param {string} groupNamespace The namespace of the group
+         * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+         * @param {GroupCreationRequest} [groupCreation] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createGroup(groupNamespace: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, groupCreation?: GroupCreationRequest, options?: any): AxiosPromise<void> {
+            return localVarFp.createGroup(groupNamespace, xTILEDBCLOUDACCESSCREDENTIALSNAME, groupCreation, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Deregisters a group
+         * @param {string} groupNamespace The namespace of the group
+         * @param {string} groupName The unique name or id of the group
+         * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deregisterGroup(groupNamespace: string, groupName: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, options?: any): AxiosPromise<void> {
+            return localVarFp.deregisterGroup(groupNamespace, groupName, xTILEDBCLOUDACCESSCREDENTIALSNAME, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * get metadata on a group using the requested config
+         * @param {string} groupNamespace The namespace of the group
+         * @param {string} groupName The unique name or id of the group
+         * @param {GroupMetadataRetrievalRequest} [metadataRetrieval] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getGroupMetadata(groupNamespace: string, groupName: string, metadataRetrieval?: GroupMetadataRetrievalRequest, options?: any): AxiosPromise<Metadata> {
+            return localVarFp.getGroupMetadata(groupNamespace, groupName, metadataRetrieval, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * can be used to check if the resource exists
+         * @param {string} groupNamespace The namespace of the group
+         * @param {string} groupName The unique name or id of the group
+         * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        groupsGroupNamespaceGroupNameOptions(groupNamespace: string, groupName: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, options?: any): AxiosPromise<void> {
+            return localVarFp.groupsGroupNamespaceGroupNameOptions(groupNamespace, groupName, xTILEDBCLOUDACCESSCREDENTIALSNAME, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Registers an already existing group
+         * @param {string} groupNamespace The namespace of the group
+         * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+         * @param {GroupRegistrationRequest} [groupRegistration] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        registerGroup(groupNamespace: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, groupRegistration?: GroupRegistrationRequest, options?: any): AxiosPromise<void> {
+            return localVarFp.registerGroup(groupNamespace, xTILEDBCLOUDACCESSCREDENTIALSNAME, groupRegistration, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Retrieves the contents of a group
+         * @param {string} groupNamespace The namespace of the group
+         * @param {string} groupName The unique name or id of the group
+         * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+         * @param {GroupContentsRetrievalRequest} [groupRetrieval] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        retrieveGroup(groupNamespace: string, groupName: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, groupRetrieval?: GroupContentsRetrievalRequest, options?: any): AxiosPromise<GroupContentsRetrievalResponse> {
+            return localVarFp.retrieveGroup(groupNamespace, groupName, xTILEDBCLOUDACCESSCREDENTIALSNAME, groupRetrieval, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Change the contents of the group
+         * @param {string} groupNamespace The namespace of the group
+         * @param {string} groupName The unique name or id of the group
+         * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+         * @param {GroupContentsChangesRequest} [groupUpdateContents] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateGroupContents(groupNamespace: string, groupName: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, groupUpdateContents?: GroupContentsChangesRequest, options?: any): AxiosPromise<void> {
+            return localVarFp.updateGroupContents(groupNamespace, groupName, xTILEDBCLOUDACCESSCREDENTIALSNAME, groupUpdateContents, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * update metadata on a group
+         * @param {string} groupNamespace The namespace of the group
+         * @param {string} groupName The unique name or id of the group
+         * @param {GroupMetadataUpdateRequest} [metadataUpdating] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateGroupMetadata(groupNamespace: string, groupName: string, metadataUpdating?: GroupMetadataUpdateRequest, options?: any): AxiosPromise<void> {
+            return localVarFp.updateGroupMetadata(groupNamespace, groupName, metadataUpdating, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * GroupsApi - object-oriented interface
+ * @export
+ * @class GroupsApi
+ * @extends {BaseAPI}
+ */
+export class GroupsApi extends BaseAPI {
+    /**
+     * Creates an empty group
+     * @param {string} groupNamespace The namespace of the group
+     * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+     * @param {GroupCreationRequest} [groupCreation] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof GroupsApi
+     */
+    public createGroup(groupNamespace: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, groupCreation?: GroupCreationRequest, options?: any) {
+        return GroupsApiFp(this.configuration).createGroup(groupNamespace, xTILEDBCLOUDACCESSCREDENTIALSNAME, groupCreation, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Deregisters a group
+     * @param {string} groupNamespace The namespace of the group
+     * @param {string} groupName The unique name or id of the group
+     * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof GroupsApi
+     */
+    public deregisterGroup(groupNamespace: string, groupName: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, options?: any) {
+        return GroupsApiFp(this.configuration).deregisterGroup(groupNamespace, groupName, xTILEDBCLOUDACCESSCREDENTIALSNAME, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * get metadata on a group using the requested config
+     * @param {string} groupNamespace The namespace of the group
+     * @param {string} groupName The unique name or id of the group
+     * @param {GroupMetadataRetrievalRequest} [metadataRetrieval] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof GroupsApi
+     */
+    public getGroupMetadata(groupNamespace: string, groupName: string, metadataRetrieval?: GroupMetadataRetrievalRequest, options?: any) {
+        return GroupsApiFp(this.configuration).getGroupMetadata(groupNamespace, groupName, metadataRetrieval, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * can be used to check if the resource exists
+     * @param {string} groupNamespace The namespace of the group
+     * @param {string} groupName The unique name or id of the group
+     * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof GroupsApi
+     */
+    public groupsGroupNamespaceGroupNameOptions(groupNamespace: string, groupName: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, options?: any) {
+        return GroupsApiFp(this.configuration).groupsGroupNamespaceGroupNameOptions(groupNamespace, groupName, xTILEDBCLOUDACCESSCREDENTIALSNAME, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Registers an already existing group
+     * @param {string} groupNamespace The namespace of the group
+     * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+     * @param {GroupRegistrationRequest} [groupRegistration] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof GroupsApi
+     */
+    public registerGroup(groupNamespace: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, groupRegistration?: GroupRegistrationRequest, options?: any) {
+        return GroupsApiFp(this.configuration).registerGroup(groupNamespace, xTILEDBCLOUDACCESSCREDENTIALSNAME, groupRegistration, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Retrieves the contents of a group
+     * @param {string} groupNamespace The namespace of the group
+     * @param {string} groupName The unique name or id of the group
+     * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+     * @param {GroupContentsRetrievalRequest} [groupRetrieval] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof GroupsApi
+     */
+    public retrieveGroup(groupNamespace: string, groupName: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, groupRetrieval?: GroupContentsRetrievalRequest, options?: any) {
+        return GroupsApiFp(this.configuration).retrieveGroup(groupNamespace, groupName, xTILEDBCLOUDACCESSCREDENTIALSNAME, groupRetrieval, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Change the contents of the group
+     * @param {string} groupNamespace The namespace of the group
+     * @param {string} groupName The unique name or id of the group
+     * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+     * @param {GroupContentsChangesRequest} [groupUpdateContents] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof GroupsApi
+     */
+    public updateGroupContents(groupNamespace: string, groupName: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, groupUpdateContents?: GroupContentsChangesRequest, options?: any) {
+        return GroupsApiFp(this.configuration).updateGroupContents(groupNamespace, groupName, xTILEDBCLOUDACCESSCREDENTIALSNAME, groupUpdateContents, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * update metadata on a group
+     * @param {string} groupNamespace The namespace of the group
+     * @param {string} groupName The unique name or id of the group
+     * @param {GroupMetadataUpdateRequest} [metadataUpdating] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof GroupsApi
+     */
+    public updateGroupMetadata(groupNamespace: string, groupName: string, metadataUpdating?: GroupMetadataUpdateRequest, options?: any) {
+        return GroupsApiFp(this.configuration).updateGroupMetadata(groupNamespace, groupName, metadataUpdating, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
