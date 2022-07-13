@@ -91,7 +91,7 @@ export const getResultsFromArrayBuffer = async (
         selectedAttributeSchema.type
       ) as string | number[] | BigInt[];
 
-      let offsets = [];
+      let offsets: number[] = [];
       if (isVarLengthSized && !options.ignoreOffsets) {
         const BYTE_PER_ELEMENT = getByteLengthOfDatatype(
           selectedAttributeSchema.type
@@ -108,8 +108,7 @@ export const getResultsFromArrayBuffer = async (
          */
         const byteOffsets = Array.from(new BigUint64Array(offsetsBuffer));
         // Convert byte offsets to offsets
-        offsets = byteOffsets.map((o) => Number(o) / BYTE_PER_ELEMENT);
-
+        offsets = byteOffsets.map((o) => Number(o / BigInt(BYTE_PER_ELEMENT)));
         const isString = typeof result === "string";
         const groupedValues = await groupValuesByOffsetBytes(
           convertToArray(result),
