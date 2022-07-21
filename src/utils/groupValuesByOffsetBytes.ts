@@ -16,7 +16,7 @@ const groupValuesByOffsetBytes = <T>(
     return Promise.resolve([values]);
   }
   const offsetIndex = range(0, offsetsLength - 1);
-  const offsetIndexTuple = offsets.map((off, i) => [off, offsetIndex[i]]);
+  const offsetIndexTuple: [number, number][] = offsets.map((off, i) => [off, offsetIndex[i]]);
   const offsetsP = new Parallel(offsetIndexTuple, {
     env: {
       values,
@@ -25,11 +25,12 @@ const groupValuesByOffsetBytes = <T>(
   });
   return new Promise((resolve) => {
     offsetsP
-      .map(([offset, i]) => {
+      .map(([offset, i]: [number, number]) => {
         const vals = global.env.values as T[];
         const globalOffsets = global.env.offsets;
         const nextOffset = globalOffsets[i + 1];
 
+        // Note: Array.prototype.slice doesn't accept BigInt
         const grpoupedValues = vals.slice(offset, nextOffset);
         return grpoupedValues;
       })
