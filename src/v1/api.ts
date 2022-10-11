@@ -936,6 +936,55 @@ export enum ArrayType {
 }
 
 /**
+ * Custom storage locations on a per–asset type basis. If any is unset, a suffix of the owning (user/organization) `default_s3_path` is used. 
+ * @export
+ * @interface AssetLocations
+ */
+export interface AssetLocations {
+    /**
+     * 
+     * @type {StorageLocation}
+     * @memberof AssetLocations
+     */
+    arrays?: StorageLocation;
+    /**
+     * 
+     * @type {StorageLocation}
+     * @memberof AssetLocations
+     */
+    files?: StorageLocation;
+    /**
+     * 
+     * @type {StorageLocation}
+     * @memberof AssetLocations
+     */
+    groups?: StorageLocation;
+    /**
+     * 
+     * @type {StorageLocation}
+     * @memberof AssetLocations
+     */
+    ml_models?: StorageLocation;
+    /**
+     * 
+     * @type {StorageLocation}
+     * @memberof AssetLocations
+     */
+    notebooks?: StorageLocation;
+    /**
+     * 
+     * @type {StorageLocation}
+     * @memberof AssetLocations
+     */
+    task_graphs?: StorageLocation;
+    /**
+     * 
+     * @type {StorageLocation}
+     * @memberof AssetLocations
+     */
+    udfs?: StorageLocation;
+}
+/**
  * Attribute of array
  * @export
  * @interface Attribute
@@ -1843,6 +1892,12 @@ export interface GroupCreate {
  * @interface GroupEntry
  */
 export interface GroupEntry {
+    /**
+     * The unique member id for the entry
+     * @type {string}
+     * @memberof GroupEntry
+     */
+    member_id?: string;
     /**
      * 
      * @type {GroupInfo}
@@ -2858,6 +2913,18 @@ export interface NotebookStatus {
      */
     memory_limit?: number;
     /**
+     * storage usage in bytes
+     * @type {number}
+     * @memberof NotebookStatus
+     */
+    storage_usage?: number;
+    /**
+     * storage allocated to notebook server in bytes
+     * @type {number}
+     * @memberof NotebookStatus
+     */
+    storage_limit?: number;
+    /**
      * millicpu allocated to notebook server
      * @type {number}
      * @memberof NotebookStatus
@@ -2905,7 +2972,7 @@ export interface Organization {
      * @type {string}
      * @memberof Organization
      */
-    logo?: string;
+    logo?: string | null;
     /**
      * Organization description
      * @type {string}
@@ -2943,17 +3010,23 @@ export interface Organization {
      */
     unpaid_subscription?: boolean;
     /**
-     * default S3 path to store newly created notebooks
+     * The default location to store newly-created notebooks and other assets like UDFs. The name `default_s3_path` is a legacy holdover; it may refer to any supported storage location. 
      * @type {string}
      * @memberof Organization
      */
     default_s3_path?: string;
     /**
-     * Default S3 path credentials name is the credentials name to use along with default_s3_path
+     * The name of the credentials used to create and access files in the `default_s3_path`, if needed. 
      * @type {string}
      * @memberof Organization
      */
     default_s3_path_credentials_name?: string;
+    /**
+     * 
+     * @type {AssetLocations}
+     * @memberof Organization
+     */
+    asset_locations?: AssetLocations;
     /**
      * Denotes that the organization is able to apply pricing to arrays by means of Stripe Connect
      * @type {boolean}
@@ -3590,6 +3663,25 @@ export enum SSOProvider {
 }
 
 /**
+ * The path at which a given asset will be stored, and the credentials used to access that asset. 
+ * @export
+ * @interface StorageLocation
+ */
+export interface StorageLocation {
+    /**
+     * The path to store this asset type. If unset, a suffix of the user\'s `default_s3_path` is used. When updating, explicitly set to `\"\"`, the empty string, to clear this path; leaving it `null` (or absent) will leave the path unchanged. 
+     * @type {string}
+     * @memberof StorageLocation
+     */
+    path?: string | null;
+    /**
+     * The name of the credentials used to acess this storage path. If unset, the `default_s3_path_credentials_name` is used. When updating, explicitly set to `\"\"`, the empty string, to clear this name; leaving it `null` (or absent) will leave the name unchanged. 
+     * @type {string}
+     * @memberof StorageLocation
+     */
+    credentials_name?: string | null;
+}
+/**
  * A Subarray
  * @export
  * @interface Subarray
@@ -3818,6 +3910,12 @@ export interface TGSQLNodeData {
      * @memberof TGSQLNodeData
      */
     result_format?: ResultFormat;
+    /**
+     * If set, the non-default namespace to execute this SQL query under. 
+     * @type {string}
+     * @memberof TGSQLNodeData
+     */
+    namespace?: string | null;
 }
 /**
  * A single argument to a UDF. This may represent a positional argument or a named argument, depending upon whether `name` is set. 
@@ -3863,11 +3961,23 @@ export interface TGUDFEnvironment {
      */
     image_name?: string;
     /**
+     * If set, the non-default namespace to execute this UDF under (and to query any Array Nodes that are used as inputs to this UDF). 
+     * @type {string}
+     * @memberof TGUDFEnvironment
+     */
+    namespace?: string | null;
+    /**
      * The resource class to use for the UDF execution. Resource classes define resource limits for memory and CPUs. If this is empty, then the UDF will execute in the standard resource class of the TileDB Cloud provider. 
      * @type {string}
      * @memberof TGUDFEnvironment
      */
     resource_class?: string;
+    /**
+     * A hint that, if possible, this function should be executed on the client side rather than on the server. Registered UDFs and functions which take arrays as inputs can never be executed client-side. If the client’s environment is incompatible, or the client does not support client-side execution, the function will be executed on the server. 
+     * @type {boolean}
+     * @memberof TGUDFEnvironment
+     */
+    run_client_side?: boolean;
 }
 /**
  * A node specifying the execution of a user-defined function.
@@ -4735,7 +4845,7 @@ export interface User {
      * @type {string}
      * @memberof User
      */
-    logo?: string;
+    logo?: string | null;
     /**
      * when the user last logged in (set by the server)
      * @type {string}
@@ -4773,17 +4883,23 @@ export interface User {
      */
     unpaid_subscription?: boolean;
     /**
-     * default S3 path to store newly created notebooks
+     * The default location to store newly-created notebooks and other assets like UDFs. The name `default_s3_path` is a legacy holdover; it may refer to any supported storage location. 
      * @type {string}
      * @memberof User
      */
     default_s3_path?: string;
     /**
-     * Default S3 path credentials name is the credentials name to use along with default_s3_path
-     * @type {string}
+     * The name of the credentials used to create and access files in the `default_s3_path`, if needed. 
+     * @type {object}
      * @memberof User
      */
-    default_s3_path_credentials_name?: string;
+    default_s3_path_credentials_name?: object;
+    /**
+     * 
+     * @type {AssetLocations}
+     * @memberof User
+     */
+    asset_locations?: AssetLocations;
     /**
      * Override the default namespace charged for actions when no namespace is specified
      * @type {string}
@@ -5185,10 +5301,11 @@ export const ArrayApiAxiosParamCreator = function (configuration?: Configuration
          * @param {Array<string>} [fileType] file_type to search for, more than one can be included
          * @param {Array<string>} [excludeFileType] file_type to exclude matching array in results, more than one can be included
          * @param {Array<string>} [fileProperty] file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included
+         * @param {Array<string>} [sharedTo] namespaces to filter results of where there arrays were shared to
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        arraysBrowserSharedGet: async (page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, fileType?: Array<string>, excludeFileType?: Array<string>, fileProperty?: Array<string>, options: any = {}): Promise<RequestArgs> => {
+        arraysBrowserSharedGet: async (page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, fileType?: Array<string>, excludeFileType?: Array<string>, fileProperty?: Array<string>, sharedTo?: Array<string>, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/arrays/browser/shared`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -5250,6 +5367,10 @@ export const ArrayApiAxiosParamCreator = function (configuration?: Configuration
 
             if (fileProperty) {
                 localVarQueryParameter['file_property'] = fileProperty;
+            }
+
+            if (sharedTo) {
+                localVarQueryParameter['shared_to'] = sharedTo;
             }
 
 
@@ -6674,11 +6795,12 @@ export const ArrayApiFp = function(configuration?: Configuration) {
          * @param {Array<string>} [fileType] file_type to search for, more than one can be included
          * @param {Array<string>} [excludeFileType] file_type to exclude matching array in results, more than one can be included
          * @param {Array<string>} [fileProperty] file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included
+         * @param {Array<string>} [sharedTo] namespaces to filter results of where there arrays were shared to
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async arraysBrowserSharedGet(page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, fileType?: Array<string>, excludeFileType?: Array<string>, fileProperty?: Array<string>, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArrayBrowserData>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.arraysBrowserSharedGet(page, perPage, search, namespace, orderby, permissions, tag, excludeTag, fileType, excludeFileType, fileProperty, options);
+        async arraysBrowserSharedGet(page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, fileType?: Array<string>, excludeFileType?: Array<string>, fileProperty?: Array<string>, sharedTo?: Array<string>, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArrayBrowserData>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.arraysBrowserSharedGet(page, perPage, search, namespace, orderby, permissions, tag, excludeTag, fileType, excludeFileType, fileProperty, sharedTo, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -7065,11 +7187,12 @@ export const ArrayApiFactory = function (configuration?: Configuration, basePath
          * @param {Array<string>} [fileType] file_type to search for, more than one can be included
          * @param {Array<string>} [excludeFileType] file_type to exclude matching array in results, more than one can be included
          * @param {Array<string>} [fileProperty] file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included
+         * @param {Array<string>} [sharedTo] namespaces to filter results of where there arrays were shared to
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        arraysBrowserSharedGet(page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, fileType?: Array<string>, excludeFileType?: Array<string>, fileProperty?: Array<string>, options?: any): AxiosPromise<ArrayBrowserData> {
-            return localVarFp.arraysBrowserSharedGet(page, perPage, search, namespace, orderby, permissions, tag, excludeTag, fileType, excludeFileType, fileProperty, options).then((request) => request(axios, basePath));
+        arraysBrowserSharedGet(page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, fileType?: Array<string>, excludeFileType?: Array<string>, fileProperty?: Array<string>, sharedTo?: Array<string>, options?: any): AxiosPromise<ArrayBrowserData> {
+            return localVarFp.arraysBrowserSharedGet(page, perPage, search, namespace, orderby, permissions, tag, excludeTag, fileType, excludeFileType, fileProperty, sharedTo, options).then((request) => request(axios, basePath));
         },
         /**
          * Fetch a list of all arrays that have been shared with the user
@@ -7440,12 +7563,13 @@ export class ArrayApi extends BaseAPI {
      * @param {Array<string>} [fileType] file_type to search for, more than one can be included
      * @param {Array<string>} [excludeFileType] file_type to exclude matching array in results, more than one can be included
      * @param {Array<string>} [fileProperty] file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included
+     * @param {Array<string>} [sharedTo] namespaces to filter results of where there arrays were shared to
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ArrayApi
      */
-    public arraysBrowserSharedGet(page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, fileType?: Array<string>, excludeFileType?: Array<string>, fileProperty?: Array<string>, options?: any) {
-        return ArrayApiFp(this.configuration).arraysBrowserSharedGet(page, perPage, search, namespace, orderby, permissions, tag, excludeTag, fileType, excludeFileType, fileProperty, options).then((request) => request(this.axios, this.basePath));
+    public arraysBrowserSharedGet(page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, fileType?: Array<string>, excludeFileType?: Array<string>, fileProperty?: Array<string>, sharedTo?: Array<string>, options?: any) {
+        return ArrayApiFp(this.configuration).arraysBrowserSharedGet(page, perPage, search, namespace, orderby, permissions, tag, excludeTag, fileType, excludeFileType, fileProperty, sharedTo, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -10540,10 +10664,11 @@ export const GroupsApiAxiosParamCreator = function (configuration?: Configuratio
          * @param {Array<string>} [excludeTag] tags to exclude matching array in results, more than one can be included
          * @param {boolean} [flat] if true, ignores the nesting of groups and searches all of them
          * @param {string} [parent] search only the children of the groups with this uuid
+         * @param {Array<string>} [sharedTo] namespaces to filter results of where there groups were shared to
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listSharedGroups: async (page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, flat?: boolean, parent?: string, options: any = {}): Promise<RequestArgs> => {
+        listSharedGroups: async (page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, flat?: boolean, parent?: string, sharedTo?: Array<string>, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/groups/browser/shared`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -10601,6 +10726,10 @@ export const GroupsApiAxiosParamCreator = function (configuration?: Configuratio
 
             if (parent !== undefined) {
                 localVarQueryParameter['parent'] = parent;
+            }
+
+            if (sharedTo) {
+                localVarQueryParameter['shared_to'] = sharedTo;
             }
 
 
@@ -10950,11 +11079,12 @@ export const GroupsApiFp = function(configuration?: Configuration) {
          * @param {Array<string>} [excludeTag] tags to exclude matching array in results, more than one can be included
          * @param {boolean} [flat] if true, ignores the nesting of groups and searches all of them
          * @param {string} [parent] search only the children of the groups with this uuid
+         * @param {Array<string>} [sharedTo] namespaces to filter results of where there groups were shared to
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listSharedGroups(page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, flat?: boolean, parent?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GroupBrowserData>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.listSharedGroups(page, perPage, search, namespace, orderby, permissions, tag, excludeTag, flat, parent, options);
+        async listSharedGroups(page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, flat?: boolean, parent?: string, sharedTo?: Array<string>, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GroupBrowserData>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listSharedGroups(page, perPage, search, namespace, orderby, permissions, tag, excludeTag, flat, parent, sharedTo, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -11155,11 +11285,12 @@ export const GroupsApiFactory = function (configuration?: Configuration, basePat
          * @param {Array<string>} [excludeTag] tags to exclude matching array in results, more than one can be included
          * @param {boolean} [flat] if true, ignores the nesting of groups and searches all of them
          * @param {string} [parent] search only the children of the groups with this uuid
+         * @param {Array<string>} [sharedTo] namespaces to filter results of where there groups were shared to
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listSharedGroups(page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, flat?: boolean, parent?: string, options?: any): AxiosPromise<GroupBrowserData> {
-            return localVarFp.listSharedGroups(page, perPage, search, namespace, orderby, permissions, tag, excludeTag, flat, parent, options).then((request) => request(axios, basePath));
+        listSharedGroups(page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, flat?: boolean, parent?: string, sharedTo?: Array<string>, options?: any): AxiosPromise<GroupBrowserData> {
+            return localVarFp.listSharedGroups(page, perPage, search, namespace, orderby, permissions, tag, excludeTag, flat, parent, sharedTo, options).then((request) => request(axios, basePath));
         },
         /**
          * Registers an existing group in the namespace.
@@ -11380,12 +11511,13 @@ export class GroupsApi extends BaseAPI {
      * @param {Array<string>} [excludeTag] tags to exclude matching array in results, more than one can be included
      * @param {boolean} [flat] if true, ignores the nesting of groups and searches all of them
      * @param {string} [parent] search only the children of the groups with this uuid
+     * @param {Array<string>} [sharedTo] namespaces to filter results of where there groups were shared to
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof GroupsApi
      */
-    public listSharedGroups(page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, flat?: boolean, parent?: string, options?: any) {
-        return GroupsApiFp(this.configuration).listSharedGroups(page, perPage, search, namespace, orderby, permissions, tag, excludeTag, flat, parent, options).then((request) => request(this.axios, this.basePath));
+    public listSharedGroups(page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, flat?: boolean, parent?: string, sharedTo?: Array<string>, options?: any) {
+        return GroupsApiFp(this.configuration).listSharedGroups(page, perPage, search, namespace, orderby, permissions, tag, excludeTag, flat, parent, sharedTo, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
