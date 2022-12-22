@@ -3,14 +3,16 @@
   "version": "1.0.10",
   "description": "JavaScript client for the TileDB Cloud Service.",
   "main": "lib/index.js",
+  "browser": "lib/browser.js",
   "files": [
     "/lib"
   ],
   "scripts": {
     "generate-openapi:v1": "openapi-generator-cli generate -i ../TileDB-Cloud-API-Spec/openapi-v1.yaml -o ./src/v1 -g typescript-axios -t ./openapi-templates --reserved-words-mappings default=default --type-mappings=Array=any",
     "generate-openapi:v2": "openapi-generator-cli generate -i ../TileDB-Cloud-API-Spec/openapi-v2.yaml -o ./src/v2 -g typescript-axios -t ./openapi-templates --reserved-words-mappings default=default --type-mappings=Array=any",
-    "build": "npm run generate-openapi:v1 && npm run generate-openapi:v2 && tsc",
+    "build": "npm run generate-openapi:v1 && npm run generate-openapi:v2 && npm run build-webpack",
     "build-ts": "tsc",
+    "build-webpack": "webpack --mode production",
     "test": "jest",
     "capnp": "capnpc -o ts src/capnp/arrayMetadata.capnp && capnpc -o ts src/capnp/query.capnp"
   },
@@ -28,8 +30,13 @@
     "axios-mock-adapter": "^1.20.0",
     "capnpc-ts": "^0.7.0",
     "jest": "^27.2.0",
+    "node-polyfill-webpack-plugin": "^2.0.1",
     "ts-jest": "^27.0.5",
-    "typescript": "^4.2.3"
+    "ts-loader": "^9.4.1",
+    "typescript": "^4.2.3",
+    "webpack": "^5.74.0",
+    "webpack-cli": "^4.10.0",
+    "webpack-node-externals": "^3.0.0"
   },
   "author": "",
   "license": "MIT"
