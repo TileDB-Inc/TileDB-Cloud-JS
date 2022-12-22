@@ -1,0 +1,1 @@
+{"version":3,"file":"convertToArray.js","sourceRoot":"","sources":["../../src/utils/convertToArray.ts"],"names":[],"mappings":";;AAAA,SAAS,cAAc,CAAC,SAAc;IACpC,IAAI,KAAK,CAAC,OAAO,CAAC,SAAS,CAAC,EAAE;QAC5B,OAAO,SAAS,CAAC;KAClB;IAED,OAAO,KAAK,CAAC,IAAI,CAAC,SAAS,CAAC,CAAC;AAC/B,CAAC;AAED,kBAAe,cAAc,CAAC"}

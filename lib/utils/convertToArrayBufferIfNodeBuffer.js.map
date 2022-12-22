@@ -1,0 +1,1 @@
+{"version":3,"file":"convertToArrayBufferIfNodeBuffer.js","sourceRoot":"","sources":["../../src/utils/convertToArrayBufferIfNodeBuffer.ts"],"names":[],"mappings":";;AAAA;;;;;GAKG;AACH,SAAS,gCAAgC,CAAC,MAAW;IACnD,IAAI,MAAM,CAAC,MAAM,EAAE;QACjB,OAAO,IAAI,UAAU,CAAC,MAAM,CAAC,CAAC,MAAM,CAAC;KACtC;IAED,OAAO,MAAM,CAAC;AAChB,CAAC;AAED,kBAAe,gCAAgC,CAAC"}

@@ -12,7 +12,7 @@ jobs:
     steps:
       - task: NodeTool@0
         inputs:
-          versionSpec: 14.x
+          versionSpec: 16.x
       - script: |
           npm install
         displayName: Install dependencies and run tests

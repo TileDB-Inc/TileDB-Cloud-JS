@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "axios": "^0.21.1",
-    "capnp-ts": "^0.7.0",
+    "capnp-ts": "^0.4.0",
     "paralleljs": "github:SarantopoulosKon/parallel.js#node-mode-in-web-worker",
     "save-file": "^2.3.1"
   },
@@ -28,7 +28,7 @@
     "@openapitools/openapi-generator-cli": "^2.1.26",
     "@types/jest": "^27.0.1",
     "axios-mock-adapter": "^1.20.0",
-    "capnpc-ts": "^0.7.0",
+    "capnpc-ts": "^0.4.0",
     "jest": "^27.2.0",
     "node-polyfill-webpack-plugin": "^2.0.1",
     "ts-jest": "^27.0.5",
@@ -37,6 +37,11 @@
     "webpack": "^5.74.0",
     "webpack-cli": "^4.10.0",
     "webpack-node-externals": "^3.0.0"
+  },
+  "overrides": {
+    "capnp-ts": {
+      "tslib": "2.4.1"
+    }
   },
   "author": "",
   "license": "MIT"
