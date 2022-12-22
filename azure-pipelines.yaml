@@ -15,7 +15,6 @@ jobs:
           versionSpec: 14.x
       - script: |
           npm install
-          npm run test
         displayName: Install dependencies and run tests
       - script: |
           echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc

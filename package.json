@@ -17,7 +17,7 @@
   "dependencies": {
     "axios": "^0.21.1",
     "capnp-ts": "^0.7.0",
-    "paralleljs": "^1.1.0",
+    "paralleljs": "github:SarantopoulosKon/parallel.js#node-mode-in-web-worker",
     "save-file": "^2.3.1"
   },
   "devDependencies": {
