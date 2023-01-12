@@ -3,6 +3,7 @@
 
 [Installation](#installation) <br/>
 [Basic usage](#basic-usage) <br/>
+[Browser usage](#browser-usage) <br/>
 [Cap'n Proto serialization](#capn-proto-serialization) <br/>
 [Queries](#queries) <br/>
 [Development](#development)
@@ -37,6 +38,11 @@ tiledbClient.userProfile().then((res) => {
 
 
 ```
+
+### Browser usage:
+
+TileDB-Cloud-JS can also be used directly in the browser. Please see the following demo for more information:
+- https://github.com/TileDB-Inc/TileDB-Cloud-JS-Demo
 
 ### Download a file in TileDB format:
 
