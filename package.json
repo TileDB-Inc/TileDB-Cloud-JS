@@ -1,6 +1,6 @@
 {
   "name": "@tiledb-inc/tiledb-cloud",
-  "version": "1.0.12-alpha.0",
+  "version": "1.0.12-alpha.1",
   "description": "JavaScript client for the TileDB Cloud Service.",
   "main": "lib/index.js",
   "files": [
@@ -15,6 +15,7 @@
     "capnp": "capnpc -o ts src/capnp/arrayMetadata.capnp && capnpc -o ts src/capnp/query.capnp"
   },
   "dependencies": {
+    "@types/debug": "^4.1.7",
     "axios": "^0.21.1",
     "capnp-ts": "^0.5.1",
     "capnpc-ts": "^0.5.1",
