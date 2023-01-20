@@ -16,8 +16,8 @@
   },
   "dependencies": {
     "axios": "^0.21.1",
-    "capnp-ts": "^0.4.0",
-    "capnpc-ts": "^0.4.0",
+    "capnp-ts": "^0.5.1",
+    "capnpc-ts": "^0.5.1",
     "paralleljs": "github:SarantopoulosKon/parallel.js#node-mode-in-web-worker",
     "save-file": "^2.3.1"
   },
