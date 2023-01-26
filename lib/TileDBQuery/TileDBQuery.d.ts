@@ -2,7 +2,7 @@ import { ArraySchema } from "../v1";
 import { ConfigurationParameters, Query } from "../v2";
 import { Options } from "../utils/getResultsFromArrayBuffer";
 import { AxiosInstance } from "axios";
-type Range = number[] | string[];
+declare type Range = number[] | string[];
 export interface QueryData extends Pick<Query, "layout">, Options {
     ranges: Array<Range | Array<Range>>;
     /**
@@ -15,7 +15,7 @@ interface AttributeValue {
     offsets?: number[];
     values: any[];
 }
-export type AttributeValues = Record<string, AttributeValue>;
+export declare type AttributeValues = Record<string, AttributeValue>;
 export interface QueryWrite extends Pick<Query, "layout"> {
     values: AttributeValues;
     subarray?: Array<number[] | string[]>;
