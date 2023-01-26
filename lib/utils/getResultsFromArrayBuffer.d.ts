@@ -15,6 +15,10 @@ export interface Options {
      * Return only given attributes/dimensions
      */
     attributes?: string[];
+    /**
+     * Return raw buffers instead of convert to javascript primitives
+     */
+    returnRawBuffers?: boolean;
 }
 /**
  * Convert an ArrayBuffer to a map of attributes with their results
