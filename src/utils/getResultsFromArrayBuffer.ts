@@ -24,6 +24,10 @@ export interface Options {
    * Return only given attributes/dimensions
    */
   attributes?: string[];
+  /**
+   * Return raw buffers instead of convert to javascript primitives
+   */
+  returnRawBuffers?: boolean;
 }
 
 type Result = string[] | string | number[] | BigInt[] | number[][] | BigInt[][];
@@ -85,6 +89,12 @@ export const getResultsFromArrayBuffer = async (
         negativeOffset -
         (isNullable ? attribute.validityLenBufferSizeInBytes : 0);
       const end = ending ? ending : undefined;
+
+      if (options.returnRawBuffers) {
+        data[attribute.name] = arrayBuffer.slice(start, end);
+
+        return offset + totalNumberOfBytesOfAttribute;
+      }
 
       let result: Result = getAttributeResult(
         arrayBuffer.slice(start, end),

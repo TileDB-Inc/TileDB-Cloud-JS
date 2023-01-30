@@ -12,9 +12,9 @@ jobs:
     steps:
       - task: NodeTool@0
         inputs:
-          versionSpec: 14.x
+          versionSpec: 18.x
       - script: |
-          npm install
+          npm install && \
           npm run test
         displayName: Install dependencies and run tests
       - script: |
@@ -23,17 +23,7 @@ jobs:
         env:
           NPM_TOKEN: $(NPM_TOKEN)
       - script: |
-          latestGitTag=$(git describe --tags --abbrev=0)
-          latestGitTag="${latestGitTag:1}"
-          echo $latestGitTag
-          if [[ $latestGitTag == *"beta"* ]];
-          then
-          echo "Publishing beta version";
-          yarn publish --new-version $latestGitTag --no-git-tag-version --access public --tag beta
-          else
-          echo "Publishing new version $latestGitTag";
-          yarn publish --new-version $latestGitTag --no-git-tag-version --access public
-          fi
+          ./scripts/publish.sh
         env:
           NPM_TOKEN: $(NPM_TOKEN)
         displayName: Release

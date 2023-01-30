@@ -1,6 +1,6 @@
 {
   "name": "@tiledb-inc/tiledb-cloud",
-  "version": "1.0.10",
+  "version": "1.0.12-alpha.2",
   "description": "JavaScript client for the TileDB Cloud Service.",
   "main": "lib/index.js",
   "files": [
@@ -35,6 +35,10 @@
     "capnp-ts": {
       "tslib": "1.14.1"
     }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TileDB-Inc/TileDB-Cloud-JS.git"
   },
   "author": "",
   "license": "MIT"
