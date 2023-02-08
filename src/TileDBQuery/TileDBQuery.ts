@@ -175,15 +175,18 @@ export class TileDBQuery {
     };
   }
 
-  async *ReadQuery(namespace: string, arrayName: string, body: QueryData) {
+  async *ReadQuery(namespace: string, arrayName: string, body: QueryData, arraySchema?: ArraySchema) {
     try {
       // Get ArraySchema of arrray, to get type information of the dimensions and the attributes
-      const arraySchemaResponse = await this.arrayAPI.getArray(
-        namespace,
-        arrayName,
-        "application/json"
-      );
-      const arraySchema = arraySchemaResponse.data;
+      if (typeof arraySchema !== 'undefined') {
+        const arraySchemaResponse = await this.arrayAPI.getArray(
+          namespace,
+          arrayName,
+          "application/json"
+        );
+        arraySchema = arraySchemaResponse.data;
+      }
+
       const options = {
         ignoreNullables: body.ignoreNullables,
         ignoreOffsets: body.ignoreOffsets,
