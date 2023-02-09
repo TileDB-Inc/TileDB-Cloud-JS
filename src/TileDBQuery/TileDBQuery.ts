@@ -178,7 +178,7 @@ export class TileDBQuery {
   async *ReadQuery(namespace: string, arrayName: string, body: QueryData, arraySchema?: ArraySchema) {
     try {
       // Get ArraySchema of arrray, to get type information of the dimensions and the attributes
-      if (typeof arraySchema !== 'undefined') {
+      if (typeof arraySchema === 'undefined') {
         const arraySchemaResponse = await this.arrayAPI.getArray(
           namespace,
           arrayName,
