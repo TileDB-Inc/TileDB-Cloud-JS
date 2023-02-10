@@ -57,7 +57,11 @@ export const getResultsFromArrayBuffer = async (
       const offset = await offsetPromise;
 
       if (!totalNumberOfBytesOfAttribute) {
-        data[attribute.name] = [];
+        if (options.returnRawBuffers) {
+          data[attribute.name] = new ArrayBuffer(0);
+        } else {
+          data[attribute.name] = [];
+        }
 
         return offset;
       }
