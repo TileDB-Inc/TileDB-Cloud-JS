@@ -43,7 +43,6 @@ describe("getResultsFromArrayBuffer()", () => {
       nullableVarLengthAttrBufferHeaders,
       varLenNullableAttributesSchema
     );
-    // expect(results).toEqual("");
 
     expect(results).toEqual({
       a1: [100, null, null, 400],
@@ -52,5 +51,62 @@ describe("getResultsFromArrayBuffer()", () => {
       cols: [1, 2, 1, 2],
       rows: [1, 1, 2, 2],
     });
+  });
+
+  it("Should return empty array if there are no results if attributebuffers are empty", async () => {
+    const file = path.join(__dirname, "../fixtures/nullable_buffer.raw");
+    const rawBuffer = readFileSync(file);
+    const arrayBufferOfFixedLengthAttributes =
+      convertToArrayBufferIfNodeBuffer(rawBuffer);
+
+      const attributeBufferHeaders = [
+        {
+          name: "cols",
+          fixedLenBufferSizeInBytes: 0,
+          varLenBufferSizeInBytes: 0,
+          validityLenBufferSizeInBytes: 0,
+          originalFixedLenBufferSizeInBytes: 0,
+          originalVarLenBufferSizeInBytes: 0,
+          originalValidityLenBufferSizeInBytes: 0,
+        }
+      ]
+
+    const results = await getResultsFromArrayBuffer(
+      arrayBufferOfFixedLengthAttributes,
+      attributeBufferHeaders,
+      varLenNullableAttributesSchema
+    );
+
+    expect(results).toEqual({ cols: []});
+  });
+
+  it("Should return empty ArrayBuffer if no results and returnRawBuffers is true", async () => {
+    const file = path.join(__dirname, "../fixtures/nullable_buffer.raw");
+    const rawBuffer = readFileSync(file);
+    const arrayBufferOfFixedLengthAttributes =
+      convertToArrayBufferIfNodeBuffer(rawBuffer);
+
+      const attributeBufferHeaders = [
+        {
+          name: "cols",
+          fixedLenBufferSizeInBytes: 0,
+          varLenBufferSizeInBytes: 0,
+          validityLenBufferSizeInBytes: 0,
+          originalFixedLenBufferSizeInBytes: 0,
+          originalVarLenBufferSizeInBytes: 0,
+          originalValidityLenBufferSizeInBytes: 0,
+        }
+      ]
+
+    const results = await getResultsFromArrayBuffer(
+      arrayBufferOfFixedLengthAttributes,
+      attributeBufferHeaders,
+      varLenNullableAttributesSchema,
+      {
+        returnRawBuffers: true
+      }
+    );
+    
+    expect(results).toEqual({ cols: new ArrayBuffer(0)});
   });
 });
