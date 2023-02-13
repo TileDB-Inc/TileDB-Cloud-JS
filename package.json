@@ -2,7 +2,9 @@
   "name": "@tiledb-inc/tiledb-cloud",
   "version": "1.0.12-alpha.2",
   "description": "JavaScript client for the TileDB Cloud Service.",
-  "main": "lib/index.js",
+  "main": "lib/main.js",
+  "module": "lib/main.esm.js",
+  "types": "lib/types/index.d.ts",
   "files": [
     "/lib"
   ],
