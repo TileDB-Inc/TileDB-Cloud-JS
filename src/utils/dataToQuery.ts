@@ -1,4 +1,3 @@
-import { V1API } from "../v1";
 import { Datatype, Query, Querystatus, Querytype } from "../v2";
 import { QueryData } from "../TileDBQuery/TileDBQuery";
 import getRanges from "./getRanges";
@@ -7,9 +6,10 @@ import emptyRangesToDomain from "./emptyRangesToDomain";
 import isAttributeVarLength from "./isAttributeVarLength";
 import isAttributeNullable from "./isAttributeNullable";
 import { Options } from "./getResultsFromArrayBuffer";
+import { Attribute, Dimension } from "../v1";
 
 const createAttributeBufferHeaders = (
-  attributes: Array<V1API.Attribute | V1API.Dimension>,
+  attributes: Array<Attribute | Dimension>,
   bufferSize: number
 ) => {
   const MAX_BYTES_PER_ELEMENT_OF_ATTRIBUTES = attributes.reduce(
@@ -58,7 +58,7 @@ const createAttributeBufferHeaders = (
   return attributeBufferHeaders;
 };
 
-const getMaxByteSizeOfAttribute = (attribute: V1API.Attribute | V1API.Dimension) => {
+const getMaxByteSizeOfAttribute = (attribute: Attribute | Dimension) => {
   const isVarLength = isAttributeVarLength(attribute);
   const isNullable = isAttributeNullable(attribute);
   const BYTES_PER_ELEMENT = getByteLengthOfDatatype(attribute.type);
@@ -84,8 +84,8 @@ const getMaxByteSizeOfAttribute = (attribute: V1API.Attribute | V1API.Dimension)
  */
 const dataToQuery = (
   data: QueryData,
-  attributes: V1API.Attribute[],
-  dimensions: V1API.Dimension[],
+  attributes: Attribute[],
+  dimensions: Dimension[],
   options: Options
 ): Query => {
   if (!data.layout) {

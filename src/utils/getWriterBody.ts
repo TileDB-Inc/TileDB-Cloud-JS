@@ -1,13 +1,13 @@
-import { V1API } from "../v1";
 import dataToQueryWriter from "./dataToQueryWriter";
 import attributeValuesToArrayBuffers from "./attributeValuesToArrayBuffers";
 import capnpQuerySerializer from "./capnpQuerySerializer";
 import concatArrayBuffers from "./concatArrayBuffers";
 import { QueryWrite } from "../TileDBQuery/TileDBQuery";
+import { ArraySchema } from "../v1";
 
 const emptyArrayBuffer = new ArrayBuffer(0);
 
-const getWriterBody = (data: QueryWrite, arraySchema: V1API.ArraySchema) => {
+const getWriterBody = (data: QueryWrite, arraySchema: ArraySchema) => {
   const dimensions = arraySchema.domain.dimensions;
   const attributes = arraySchema.attributes;
   const valueBuffers = attributeValuesToArrayBuffers(

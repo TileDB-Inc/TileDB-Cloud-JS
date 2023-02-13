@@ -1,13 +1,13 @@
-import { V1API } from "../v1";
 import { ValueBuffers } from "./attributeValuesToArrayBuffers";
 import { Querystatus, Querytype } from "../v2";
 import getRanges from "./getRanges";
 import { QueryWrite } from '../TileDBQuery/TileDBQuery';
 import flatten from "./flatten";
+import { Dimension } from "../v1";
 
 const dataToQueryWriter = (
   data: QueryWrite,
-  dimensions: V1API.Dimension[],
+  dimensions: Dimension[],
   valueBuffer: ValueBuffers
 ) => {
   const attributeBufferHeaders = Object.entries(valueBuffer).map(
@@ -61,7 +61,7 @@ const dataToQueryWriter = (
 
 export default dataToQueryWriter;
 
-const getSubArray = (ranges: Array<number[]> | undefined, dimensions: V1API.Dimension[]) => {
+const getSubArray = (ranges: Array<number[]> | undefined, dimensions: Dimension[]) => {
   const subarray = {
     int8: [],
     uint8: [],

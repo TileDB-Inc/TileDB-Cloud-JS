@@ -1,8 +1,8 @@
 import rangesToBuffer from "./rangesToBuffer";
 import flatten from "./flatten";
 import { QueryData } from "../TileDBQuery/TileDBQuery";
-import { V1API } from "../v1";
 import getByteLengthOfdata from "./getByteLengthOfData";
+import { Dimension } from "../v1";
 
 /**
  * Checks if data is an array of numbers
@@ -15,7 +15,7 @@ const isNumberArray = (data: any[]): data is number[] => {
 
 const getRanges = (
   ranges: QueryData["ranges"],
-  dimensions: V1API.Dimension[],
+  dimensions: Dimension[],
   hasDefaultRange?: boolean
 ) => {
   

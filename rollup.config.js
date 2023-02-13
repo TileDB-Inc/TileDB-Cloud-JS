@@ -1,5 +1,5 @@
-const { nodeResolve } = require('@rollup/plugin-node-resolve');
-import dts from "rollup-plugin-dts";
+import typescript from '@rollup/plugin-typescript';
+
 
 export default {
   input: 'src/index.ts',
@@ -7,5 +7,5 @@ export default {
     format: 'cjs',
     file: 'lib/index.js'
   },
-  plugins: [dts.default()]
+  plugins: [typescript()]
 };

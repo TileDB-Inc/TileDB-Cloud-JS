@@ -1,6 +1,7 @@
-import { V1API } from "../v1";
+import { Attribute, Dimension } from "../v1";
 
-const isDimension = (data: V1API.Attribute | V1API.Dimension): data is V1API.Dimension => {
+
+const isDimension = (data: Attribute | Dimension): data is Dimension => {
   return data.hasOwnProperty("nullTileExtent");
 };
 

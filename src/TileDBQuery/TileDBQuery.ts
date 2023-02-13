@@ -1,6 +1,6 @@
 import dataToQuery from "../utils/dataToQuery";
 import capnpQueryDeSerializer from "../utils/capnpQueryDeSerializer";
-import { V1API } from "../v1";
+import { ArrayApi, ArraySchema } from "../v1";
 import {
   AttributeBufferHeader,
   Configuration,
@@ -42,7 +42,7 @@ export class TileDBQuery {
   configurationParams: ConfigurationParameters;
   private axios: AxiosInstance;
   private queryAPI: QueryApi;
-  private arrayAPI: V1API.ArrayApi;
+  private arrayAPI: ArrayApi;
 
   constructor(params: ConfigurationParameters, axios: AxiosInstance = globalAxios) {
     this.configurationParams = params;
@@ -56,7 +56,7 @@ export class TileDBQuery {
       ...(baseV1 ? { basePath: baseV1 } : {}),
     });
     this.queryAPI = new QueryApi(config, undefined, this.axios);
-    this.arrayAPI = new V1API.ArrayApi(configV1, undefined, this.axios);
+    this.arrayAPI = new ArrayApi(configV1, undefined, this.axios);
   }
 
   async WriteQuery(namespace: string, arrayName: string, data: QueryWrite) {
@@ -116,7 +116,7 @@ export class TileDBQuery {
   }
 
   async ReadIncompleteQuery(
-    arraySchema: V1API.ArraySchema,
+    arraySchema: ArraySchema,
     queryAsArrayBuffer: ArrayBuffer,
     namespace: string,
     arrayName: string,
@@ -175,7 +175,7 @@ export class TileDBQuery {
     };
   }
 
-  async *ReadQuery(namespace: string, arrayName: string, body: QueryData, arraySchema?: V1API.ArraySchema) {
+  async *ReadQuery(namespace: string, arrayName: string, body: QueryData, arraySchema?: ArraySchema) {
     try {
       // Get ArraySchema of arrray, to get type information of the dimensions and the attributes
       if (typeof arraySchema === 'undefined') {
@@ -285,7 +285,7 @@ export class TileDBQuery {
   }
 
   private async getResultsFromArrayBuffer(
-    arraySchema: V1API.ArraySchema,
+    arraySchema: ArraySchema,
     bufferResults: ArrayBuffer,
     attributeHeaders: AttributeBufferHeader[],
     options: Options
