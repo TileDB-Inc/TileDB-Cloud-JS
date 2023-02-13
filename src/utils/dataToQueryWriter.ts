@@ -1,4 +1,4 @@
-import { Dimension } from "../v1";
+import { V1API } from "../v1";
 import { ValueBuffers } from "./attributeValuesToArrayBuffers";
 import { Querystatus, Querytype } from "../v2";
 import getRanges from "./getRanges";
@@ -7,7 +7,7 @@ import flatten from "./flatten";
 
 const dataToQueryWriter = (
   data: QueryWrite,
-  dimensions: Dimension[],
+  dimensions: V1API.Dimension[],
   valueBuffer: ValueBuffers
 ) => {
   const attributeBufferHeaders = Object.entries(valueBuffer).map(
@@ -61,7 +61,7 @@ const dataToQueryWriter = (
 
 export default dataToQueryWriter;
 
-const getSubArray = (ranges: Array<number[]> | undefined, dimensions: Dimension[]) => {
+const getSubArray = (ranges: Array<number[]> | undefined, dimensions: V1API.Dimension[]) => {
   const subarray = {
     int8: [],
     uint8: [],

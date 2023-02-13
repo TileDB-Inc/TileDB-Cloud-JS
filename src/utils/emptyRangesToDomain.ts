@@ -1,7 +1,7 @@
 import { QueryData } from "../TileDBQuery/TileDBQuery";
-import { Dimension } from "../v1";
+import { V1API } from "../v1";
 
-const emptyRangesToDomain = (ranges: QueryData["ranges"], dimensions: Dimension[]) => {
+const emptyRangesToDomain = (ranges: QueryData["ranges"], dimensions: V1API.Dimension[]) => {
     return ranges.map((range, i) => {
       const isEmpty = !range.length;
       const domain = dimensions[i].domain;

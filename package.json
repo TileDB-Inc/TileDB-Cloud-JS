@@ -3,6 +3,7 @@
   "version": "1.0.12-alpha.2",
   "description": "JavaScript client for the TileDB Cloud Service.",
   "main": "lib/index.js",
+  "type": "module",
   "files": [
     "/lib"
   ],
@@ -11,6 +12,7 @@
     "generate-openapi:v2": "openapi-generator-cli generate -i ../TileDB-Cloud-API-Spec/openapi-v2.yaml -o ./src/v2 -g typescript-axios -t ./openapi-templates --reserved-words-mappings default=default --type-mappings=Array=any",
     "build": "npm run generate-openapi:v1 && npm run generate-openapi:v2 && tsc",
     "build-ts": "tsc",
+    "build-rollup": "rollup -c rollup.config.js --configPlugin typescript --bundleConfigAsCjs",
     "test": "jest",
     "capnp": "capnpc -o ts src/capnp/arrayMetadata.capnp && capnpc -o ts src/capnp/query.capnp"
   },
@@ -25,10 +27,15 @@
     "@babel/core": "^7.15.5",
     "@babel/preset-env": "^7.15.4",
     "@openapitools/openapi-generator-cli": "^2.1.26",
+    "@rollup/plugin-node-resolve": "^15.0.1",
+    "@rollup/plugin-typescript": "^11.0.0",
     "@types/jest": "^27.0.1",
     "axios-mock-adapter": "^1.20.0",
     "jest": "^27.2.0",
+    "rollup": "^3.15.0",
+    "rollup-plugin-dts": "^5.1.1",
     "ts-jest": "^27.0.5",
+    "tslib": "^2.5.0",
     "typescript": "^4.2.3"
   },
   "overrides": {

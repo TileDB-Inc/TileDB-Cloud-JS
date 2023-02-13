@@ -1,6 +1,6 @@
 import {
   Configuration,
-  GroupsApi,
+  V1API,
 } from "../v1";
 import {
   GroupsApi as GroupsV2Api,
@@ -8,7 +8,7 @@ import {
 import globalAxios, { AxiosInstance } from "axios";
 
 class Groups {
-  API: GroupsApi;
+  API: V1API.GroupsApi;
   V2API: GroupsV2Api;
 
   constructor(
@@ -16,7 +16,7 @@ class Groups {
     paramsV2: Configuration,
     axios: AxiosInstance = globalAxios
   ) {
-    this.API = new GroupsApi(params, undefined, axios);
+    this.API = new V1API.GroupsApi(params, undefined, axios);
     this.V2API = new GroupsV2Api(paramsV2, undefined, axios);
   }
 

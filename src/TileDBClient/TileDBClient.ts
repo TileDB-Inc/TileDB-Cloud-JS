@@ -1,14 +1,6 @@
 import save from "save-file";
-import axios, { AxiosInstance } from 'axios';
-import {
-  ArrayApi,
-  ArrayInfoUpdate,
-  ArraySharing,
-  OrganizationApi,
-  NotebookApi,
-  TasksApi,
-  UserApi,
-} from "../v1";
+import axios, { AxiosInstance } from "axios";
+import { V1API } from "../v1";
 import UDF from "../UDF";
 import Sql from "../Sql";
 import Groups from "../Groups";
@@ -38,11 +30,11 @@ if (isNode) {
 class TileDBClient {
   config: Configuration;
   configV2: Configuration;
-  ArrayApi: ArrayApi;
-  OrganizationApi: OrganizationApi;
-  UserApi: UserApi;
-  NotebookApi: NotebookApi;
-  TasksApi: TasksApi;
+  ArrayApi: V1API.ArrayApi;
+  OrganizationApi: V1API.OrganizationApi;
+  UserApi: V1API.UserApi;
+  NotebookApi: V1API.NotebookApi;
+  TasksApi: V1API.TasksApi;
   udf: UDF;
   groups: Groups;
   sql: Sql;
@@ -75,11 +67,15 @@ class TileDBClient {
       basePath: config.basePath + "/v2",
     });
 
-    this.ArrayApi = new ArrayApi(this.config, undefined, this.axios);
-    this.OrganizationApi = new OrganizationApi(this.config, undefined, this.axios);
-    this.UserApi = new UserApi(this.config, undefined, this.axios);
-    this.NotebookApi = new NotebookApi(this.config, undefined, this.axios);
-    this.TasksApi = new TasksApi(this.config, undefined, this.axios);
+    this.ArrayApi = new V1API.ArrayApi(this.config, undefined, this.axios);
+    this.OrganizationApi = new V1API.OrganizationApi(
+      this.config,
+      undefined,
+      this.axios
+    );
+    this.UserApi = new V1API.UserApi(this.config, undefined, this.axios);
+    this.NotebookApi = new V1API.NotebookApi(this.config, undefined, this.axios);
+    this.TasksApi = new V1API.TasksApi(this.config, undefined, this.axios);
     this.udf = new UDF(this.config, this.axios);
     this.sql = new Sql(this.config, this.axios);
     this.groups = new Groups(this.config, this.configV2, this.axios);
@@ -119,7 +115,7 @@ class TileDBClient {
   public registerArray(
     namespace: string,
     array: string,
-    arrayMetadata: ArrayInfoUpdate,
+    arrayMetadata: V1API.ArrayInfoUpdate,
     options?: any
   ) {
     return this.ArrayApi.registerArray(
@@ -137,7 +133,7 @@ class TileDBClient {
   public shareArray(
     namespace: string,
     array: string,
-    arraySharing: ArraySharing,
+    arraySharing: V1API.ArraySharing,
     options?: any
   ) {
     return this.ArrayApi.shareArray(namespace, array, arraySharing, options);

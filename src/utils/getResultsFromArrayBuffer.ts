@@ -1,4 +1,4 @@
-import { Attribute, Dimension } from "../v1";
+import { V1API } from "../v1";
 import { AttributeBufferHeader } from "../v2";
 import getAttributeSizeInBytes from "./getAttributeSizeInBytes";
 import getAttributeSchema from "./getAttributeSchema";
@@ -42,7 +42,7 @@ type Result = string[] | string | number[] | BigInt[] | number[][] | BigInt[][];
 export const getResultsFromArrayBuffer = async (
   arrayBuffer: ArrayBuffer,
   attributeBufferHeaders: AttributeBufferHeader[],
-  attributesSchema: Array<Dimension | Attribute>,
+  attributesSchema: Array<V1API.Dimension | V1API.Attribute>,
   options: Options = {}
 ) => {
   const data = {};

@@ -1,5 +1,5 @@
 import { AttributeValues } from "../TileDBQuery/TileDBQuery";
-import { Attribute, Dimension } from "../v1";
+import { V1API } from "../v1";
 import dataToArrayBuffer from "./dataToArrayBuffer";
 import { Datatype } from "../v2";
 import mapToBigIntIfNeeded from "./mapToBigIntIfNeeded";
@@ -14,8 +14,8 @@ export type ValueBuffers = Record<string, ValueBuffer>;
 
 const attributeValuesToArrayBuffers = (
   values: AttributeValues,
-  dimensions: Dimension[],
-  attributes: Attribute[]
+  dimensions: V1API.Dimension[],
+  attributes: V1API.Attribute[]
 ): ValueBuffers => {
   const data = {};
   const dimensionsAndAttributes = [...dimensions, ...attributes];

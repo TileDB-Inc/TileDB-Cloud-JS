@@ -13,7 +13,6 @@
  */
 
 
-export * from "./api";
-export * from "./configuration";
-export * from "./configuration";
+export * as V1API from "./api";
 
+export { ConfigurationParameters, Configuration } from './configuration';

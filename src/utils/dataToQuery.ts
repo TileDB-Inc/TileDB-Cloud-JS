@@ -1,4 +1,4 @@
-import { Attribute, Dimension } from "../v1";
+import { V1API } from "../v1";
 import { Datatype, Query, Querystatus, Querytype } from "../v2";
 import { QueryData } from "../TileDBQuery/TileDBQuery";
 import getRanges from "./getRanges";
@@ -9,7 +9,7 @@ import isAttributeNullable from "./isAttributeNullable";
 import { Options } from "./getResultsFromArrayBuffer";
 
 const createAttributeBufferHeaders = (
-  attributes: Array<Attribute | Dimension>,
+  attributes: Array<V1API.Attribute | V1API.Dimension>,
   bufferSize: number
 ) => {
   const MAX_BYTES_PER_ELEMENT_OF_ATTRIBUTES = attributes.reduce(
@@ -58,7 +58,7 @@ const createAttributeBufferHeaders = (
   return attributeBufferHeaders;
 };
 
-const getMaxByteSizeOfAttribute = (attribute: Attribute | Dimension) => {
+const getMaxByteSizeOfAttribute = (attribute: V1API.Attribute | V1API.Dimension) => {
   const isVarLength = isAttributeVarLength(attribute);
   const isNullable = isAttributeNullable(attribute);
   const BYTES_PER_ELEMENT = getByteLengthOfDatatype(attribute.type);
@@ -84,8 +84,8 @@ const getMaxByteSizeOfAttribute = (attribute: Attribute | Dimension) => {
  */
 const dataToQuery = (
   data: QueryData,
-  attributes: Attribute[],
-  dimensions: Dimension[],
+  attributes: V1API.Attribute[],
+  dimensions: V1API.Dimension[],
   options: Options
 ): Query => {
   if (!data.layout) {
@@ -93,7 +93,7 @@ const dataToQuery = (
   }
   const { bufferSize } = data;
   // Use default dimension's Domain for ranges that are set empty []
-  const rangesWithDomain = emptyRangesToDomain(data.ranges, dimensions);
+  const rangesWithDomain: any[] = emptyRangesToDomain(data.ranges, dimensions);
   const ranges = getRanges(rangesWithDomain, dimensions);
   const attributesAndDimensions = [...attributes, ...dimensions];
   // if user sets options.attributes we filter out all the other unwanted dimensions / attributes

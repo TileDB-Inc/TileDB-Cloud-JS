@@ -2,8 +2,9 @@
     "compilerOptions": {
       "declaration": true,
       "esModuleInterop":true,
+      "declarationDir": "types",
       "lib": ["es2015", "dom", "WebWorker"],
-      "module": "commonjs",
+      "module": "ES2015",
       "moduleResolution": "node",
       "noEmitOnError": true,
       "noUnusedLocals": true,

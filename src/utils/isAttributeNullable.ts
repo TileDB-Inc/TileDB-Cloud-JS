@@ -1,7 +1,7 @@
-import { Attribute, Dimension } from "../v1";
+import { V1API } from "../v1";
 import isDimension from "./isDimension";
 
-const isAttributeNullable = (attribute: Attribute | Dimension) => {
+const isAttributeNullable = (attribute: V1API.Attribute | V1API.Dimension) => {
   if (isDimension(attribute)) {
     return false;
   }
