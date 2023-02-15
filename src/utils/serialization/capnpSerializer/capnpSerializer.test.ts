@@ -1,5 +1,5 @@
 import serializer from "./capnpSerializer";
-import { deserializeCapnp, DeserializableType } from "./capnpDeSerializer";
+import { deserializeCapnp, DeserializableType } from "../../deserialization/capnpDeSerializer";
 
 test("serializer", () => {
   const data = {

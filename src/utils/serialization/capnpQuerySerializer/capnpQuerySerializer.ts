@@ -1,5 +1,5 @@
-import { Query as QueryType, Subarray as SubarrayType, DomainArray as DomainArrayType } from "../v2";
-import { Query, Subarray, DomainArray } from "../capnp/query_capnp";
+import { Query as QueryType, Subarray as SubarrayType, DomainArray as DomainArrayType } from "../../../v2";
+import { Query, Subarray, DomainArray } from "../../../capnp/query_capnp";
 import * as capnp from "capnp-ts";
 
 /**

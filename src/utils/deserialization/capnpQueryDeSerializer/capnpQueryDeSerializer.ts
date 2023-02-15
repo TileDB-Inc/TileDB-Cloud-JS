@@ -15,7 +15,7 @@ import {
   SubarrayPartitioner,
   SubarrayPartitioner_PartitionInfo,
   SubarrayPartitioner_State,
-} from "../capnp/query_capnp";
+} from "../../../capnp/query_capnp";
 import * as capnp from "capnp-ts";
 
 /**

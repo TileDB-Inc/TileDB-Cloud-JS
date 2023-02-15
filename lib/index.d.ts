@@ -11,7 +11,7 @@
  */
 export * as v1 from "./v1";
 export * as v2 from "./v2";
-export * from "./utils/capnpDeSerializer";
+export * from "./utils/deserialization/capnpDeSerializer";
 export * from "./TileDBQuery/TileDBQuery";
 import TileDBClient from "./TileDBClient";
 export default TileDBClient;

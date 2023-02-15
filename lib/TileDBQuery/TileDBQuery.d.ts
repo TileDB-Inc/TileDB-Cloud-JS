@@ -159,7 +159,9 @@ export declare class TileDBQuery {
                         };
                         start: number;
                         end: number;
-                        splitMultiRange: boolean;
+                        splitMultiRange: boolean; /**
+                         * Deserialize buffer to a Query object
+                         */
                     };
                     state: {
                         start: number;

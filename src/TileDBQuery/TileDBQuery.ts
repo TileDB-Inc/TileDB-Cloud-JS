@@ -1,5 +1,5 @@
 import dataToQuery from "../utils/dataToQuery";
-import capnpQueryDeSerializer from "../utils/capnpQueryDeSerializer";
+import capnpQueryDeSerializer from "../utils/deserialization/capnpQueryDeSerializer";
 import { ArrayApi, ArraySchema } from "../v1";
 import {
   AttributeBufferHeader,

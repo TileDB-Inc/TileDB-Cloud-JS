@@ -16,7 +16,7 @@
 import { Configuration } from "./configuration";
 import { RequiredError,　RequestArgs } from "./base";
 import { AxiosInstance } from 'axios';
-import capnpSerializer from "../utils/capnpSerializer";
+import capnpSerializer from "../utils/serialization/capnpSerializer";
 
 /**
  *

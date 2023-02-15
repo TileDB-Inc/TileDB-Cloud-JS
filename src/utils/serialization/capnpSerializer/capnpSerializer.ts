@@ -1,8 +1,8 @@
-import { ArrayMetadata } from "../capnp/arrayMetadata_capnp";
-import { Query } from "../v2";
+import { ArrayMetadata } from "../../../capnp/arrayMetadata_capnp";
+import { Query } from "../../../v2";
 import * as capnp from "capnp-ts";
-import { ArrayMetadata as ArrayMetadataType } from "../v1/api";
-import capnpQuerySerializer from "./capnpQuerySerializer";
+import { ArrayMetadata as ArrayMetadataType } from "../../../v1/api";
+import capnpQuerySerializer from "../capnpQuerySerializer";
 
 const capnpSerializer = (data: any) => {
   if (isArrayMetadata(data)) {

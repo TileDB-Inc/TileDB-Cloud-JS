@@ -1,6 +1,6 @@
 import * as capnp from "capnp-ts";
-import { ArrayMetadata } from "../capnp/arrayMetadata_capnp";
-import capnpQueryDeSerializer from './capnpQueryDeSerializer';
+import { ArrayMetadata } from "../../../capnp/arrayMetadata_capnp";
+import capnpQueryDeSerializer from '../capnpQueryDeSerializer';
 
 export enum DeserializableType {
   "arrayMetadata",
