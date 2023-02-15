@@ -48,6 +48,47 @@ struct Query {
     # Stats object
 }
 
+struct NonEmptyDomain {
+  # object representing a non-empty domain
+
+  nonEmptyDomain @0 :DomainArray;
+  # Non-empty domain of array
+
+  isEmpty @1 :Bool;
+  # Is non-empty domain really empty?
+
+  sizes @2 :List(UInt64);
+  # Number of elements in DomainArray for var length
+}
+
+struct NonEmptyDomainList {
+  # object representing non-empty domain for heterogeneous or string dimensions
+  nonEmptyDomains @0 :List(NonEmptyDomain);
+}
+
+struct Attribute {
+# Attribute of array
+    cellValNum @0 :UInt32;
+    # Attribute number of values per cell
+
+    name @1 :Text;
+    # Attribute name
+
+    type @2 :Text;
+    # TileDB attribute datatype
+
+    filterPipeline @3 :FilterPipeline;
+    # TileDB FilterPipeline for Attribute
+
+    fillValue @4 :Data;
+    # Default fill value
+
+    nullable @5 :Bool;
+    # Is attribute nullable
+
+    fillValueValidity @6 :Bool;
+    # Default validity fill value for nullable attributes
+}
 
 struct AttributeBufferHeader {
 # Represents an attribute buffer header information
@@ -74,6 +115,54 @@ struct AttributeBufferHeader {
     # Original user set number of bytes in the validity data buffer
 }
 
+struct Dimension {
+# Dimension of array
+
+    name @0 :Text;
+    # Dimension name
+
+    nullTileExtent @1 :Bool;
+    # Is tile extent null
+
+    type @2 :Text;
+    # Datatype for Dimension
+
+    tileExtent :union {
+      int8 @3 :Int8;
+      uint8 @4 :UInt8;
+      int16 @5 :Int16;
+      uint16 @6 :UInt16;
+      int32 @7 :Int32;
+      uint32 @8 :UInt32;
+      int64 @9 :Int64;
+      uint64 @10 :UInt64;
+      float32 @11 :Float32;
+      float64 @12 :Float64;
+    }
+    # Extent of tile
+
+    domain @13 :DomainArray;
+    # extent of domain
+
+    filterPipeline @14 :FilterPipeline;
+    # TileDB FilterPipeline for Dimension
+}
+
+struct Domain {
+# Domain of array
+    cellOrder @0 :Text;
+    # Tile Order
+
+    dimensions @1 :List(Dimension);
+    # Array of dimensions
+
+    tileOrder @2 :Text;
+    # Tile Order
+
+    type @3 :Text;
+    # Datatype of domain
+}
+
 struct Array {
   endTimestamp @0 :UInt64;
   # ending timestamp array was opened
@@ -86,10 +175,81 @@ struct Array {
 
   startTimestamp @3 :UInt64;
   # starting timestamp array was opened
+
+  arraySchemaLatest @4 :ArraySchema;
+  # latest array schema
+
+  arraySchemasAll @5 :Map(Text, ArraySchema);
+  # map of all Array Schemas
+
+  nonEmptyDomain @6 :NonEmptyDomainList;
+  # non empty domain
+
+  arrayMetadata @7 :ArrayMetadata;
+  # array metadata
+
+  # The rest of the field are not needed for Array Open v2
+  # arrayDirectory @8 :ArrayDirectory;
+  # array directory (for reads)
+
+  # fragmentMetadataAll @9 :List(FragmentMetadata);
+  # metadata for all fragments (for reads)
+
+  # openedAtEndTimestamp @10 :UInt64;
+  # The ending timestamp that the array was last opened at
 }
 
-struct FilterPipeline {
-  filters @0 :List(Filter);
+struct ArrayOpen {
+  config @0 :Config;
+  # Config
+  queryType @1 :Text;
+  # Query type to open the array for
+}
+
+struct ArraySchema {
+# ArraySchema during creation or retrieval
+    arrayType @0 :Text;
+    # Type of array
+
+    attributes @1 :List(Attribute);
+    # Attributes of array
+
+    capacity @2 :UInt64;
+    # Capacity of array
+
+    cellOrder @3 :Text;
+    # Order of cells
+
+    coordsFilterPipeline @4 :FilterPipeline;
+    # Type of compression for coordinates (enum)
+
+    domain @5 :Domain;
+    # Domain of array
+
+    offsetFilterPipeline @6 :FilterPipeline;
+    # Compression type of cell variable offsets (enum)
+
+    tileOrder @7 :Text;
+    # Tile order setting of array
+
+    uri @8 :Text;
+    # URI of schema
+
+    version @9 :List(Int32);
+    # file format version
+
+    allowsDuplicates @10 :Bool;
+    # True if the array allows coordinate duplicates.
+    # Applicable only to sparse arrays.
+
+    validityFilterPipeline @11 :FilterPipeline;
+    # Type of compression for validity buffers (enum)
+
+    name @12 :Text;
+    # name of array schema
+
+    timestampRange @13 :List(UInt64);
+    # Timestamp range of array schema
 }
 
 struct Filter {
@@ -111,6 +271,18 @@ struct Filter {
     float64 @12 :Float64;
   }
   # filter data
+}
+
+struct FilterPipeline {
+  filters @0 :List(Filter);
+}
+
+struct Map(Key, Value) {
+  entries @0 :List(Entry);
+  struct Entry {
+    key @0 :Key;
+    value @1 :Value;
+  }
 }
 
 
@@ -330,4 +502,19 @@ struct AttributeBufferSize {
 
   validityBytes @3: UInt64;
   # size (in bytes) of data buffer
+}
+
+struct ArrayMetadata {
+  # object representing array metadata
+
+  struct MetadataEntry {
+    key @0 :Text;
+    type @1 :Text;
+    valueNum @2 :UInt32;
+    value @3 :Data;
+    del @4 :Bool;
+  }
+
+  entries @0 :List(MetadataEntry);
+  # list of metadata values
 }
