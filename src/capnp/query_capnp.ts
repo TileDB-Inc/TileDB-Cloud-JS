@@ -66,6 +66,61 @@ export class Query extends __S {
     setStats(value: Stats): void { __S.copyFrom(value, __S.getPointer(9, this)); }
     toString(): string { return "Query_" + super.toString(); }
 }
+export class NonEmptyDomain extends __S {
+    static readonly _capnp = { displayName: "NonEmptyDomain", id: "8ee6e91f0369a459", size: new __O(8, 2) };
+    adoptNonEmptyDomain(value: capnp.Orphan<DomainArray>): void { __S.adopt(value, __S.getPointer(0, this)); }
+    disownNonEmptyDomain(): capnp.Orphan<DomainArray> { return __S.disown(this.getNonEmptyDomain()); }
+    getNonEmptyDomain(): DomainArray { return __S.getStruct(0, DomainArray, this); }
+    hasNonEmptyDomain(): boolean { return !__S.isNull(__S.getPointer(0, this)); }
+    initNonEmptyDomain(): DomainArray { return __S.initStructAt(0, DomainArray, this); }
+    setNonEmptyDomain(value: DomainArray): void { __S.copyFrom(value, __S.getPointer(0, this)); }
+    getIsEmpty(): boolean { return __S.getBit(0, this); }
+    setIsEmpty(value: boolean): void { __S.setBit(0, value, this); }
+    adoptSizes(value: capnp.Orphan<capnp.List<capnp.Uint64>>): void { __S.adopt(value, __S.getPointer(1, this)); }
+    disownSizes(): capnp.Orphan<capnp.List<capnp.Uint64>> { return __S.disown(this.getSizes()); }
+    getSizes(): capnp.List<capnp.Uint64> { return __S.getList(1, capnp.Uint64List, this); }
+    hasSizes(): boolean { return !__S.isNull(__S.getPointer(1, this)); }
+    initSizes(length: number): capnp.List<capnp.Uint64> { return __S.initList(1, capnp.Uint64List, length, this); }
+    setSizes(value: capnp.List<capnp.Uint64>): void { __S.copyFrom(value, __S.getPointer(1, this)); }
+    toString(): string { return "NonEmptyDomain_" + super.toString(); }
+}
+export class NonEmptyDomainList extends __S {
+    static readonly _capnp = { displayName: "NonEmptyDomainList", id: "ec4d493d30f4b23d", size: new __O(0, 1) };
+    static _NonEmptyDomains: capnp.ListCtor<NonEmptyDomain>;
+    adoptNonEmptyDomains(value: capnp.Orphan<capnp.List<NonEmptyDomain>>): void { __S.adopt(value, __S.getPointer(0, this)); }
+    disownNonEmptyDomains(): capnp.Orphan<capnp.List<NonEmptyDomain>> { return __S.disown(this.getNonEmptyDomains()); }
+    getNonEmptyDomains(): capnp.List<NonEmptyDomain> { return __S.getList(0, NonEmptyDomainList._NonEmptyDomains, this); }
+    hasNonEmptyDomains(): boolean { return !__S.isNull(__S.getPointer(0, this)); }
+    initNonEmptyDomains(length: number): capnp.List<NonEmptyDomain> { return __S.initList(0, NonEmptyDomainList._NonEmptyDomains, length, this); }
+    setNonEmptyDomains(value: capnp.List<NonEmptyDomain>): void { __S.copyFrom(value, __S.getPointer(0, this)); }
+    toString(): string { return "NonEmptyDomainList_" + super.toString(); }
+}
+export class Attribute extends __S {
+    static readonly _capnp = { displayName: "Attribute", id: "c3c6d96fc6043315", size: new __O(8, 4) };
+    getCellValNum(): number { return __S.getUint32(0, this); }
+    setCellValNum(value: number): void { __S.setUint32(0, value, this); }
+    getName(): string { return __S.getText(0, this); }
+    setName(value: string): void { __S.setText(0, value, this); }
+    getType(): string { return __S.getText(1, this); }
+    setType(value: string): void { __S.setText(1, value, this); }
+    adoptFilterPipeline(value: capnp.Orphan<FilterPipeline>): void { __S.adopt(value, __S.getPointer(2, this)); }
+    disownFilterPipeline(): capnp.Orphan<FilterPipeline> { return __S.disown(this.getFilterPipeline()); }
+    getFilterPipeline(): FilterPipeline { return __S.getStruct(2, FilterPipeline, this); }
+    hasFilterPipeline(): boolean { return !__S.isNull(__S.getPointer(2, this)); }
+    initFilterPipeline(): FilterPipeline { return __S.initStructAt(2, FilterPipeline, this); }
+    setFilterPipeline(value: FilterPipeline): void { __S.copyFrom(value, __S.getPointer(2, this)); }
+    adoptFillValue(value: capnp.Orphan<capnp.Data>): void { __S.adopt(value, __S.getPointer(3, this)); }
+    disownFillValue(): capnp.Orphan<capnp.Data> { return __S.disown(this.getFillValue()); }
+    getFillValue(): capnp.Data { return __S.getData(3, this); }
+    hasFillValue(): boolean { return !__S.isNull(__S.getPointer(3, this)); }
+    initFillValue(length: number): capnp.Data { return __S.initData(3, length, this); }
+    setFillValue(value: capnp.Data): void { __S.copyFrom(value, __S.getPointer(3, this)); }
+    getNullable(): boolean { return __S.getBit(32, this); }
+    setNullable(value: boolean): void { __S.setBit(32, value, this); }
+    getFillValueValidity(): boolean { return __S.getBit(33, this); }
+    setFillValueValidity(value: boolean): void { __S.setBit(33, value, this); }
+    toString(): string { return "Attribute_" + super.toString(); }
+}
 export class AttributeBufferHeader extends __S {
     static readonly _capnp = { displayName: "AttributeBufferHeader", id: "9884df9a1b40f364", size: new __O(48, 1) };
     getName(): string { return __S.getText(0, this); }
@@ -84,8 +139,166 @@ export class AttributeBufferHeader extends __S {
     setOriginalValidityLenBufferSizeInBytes(value: capnp.Uint64): void { __S.setUint64(40, value, this); }
     toString(): string { return "AttributeBufferHeader_" + super.toString(); }
 }
+export enum Dimension_TileExtent_Which {
+    INT8 = 0,
+    UINT8 = 1,
+    INT16 = 2,
+    UINT16 = 3,
+    INT32 = 4,
+    UINT32 = 5,
+    INT64 = 6,
+    UINT64 = 7,
+    FLOAT32 = 8,
+    FLOAT64 = 9
+}
+export class Dimension_TileExtent extends __S {
+    static readonly INT8 = Dimension_TileExtent_Which.INT8;
+    static readonly UINT8 = Dimension_TileExtent_Which.UINT8;
+    static readonly INT16 = Dimension_TileExtent_Which.INT16;
+    static readonly UINT16 = Dimension_TileExtent_Which.UINT16;
+    static readonly INT32 = Dimension_TileExtent_Which.INT32;
+    static readonly UINT32 = Dimension_TileExtent_Which.UINT32;
+    static readonly INT64 = Dimension_TileExtent_Which.INT64;
+    static readonly UINT64 = Dimension_TileExtent_Which.UINT64;
+    static readonly FLOAT32 = Dimension_TileExtent_Which.FLOAT32;
+    static readonly FLOAT64 = Dimension_TileExtent_Which.FLOAT64;
+    static readonly _capnp = { displayName: "tileExtent", id: "e669e109ac3471bd", size: new __O(16, 4) };
+    getInt8(): number {
+        __S.testWhich("int8", __S.getUint16(2, this), 0, this);
+        return __S.getInt8(1, this);
+    }
+    isInt8(): boolean { return __S.getUint16(2, this) === 0; }
+    setInt8(value: number): void {
+        __S.setUint16(2, 0, this);
+        __S.setInt8(1, value, this);
+    }
+    getUint8(): number {
+        __S.testWhich("uint8", __S.getUint16(2, this), 1, this);
+        return __S.getUint8(1, this);
+    }
+    isUint8(): boolean { return __S.getUint16(2, this) === 1; }
+    setUint8(value: number): void {
+        __S.setUint16(2, 1, this);
+        __S.setUint8(1, value, this);
+    }
+    getInt16(): number {
+        __S.testWhich("int16", __S.getUint16(2, this), 2, this);
+        return __S.getInt16(4, this);
+    }
+    isInt16(): boolean { return __S.getUint16(2, this) === 2; }
+    setInt16(value: number): void {
+        __S.setUint16(2, 2, this);
+        __S.setInt16(4, value, this);
+    }
+    getUint16(): number {
+        __S.testWhich("uint16", __S.getUint16(2, this), 3, this);
+        return __S.getUint16(4, this);
+    }
+    isUint16(): boolean { return __S.getUint16(2, this) === 3; }
+    setUint16(value: number): void {
+        __S.setUint16(2, 3, this);
+        __S.setUint16(4, value, this);
+    }
+    getInt32(): number {
+        __S.testWhich("int32", __S.getUint16(2, this), 4, this);
+        return __S.getInt32(4, this);
+    }
+    isInt32(): boolean { return __S.getUint16(2, this) === 4; }
+    setInt32(value: number): void {
+        __S.setUint16(2, 4, this);
+        __S.setInt32(4, value, this);
+    }
+    getUint32(): number {
+        __S.testWhich("uint32", __S.getUint16(2, this), 5, this);
+        return __S.getUint32(4, this);
+    }
+    isUint32(): boolean { return __S.getUint16(2, this) === 5; }
+    setUint32(value: number): void {
+        __S.setUint16(2, 5, this);
+        __S.setUint32(4, value, this);
+    }
+    getInt64(): capnp.Int64 {
+        __S.testWhich("int64", __S.getUint16(2, this), 6, this);
+        return __S.getInt64(8, this);
+    }
+    isInt64(): boolean { return __S.getUint16(2, this) === 6; }
+    setInt64(value: capnp.Int64): void {
+        __S.setUint16(2, 6, this);
+        __S.setInt64(8, value, this);
+    }
+    getUint64(): capnp.Uint64 {
+        __S.testWhich("uint64", __S.getUint16(2, this), 7, this);
+        return __S.getUint64(8, this);
+    }
+    isUint64(): boolean { return __S.getUint16(2, this) === 7; }
+    setUint64(value: capnp.Uint64): void {
+        __S.setUint16(2, 7, this);
+        __S.setUint64(8, value, this);
+    }
+    getFloat32(): number {
+        __S.testWhich("float32", __S.getUint16(2, this), 8, this);
+        return __S.getFloat32(4, this);
+    }
+    isFloat32(): boolean { return __S.getUint16(2, this) === 8; }
+    setFloat32(value: number): void {
+        __S.setUint16(2, 8, this);
+        __S.setFloat32(4, value, this);
+    }
+    getFloat64(): number {
+        __S.testWhich("float64", __S.getUint16(2, this), 9, this);
+        return __S.getFloat64(8, this);
+    }
+    isFloat64(): boolean { return __S.getUint16(2, this) === 9; }
+    setFloat64(value: number): void {
+        __S.setUint16(2, 9, this);
+        __S.setFloat64(8, value, this);
+    }
+    toString(): string { return "Dimension_TileExtent_" + super.toString(); }
+    which(): Dimension_TileExtent_Which { return __S.getUint16(2, this); }
+}
+export class Dimension extends __S {
+    static readonly _capnp = { displayName: "Dimension", id: "8740d96d749301b9", size: new __O(16, 4) };
+    getName(): string { return __S.getText(0, this); }
+    setName(value: string): void { __S.setText(0, value, this); }
+    getNullTileExtent(): boolean { return __S.getBit(0, this); }
+    setNullTileExtent(value: boolean): void { __S.setBit(0, value, this); }
+    getType(): string { return __S.getText(1, this); }
+    setType(value: string): void { __S.setText(1, value, this); }
+    getTileExtent(): Dimension_TileExtent { return __S.getAs(Dimension_TileExtent, this); }
+    initTileExtent(): Dimension_TileExtent { return __S.getAs(Dimension_TileExtent, this); }
+    adoptDomain(value: capnp.Orphan<DomainArray>): void { __S.adopt(value, __S.getPointer(2, this)); }
+    disownDomain(): capnp.Orphan<DomainArray> { return __S.disown(this.getDomain()); }
+    getDomain(): DomainArray { return __S.getStruct(2, DomainArray, this); }
+    hasDomain(): boolean { return !__S.isNull(__S.getPointer(2, this)); }
+    initDomain(): DomainArray { return __S.initStructAt(2, DomainArray, this); }
+    setDomain(value: DomainArray): void { __S.copyFrom(value, __S.getPointer(2, this)); }
+    adoptFilterPipeline(value: capnp.Orphan<FilterPipeline>): void { __S.adopt(value, __S.getPointer(3, this)); }
+    disownFilterPipeline(): capnp.Orphan<FilterPipeline> { return __S.disown(this.getFilterPipeline()); }
+    getFilterPipeline(): FilterPipeline { return __S.getStruct(3, FilterPipeline, this); }
+    hasFilterPipeline(): boolean { return !__S.isNull(__S.getPointer(3, this)); }
+    initFilterPipeline(): FilterPipeline { return __S.initStructAt(3, FilterPipeline, this); }
+    setFilterPipeline(value: FilterPipeline): void { __S.copyFrom(value, __S.getPointer(3, this)); }
+    toString(): string { return "Dimension_" + super.toString(); }
+}
+export class Domain extends __S {
+    static readonly _capnp = { displayName: "Domain", id: "f8ef6fb69336c12f", size: new __O(0, 4) };
+    static _Dimensions: capnp.ListCtor<Dimension>;
+    getCellOrder(): string { return __S.getText(0, this); }
+    setCellOrder(value: string): void { __S.setText(0, value, this); }
+    adoptDimensions(value: capnp.Orphan<capnp.List<Dimension>>): void { __S.adopt(value, __S.getPointer(1, this)); }
+    disownDimensions(): capnp.Orphan<capnp.List<Dimension>> { return __S.disown(this.getDimensions()); }
+    getDimensions(): capnp.List<Dimension> { return __S.getList(1, Domain._Dimensions, this); }
+    hasDimensions(): boolean { return !__S.isNull(__S.getPointer(1, this)); }
+    initDimensions(length: number): capnp.List<Dimension> { return __S.initList(1, Domain._Dimensions, length, this); }
+    setDimensions(value: capnp.List<Dimension>): void { __S.copyFrom(value, __S.getPointer(1, this)); }
+    getTileOrder(): string { return __S.getText(2, this); }
+    setTileOrder(value: string): void { __S.setText(2, value, this); }
+    getType(): string { return __S.getText(3, this); }
+    setType(value: string): void { __S.setText(3, value, this); }
+    toString(): string { return "Domain_" + super.toString(); }
+}
 export class Array extends __S {
-    static readonly _capnp = { displayName: "Array", id: "e8b44da5a3b284a4", size: new __O(16, 2) };
+    static readonly _capnp = { displayName: "Array", id: "e8b44da5a3b284a4", size: new __O(16, 6) };
     getEndTimestamp(): capnp.Uint64 { return __S.getUint64(0, this); }
     setEndTimestamp(value: capnp.Uint64): void { __S.setUint64(0, value, this); }
     getQueryType(): string { return __S.getText(0, this); }
@@ -94,18 +307,104 @@ export class Array extends __S {
     setUri(value: string): void { __S.setText(1, value, this); }
     getStartTimestamp(): capnp.Uint64 { return __S.getUint64(8, this); }
     setStartTimestamp(value: capnp.Uint64): void { __S.setUint64(8, value, this); }
+    adoptArraySchemaLatest(value: capnp.Orphan<ArraySchema>): void { __S.adopt(value, __S.getPointer(2, this)); }
+    disownArraySchemaLatest(): capnp.Orphan<ArraySchema> { return __S.disown(this.getArraySchemaLatest()); }
+    getArraySchemaLatest(): ArraySchema { return __S.getStruct(2, ArraySchema, this); }
+    hasArraySchemaLatest(): boolean { return !__S.isNull(__S.getPointer(2, this)); }
+    initArraySchemaLatest(): ArraySchema { return __S.initStructAt(2, ArraySchema, this); }
+    setArraySchemaLatest(value: ArraySchema): void { __S.copyFrom(value, __S.getPointer(2, this)); }
+    adoptArraySchemasAll(value: capnp.Orphan<Map>): void { __S.adopt(value, __S.getPointer(3, this)); }
+    disownArraySchemasAll(): capnp.Orphan<Map> { return __S.disown(this.getArraySchemasAll()); }
+    getArraySchemasAll(): Map { return __S.getStruct(3, Map, this); }
+    hasArraySchemasAll(): boolean { return !__S.isNull(__S.getPointer(3, this)); }
+    initArraySchemasAll(): Map { return __S.initStructAt(3, Map, this); }
+    setArraySchemasAll(value: Map): void { __S.copyFrom(value, __S.getPointer(3, this)); }
+    adoptNonEmptyDomain(value: capnp.Orphan<NonEmptyDomainList>): void { __S.adopt(value, __S.getPointer(4, this)); }
+    disownNonEmptyDomain(): capnp.Orphan<NonEmptyDomainList> { return __S.disown(this.getNonEmptyDomain()); }
+    getNonEmptyDomain(): NonEmptyDomainList { return __S.getStruct(4, NonEmptyDomainList, this); }
+    hasNonEmptyDomain(): boolean { return !__S.isNull(__S.getPointer(4, this)); }
+    initNonEmptyDomain(): NonEmptyDomainList { return __S.initStructAt(4, NonEmptyDomainList, this); }
+    setNonEmptyDomain(value: NonEmptyDomainList): void { __S.copyFrom(value, __S.getPointer(4, this)); }
+    adoptArrayMetadata(value: capnp.Orphan<ArrayMetadata>): void { __S.adopt(value, __S.getPointer(5, this)); }
+    disownArrayMetadata(): capnp.Orphan<ArrayMetadata> { return __S.disown(this.getArrayMetadata()); }
+    getArrayMetadata(): ArrayMetadata { return __S.getStruct(5, ArrayMetadata, this); }
+    hasArrayMetadata(): boolean { return !__S.isNull(__S.getPointer(5, this)); }
+    initArrayMetadata(): ArrayMetadata { return __S.initStructAt(5, ArrayMetadata, this); }
+    setArrayMetadata(value: ArrayMetadata): void { __S.copyFrom(value, __S.getPointer(5, this)); }
     toString(): string { return "Array_" + super.toString(); }
 }
-export class FilterPipeline extends __S {
-    static readonly _capnp = { displayName: "FilterPipeline", id: "a6d903a3c84d4809", size: new __O(0, 1) };
-    static _Filters: capnp.ListCtor<Filter>;
-    adoptFilters(value: capnp.Orphan<capnp.List<Filter>>): void { __S.adopt(value, __S.getPointer(0, this)); }
-    disownFilters(): capnp.Orphan<capnp.List<Filter>> { return __S.disown(this.getFilters()); }
-    getFilters(): capnp.List<Filter> { return __S.getList(0, FilterPipeline._Filters, this); }
-    hasFilters(): boolean { return !__S.isNull(__S.getPointer(0, this)); }
-    initFilters(length: number): capnp.List<Filter> { return __S.initList(0, FilterPipeline._Filters, length, this); }
-    setFilters(value: capnp.List<Filter>): void { __S.copyFrom(value, __S.getPointer(0, this)); }
-    toString(): string { return "FilterPipeline_" + super.toString(); }
+export class ArrayOpen extends __S {
+    static readonly _capnp = { displayName: "ArrayOpen", id: "98080e8276f32101", size: new __O(0, 2) };
+    adoptConfig(value: capnp.Orphan<Config>): void { __S.adopt(value, __S.getPointer(0, this)); }
+    disownConfig(): capnp.Orphan<Config> { return __S.disown(this.getConfig()); }
+    getConfig(): Config { return __S.getStruct(0, Config, this); }
+    hasConfig(): boolean { return !__S.isNull(__S.getPointer(0, this)); }
+    initConfig(): Config { return __S.initStructAt(0, Config, this); }
+    setConfig(value: Config): void { __S.copyFrom(value, __S.getPointer(0, this)); }
+    getQueryType(): string { return __S.getText(1, this); }
+    setQueryType(value: string): void { __S.setText(1, value, this); }
+    toString(): string { return "ArrayOpen_" + super.toString(); }
+}
+export class ArraySchema extends __S {
+    static readonly _capnp = { displayName: "ArraySchema", id: "e4e6fd8e4b4df3bd", size: new __O(16, 12) };
+    static _Attributes: capnp.ListCtor<Attribute>;
+    getArrayType(): string { return __S.getText(0, this); }
+    setArrayType(value: string): void { __S.setText(0, value, this); }
+    adoptAttributes(value: capnp.Orphan<capnp.List<Attribute>>): void { __S.adopt(value, __S.getPointer(1, this)); }
+    disownAttributes(): capnp.Orphan<capnp.List<Attribute>> { return __S.disown(this.getAttributes()); }
+    getAttributes(): capnp.List<Attribute> { return __S.getList(1, ArraySchema._Attributes, this); }
+    hasAttributes(): boolean { return !__S.isNull(__S.getPointer(1, this)); }
+    initAttributes(length: number): capnp.List<Attribute> { return __S.initList(1, ArraySchema._Attributes, length, this); }
+    setAttributes(value: capnp.List<Attribute>): void { __S.copyFrom(value, __S.getPointer(1, this)); }
+    getCapacity(): capnp.Uint64 { return __S.getUint64(0, this); }
+    setCapacity(value: capnp.Uint64): void { __S.setUint64(0, value, this); }
+    getCellOrder(): string { return __S.getText(2, this); }
+    setCellOrder(value: string): void { __S.setText(2, value, this); }
+    adoptCoordsFilterPipeline(value: capnp.Orphan<FilterPipeline>): void { __S.adopt(value, __S.getPointer(3, this)); }
+    disownCoordsFilterPipeline(): capnp.Orphan<FilterPipeline> { return __S.disown(this.getCoordsFilterPipeline()); }
+    getCoordsFilterPipeline(): FilterPipeline { return __S.getStruct(3, FilterPipeline, this); }
+    hasCoordsFilterPipeline(): boolean { return !__S.isNull(__S.getPointer(3, this)); }
+    initCoordsFilterPipeline(): FilterPipeline { return __S.initStructAt(3, FilterPipeline, this); }
+    setCoordsFilterPipeline(value: FilterPipeline): void { __S.copyFrom(value, __S.getPointer(3, this)); }
+    adoptDomain(value: capnp.Orphan<Domain>): void { __S.adopt(value, __S.getPointer(4, this)); }
+    disownDomain(): capnp.Orphan<Domain> { return __S.disown(this.getDomain()); }
+    getDomain(): Domain { return __S.getStruct(4, Domain, this); }
+    hasDomain(): boolean { return !__S.isNull(__S.getPointer(4, this)); }
+    initDomain(): Domain { return __S.initStructAt(4, Domain, this); }
+    setDomain(value: Domain): void { __S.copyFrom(value, __S.getPointer(4, this)); }
+    adoptOffsetFilterPipeline(value: capnp.Orphan<FilterPipeline>): void { __S.adopt(value, __S.getPointer(5, this)); }
+    disownOffsetFilterPipeline(): capnp.Orphan<FilterPipeline> { return __S.disown(this.getOffsetFilterPipeline()); }
+    getOffsetFilterPipeline(): FilterPipeline { return __S.getStruct(5, FilterPipeline, this); }
+    hasOffsetFilterPipeline(): boolean { return !__S.isNull(__S.getPointer(5, this)); }
+    initOffsetFilterPipeline(): FilterPipeline { return __S.initStructAt(5, FilterPipeline, this); }
+    setOffsetFilterPipeline(value: FilterPipeline): void { __S.copyFrom(value, __S.getPointer(5, this)); }
+    getTileOrder(): string { return __S.getText(6, this); }
+    setTileOrder(value: string): void { __S.setText(6, value, this); }
+    getUri(): string { return __S.getText(7, this); }
+    setUri(value: string): void { __S.setText(7, value, this); }
+    adoptVersion(value: capnp.Orphan<capnp.List<number>>): void { __S.adopt(value, __S.getPointer(8, this)); }
+    disownVersion(): capnp.Orphan<capnp.List<number>> { return __S.disown(this.getVersion()); }
+    getVersion(): capnp.List<number> { return __S.getList(8, capnp.Int32List, this); }
+    hasVersion(): boolean { return !__S.isNull(__S.getPointer(8, this)); }
+    initVersion(length: number): capnp.List<number> { return __S.initList(8, capnp.Int32List, length, this); }
+    setVersion(value: capnp.List<number>): void { __S.copyFrom(value, __S.getPointer(8, this)); }
+    getAllowsDuplicates(): boolean { return __S.getBit(64, this); }
+    setAllowsDuplicates(value: boolean): void { __S.setBit(64, value, this); }
+    adoptValidityFilterPipeline(value: capnp.Orphan<FilterPipeline>): void { __S.adopt(value, __S.getPointer(9, this)); }
+    disownValidityFilterPipeline(): capnp.Orphan<FilterPipeline> { return __S.disown(this.getValidityFilterPipeline()); }
+    getValidityFilterPipeline(): FilterPipeline { return __S.getStruct(9, FilterPipeline, this); }
+    hasValidityFilterPipeline(): boolean { return !__S.isNull(__S.getPointer(9, this)); }
+    initValidityFilterPipeline(): FilterPipeline { return __S.initStructAt(9, FilterPipeline, this); }
+    setValidityFilterPipeline(value: FilterPipeline): void { __S.copyFrom(value, __S.getPointer(9, this)); }
+    getName(): string { return __S.getText(10, this); }
+    setName(value: string): void { __S.setText(10, value, this); }
+    adoptTimestampRange(value: capnp.Orphan<capnp.List<capnp.Uint64>>): void { __S.adopt(value, __S.getPointer(11, this)); }
+    disownTimestampRange(): capnp.Orphan<capnp.List<capnp.Uint64>> { return __S.disown(this.getTimestampRange()); }
+    getTimestampRange(): capnp.List<capnp.Uint64> { return __S.getList(11, capnp.Uint64List, this); }
+    hasTimestampRange(): boolean { return !__S.isNull(__S.getPointer(11, this)); }
+    initTimestampRange(length: number): capnp.List<capnp.Uint64> { return __S.initList(11, capnp.Uint64List, length, this); }
+    setTimestampRange(value: capnp.List<capnp.Uint64>): void { __S.copyFrom(value, __S.getPointer(11, this)); }
+    toString(): string { return "ArraySchema_" + super.toString(); }
 }
 export enum Filter_Data_Which {
     TEXT = 0,
@@ -263,6 +562,43 @@ export class Filter extends __S {
     getData(): Filter_Data { return __S.getAs(Filter_Data, this); }
     initData(): Filter_Data { return __S.getAs(Filter_Data, this); }
     toString(): string { return "Filter_" + super.toString(); }
+}
+export class FilterPipeline extends __S {
+    static readonly _capnp = { displayName: "FilterPipeline", id: "a6d903a3c84d4809", size: new __O(0, 1) };
+    static _Filters: capnp.ListCtor<Filter>;
+    adoptFilters(value: capnp.Orphan<capnp.List<Filter>>): void { __S.adopt(value, __S.getPointer(0, this)); }
+    disownFilters(): capnp.Orphan<capnp.List<Filter>> { return __S.disown(this.getFilters()); }
+    getFilters(): capnp.List<Filter> { return __S.getList(0, FilterPipeline._Filters, this); }
+    hasFilters(): boolean { return !__S.isNull(__S.getPointer(0, this)); }
+    initFilters(length: number): capnp.List<Filter> { return __S.initList(0, FilterPipeline._Filters, length, this); }
+    setFilters(value: capnp.List<Filter>): void { __S.copyFrom(value, __S.getPointer(0, this)); }
+    toString(): string { return "FilterPipeline_" + super.toString(); }
+}
+export class Map_Entry extends __S {
+    static readonly _capnp = { displayName: "Entry", id: "9d58857f4eaf2e0b", size: new __O(0, 2) };
+    adoptKey(value: capnp.Orphan<capnp.Pointer>): void { __S.adopt(value, __S.getPointer(0, this)); }
+    disownKey(): capnp.Orphan<capnp.Pointer> { return __S.disown(this.getKey()); }
+    getKey(): capnp.Pointer { return __S.getPointer(0, this); }
+    hasKey(): boolean { return !__S.isNull(__S.getPointer(0, this)); }
+    setKey(value: capnp.Pointer): void { __S.copyFrom(value, __S.getPointer(0, this)); }
+    adoptValue(value: capnp.Orphan<capnp.Pointer>): void { __S.adopt(value, __S.getPointer(1, this)); }
+    disownValue(): capnp.Orphan<capnp.Pointer> { return __S.disown(this.getValue()); }
+    getValue(): capnp.Pointer { return __S.getPointer(1, this); }
+    hasValue(): boolean { return !__S.isNull(__S.getPointer(1, this)); }
+    setValue(value: capnp.Pointer): void { __S.copyFrom(value, __S.getPointer(1, this)); }
+    toString(): string { return "Map_Entry_" + super.toString(); }
+}
+export class Map extends __S {
+    static readonly Entry = Map_Entry;
+    static readonly _capnp = { displayName: "Map", id: "d49ce2e3753dec00", size: new __O(0, 1) };
+    static _Entries: capnp.ListCtor<Map_Entry>;
+    adoptEntries(value: capnp.Orphan<capnp.List<Map_Entry>>): void { __S.adopt(value, __S.getPointer(0, this)); }
+    disownEntries(): capnp.Orphan<capnp.List<Map_Entry>> { return __S.disown(this.getEntries()); }
+    getEntries(): capnp.List<Map_Entry> { return __S.getList(0, Map._Entries, this); }
+    hasEntries(): boolean { return !__S.isNull(__S.getPointer(0, this)); }
+    initEntries(length: number): capnp.List<Map_Entry> { return __S.initList(0, Map._Entries, length, this); }
+    setEntries(value: capnp.List<Map_Entry>): void { __S.copyFrom(value, __S.getPointer(0, this)); }
+    toString(): string { return "Map_" + super.toString(); }
 }
 export class KV extends __S {
     static readonly _capnp = { displayName: "KV", id: "f81811af0443b7bd", size: new __O(0, 2) };
@@ -646,8 +982,42 @@ export class AttributeBufferSize extends __S {
     setValidityBytes(value: capnp.Uint64): void { __S.setUint64(16, value, this); }
     toString(): string { return "AttributeBufferSize_" + super.toString(); }
 }
+export class ArrayMetadata_MetadataEntry extends __S {
+    static readonly _capnp = { displayName: "MetadataEntry", id: "dc11d0ec5c20f3f9", size: new __O(8, 3) };
+    getKey(): string { return __S.getText(0, this); }
+    setKey(value: string): void { __S.setText(0, value, this); }
+    getType(): string { return __S.getText(1, this); }
+    setType(value: string): void { __S.setText(1, value, this); }
+    getValueNum(): number { return __S.getUint32(0, this); }
+    setValueNum(value: number): void { __S.setUint32(0, value, this); }
+    adoptValue(value: capnp.Orphan<capnp.Data>): void { __S.adopt(value, __S.getPointer(2, this)); }
+    disownValue(): capnp.Orphan<capnp.Data> { return __S.disown(this.getValue()); }
+    getValue(): capnp.Data { return __S.getData(2, this); }
+    hasValue(): boolean { return !__S.isNull(__S.getPointer(2, this)); }
+    initValue(length: number): capnp.Data { return __S.initData(2, length, this); }
+    setValue(value: capnp.Data): void { __S.copyFrom(value, __S.getPointer(2, this)); }
+    getDel(): boolean { return __S.getBit(32, this); }
+    setDel(value: boolean): void { __S.setBit(32, value, this); }
+    toString(): string { return "ArrayMetadata_MetadataEntry_" + super.toString(); }
+}
+export class ArrayMetadata extends __S {
+    static readonly MetadataEntry = ArrayMetadata_MetadataEntry;
+    static readonly _capnp = { displayName: "ArrayMetadata", id: "b34f96d2ab41185f", size: new __O(0, 1) };
+    static _Entries: capnp.ListCtor<ArrayMetadata_MetadataEntry>;
+    adoptEntries(value: capnp.Orphan<capnp.List<ArrayMetadata_MetadataEntry>>): void { __S.adopt(value, __S.getPointer(0, this)); }
+    disownEntries(): capnp.Orphan<capnp.List<ArrayMetadata_MetadataEntry>> { return __S.disown(this.getEntries()); }
+    getEntries(): capnp.List<ArrayMetadata_MetadataEntry> { return __S.getList(0, ArrayMetadata._Entries, this); }
+    hasEntries(): boolean { return !__S.isNull(__S.getPointer(0, this)); }
+    initEntries(length: number): capnp.List<ArrayMetadata_MetadataEntry> { return __S.initList(0, ArrayMetadata._Entries, length, this); }
+    setEntries(value: capnp.List<ArrayMetadata_MetadataEntry>): void { __S.copyFrom(value, __S.getPointer(0, this)); }
+    toString(): string { return "ArrayMetadata_" + super.toString(); }
+}
 Query._AttributeBufferHeaders = capnp.CompositeList(AttributeBufferHeader);
+NonEmptyDomainList._NonEmptyDomains = capnp.CompositeList(NonEmptyDomain);
+Domain._Dimensions = capnp.CompositeList(Dimension);
+ArraySchema._Attributes = capnp.CompositeList(Attribute);
 FilterPipeline._Filters = capnp.CompositeList(Filter);
+Map._Entries = capnp.CompositeList(Map_Entry);
 Config._Entries = capnp.CompositeList(KV);
 Subarray._Ranges = capnp.CompositeList(SubarrayRanges);
 SubarrayPartitioner_State._SingleRange = capnp.CompositeList(Subarray);
@@ -656,3 +1026,4 @@ SubarrayPartitioner._Budget = capnp.CompositeList(AttributeBufferSize);
 Condition._Clauses = capnp.CompositeList(ConditionClause);
 MapFloat64._Entries = capnp.CompositeList(MapFloat64_Entry);
 MapUInt64._Entries = capnp.CompositeList(MapUInt64_Entry);
+ArrayMetadata._Entries = capnp.CompositeList(ArrayMetadata_MetadataEntry);

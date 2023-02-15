@@ -30,6 +30,37 @@ export interface AWSCredential {
      * @memberof AWSCredential
      */
     secret_access_key?: string;
+    /**
+     * The endpoint used for this credential
+     * @type {string}
+     * @memberof AWSCredential
+     */
+    endpoint?: string | null;
+}
+/**
+ * Role information to access Amazon Web Services
+ * @export
+ * @interface AWSRole
+ */
+export interface AWSRole {
+    /**
+     * The role arn used to access
+     * @type {string}
+     * @memberof AWSRole
+     */
+    role_arn?: string;
+    /**
+     * The role external id used to access
+     * @type {string}
+     * @memberof AWSRole
+     */
+    external_id?: string;
+    /**
+     * The endpoint used for this role
+     * @type {string}
+     * @memberof AWSRole
+     */
+    endpoint?: string | null;
 }
 /**
  * A union type which may contain a credential to access any one cloud provider.
@@ -73,6 +104,12 @@ export interface AccessCredential {
      * @memberof AccessCredential
      */
     credential?: AccessCredentialCredential;
+    /**
+     *
+     * @type {AccessCredentialRole}
+     * @memberof AccessCredential
+     */
+    role?: AccessCredentialRole;
 }
 /**
  * The credential information itself. Exactly one sub-field may be set. The names match those in the CloudProvider enum.
@@ -92,6 +129,19 @@ export interface AccessCredentialCredential {
      * @memberof AccessCredentialCredential
      */
     azure?: AzureCredential | null;
+}
+/**
+ * The role information itself. Exactly one sub-field may be set. The names match those in the CloudProvider enum.
+ * @export
+ * @interface AccessCredentialRole
+ */
+export interface AccessCredentialRole {
+    /**
+     *
+     * @type {AWSRole}
+     * @memberof AccessCredentialRole
+     */
+    aws?: AWSRole | null;
 }
 /**
  * Object including credentials and pagination metadata
@@ -214,6 +264,25 @@ export interface ArrayActivityLogData {
      * @memberof ArrayActivityLogData
      */
     pagination_metadata?: PaginationMetadata;
+}
+/**
+ * Model for opening an array v2
+ * @export
+ * @interface ArrayFetch
+ */
+export interface ArrayFetch {
+    /**
+     *
+     * @type {TileDBConfig}
+     * @memberof ArrayFetch
+     */
+    config?: TileDBConfig;
+    /**
+     *
+     * @type {Querytype}
+     * @memberof ArrayFetch
+     */
+    queryType?: Querytype;
 }
 /**
  * Represents an attribute buffer header information
@@ -421,6 +490,31 @@ export interface DomainArray {
      * @memberof DomainArray
      */
     float64?: Array<number>;
+}
+/**
+ * Uploaded file name and information
+ * @export
+ * @interface FileUploaded
+ */
+export interface FileUploaded {
+    /**
+     * output location of the TileDB File
+     * @type {string}
+     * @memberof FileUploaded
+     */
+    output_uri?: string;
+    /**
+     * name of the file uploaded
+     * @type {string}
+     * @memberof FileUploaded
+     */
+    file_name?: string;
+    /**
+     * unique ID of the uploaded file
+     * @type {string}
+     * @memberof FileUploaded
+     */
+    id: string;
 }
 /**
  * Updates the contents group
@@ -1256,6 +1350,16 @@ export declare const ArrayApiAxiosParamCreator: (configuration?: Configuration) 
      * @throws {RequiredError}
      */
     arrayActivityLog: (namespace: string, array: string, start?: number, end?: number, eventTypes?: Array<string>, taskId?: string, hasTaskId?: boolean, page?: number, perPage?: number, options?: any) => Promise<RequestArgs>;
+    /**
+     * Get a array at a specified URI registered to a group/project
+     * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
+     * @param {string} array name/uri of array that is url-encoded
+     * @param {string} contentType Content Type of input and return mime
+     * @param {ArrayFetch} arrayFetch Details for array being fetched
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getArray: (namespace: string, array: string, contentType: string, arrayFetch: ArrayFetch, options?: any) => Promise<RequestArgs>;
 };
 /**
  * ArrayApi - functional programming interface
@@ -1277,6 +1381,16 @@ export declare const ArrayApiFp: (configuration?: Configuration) => {
      * @throws {RequiredError}
      */
     arrayActivityLog(namespace: string, array: string, start?: number, end?: number, eventTypes?: Array<string>, taskId?: string, hasTaskId?: boolean, page?: number, perPage?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArrayActivityLogData>>;
+    /**
+     * Get a array at a specified URI registered to a group/project
+     * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
+     * @param {string} array name/uri of array that is url-encoded
+     * @param {string} contentType Content Type of input and return mime
+     * @param {ArrayFetch} arrayFetch Details for array being fetched
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getArray(namespace: string, array: string, contentType: string, arrayFetch: ArrayFetch, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>>;
 };
 /**
  * ArrayApi - factory interface
@@ -1298,6 +1412,16 @@ export declare const ArrayApiFactory: (configuration?: Configuration, basePath?:
      * @throws {RequiredError}
      */
     arrayActivityLog(namespace: string, array: string, start?: number, end?: number, eventTypes?: Array<string>, taskId?: string, hasTaskId?: boolean, page?: number, perPage?: number, options?: any): AxiosPromise<ArrayActivityLogData>;
+    /**
+     * Get a array at a specified URI registered to a group/project
+     * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
+     * @param {string} array name/uri of array that is url-encoded
+     * @param {string} contentType Content Type of input and return mime
+     * @param {ArrayFetch} arrayFetch Details for array being fetched
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getArray(namespace: string, array: string, contentType: string, arrayFetch: ArrayFetch, options?: any): AxiosPromise<any>;
 };
 /**
  * ArrayApi - object-oriented interface
@@ -1322,6 +1446,104 @@ export declare class ArrayApi extends BaseAPI {
      * @memberof ArrayApi
      */
     arrayActivityLog(namespace: string, array: string, start?: number, end?: number, eventTypes?: Array<string>, taskId?: string, hasTaskId?: boolean, page?: number, perPage?: number, options?: any): Promise<import("axios").AxiosResponse<ArrayActivityLogData>>;
+    /**
+     * Get a array at a specified URI registered to a group/project
+     * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
+     * @param {string} array name/uri of array that is url-encoded
+     * @param {string} contentType Content Type of input and return mime
+     * @param {ArrayFetch} arrayFetch Details for array being fetched
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ArrayApi
+     */
+    getArray(namespace: string, array: string, contentType: string, arrayFetch: ArrayFetch, options?: any): Promise<import("axios").AxiosResponse<any>>;
+}
+/**
+ * FilesApi - axios parameter creator
+ * @export
+ */
+export declare const FilesApiAxiosParamCreator: (configuration?: Configuration) => {
+    /**
+     * Upload a file at the specified location and wrap it in TileDB Array
+     * @param {string} namespace The namespace of the file
+     * @param {string} array name/uri of array that is url-encoded
+     * @param {string} contentType Content Type of input
+     * @param {number} filesize size of the file to upload in bytes
+     * @param {any} file file to upload
+     * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+     * @param {string} [name] name of the TileDB array to create, if missing {array} is used
+     * @param {string} [filename] original file name
+     * @param {string} [mimetype] Mime type of the uploaded file. Autogenerated clients do not always support changing the content type param. Server will always use mimetype query param to set mimetype for file, if it is not set Content-Type will be used
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    handleUploadFile: (namespace: string, array: string, contentType: string, filesize: number, file: any, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, name?: string, filename?: string, mimetype?: string, options?: any) => Promise<RequestArgs>;
+};
+/**
+ * FilesApi - functional programming interface
+ * @export
+ */
+export declare const FilesApiFp: (configuration?: Configuration) => {
+    /**
+     * Upload a file at the specified location and wrap it in TileDB Array
+     * @param {string} namespace The namespace of the file
+     * @param {string} array name/uri of array that is url-encoded
+     * @param {string} contentType Content Type of input
+     * @param {number} filesize size of the file to upload in bytes
+     * @param {any} file file to upload
+     * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+     * @param {string} [name] name of the TileDB array to create, if missing {array} is used
+     * @param {string} [filename] original file name
+     * @param {string} [mimetype] Mime type of the uploaded file. Autogenerated clients do not always support changing the content type param. Server will always use mimetype query param to set mimetype for file, if it is not set Content-Type will be used
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    handleUploadFile(namespace: string, array: string, contentType: string, filesize: number, file: any, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, name?: string, filename?: string, mimetype?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<FileUploaded>>;
+};
+/**
+ * FilesApi - factory interface
+ * @export
+ */
+export declare const FilesApiFactory: (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) => {
+    /**
+     * Upload a file at the specified location and wrap it in TileDB Array
+     * @param {string} namespace The namespace of the file
+     * @param {string} array name/uri of array that is url-encoded
+     * @param {string} contentType Content Type of input
+     * @param {number} filesize size of the file to upload in bytes
+     * @param {any} file file to upload
+     * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+     * @param {string} [name] name of the TileDB array to create, if missing {array} is used
+     * @param {string} [filename] original file name
+     * @param {string} [mimetype] Mime type of the uploaded file. Autogenerated clients do not always support changing the content type param. Server will always use mimetype query param to set mimetype for file, if it is not set Content-Type will be used
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    handleUploadFile(namespace: string, array: string, contentType: string, filesize: number, file: any, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, name?: string, filename?: string, mimetype?: string, options?: any): AxiosPromise<FileUploaded>;
+};
+/**
+ * FilesApi - object-oriented interface
+ * @export
+ * @class FilesApi
+ * @extends {BaseAPI}
+ */
+export declare class FilesApi extends BaseAPI {
+    /**
+     * Upload a file at the specified location and wrap it in TileDB Array
+     * @param {string} namespace The namespace of the file
+     * @param {string} array name/uri of array that is url-encoded
+     * @param {string} contentType Content Type of input
+     * @param {number} filesize size of the file to upload in bytes
+     * @param {any} file file to upload
+     * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+     * @param {string} [name] name of the TileDB array to create, if missing {array} is used
+     * @param {string} [filename] original file name
+     * @param {string} [mimetype] Mime type of the uploaded file. Autogenerated clients do not always support changing the content type param. Server will always use mimetype query param to set mimetype for file, if it is not set Content-Type will be used
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof FilesApi
+     */
+    handleUploadFile(namespace: string, array: string, contentType: string, filesize: number, file: any, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, name?: string, filename?: string, mimetype?: string, options?: any): Promise<import("axios").AxiosResponse<FileUploaded>>;
 }
 /**
  * GroupsApi - axios parameter creator
