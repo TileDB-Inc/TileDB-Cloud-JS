@@ -1,7 +1,2 @@
-declare const capnpArrayDeserializer: (buffer: ArrayBuffer) => {
-    endTimestamp: number;
-    queryType: string;
-    uri: string;
-    startTimestamp: number;
-};
+declare const capnpArrayDeserializer: (buffer: ArrayBuffer) => unknown;
 export default capnpArrayDeserializer;
