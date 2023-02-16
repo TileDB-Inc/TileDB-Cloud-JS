@@ -1,9 +1,15 @@
 import * as capnp from "capnp-ts";
 export declare enum DeserializableType {
     "arrayMetadata" = 0,
-    "query" = 1
+    "query" = 1,
+    "array" = 2
 }
 export declare const deserializeCapnp: (data: any, type: DeserializableType) => {
+    endTimestamp: number;
+    queryType: string;
+    uri: string;
+    startTimestamp: number;
+} | {
     attributeBufferHeaders: {
         name: string;
         fixedLenBufferSizeInBytes: number;

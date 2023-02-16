@@ -1,4 +1,5 @@
 import { ArrayFetch } from "../../../v2";
+import capnpArrayFetchDeserializer from "../../deserialization/capnpArrayFetchDeserializer/capnpArrayFetchDeserializer";
 import capnpArrayFetchSerializer from "./capnpArrayFetchSerializer";
 
 describe("capnpArrayFetchSerializer()", () => {
@@ -10,9 +11,11 @@ describe("capnpArrayFetchSerializer()", () => {
           { key: "config.logging_format", value: "DEFAULT" },
         ],
       },
-      queryType: "READ",
+      queryType: "WRITE",
     };
     const result = capnpArrayFetchSerializer(arrayFetch as ArrayFetch);
+    const deserialized = capnpArrayFetchDeserializer(result);
+    expect(deserialized.queryType).toBe('WRITE')
     expect(result.byteLength).toBe(152);
   });
 });
