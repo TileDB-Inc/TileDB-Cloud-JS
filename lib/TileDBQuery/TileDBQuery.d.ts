@@ -45,18 +45,7 @@ export declare class TileDBQuery {
             checkCoordDups: boolean;
             checkCoordOOB: boolean;
             dedupCoords: boolean;
-            subarray: {
-                int8: number[];
-                uint8: number[];
-                int16: number[];
-                uint16: number[];
-                int32: number[];
-                uint32: number[];
-                int64: import("capnp-ts").Int64[];
-                uint64: import("capnp-ts").Uint64[];
-                float32: number[];
-                float64: number[];
-            };
+            subarray: import("../v2").DomainArray;
             subarrayRanges: {
                 layout: string;
                 stats: {
@@ -252,10 +241,7 @@ export declare class TileDBQuery {
             entries: {
                 key: string;
                 value: string;
-            }[]; /**
-             * First 8 bytes of the response, contain a Uint64 number
-             * which is the size of the response we skip it.
-             */
+            }[];
         };
         stats: {
             timers: {
@@ -276,6 +262,6 @@ export declare class TileDBQuery {
     ReadQuery(namespace: string, arrayName: string, body: QueryData, arraySchema?: ArraySchema): AsyncGenerator<{}, void, unknown>;
     private getResultsFromArrayBuffer;
     private throwError;
-    OpenArray(namespace: string, array: string, queryType: Querytype): Promise<unknown>;
+    ArrayOpen(namespace: string, array: string, queryType: Querytype): Promise<unknown>;
 }
 export default TileDBQuery;

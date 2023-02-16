@@ -29,6 +29,7 @@ import {
   ArrayMetadata,
   ArrayMetadata_MetadataEntry,
 } from "../../../capnp/arrayMetadata_capnp";
+import { DomainArray as DomainArrayV2} from '../../../v2';
 
 /**
  * Deserializes an ArrayBuffer to a Query object
@@ -414,18 +415,51 @@ export const deserializeWrite = (query: Query) => {
 };
 
 export const deserializeDomainArray = (domainArray: DomainArray) => {
-  return {
-    int8: domainArray.getInt8().toArray(),
-    uint8: domainArray.getUint8().toArray(),
-    int16: domainArray.getInt16().toArray(),
-    uint16: domainArray.getUint16().toArray(),
-    int32: domainArray.getInt32().toArray(),
-    uint32: domainArray.getUint32().toArray(),
-    int64: domainArray.getInt64().toArray(),
-    uint64: domainArray.getUint64().toArray(),
-    float32: domainArray.getFloat32().toArray(),
-    float64: domainArray.getFloat64().toArray(),
-  };
+  let domain: DomainArrayV2 = {};
+
+  const int8 = domainArray.getInt8().toArray();
+  const int16 = domainArray.getInt16().toArray();
+  const int32 = domainArray.getInt32().toArray();
+  const int64 = domainArray.getInt64().toArray();
+  const uint8 = domainArray.getUint8().toArray();
+  const uint16 = domainArray.getUint16().toArray();
+  const uint32 = domainArray.getUint32().toArray();
+  const uint64 = domainArray.getUint64().toArray();
+  const float32 = domainArray.getFloat32().toArray();
+  const float64 = domainArray.getFloat64().toArray();
+
+  if (int8.length) {
+    Object.assign(domain, { int8 });
+  }
+  if (int16.length) {
+    Object.assign(domain, { int16 });
+  }
+  if (int32.length) {
+    Object.assign(domain, { int32 });
+  }
+  if (int64.length) {
+    Object.assign(domain, { int64 });
+  }
+  if (uint8.length) {
+    Object.assign(domain, { uint8 });
+  }
+  if (uint16.length) {
+    Object.assign(domain, { uint16 });
+  }
+  if (uint32.length) {
+    Object.assign(domain, { uint32 });
+  }
+  if (uint64.length) {
+    Object.assign(domain, { uint64 });
+  }
+  if (float32.length) {
+    Object.assign(domain, { float32 });
+  }
+  if (float64.length) {
+    Object.assign(domain, { float64 });
+  }
+
+  return domain;
 };
 
 export const deserializeSubarray = (subArray: Subarray) => {

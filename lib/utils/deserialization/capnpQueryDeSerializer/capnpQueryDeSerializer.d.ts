@@ -1,6 +1,6 @@
 import { Array as ArrayCapnp, ArraySchema, Attribute, Dimension, Dimension_TileExtent, Domain, Filter_Data, Config, DomainArray, Filter, FilterPipeline, MapFloat64, MapUInt64, Query, QueryReader, Stats, Subarray } from "../../../capnp/query_capnp";
-import * as capnp from "capnp-ts";
 import { ArrayMetadata, ArrayMetadata_MetadataEntry } from "../../../capnp/arrayMetadata_capnp";
+import { DomainArray as DomainArrayV2 } from '../../../v2';
 /**
  * Deserializes an ArrayBuffer to a Query object
  * @param buffer ArrayBuffer of the capnp Query object
@@ -23,18 +23,7 @@ declare const capnpQueryDeSerializer: (buffer: ArrayBuffer | ArrayBufferLike) =>
         checkCoordDups: boolean;
         checkCoordOOB: boolean;
         dedupCoords: boolean;
-        subarray: {
-            int8: number[];
-            uint8: number[];
-            int16: number[];
-            uint16: number[];
-            int32: number[];
-            uint32: number[];
-            int64: capnp.Int64[];
-            uint64: capnp.Uint64[];
-            float32: number[];
-            float64: number[];
-        };
+        subarray: DomainArrayV2;
         subarrayRanges: {
             layout: string;
             stats: {
@@ -294,18 +283,7 @@ export declare const deserializeArraySchema: (schema: ArraySchema) => {
         dimensions: {
             name: string;
             type: string;
-            domain: {
-                int8: number[];
-                uint8: number[];
-                int16: number[];
-                uint16: number[];
-                int32: number[];
-                uint32: number[];
-                int64: capnp.Int64[];
-                uint64: capnp.Uint64[];
-                float32: number[];
-                float64: number[];
-            };
+            domain: DomainArrayV2;
             nullTileExtent: boolean;
             tileExtent: {};
             filterPipeline: {
@@ -352,18 +330,7 @@ export declare const deserializeDomain: (domain: Domain) => {
     dimensions: {
         name: string;
         type: string;
-        domain: {
-            int8: number[];
-            uint8: number[];
-            int16: number[];
-            uint16: number[];
-            int32: number[];
-            uint32: number[];
-            int64: capnp.Int64[];
-            uint64: capnp.Uint64[];
-            float32: number[];
-            float64: number[];
-        };
+        domain: DomainArrayV2;
         nullTileExtent: boolean;
         tileExtent: {};
         filterPipeline: {
@@ -377,18 +344,7 @@ export declare const deserializeDomain: (domain: Domain) => {
 export declare const deserializeDimension: (dimension: Dimension) => {
     name: string;
     type: string;
-    domain: {
-        int8: number[];
-        uint8: number[];
-        int16: number[];
-        uint16: number[];
-        int32: number[];
-        uint32: number[];
-        int64: capnp.Int64[];
-        uint64: capnp.Uint64[];
-        float32: number[];
-        float64: number[];
-    };
+    domain: DomainArrayV2;
     nullTileExtent: boolean;
     tileExtent: {};
     filterPipeline: {
@@ -573,18 +529,7 @@ export declare const deserializeWrite: (query: Query) => {
     checkCoordDups: boolean;
     checkCoordOOB: boolean;
     dedupCoords: boolean;
-    subarray: {
-        int8: number[];
-        uint8: number[];
-        int16: number[];
-        uint16: number[];
-        int32: number[];
-        uint32: number[];
-        int64: capnp.Int64[];
-        uint64: capnp.Uint64[];
-        float32: number[];
-        float64: number[];
-    };
+    subarray: DomainArrayV2;
     subarrayRanges: {
         layout: string;
         stats: {
@@ -616,18 +561,7 @@ export declare const deserializeWrite: (query: Query) => {
         }[];
     };
 };
-export declare const deserializeDomainArray: (domainArray: DomainArray) => {
-    int8: number[];
-    uint8: number[];
-    int16: number[];
-    uint16: number[];
-    int32: number[];
-    uint32: number[];
-    int64: capnp.Int64[];
-    uint64: capnp.Uint64[];
-    float32: number[];
-    float64: number[];
-};
+export declare const deserializeDomainArray: (domainArray: DomainArray) => DomainArrayV2;
 export declare const deserializeSubarray: (subArray: Subarray) => {
     layout: string;
     stats: {

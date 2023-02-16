@@ -193,12 +193,10 @@ export class TileDBQuery {
     try {
       // Get ArraySchema of arrray, to get type information of the dimensions and the attributes
       if (typeof arraySchema === "undefined") {
-        const arraySchemaResponse = await this.arrayAPI.getArray(
-          namespace,
-          arrayName,
-          "application/json"
-        );
-        arraySchema = arraySchemaResponse.data;
+        // TODO: fix 
+        const arrayFromCapnp: any = await this.ArrayOpen(namespace,
+          arrayName, Querytype.Read);
+        arraySchema = arrayFromCapnp.arraySchemaLatest;
       }
 
       const options = {
@@ -348,7 +346,7 @@ export class TileDBQuery {
     }
   }
 
-  async OpenArray(namespace: string, array: string, queryType: Querytype) {
+  async ArrayOpen(namespace: string, array: string, queryType: Querytype) {
     const arrayFetch = arrayFetchFromConfig(this.config, queryType);
     const arrayFetchCapnp: any = capnpArrayFetchSerializer(arrayFetch);
     this.arrayAPIV2
