@@ -1,6 +1,6 @@
 import { Array as ArrayCapnp, ArraySchema, Attribute, Dimension, Dimension_TileExtent, Domain, Filter_Data, Config, DomainArray, Filter, FilterPipeline, MapFloat64, MapUInt64, Query, QueryReader, Stats, Subarray, NonEmptyDomainList, NonEmptyDomain } from "../../../capnp/query_capnp";
 import { ArrayMetadata, ArrayMetadata_MetadataEntry } from "../../../capnp/arrayMetadata_capnp";
-import { DomainArray as DomainArrayV2, DimensionTileExtent } from '../../../v2';
+import { DomainArray as DomainArrayV2, DimensionTileExtent, ArrayData, ArraySchema as ArraySchemaV2, FilterPipeline as FilterPipelineV2, Filter as FilterV2, Domain as DomainV2, Dimension as DimensionV2, Attribute as AttributeV2 } from "../../../v2";
 /**
  * Deserializes an ArrayBuffer to a Query object
  * @param buffer ArrayBuffer of the capnp Query object
@@ -208,7 +208,7 @@ declare const capnpQueryDeSerializer: (buffer: ArrayBuffer | ArrayBufferLike) =>
             }[];
         };
     };
-    array: unknown;
+    array: ArrayData;
     totalFixedLengthBufferBytes: number;
     totalVarLenBufferBytes: number;
     totalValidityBufferBytes: number;
@@ -233,7 +233,7 @@ declare const capnpQueryDeSerializer: (buffer: ArrayBuffer | ArrayBufferLike) =>
     };
 };
 export default capnpQueryDeSerializer;
-export declare const deserializeArray: (arr: ArrayCapnp) => unknown;
+export declare const deserializeArray: (arr: ArrayCapnp) => ArrayData;
 export declare const deserializeNonEmptyDomainList: (nonEmptyDomainList: NonEmptyDomainList) => {
     nonEmptyDomains: {
         isEmpty: boolean;
@@ -260,123 +260,13 @@ export declare const deserializeMetadataEntry: (entry: ArrayMetadata_MetadataEnt
     valueNum: number;
     del: boolean;
 };
-export declare const deserializeArraySchema: (schema: ArraySchema) => {
-    arrayType: string;
-    capacity: number;
-    cellOrder: string;
-    tileOrder: string;
-    uri: string;
-    version: number[];
-    allowsDuplicates: boolean;
-    name: string;
-    timestampRange: number[];
-    coordsFilterPipeline: {
-        filters: {
-            type: string;
-            data: {};
-        }[];
-    };
-    offsetFilterPipeline: {
-        filters: {
-            type: string;
-            data: {};
-        }[];
-    };
-    validityFilterPipeline: {
-        filters: {
-            type: string;
-            data: {};
-        }[];
-    };
-    domain: {
-        type: string;
-        tileOrder: string;
-        cellOrder: string;
-        dimensions: {
-            name: string;
-            type: string;
-            domain: DomainArrayV2;
-            nullTileExtent: boolean;
-            tileExtent: DimensionTileExtent;
-            filterPipeline: {
-                filters: {
-                    type: string;
-                    data: {};
-                }[];
-            };
-        }[];
-    };
-    attributes: {
-        cellValNum: number;
-        name: string;
-        type: string;
-        filterPipeline: {
-            filters: {
-                type: string;
-                data: {};
-            }[];
-        };
-        fillValue: number[];
-        nullable: boolean;
-        fillValueValidity: boolean;
-    }[];
-};
-export declare const deserializeAttribute: (attribute: Attribute) => {
-    cellValNum: number;
-    name: string;
-    type: string;
-    filterPipeline: {
-        filters: {
-            type: string;
-            data: {};
-        }[];
-    };
-    fillValue: number[];
-    nullable: boolean;
-    fillValueValidity: boolean;
-};
-export declare const deserializeDomain: (domain: Domain) => {
-    type: string;
-    tileOrder: string;
-    cellOrder: string;
-    dimensions: {
-        name: string;
-        type: string;
-        domain: DomainArrayV2;
-        nullTileExtent: boolean;
-        tileExtent: DimensionTileExtent;
-        filterPipeline: {
-            filters: {
-                type: string;
-                data: {};
-            }[];
-        };
-    }[];
-};
-export declare const deserializeDimension: (dimension: Dimension) => {
-    name: string;
-    type: string;
-    domain: DomainArrayV2;
-    nullTileExtent: boolean;
-    tileExtent: DimensionTileExtent;
-    filterPipeline: {
-        filters: {
-            type: string;
-            data: {};
-        }[];
-    };
-};
+export declare const deserializeArraySchema: (schema: ArraySchema) => ArraySchemaV2;
+export declare const deserializeAttribute: (attribute: Attribute) => AttributeV2;
+export declare const deserializeDomain: (domain: Domain) => DomainV2;
+export declare const deserializeDimension: (dimension: Dimension) => DimensionV2;
 export declare const deserializeTileExtent: (tileExtent: Dimension_TileExtent) => DimensionTileExtent;
-export declare const deserializeFilterPipeline: (filterPipeline: FilterPipeline) => {
-    filters: {
-        type: string;
-        data: {};
-    }[];
-};
-export declare const deserializeFilter: (filter: Filter) => {
-    type: string;
-    data: {};
-};
+export declare const deserializeFilterPipeline: (filterPipeline: FilterPipeline) => FilterPipelineV2;
+export declare const deserializeFilter: (filter: Filter) => FilterV2;
 export declare const deserializeFilterData: (data: Filter_Data) => {};
 export declare const deserializeConfig: (config: Config) => {
     entries: {

@@ -230,7 +230,7 @@ export declare class TileDBQuery {
                 }[];
             };
         };
-        array: unknown;
+        array: import("../v2").ArrayData;
         totalFixedLengthBufferBytes: number;
         totalVarLenBufferBytes: number;
         totalValidityBufferBytes: number;
@@ -262,6 +262,6 @@ export declare class TileDBQuery {
     ReadQuery(namespace: string, arrayName: string, body: QueryData, arraySchema?: ArraySchema): AsyncGenerator<{}, void, unknown>;
     private getResultsFromArrayBuffer;
     private throwError;
-    ArrayOpen(namespace: string, array: string, queryType: Querytype): Promise<unknown>;
+    ArrayOpen(namespace: string, array: string, queryType: Querytype): Promise<import("../v2").ArrayData>;
 }
 export default TileDBQuery;

@@ -164,19 +164,19 @@ struct Domain {
 }
 
 struct Array {
-  endTimestamp @0 :UInt64;
+  endTimestamp @0 :UInt64; ✅
   # ending timestamp array was opened
 
-  queryType @1 :Text;
+  queryType @1 :Text; ✅
   # Array opened for query type
 
-  uri @2 :Text;
+  uri @2 :Text; ✅
   # Array uri
 
-  startTimestamp @3 :UInt64;
+  startTimestamp @3 :UInt64; ✅
   # starting timestamp array was opened
 
-  arraySchemaLatest @4 :ArraySchema;
+  arraySchemaLatest @4 :ArraySchema; ✅
   # latest array schema
 
   arraySchemasAll @5 :Map(Text, ArraySchema);

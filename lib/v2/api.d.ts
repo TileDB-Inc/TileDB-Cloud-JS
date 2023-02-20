@@ -272,12 +272,6 @@ export interface ArrayActivityLogData {
  */
 export interface ArrayData {
     /**
-     * timestamp (epoch milliseconds) array is opened at
-     * @type {number}
-     * @memberof ArrayData
-     */
-    timestamp: number;
-    /**
      *
      * @type {Querytype}
      * @memberof ArrayData
@@ -289,6 +283,18 @@ export interface ArrayData {
      * @memberof ArrayData
      */
     uri: string;
+    /**
+     * Ending timestamp (epoch milliseconds) array is opened at
+     * @type {number}
+     * @memberof ArrayData
+     */
+    endTimestamp?: number;
+    /**
+     * Starting timestamp (epoch milliseconds) array is opened at
+     * @type {number}
+     * @memberof ArrayData
+     */
+    startTimestamp?: number;
     /**
      *
      * @type {ArraySchema}
@@ -303,10 +309,10 @@ export interface ArrayData {
     arrayMetadata?: ArrayMetadata;
     /**
      *
-     * @type {NonEmptyDomain}
+     * @type {NonEmptyDomainList}
      * @memberof ArrayData
      */
-    nonEmptyDomain?: NonEmptyDomain;
+    nonEmptyDomain?: NonEmptyDomainList;
 }
 /**
  * Model for opening an array v2
@@ -390,6 +396,12 @@ export interface ArraySchema {
      */
     uri?: string;
     /**
+     * name of schema
+     * @type {string}
+     * @memberof ArraySchema
+     */
+    name?: string;
+    /**
      * file format version
      * @type {Array<number>}
      * @memberof ArraySchema
@@ -433,6 +445,12 @@ export interface ArraySchema {
     offsetFilterPipeline: FilterPipeline;
     /**
      *
+     * @type {FilterPipeline}
+     * @memberof ArraySchema
+     */
+    validityFilterPipeline?: FilterPipeline;
+    /**
+     *
      * @type {Domain}
      * @memberof ArraySchema
      */
@@ -449,6 +467,12 @@ export interface ArraySchema {
      * @memberof ArraySchema
      */
     allowsDuplicates?: boolean;
+    /**
+     * The list of sizes per range
+     * @type {Array<number>}
+     * @memberof ArraySchema
+     */
+    timestampRange?: Array<number>;
 }
 /**
  * TileDB array type
@@ -495,6 +519,12 @@ export interface Attribute {
      * @memberof Attribute
      */
     nullable?: boolean;
+    /**
+     * Default validity fill value for nullable attributes
+     * @type {boolean}
+     * @memberof Attribute
+     */
+    fillValueValidity?: boolean;
     /**
      * The default fill value
      * @type {Array<number>}
@@ -1394,6 +1424,25 @@ export interface NonEmptyDomain {
      * @memberof NonEmptyDomain
      */
     isEmpty: boolean;
+    /**
+     * Number of elements in DomainArray for var length
+     * @type {Array<number>}
+     * @memberof NonEmptyDomain
+     */
+    sizes?: Array<number>;
+}
+/**
+ * object containing non empty domains
+ * @export
+ * @interface NonEmptyDomainList
+ */
+export interface NonEmptyDomainList {
+    /**
+     * Array\'s non empty domain
+     * @type {Array<NonEmptyDomain>}
+     * @memberof NonEmptyDomainList
+     */
+    nonEmptyDomains?: Array<NonEmptyDomain>;
 }
 /**
  *
@@ -1470,10 +1519,10 @@ export interface Query {
     reader?: QueryReader;
     /**
      *
-     * @type {any}
+     * @type {ArrayData}
      * @memberof Query
      */
-    array: any;
+    array: ArrayData;
     /**
      * Total number of bytes in fixed size attribute buffers.
      * @type {number}

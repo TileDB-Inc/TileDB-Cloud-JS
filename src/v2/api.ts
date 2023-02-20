@@ -1441,6 +1441,12 @@ export interface NonEmptyDomain {
      * @memberof NonEmptyDomain
      */
     isEmpty: boolean;
+    /**
+     * Number of elements in DomainArray for var length
+     * @type {Array<number>}
+     * @memberof NonEmptyDomain
+     */
+    sizes?: Array<number>;
 }
 /**
  * object containing non empty domains
