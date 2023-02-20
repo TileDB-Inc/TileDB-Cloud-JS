@@ -266,6 +266,49 @@ export interface ArrayActivityLogData {
     pagination_metadata?: PaginationMetadata;
 }
 /**
+ * Represents an open array
+ * @export
+ * @interface ArrayData
+ */
+export interface ArrayData {
+    /**
+     * timestamp (epoch milliseconds) array is opened at
+     * @type {number}
+     * @memberof ArrayData
+     */
+    timestamp: number;
+    /**
+     *
+     * @type {Querytype}
+     * @memberof ArrayData
+     */
+    queryType: Querytype;
+    /**
+     * Array uri
+     * @type {string}
+     * @memberof ArrayData
+     */
+    uri: string;
+    /**
+     *
+     * @type {ArraySchema}
+     * @memberof ArrayData
+     */
+    arraySchemaLatest?: ArraySchema;
+    /**
+     *
+     * @type {ArrayMetadata}
+     * @memberof ArrayData
+     */
+    arrayMetadata?: ArrayMetadata;
+    /**
+     *
+     * @type {NonEmptyDomain}
+     * @memberof ArrayData
+     */
+    nonEmptyDomain?: NonEmptyDomain;
+}
+/**
  * Model for opening an array v2
  * @export
  * @interface ArrayFetch
@@ -283,6 +326,181 @@ export interface ArrayFetch {
      * @memberof ArrayFetch
      */
     queryType?: Querytype;
+}
+/**
+ * user\'s TileDB array metadata
+ * @export
+ * @interface ArrayMetadata
+ */
+export interface ArrayMetadata {
+    /**
+     * List of metadata entries
+     * @type {Array<ArrayMetadataEntry>}
+     * @memberof ArrayMetadata
+     */
+    entries?: Array<ArrayMetadataEntry>;
+}
+/**
+ * key/value pair representing an array metadata map entry
+ * @export
+ * @interface ArrayMetadataEntry
+ */
+export interface ArrayMetadataEntry {
+    /**
+     *
+     * @type {string}
+     * @memberof ArrayMetadataEntry
+     */
+    key?: string;
+    /**
+     *
+     * @type {string}
+     * @memberof ArrayMetadataEntry
+     */
+    type?: string;
+    /**
+     *
+     * @type {number}
+     * @memberof ArrayMetadataEntry
+     */
+    valueNum?: number;
+    /**
+     *
+     * @type {Array<number>}
+     * @memberof ArrayMetadataEntry
+     */
+    value?: Array<number>;
+    /**
+     *
+     * @type {boolean}
+     * @memberof ArrayMetadataEntry
+     */
+    del?: boolean;
+}
+/**
+ * ArraySchema during creation or retrieval
+ * @export
+ * @interface ArraySchema
+ */
+export interface ArraySchema {
+    /**
+     * URI of schema
+     * @type {string}
+     * @memberof ArraySchema
+     */
+    uri?: string;
+    /**
+     * file format version
+     * @type {Array<number>}
+     * @memberof ArraySchema
+     */
+    version: Array<number>;
+    /**
+     *
+     * @type {ArrayType}
+     * @memberof ArraySchema
+     */
+    arrayType: ArrayType;
+    /**
+     *
+     * @type {Layout}
+     * @memberof ArraySchema
+     */
+    tileOrder: Layout;
+    /**
+     *
+     * @type {Layout}
+     * @memberof ArraySchema
+     */
+    cellOrder: Layout;
+    /**
+     * Capacity of array
+     * @type {number}
+     * @memberof ArraySchema
+     */
+    capacity: number;
+    /**
+     *
+     * @type {FilterPipeline}
+     * @memberof ArraySchema
+     */
+    coordsFilterPipeline: FilterPipeline;
+    /**
+     *
+     * @type {FilterPipeline}
+     * @memberof ArraySchema
+     */
+    offsetFilterPipeline: FilterPipeline;
+    /**
+     *
+     * @type {Domain}
+     * @memberof ArraySchema
+     */
+    domain: Domain;
+    /**
+     * Attributes of array
+     * @type {Array<Attribute>}
+     * @memberof ArraySchema
+     */
+    attributes: Array<Attribute>;
+    /**
+     * True if the array allows coordinate duplicates. Applicable only to sparse arrays.
+     * @type {boolean}
+     * @memberof ArraySchema
+     */
+    allowsDuplicates?: boolean;
+}
+/**
+ * TileDB array type
+ * @export
+ * @enum {string}
+ */
+export declare enum ArrayType {
+    Dense = "dense",
+    Sparse = "sparse"
+}
+/**
+ * Attribute of array
+ * @export
+ * @interface Attribute
+ */
+export interface Attribute {
+    /**
+     * Attribute name
+     * @type {string}
+     * @memberof Attribute
+     */
+    name: string;
+    /**
+     *
+     * @type {Datatype}
+     * @memberof Attribute
+     */
+    type: Datatype;
+    /**
+     *
+     * @type {FilterPipeline}
+     * @memberof Attribute
+     */
+    filterPipeline: FilterPipeline;
+    /**
+     * Attribute number of values per cell
+     * @type {number}
+     * @memberof Attribute
+     */
+    cellValNum: number;
+    /**
+     * Is attribute nullable
+     * @type {boolean}
+     * @memberof Attribute
+     */
+    nullable?: boolean;
+    /**
+     * The default fill value
+     * @type {Array<number>}
+     * @memberof Attribute
+     */
+    fillValue?: Array<number>;
 }
 /**
  * Represents an attribute buffer header information
@@ -425,6 +643,147 @@ export declare enum Datatype {
     Any = "ANY"
 }
 /**
+ * Dimension of array
+ * @export
+ * @interface Dimension
+ */
+export interface Dimension {
+    /**
+     * Dimension name
+     * @type {string}
+     * @memberof Dimension
+     */
+    name?: string;
+    /**
+     *
+     * @type {Datatype}
+     * @memberof Dimension
+     */
+    type: Datatype;
+    /**
+     *
+     * @type {DomainArray}
+     * @memberof Dimension
+     */
+    domain: DomainArray;
+    /**
+     * Is tile extent null
+     * @type {boolean}
+     * @memberof Dimension
+     */
+    nullTileExtent: boolean;
+    /**
+     *
+     * @type {DimensionTileExtent}
+     * @memberof Dimension
+     */
+    tileExtent?: DimensionTileExtent;
+    /**
+     *
+     * @type {FilterPipeline}
+     * @memberof Dimension
+     */
+    filterPipeline?: FilterPipeline;
+}
+/**
+ * Extent of tile
+ * @export
+ * @interface DimensionTileExtent
+ */
+export interface DimensionTileExtent {
+    /**
+     *
+     * @type {number}
+     * @memberof DimensionTileExtent
+     */
+    int8?: number;
+    /**
+     *
+     * @type {number}
+     * @memberof DimensionTileExtent
+     */
+    uint8?: number;
+    /**
+     *
+     * @type {number}
+     * @memberof DimensionTileExtent
+     */
+    int16?: number;
+    /**
+     *
+     * @type {number}
+     * @memberof DimensionTileExtent
+     */
+    uint16?: number;
+    /**
+     *
+     * @type {number}
+     * @memberof DimensionTileExtent
+     */
+    int32?: number;
+    /**
+     *
+     * @type {number}
+     * @memberof DimensionTileExtent
+     */
+    uint32?: number;
+    /**
+     *
+     * @type {number}
+     * @memberof DimensionTileExtent
+     */
+    int64?: number;
+    /**
+     *
+     * @type {number}
+     * @memberof DimensionTileExtent
+     */
+    uint64?: number;
+    /**
+     *
+     * @type {number}
+     * @memberof DimensionTileExtent
+     */
+    float32?: number;
+    /**
+     *
+     * @type {number}
+     * @memberof DimensionTileExtent
+     */
+    float64?: number;
+}
+/**
+ * Domain of array
+ * @export
+ * @interface Domain
+ */
+export interface Domain {
+    /**
+     *
+     * @type {Datatype}
+     * @memberof Domain
+     */
+    type: Datatype;
+    /**
+     *
+     * @type {Layout}
+     * @memberof Domain
+     */
+    tileOrder: Layout;
+    /**
+     *
+     * @type {Layout}
+     * @memberof Domain
+     */
+    cellOrder: Layout;
+    /**
+     * Array of dimensions
+     * @type {Array<Dimension>}
+     * @memberof Domain
+     */
+    dimensions: Array<Dimension>;
+}
+/**
  * Domain object for an array of each type
  * @export
  * @interface DomainArray
@@ -515,6 +874,123 @@ export interface FileUploaded {
      * @memberof FileUploaded
      */
     id: string;
+}
+/**
+ * Filter
+ * @export
+ * @interface Filter
+ */
+export interface Filter {
+    /**
+     *
+     * @type {FilterType}
+     * @memberof Filter
+     */
+    type: FilterType;
+    /**
+     *
+     * @type {FilterData}
+     * @memberof Filter
+     */
+    data?: FilterData;
+}
+/**
+ * Filter data
+ * @export
+ * @interface FilterData
+ */
+export interface FilterData {
+    /**
+     *
+     * @type {number}
+     * @memberof FilterData
+     */
+    int8?: number;
+    /**
+     *
+     * @type {number}
+     * @memberof FilterData
+     */
+    uint8?: number;
+    /**
+     *
+     * @type {number}
+     * @memberof FilterData
+     */
+    int16?: number;
+    /**
+     *
+     * @type {number}
+     * @memberof FilterData
+     */
+    uint16?: number;
+    /**
+     *
+     * @type {number}
+     * @memberof FilterData
+     */
+    int32?: number;
+    /**
+     *
+     * @type {number}
+     * @memberof FilterData
+     */
+    uint32?: number;
+    /**
+     *
+     * @type {number}
+     * @memberof FilterData
+     */
+    int64?: number;
+    /**
+     *
+     * @type {number}
+     * @memberof FilterData
+     */
+    uint64?: number;
+    /**
+     *
+     * @type {number}
+     * @memberof FilterData
+     */
+    float32?: number;
+    /**
+     *
+     * @type {number}
+     * @memberof FilterData
+     */
+    float64?: number;
+}
+/**
+ * One or more filters to apply
+ * @export
+ * @interface FilterPipeline
+ */
+export interface FilterPipeline {
+    /**
+     *
+     * @type {Array<Filter>}
+     * @memberof FilterPipeline
+     */
+    filters?: Array<Filter>;
+}
+/**
+ * TileDB filter types
+ * @export
+ * @enum {string}
+ */
+export declare enum FilterType {
+    None = "FILTER_NONE",
+    Gzip = "FILTER_GZIP",
+    Zstd = "FILTER_ZSTD",
+    Lz4 = "FILTER_LZ4",
+    Rle = "FILTER_RLE",
+    Bzip2 = "FILTER_BZIP2",
+    DoubleDelta = "FILTER_DOUBLE_DELTA",
+    BitWidthReduction = "FILTER_BIT_WIDTH_REDUCTION",
+    Bitshuffle = "FILTER_BITSHUFFLE",
+    Byteshuffle = "FILTER_BYTESHUFFLE",
+    PositiveDelta = "FILTER_POSITIVE_DELTA"
 }
 /**
  * Updates the contents group
@@ -882,31 +1358,6 @@ export interface MetadataEntry {
     del?: boolean;
 }
 /**
- * Represents an open array
- * @export
- * @interface ModelArray
- */
-export interface ModelArray {
-    /**
-     * timestamp (epoch milliseconds) array is opened at
-     * @type {number}
-     * @memberof ModelArray
-     */
-    timestamp: number;
-    /**
-     *
-     * @type {Querytype}
-     * @memberof ModelArray
-     */
-    queryType: Querytype;
-    /**
-     * Array uri
-     * @type {string}
-     * @memberof ModelArray
-     */
-    uri: string;
-}
-/**
  *
  * @export
  * @interface ModelError
@@ -924,6 +1375,25 @@ export interface ModelError {
      * @memberof ModelError
      */
     message?: string;
+}
+/**
+ * object representing a non-empty domain
+ * @export
+ * @interface NonEmptyDomain
+ */
+export interface NonEmptyDomain {
+    /**
+     *
+     * @type {DomainArray}
+     * @memberof NonEmptyDomain
+     */
+    nonEmptyDomain: DomainArray;
+    /**
+     * Is non-empty domain really empty?
+     * @type {boolean}
+     * @memberof NonEmptyDomain
+     */
+    isEmpty: boolean;
 }
 /**
  *
@@ -1390,7 +1860,7 @@ export declare const ArrayApiFp: (configuration?: Configuration) => {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getArray(namespace: string, array: string, contentType: string, arrayFetch: ArrayFetch, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>>;
+    getArray(namespace: string, array: string, contentType: string, arrayFetch: ArrayFetch, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArrayData>>;
 };
 /**
  * ArrayApi - factory interface
@@ -1421,7 +1891,7 @@ export declare const ArrayApiFactory: (configuration?: Configuration, basePath?:
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getArray(namespace: string, array: string, contentType: string, arrayFetch: ArrayFetch, options?: any): AxiosPromise<any>;
+    getArray(namespace: string, array: string, contentType: string, arrayFetch: ArrayFetch, options?: any): AxiosPromise<ArrayData>;
 };
 /**
  * ArrayApi - object-oriented interface
@@ -1456,7 +1926,7 @@ export declare class ArrayApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ArrayApi
      */
-    getArray(namespace: string, array: string, contentType: string, arrayFetch: ArrayFetch, options?: any): Promise<import("axios").AxiosResponse<any>>;
+    getArray(namespace: string, array: string, contentType: string, arrayFetch: ArrayFetch, options?: any): Promise<import("axios").AxiosResponse<ArrayData>>;
 }
 /**
  * FilesApi - axios parameter creator

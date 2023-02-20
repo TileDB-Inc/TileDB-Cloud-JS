@@ -23,13 +23,30 @@ import {
   SubarrayPartitioner,
   SubarrayPartitioner_PartitionInfo,
   SubarrayPartitioner_State,
+  NonEmptyDomainList,
+  NonEmptyDomain,
 } from "../../../capnp/query_capnp";
 import * as capnp from "capnp-ts";
 import {
   ArrayMetadata,
   ArrayMetadata_MetadataEntry,
 } from "../../../capnp/arrayMetadata_capnp";
-import { DomainArray as DomainArrayV2} from '../../../v2';
+import {
+  DomainArray as DomainArrayV2,
+  DimensionTileExtent,
+  ArrayData,
+  ArraySchema as ArraySchemaV2,
+  Querytype,
+  ArrayType,
+  Layout,
+  FilterPipeline as FilterPipelineV2,
+  Filter as FilterV2,
+  FilterType,
+  Datatype,
+  Domain as DomainV2,
+  Dimension as DimensionV2,
+  Attribute as AttributeV2,
+} from "../../../v2";
 
 /**
  * Deserializes an ArrayBuffer to a Query object
@@ -63,14 +80,33 @@ const capnpQueryDeSerializer = (buffer: ArrayBuffer | ArrayBufferLike) => {
 
 export default capnpQueryDeSerializer;
 
-export const deserializeArray = (arr: ArrayCapnp): unknown => {
+export const deserializeArray = (arr: ArrayCapnp): ArrayData => {
   return {
     endTimestamp: arr.getEndTimestamp().toNumber(),
-    queryType: arr.getQueryType() as any,
+    queryType: arr.getQueryType() as Querytype,
     uri: arr.getUri(),
     startTimestamp: arr.getStartTimestamp().toNumber(),
     arraySchemaLatest: deserializeArraySchema(arr.getArraySchemaLatest()),
     arrayMetadata: deserializeArrayMetadata(arr.getArrayMetadata()),
+    nonEmptyDomain: deserializeNonEmptyDomainList(arr.getNonEmptyDomain()),
+  };
+};
+
+export const deserializeNonEmptyDomainList = (
+  nonEmptyDomainList: NonEmptyDomainList
+) => {
+  return {
+    nonEmptyDomains: nonEmptyDomainList
+      .getNonEmptyDomains()
+      .map(deserializeNonEmptyDomain),
+  };
+};
+
+export const deserializeNonEmptyDomain = (nonEmptyDomain: NonEmptyDomain) => {
+  return {
+    isEmpty: nonEmptyDomain.getIsEmpty(),
+    sizes: nonEmptyDomain.getSizes().map(Number),
+    nonEmptyDomain: deserializeDomainArray(nonEmptyDomain.getNonEmptyDomain()),
   };
 };
 
@@ -93,12 +129,12 @@ export const deserializeMetadataEntry = (
   return metadataEntry;
 };
 
-export const deserializeArraySchema = (schema: ArraySchema) => {
+export const deserializeArraySchema = (schema: ArraySchema): ArraySchemaV2 => {
   return {
-    arrayType: schema.getArrayType(),
+    arrayType: schema.getArrayType() as ArrayType,
     capacity: schema.getCapacity().toNumber(),
-    cellOrder: schema.getCellOrder(),
-    tileOrder: schema.getTileOrder(),
+    cellOrder: schema.getCellOrder() as Layout,
+    tileOrder: schema.getTileOrder() as Layout,
     uri: schema.getUri(),
     version: schema.getVersion().toArray(),
     allowsDuplicates: schema.getAllowsDuplicates(),
@@ -118,11 +154,11 @@ export const deserializeArraySchema = (schema: ArraySchema) => {
   };
 };
 
-export const deserializeAttribute = (attribute: Attribute) => {
+export const deserializeAttribute = (attribute: Attribute): AttributeV2 => {
   return {
     cellValNum: attribute.getCellValNum(),
     name: attribute.getName(),
-    type: attribute.getType(),
+    type: attribute.getType() as Datatype,
     filterPipeline: deserializeFilterPipeline(attribute.getFilterPipeline()),
     fillValue: attribute.getFillValue().toArray(),
     nullable: attribute.getNullable(),
@@ -130,19 +166,19 @@ export const deserializeAttribute = (attribute: Attribute) => {
   };
 };
 
-export const deserializeDomain = (domain: Domain) => {
+export const deserializeDomain = (domain: Domain): DomainV2 => {
   return {
-    type: domain.getType(),
-    tileOrder: domain.getTileOrder(),
-    cellOrder: domain.getCellOrder(),
+    type: domain.getType() as Datatype,
+    tileOrder: domain.getTileOrder() as Layout,
+    cellOrder: domain.getCellOrder() as Layout,
     dimensions: domain.getDimensions().map(deserializeDimension),
   };
 };
 
-export const deserializeDimension = (dimension: Dimension) => {
+export const deserializeDimension = (dimension: Dimension): DimensionV2 => {
   return {
     name: dimension.getName(),
-    type: dimension.getType(),
+    type: dimension.getType() as Datatype,
     domain: deserializeDomainArray(dimension.getDomain()),
     nullTileExtent: dimension.getNullTileExtent(),
     tileExtent: deserializeTileExtent(dimension.getTileExtent()),
@@ -151,65 +187,67 @@ export const deserializeDimension = (dimension: Dimension) => {
 };
 
 export const deserializeTileExtent = (tileExtent: Dimension_TileExtent) => {
-  let tile = {};
+  let tile: DimensionTileExtent = {};
 
   try {
     const int8 = tileExtent.getInt8();
-    Object.assign(tile, { int8 });
+    tile.int8 = int8;
   } catch {}
 
   try {
     const uint8 = tileExtent.getUint8();
-    Object.assign(tile, { uint8 });
+    tile.uint8 = uint8;
   } catch {}
 
   try {
     const int16 = tileExtent.getInt16();
-    Object.assign(tile, { int16 });
+    tile.int16 = int16;
   } catch {}
 
   try {
     const uint16 = tileExtent.getUint16();
-    Object.assign(tile, { uint16 });
+    tile.uint16 = uint16;
   } catch {}
 
   try {
     const int32 = tileExtent.getInt32();
-    Object.assign(tile, { int32 });
+    tile.int32 = int32;
   } catch {}
 
   try {
-    const int64 = tileExtent.getInt64();
-    Object.assign(tile, { int64 });
+    const int64 = tileExtent.getInt64().toNumber();
+    tile.int64 = int64;
   } catch {}
 
   try {
-    const uint64 = tileExtent.getUint64();
-    Object.assign(tile, { uint64 });
+    const uint64 = tileExtent.getUint64().toNumber();
+    tile.uint64 = uint64;
   } catch {}
 
   try {
     const float32 = tileExtent.getFloat32();
-    Object.assign(tile, { float32 });
+    tile.float32 = float32;
   } catch {}
 
   try {
     const float64 = tileExtent.getFloat64();
-    Object.assign(tile, { float64 });
+    tile.float64 = float64;
   } catch {}
 
   return tile;
 };
 
-export const deserializeFilterPipeline = (filterPipeline: FilterPipeline) => {
+export const deserializeFilterPipeline = (
+  filterPipeline: FilterPipeline
+): FilterPipelineV2 => {
   return {
     filters: filterPipeline.getFilters().map(deserializeFilter),
   };
 };
 
-export const deserializeFilter = (filter: Filter) => {
+export const deserializeFilter = (filter: Filter): FilterV2 => {
   return {
-    type: filter.getType(),
+    type: filter.getType() as FilterType,
     data: deserializeFilterData(filter.getData()),
   };
 };
@@ -420,43 +458,43 @@ export const deserializeDomainArray = (domainArray: DomainArray) => {
   const int8 = domainArray.getInt8().toArray();
   const int16 = domainArray.getInt16().toArray();
   const int32 = domainArray.getInt32().toArray();
-  const int64 = domainArray.getInt64().toArray();
+  const int64 = domainArray.getInt64().toArray().map(Number);
   const uint8 = domainArray.getUint8().toArray();
   const uint16 = domainArray.getUint16().toArray();
   const uint32 = domainArray.getUint32().toArray();
-  const uint64 = domainArray.getUint64().toArray();
+  const uint64 = domainArray.getUint64().toArray().map(Number);
   const float32 = domainArray.getFloat32().toArray();
   const float64 = domainArray.getFloat64().toArray();
 
   if (int8.length) {
-    Object.assign(domain, { int8 });
+    domain.int8 = int8;
   }
   if (int16.length) {
-    Object.assign(domain, { int16 });
+    domain.int16 = int16;
   }
   if (int32.length) {
-    Object.assign(domain, { int32 });
+    domain.int32 = int32;
   }
   if (int64.length) {
-    Object.assign(domain, { int64 });
+    domain.int64 = int64;
   }
   if (uint8.length) {
-    Object.assign(domain, { uint8 });
+    domain.uint8 = uint8;
   }
   if (uint16.length) {
-    Object.assign(domain, { uint16 });
+    domain.uint16 = uint16;
   }
   if (uint32.length) {
-    Object.assign(domain, { uint32 });
+    domain.uint32 = uint32;
   }
   if (uint64.length) {
-    Object.assign(domain, { uint64 });
+    domain.uint64 = uint64;
   }
   if (float32.length) {
-    Object.assign(domain, { float32 });
+    domain.float32 = float32;
   }
   if (float64.length) {
-    Object.assign(domain, { float64 });
+    domain.float64 = float64;
   }
 
   return domain;

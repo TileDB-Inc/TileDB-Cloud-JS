@@ -1,6 +1,6 @@
-import { Array as ArrayCapnp, ArraySchema, Attribute, Dimension, Dimension_TileExtent, Domain, Filter_Data, Config, DomainArray, Filter, FilterPipeline, MapFloat64, MapUInt64, Query, QueryReader, Stats, Subarray } from "../../../capnp/query_capnp";
+import { Array as ArrayCapnp, ArraySchema, Attribute, Dimension, Dimension_TileExtent, Domain, Filter_Data, Config, DomainArray, Filter, FilterPipeline, MapFloat64, MapUInt64, Query, QueryReader, Stats, Subarray, NonEmptyDomainList, NonEmptyDomain } from "../../../capnp/query_capnp";
 import { ArrayMetadata, ArrayMetadata_MetadataEntry } from "../../../capnp/arrayMetadata_capnp";
-import { DomainArray as DomainArrayV2 } from '../../../v2';
+import { DomainArray as DomainArrayV2, DimensionTileExtent } from '../../../v2';
 /**
  * Deserializes an ArrayBuffer to a Query object
  * @param buffer ArrayBuffer of the capnp Query object
@@ -234,6 +234,18 @@ declare const capnpQueryDeSerializer: (buffer: ArrayBuffer | ArrayBufferLike) =>
 };
 export default capnpQueryDeSerializer;
 export declare const deserializeArray: (arr: ArrayCapnp) => unknown;
+export declare const deserializeNonEmptyDomainList: (nonEmptyDomainList: NonEmptyDomainList) => {
+    nonEmptyDomains: {
+        isEmpty: boolean;
+        sizes: number[];
+        nonEmptyDomain: DomainArrayV2;
+    }[];
+};
+export declare const deserializeNonEmptyDomain: (nonEmptyDomain: NonEmptyDomain) => {
+    isEmpty: boolean;
+    sizes: number[];
+    nonEmptyDomain: DomainArrayV2;
+};
 export declare const deserializeArrayMetadata: (arrayMetadata: ArrayMetadata) => {
     entries: {
         key: string;
@@ -285,7 +297,7 @@ export declare const deserializeArraySchema: (schema: ArraySchema) => {
             type: string;
             domain: DomainArrayV2;
             nullTileExtent: boolean;
-            tileExtent: {};
+            tileExtent: DimensionTileExtent;
             filterPipeline: {
                 filters: {
                     type: string;
@@ -332,7 +344,7 @@ export declare const deserializeDomain: (domain: Domain) => {
         type: string;
         domain: DomainArrayV2;
         nullTileExtent: boolean;
-        tileExtent: {};
+        tileExtent: DimensionTileExtent;
         filterPipeline: {
             filters: {
                 type: string;
@@ -346,7 +358,7 @@ export declare const deserializeDimension: (dimension: Dimension) => {
     type: string;
     domain: DomainArrayV2;
     nullTileExtent: boolean;
-    tileExtent: {};
+    tileExtent: DimensionTileExtent;
     filterPipeline: {
         filters: {
             type: string;
@@ -354,7 +366,7 @@ export declare const deserializeDimension: (dimension: Dimension) => {
         }[];
     };
 };
-export declare const deserializeTileExtent: (tileExtent: Dimension_TileExtent) => {};
+export declare const deserializeTileExtent: (tileExtent: Dimension_TileExtent) => DimensionTileExtent;
 export declare const deserializeFilterPipeline: (filterPipeline: FilterPipeline) => {
     filters: {
         type: string;
