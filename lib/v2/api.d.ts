@@ -303,6 +303,12 @@ export interface ArrayData {
     arraySchemaLatest?: ArraySchema;
     /**
      *
+     * @type {ArraySchemaMap}
+     * @memberof ArrayData
+     */
+    arraySchemasAll?: ArraySchemaMap;
+    /**
+     *
      * @type {ArrayMetadata}
      * @memberof ArrayData
      */
@@ -473,6 +479,38 @@ export interface ArraySchema {
      * @memberof ArraySchema
      */
     timestampRange?: Array<number>;
+}
+/**
+ * key/value pair representing an array schema map entry
+ * @export
+ * @interface ArraySchemaEntry
+ */
+export interface ArraySchemaEntry {
+    /**
+     *
+     * @type {string}
+     * @memberof ArraySchemaEntry
+     */
+    key?: string;
+    /**
+     *
+     * @type {ArraySchema}
+     * @memberof ArraySchemaEntry
+     */
+    value?: ArraySchema;
+}
+/**
+ * array\'s schemas
+ * @export
+ * @interface ArraySchemaMap
+ */
+export interface ArraySchemaMap {
+    /**
+     * List of array schemas entries
+     * @type {Array<ArraySchemaEntry>}
+     * @memberof ArraySchemaMap
+     */
+    entries?: Array<ArraySchemaEntry>;
 }
 /**
  * TileDB array type

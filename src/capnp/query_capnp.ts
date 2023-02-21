@@ -313,12 +313,12 @@ export class Array extends __S {
     hasArraySchemaLatest(): boolean { return !__S.isNull(__S.getPointer(2, this)); }
     initArraySchemaLatest(): ArraySchema { return __S.initStructAt(2, ArraySchema, this); }
     setArraySchemaLatest(value: ArraySchema): void { __S.copyFrom(value, __S.getPointer(2, this)); }
-    adoptArraySchemasAll(value: capnp.Orphan<Map>): void { __S.adopt(value, __S.getPointer(3, this)); }
-    disownArraySchemasAll(): capnp.Orphan<Map> { return __S.disown(this.getArraySchemasAll()); }
-    getArraySchemasAll(): Map { return __S.getStruct(3, Map, this); }
+    adoptArraySchemasAll(value: capnp.Orphan<ArraySchemaMap>): void { __S.adopt(value, __S.getPointer(3, this)); }
+    disownArraySchemasAll(): capnp.Orphan<ArraySchemaMap> { return __S.disown(this.getArraySchemasAll()); }
+    getArraySchemasAll(): ArraySchemaMap { return __S.getStruct(3, ArraySchemaMap, this); }
     hasArraySchemasAll(): boolean { return !__S.isNull(__S.getPointer(3, this)); }
-    initArraySchemasAll(): Map { return __S.initStructAt(3, Map, this); }
-    setArraySchemasAll(value: Map): void { __S.copyFrom(value, __S.getPointer(3, this)); }
+    initArraySchemasAll(): ArraySchemaMap { return __S.initStructAt(3, ArraySchemaMap, this); }
+    setArraySchemasAll(value: ArraySchemaMap): void { __S.copyFrom(value, __S.getPointer(3, this)); }
     adoptNonEmptyDomain(value: capnp.Orphan<NonEmptyDomainList>): void { __S.adopt(value, __S.getPointer(4, this)); }
     disownNonEmptyDomain(): capnp.Orphan<NonEmptyDomainList> { return __S.disown(this.getNonEmptyDomain()); }
     getNonEmptyDomain(): NonEmptyDomainList { return __S.getStruct(4, NonEmptyDomainList, this); }
@@ -573,6 +573,30 @@ export class FilterPipeline extends __S {
     initFilters(length: number): capnp.List<Filter> { return __S.initList(0, FilterPipeline._Filters, length, this); }
     setFilters(value: capnp.List<Filter>): void { __S.copyFrom(value, __S.getPointer(0, this)); }
     toString(): string { return "FilterPipeline_" + super.toString(); }
+}
+export class ArraySchemaMap_Entry extends __S {
+    static readonly _capnp = { displayName: "Entry", id: "f6918b8d3d6aaece", size: new __O(0, 2) };
+    getKey(): string { return __S.getText(0, this); }
+    setKey(value: string): void { __S.setText(0, value, this); }
+    adoptValue(value: capnp.Orphan<ArraySchema>): void { __S.adopt(value, __S.getPointer(1, this)); }
+    disownValue(): capnp.Orphan<ArraySchema> { return __S.disown(this.getValue()); }
+    getValue(): ArraySchema { return __S.getStruct(1, ArraySchema, this); }
+    hasValue(): boolean { return !__S.isNull(__S.getPointer(1, this)); }
+    initValue(): ArraySchema { return __S.initStructAt(1, ArraySchema, this); }
+    setValue(value: ArraySchema): void { __S.copyFrom(value, __S.getPointer(1, this)); }
+    toString(): string { return "ArraySchemaMap_Entry_" + super.toString(); }
+}
+export class ArraySchemaMap extends __S {
+    static readonly Entry = ArraySchemaMap_Entry;
+    static readonly _capnp = { displayName: "ArraySchemaMap", id: "fd01f8198120e948", size: new __O(0, 1) };
+    static _Entries: capnp.ListCtor<ArraySchemaMap_Entry>;
+    adoptEntries(value: capnp.Orphan<capnp.List<ArraySchemaMap_Entry>>): void { __S.adopt(value, __S.getPointer(0, this)); }
+    disownEntries(): capnp.Orphan<capnp.List<ArraySchemaMap_Entry>> { return __S.disown(this.getEntries()); }
+    getEntries(): capnp.List<ArraySchemaMap_Entry> { return __S.getList(0, ArraySchemaMap._Entries, this); }
+    hasEntries(): boolean { return !__S.isNull(__S.getPointer(0, this)); }
+    initEntries(length: number): capnp.List<ArraySchemaMap_Entry> { return __S.initList(0, ArraySchemaMap._Entries, length, this); }
+    setEntries(value: capnp.List<ArraySchemaMap_Entry>): void { __S.copyFrom(value, __S.getPointer(0, this)); }
+    toString(): string { return "ArraySchemaMap_" + super.toString(); }
 }
 export class Map_Entry extends __S {
     static readonly _capnp = { displayName: "Entry", id: "9d58857f4eaf2e0b", size: new __O(0, 2) };
@@ -1017,6 +1041,7 @@ NonEmptyDomainList._NonEmptyDomains = capnp.CompositeList(NonEmptyDomain);
 Domain._Dimensions = capnp.CompositeList(Dimension);
 ArraySchema._Attributes = capnp.CompositeList(Attribute);
 FilterPipeline._Filters = capnp.CompositeList(Filter);
+ArraySchemaMap._Entries = capnp.CompositeList(ArraySchemaMap_Entry);
 Map._Entries = capnp.CompositeList(Map_Entry);
 Config._Entries = capnp.CompositeList(KV);
 Subarray._Ranges = capnp.CompositeList(SubarrayRanges);

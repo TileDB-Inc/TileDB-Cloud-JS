@@ -286,12 +286,12 @@ export declare class Array extends __S {
     hasArraySchemaLatest(): boolean;
     initArraySchemaLatest(): ArraySchema;
     setArraySchemaLatest(value: ArraySchema): void;
-    adoptArraySchemasAll(value: capnp.Orphan<Map>): void;
-    disownArraySchemasAll(): capnp.Orphan<Map>;
-    getArraySchemasAll(): Map;
+    adoptArraySchemasAll(value: capnp.Orphan<ArraySchemaMap>): void;
+    disownArraySchemasAll(): capnp.Orphan<ArraySchemaMap>;
+    getArraySchemasAll(): ArraySchemaMap;
     hasArraySchemasAll(): boolean;
-    initArraySchemasAll(): Map;
-    setArraySchemasAll(value: Map): void;
+    initArraySchemasAll(): ArraySchemaMap;
+    setArraySchemasAll(value: ArraySchemaMap): void;
     adoptNonEmptyDomain(value: capnp.Orphan<NonEmptyDomainList>): void;
     disownNonEmptyDomain(): capnp.Orphan<NonEmptyDomainList>;
     getNonEmptyDomain(): NonEmptyDomainList;
@@ -487,6 +487,38 @@ export declare class FilterPipeline extends __S {
     hasFilters(): boolean;
     initFilters(length: number): capnp.List<Filter>;
     setFilters(value: capnp.List<Filter>): void;
+    toString(): string;
+}
+export declare class ArraySchemaMap_Entry extends __S {
+    static readonly _capnp: {
+        displayName: string;
+        id: string;
+        size: capnp.ObjectSize;
+    };
+    getKey(): string;
+    setKey(value: string): void;
+    adoptValue(value: capnp.Orphan<ArraySchema>): void;
+    disownValue(): capnp.Orphan<ArraySchema>;
+    getValue(): ArraySchema;
+    hasValue(): boolean;
+    initValue(): ArraySchema;
+    setValue(value: ArraySchema): void;
+    toString(): string;
+}
+export declare class ArraySchemaMap extends __S {
+    static readonly Entry: typeof ArraySchemaMap_Entry;
+    static readonly _capnp: {
+        displayName: string;
+        id: string;
+        size: capnp.ObjectSize;
+    };
+    static _Entries: capnp.ListCtor<ArraySchemaMap_Entry>;
+    adoptEntries(value: capnp.Orphan<capnp.List<ArraySchemaMap_Entry>>): void;
+    disownEntries(): capnp.Orphan<capnp.List<ArraySchemaMap_Entry>>;
+    getEntries(): capnp.List<ArraySchemaMap_Entry>;
+    hasEntries(): boolean;
+    initEntries(length: number): capnp.List<ArraySchemaMap_Entry>;
+    setEntries(value: capnp.List<ArraySchemaMap_Entry>): void;
     toString(): string;
 }
 export declare class Map_Entry extends __S {

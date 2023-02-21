@@ -24,7 +24,9 @@ import {
   SubarrayPartitioner_PartitionInfo,
   SubarrayPartitioner_State,
   NonEmptyDomainList,
+  ArraySchemaMap as ArraySchemaMapCapnp,
   NonEmptyDomain,
+  ArraySchemaMap_Entry,
 } from "../../../capnp/query_capnp";
 import * as capnp from "capnp-ts";
 import {
@@ -46,6 +48,8 @@ import {
   Domain as DomainV2,
   Dimension as DimensionV2,
   Attribute as AttributeV2,
+  ArraySchemaMap,
+  ArraySchemaEntry,
 } from "../../../v2";
 
 /**
@@ -89,8 +93,22 @@ export const deserializeArray = (arr: ArrayCapnp): ArrayData => {
     arraySchemaLatest: deserializeArraySchema(arr.getArraySchemaLatest()),
     arrayMetadata: deserializeArrayMetadata(arr.getArrayMetadata()),
     nonEmptyDomain: deserializeNonEmptyDomainList(arr.getNonEmptyDomain()),
+    arraySchemasAll: deserializeArraySchemasAll(arr.getArraySchemasAll())
   };
 };
+
+const deserializeArraySchemasAll = (map: ArraySchemaMapCapnp): ArraySchemaMap => {
+  return {
+    entries: map.getEntries().map(deserializeMapEntry)
+  }
+}
+
+export const deserializeMapEntry = (mapEntry: ArraySchemaMap_Entry): ArraySchemaEntry => {
+  return {
+    key: mapEntry.getKey(),
+    value: deserializeArraySchema(mapEntry.getValue())
+  }
+}
 
 export const deserializeNonEmptyDomainList = (
   nonEmptyDomainList: NonEmptyDomainList
@@ -119,7 +137,7 @@ export const deserializeArrayMetadata = (arrayMetadata: ArrayMetadata) => {
 export const deserializeMetadataEntry = (
   entry: ArrayMetadata_MetadataEntry
 ) => {
-  let metadataEntry = {
+  const metadataEntry = {
     key: entry.getKey(),
     type: entry.getType(),
     valueNum: entry.getValueNum(),

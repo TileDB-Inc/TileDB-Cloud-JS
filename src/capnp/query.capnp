@@ -164,25 +164,25 @@ struct Domain {
 }
 
 struct Array {
-  endTimestamp @0 :UInt64; ✅
+  endTimestamp @0 :UInt64;
   # ending timestamp array was opened
 
-  queryType @1 :Text; ✅
+  queryType @1 :Text;
   # Array opened for query type
 
-  uri @2 :Text; ✅
+  uri @2 :Text;
   # Array uri
 
-  startTimestamp @3 :UInt64; ✅
+  startTimestamp @3 :UInt64;
   # starting timestamp array was opened
 
-  arraySchemaLatest @4 :ArraySchema; ✅
+  arraySchemaLatest @4 :ArraySchema;
   # latest array schema
 
-  arraySchemasAll @5 :Map(Text, ArraySchema);
+  arraySchemasAll @5 :ArraySchemaMap;
   # map of all Array Schemas
 
-  nonEmptyDomain @6 :NonEmptyDomainList; ✅
+  nonEmptyDomain @6 :NonEmptyDomainList;
   # non empty domain
 
   arrayMetadata @7 :ArrayMetadata;
@@ -275,6 +275,15 @@ struct Filter {
 
 struct FilterPipeline {
   filters @0 :List(Filter);
+}
+
+# This is an added struct because we were having issues with generics, specifically using Map(Text, ArraySchema)
+struct ArraySchemaMap {
+  entries @0 :List(Entry);
+  struct Entry {
+    key @0 :Text;
+    value @1 :ArraySchema;
+  }
 }
 
 struct Map(Key, Value) {

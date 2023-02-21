@@ -11,6 +11,7 @@ import {
   NonEmptyDomainList,
   NonEmptyDomain,
   ArrayMetadata,
+  ArraySchemaMap,
 } from "../../../v2";
 import {
   Query,
@@ -25,6 +26,7 @@ import {
   NonEmptyDomainList as NonEmptyDomainListCapnp,
   NonEmptyDomain as NonEmptyDomainCapnp,
   ArrayMetadata as ArrayMetadataCapnp,
+  ArraySchemaMap as ArraySchemaMapCapnp,
 } from "../../../capnp/query_capnp";
 import * as capnp from "capnp-ts";
 
@@ -221,6 +223,25 @@ export const serializeArray = (arrayCapNp: ArrayCapnp, array: ArrayData) => {
   if (array.arrayMetadata) {
     serializeArrayMetadata(arrayCapNp.initArrayMetadata(), array.arrayMetadata);
   }
+
+  if (array.arraySchemasAll) {
+    serializeArraySchemasAll(
+      arrayCapNp.initArraySchemasAll(),
+      array.arraySchemasAll
+    );
+  }
+};
+
+const serializeArraySchemasAll = (
+  arraySchemasAllCapnp: ArraySchemaMapCapnp,
+  arraySchemasAll: ArraySchemaMap
+) => {
+  const entriesCapnp = arraySchemasAllCapnp.initEntries(arraySchemasAll.entries.length);
+  entriesCapnp.forEach((entryCapnp, i) => {
+    const entry = arraySchemasAll.entries[i];
+    entryCapnp.setKey(entry.key);
+    serializeArraySchema(entryCapnp.initValue(), entry.value);
+  });
 };
 
 const serializeArrayMetadata = (

@@ -1,6 +1,6 @@
-import { Array as ArrayCapnp, ArraySchema, Attribute, Dimension, Dimension_TileExtent, Domain, Filter_Data, Config, DomainArray, Filter, FilterPipeline, MapFloat64, MapUInt64, Query, QueryReader, Stats, Subarray, NonEmptyDomainList, NonEmptyDomain } from "../../../capnp/query_capnp";
+import { Array as ArrayCapnp, ArraySchema, Attribute, Dimension, Dimension_TileExtent, Domain, Filter_Data, Config, DomainArray, Filter, FilterPipeline, MapFloat64, MapUInt64, Query, QueryReader, Stats, Subarray, NonEmptyDomainList, NonEmptyDomain, ArraySchemaMap_Entry } from "../../../capnp/query_capnp";
 import { ArrayMetadata, ArrayMetadata_MetadataEntry } from "../../../capnp/arrayMetadata_capnp";
-import { DomainArray as DomainArrayV2, DimensionTileExtent, ArrayData, ArraySchema as ArraySchemaV2, FilterPipeline as FilterPipelineV2, Filter as FilterV2, Domain as DomainV2, Dimension as DimensionV2, Attribute as AttributeV2 } from "../../../v2";
+import { DomainArray as DomainArrayV2, DimensionTileExtent, ArrayData, ArraySchema as ArraySchemaV2, FilterPipeline as FilterPipelineV2, Filter as FilterV2, Domain as DomainV2, Dimension as DimensionV2, Attribute as AttributeV2, ArraySchemaEntry } from "../../../v2";
 /**
  * Deserializes an ArrayBuffer to a Query object
  * @param buffer ArrayBuffer of the capnp Query object
@@ -234,6 +234,7 @@ declare const capnpQueryDeSerializer: (buffer: ArrayBuffer | ArrayBufferLike) =>
 };
 export default capnpQueryDeSerializer;
 export declare const deserializeArray: (arr: ArrayCapnp) => ArrayData;
+export declare const deserializeMapEntry: (mapEntry: ArraySchemaMap_Entry) => ArraySchemaEntry;
 export declare const deserializeNonEmptyDomainList: (nonEmptyDomainList: NonEmptyDomainList) => {
     nonEmptyDomains: {
         isEmpty: boolean;
