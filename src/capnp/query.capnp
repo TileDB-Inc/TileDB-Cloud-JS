@@ -182,7 +182,7 @@ struct Array {
   arraySchemasAll @5 :Map(Text, ArraySchema);
   # map of all Array Schemas
 
-  nonEmptyDomain @6 :NonEmptyDomainList;
+  nonEmptyDomain @6 :NonEmptyDomainList; ✅
   # non empty domain
 
   arrayMetadata @7 :ArrayMetadata;

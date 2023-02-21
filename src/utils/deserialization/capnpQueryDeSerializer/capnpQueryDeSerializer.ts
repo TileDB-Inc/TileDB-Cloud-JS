@@ -124,6 +124,7 @@ export const deserializeMetadataEntry = (
     type: entry.getType(),
     valueNum: entry.getValueNum(),
     del: entry.getDel(),
+    value: entry.getValue().toArray(),
   };
 
   return metadataEntry;

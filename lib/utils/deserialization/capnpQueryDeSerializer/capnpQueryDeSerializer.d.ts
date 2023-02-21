@@ -252,6 +252,7 @@ export declare const deserializeArrayMetadata: (arrayMetadata: ArrayMetadata) =>
         type: string;
         valueNum: number;
         del: boolean;
+        value: number[];
     }[];
 };
 export declare const deserializeMetadataEntry: (entry: ArrayMetadata_MetadataEntry) => {
@@ -259,6 +260,7 @@ export declare const deserializeMetadataEntry: (entry: ArrayMetadata_MetadataEnt
     type: string;
     valueNum: number;
     del: boolean;
+    value: number[];
 };
 export declare const deserializeArraySchema: (schema: ArraySchema) => ArraySchemaV2;
 export declare const deserializeAttribute: (attribute: Attribute) => AttributeV2;

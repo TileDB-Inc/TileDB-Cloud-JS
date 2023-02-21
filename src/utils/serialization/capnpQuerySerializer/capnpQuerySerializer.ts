@@ -9,7 +9,8 @@ import {
   Domain,
   Dimension,
   NonEmptyDomainList,
-  NonEmptyDomain
+  NonEmptyDomain,
+  ArrayMetadata,
 } from "../../../v2";
 import {
   Query,
@@ -23,6 +24,7 @@ import {
   Dimension as DimensionCapnp,
   NonEmptyDomainList as NonEmptyDomainListCapnp,
   NonEmptyDomain as NonEmptyDomainCapnp,
+  ArrayMetadata as ArrayMetadataCapnp,
 } from "../../../capnp/query_capnp";
 import * as capnp from "capnp-ts";
 
@@ -210,31 +212,75 @@ export const serializeArray = (arrayCapNp: ArrayCapnp, array: ArrayData) => {
   }
 
   if (array.nonEmptyDomain) {
-    serializeNonEmptyDomainList(arrayCapNp.initNonEmptyDomain(), array.nonEmptyDomain)
+    serializeNonEmptyDomainList(
+      arrayCapNp.initNonEmptyDomain(),
+      array.nonEmptyDomain
+    );
+  }
+
+  if (array.arrayMetadata) {
+    serializeArrayMetadata(arrayCapNp.initArrayMetadata(), array.arrayMetadata);
   }
 };
 
+const serializeArrayMetadata = (
+  arrayMetadataCapnp: ArrayMetadataCapnp,
+  arrayMetadata: ArrayMetadata
+) => {
+  const { entries = [] } = arrayMetadata;
+  const entriesCapnp = arrayMetadataCapnp.initEntries(
+    arrayMetadata.entries.length || 0
+  );
 
-const serializeNonEmptyDomainList = (nonEmptyDomainListCapnp: NonEmptyDomainListCapnp, nonEmptyDomainList: NonEmptyDomainList) => {
+  entriesCapnp.forEach((entryCapnp, i) => {
+    const entry = entries[i];
+    entryCapnp.setKey(entry.key);
+    entryCapnp.setDel(entry.del);
+    entryCapnp.setType(entry.type);
+    entryCapnp.setValueNum(entry.valueNum);
+    if (entry.value.length) {
+      const entryList = entryCapnp.initValue(entry.value.length);
+
+      entryList.forEach((entryC, i) => {
+        entryList.set(i, entry.value[i]);
+      });
+    }
+  });
+};
+
+const serializeNonEmptyDomainList = (
+  nonEmptyDomainListCapnp: NonEmptyDomainListCapnp,
+  nonEmptyDomainList: NonEmptyDomainList
+) => {
   if (nonEmptyDomainList.nonEmptyDomains.length) {
-    const nonEmptyDomains = nonEmptyDomainListCapnp.initNonEmptyDomains(nonEmptyDomainList.nonEmptyDomains.length);
+    const nonEmptyDomains = nonEmptyDomainListCapnp.initNonEmptyDomains(
+      nonEmptyDomainList.nonEmptyDomains.length
+    );
 
     nonEmptyDomains.forEach((nonEmptyDomainCapnp, i) => {
-      serializeNonEmptyDomain(nonEmptyDomainCapnp, nonEmptyDomainList.nonEmptyDomains[i]);
+      serializeNonEmptyDomain(
+        nonEmptyDomainCapnp,
+        nonEmptyDomainList.nonEmptyDomains[i]
+      );
     });
   }
-}
+};
 
-const serializeNonEmptyDomain = (nonEmptyDomainCapnp: NonEmptyDomainCapnp, nonEmptyDomain: NonEmptyDomain) => {
+const serializeNonEmptyDomain = (
+  nonEmptyDomainCapnp: NonEmptyDomainCapnp,
+  nonEmptyDomain: NonEmptyDomain
+) => {
   nonEmptyDomainCapnp.setIsEmpty(nonEmptyDomain.isEmpty);
-  serializeDomainArray(nonEmptyDomainCapnp.initNonEmptyDomain(), nonEmptyDomain.nonEmptyDomain);
-  const sizes = nonEmptyDomainCapnp.initSizes(nonEmptyDomain.sizes.length)
+  serializeDomainArray(
+    nonEmptyDomainCapnp.initNonEmptyDomain(),
+    nonEmptyDomain.nonEmptyDomain
+  );
+  const sizes = nonEmptyDomainCapnp.initSizes(nonEmptyDomain.sizes.length);
 
   nonEmptyDomain.sizes.forEach((size, i) => {
-    sizes.set(i, capnp.Uint64.fromNumber(size))
-  })
-}
-
+    sizes.set(i, capnp.Uint64.fromNumber(size));
+  });
+};
 
 const serializeArraySchema = (
   arraySchemaCapnp: ArraySchemaCapnp,
@@ -314,7 +360,7 @@ const serializeDimension = (
     dimensionCapnp.initFilterPipeline(),
     dimension.filterPipeline
   );
-  
+
   serializeDomainArray(dimensionCapnp.initDomain(), dimension.domain);
   const { tileExtent } = dimension;
   const tileExtentCapnp = dimensionCapnp.initTileExtent();
@@ -359,7 +405,6 @@ const serializeDimension = (
     tileExtentCapnp.setUint8(tileExtent.uint8);
   }
 };
-
 
 const serializeAttribute = (
   attributeCapnp: AttributeCapnp,
