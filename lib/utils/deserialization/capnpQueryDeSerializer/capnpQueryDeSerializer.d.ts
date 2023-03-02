@@ -1,6 +1,6 @@
-import { Array as ArrayCapnp, ArraySchema, Attribute, Dimension, Dimension_TileExtent, Domain, Filter_Data, Config, DomainArray, Filter, FilterPipeline, MapFloat64, MapUInt64, Query, QueryReader, Stats, Subarray, NonEmptyDomainList, NonEmptyDomain, ArraySchemaMap_Entry } from "../../../capnp/query_capnp";
+import { Array as ArrayCapnp, ArraySchema, Attribute, Dimension, Dimension_TileExtent, Domain, Filter_Data, Config, DomainArray, Filter, FilterPipeline, MapFloat64, MapUInt64, Query, QueryReader, Stats, Subarray, NonEmptyDomainList, NonEmptyDomain, ArraySchemaMap_Entry, FloatScaleConfig as FloatScaleConfigCapnp } from "../../../capnp/query_capnp";
 import { ArrayMetadata, ArrayMetadata_MetadataEntry } from "../../../capnp/arrayMetadata_capnp";
-import { DomainArray as DomainArrayV2, DimensionTileExtent, ArrayData, ArraySchema as ArraySchemaV2, FilterPipeline as FilterPipelineV2, Filter as FilterV2, Domain as DomainV2, Dimension as DimensionV2, Attribute as AttributeV2, ArraySchemaEntry } from "../../../v2";
+import { DomainArray as DomainArrayV2, DimensionTileExtent, ArrayData, FloatScaleConfig, ArraySchema as ArraySchemaV2, FilterPipeline as FilterPipelineV2, Filter as FilterV2, Domain as DomainV2, Dimension as DimensionV2, Attribute as AttributeV2, ArraySchemaEntry, FilterData } from "../../../v2";
 /**
  * Deserializes an ArrayBuffer to a Query object
  * @param buffer ArrayBuffer of the capnp Query object
@@ -270,7 +270,8 @@ export declare const deserializeDimension: (dimension: Dimension) => DimensionV2
 export declare const deserializeTileExtent: (tileExtent: Dimension_TileExtent) => DimensionTileExtent;
 export declare const deserializeFilterPipeline: (filterPipeline: FilterPipeline) => FilterPipelineV2;
 export declare const deserializeFilter: (filter: Filter) => FilterV2;
-export declare const deserializeFilterData: (data: Filter_Data) => {};
+export declare const deserializeFloatScaleConfig: (floatScaleConfig: FloatScaleConfigCapnp) => FloatScaleConfig;
+export declare const deserializeFilterData: (data: Filter_Data) => FilterData;
 export declare const deserializeConfig: (config: Config) => {
     entries: {
         key: string;

@@ -387,6 +387,20 @@ export declare class ArraySchema extends __S {
     setTimestampRange(value: capnp.List<capnp.Uint64>): void;
     toString(): string;
 }
+export declare class FloatScaleConfig extends __S {
+    static readonly _capnp: {
+        displayName: string;
+        id: string;
+        size: capnp.ObjectSize;
+    };
+    getScale(): number;
+    setScale(value: number): void;
+    getOffset(): number;
+    setOffset(value: number): void;
+    getByteWidth(): capnp.Uint64;
+    setByteWidth(value: capnp.Uint64): void;
+    toString(): string;
+}
 export declare enum Filter_Data_Which {
     TEXT = 0,
     BYTES = 1,
@@ -472,6 +486,12 @@ export declare class Filter extends __S {
     setType(value: string): void;
     getData(): Filter_Data;
     initData(): Filter_Data;
+    adoptFloatScaleConfig(value: capnp.Orphan<FloatScaleConfig>): void;
+    disownFloatScaleConfig(): capnp.Orphan<FloatScaleConfig>;
+    getFloatScaleConfig(): FloatScaleConfig;
+    hasFloatScaleConfig(): boolean;
+    initFloatScaleConfig(): FloatScaleConfig;
+    setFloatScaleConfig(value: FloatScaleConfig): void;
     toString(): string;
 }
 export declare class FilterPipeline extends __S {

@@ -252,6 +252,12 @@ struct ArraySchema {
     # Timestamp range of array schema
 }
 
+struct FloatScaleConfig {
+  scale @0 :Float64;
+  offset @1 :Float64;
+  byteWidth @2 :UInt64;
+}
+
 struct Filter {
   type @0 :Text;
   # filter type
@@ -270,7 +276,8 @@ struct Filter {
     float32 @11 :Float32;
     float64 @12 :Float64;
   }
-  # filter data
+
+  floatScaleConfig @13 :FloatScaleConfig;
 }
 
 struct FilterPipeline {

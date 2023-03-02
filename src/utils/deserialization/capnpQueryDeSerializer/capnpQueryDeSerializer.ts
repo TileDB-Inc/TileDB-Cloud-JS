@@ -27,6 +27,7 @@ import {
   ArraySchemaMap as ArraySchemaMapCapnp,
   NonEmptyDomain,
   ArraySchemaMap_Entry,
+  FloatScaleConfig as FloatScaleConfigCapnp,
 } from "../../../capnp/query_capnp";
 import * as capnp from "capnp-ts";
 import {
@@ -37,6 +38,7 @@ import {
   DomainArray as DomainArrayV2,
   DimensionTileExtent,
   ArrayData,
+  FloatScaleConfig,
   ArraySchema as ArraySchemaV2,
   Querytype,
   ArrayType,
@@ -50,6 +52,7 @@ import {
   Attribute as AttributeV2,
   ArraySchemaMap,
   ArraySchemaEntry,
+  FilterData,
 } from "../../../v2";
 
 /**
@@ -208,50 +211,41 @@ export const deserializeDimension = (dimension: Dimension): DimensionV2 => {
 export const deserializeTileExtent = (tileExtent: Dimension_TileExtent) => {
   let tile: DimensionTileExtent = {};
 
-  try {
-    const int8 = tileExtent.getInt8();
-    tile.int8 = int8;
-  } catch {}
+  if (tileExtent.isInt8()) {
+    tile.int8 = tileExtent.getInt8();
+  }
 
-  try {
-    const uint8 = tileExtent.getUint8();
-    tile.uint8 = uint8;
-  } catch {}
+  if (tileExtent.isUint8()) {
+    tile.uint8 = tileExtent.getUint8();
+  }
 
-  try {
-    const int16 = tileExtent.getInt16();
-    tile.int16 = int16;
-  } catch {}
+  if (tileExtent.isInt16()) {
+    tile.int16 = tileExtent.getInt16();
+  }
 
-  try {
-    const uint16 = tileExtent.getUint16();
-    tile.uint16 = uint16;
-  } catch {}
+  if (tileExtent.isUint16()) {
+    tile.uint16 = tileExtent.getUint16();
+  }
 
-  try {
-    const int32 = tileExtent.getInt32();
-    tile.int32 = int32;
-  } catch {}
+  if (tileExtent.isInt32()) {
+    tile.int32 = tileExtent.getInt32();
+  }
 
-  try {
-    const int64 = tileExtent.getInt64().toNumber();
-    tile.int64 = int64;
-  } catch {}
+  if (tileExtent.isInt64()) {
+    tile.int64 = tileExtent.getInt64().toNumber();
+  }
 
-  try {
-    const uint64 = tileExtent.getUint64().toNumber();
-    tile.uint64 = uint64;
-  } catch {}
+  if (tileExtent.isUint64()) {
+    tile.uint64 = tileExtent.getUint64().toNumber();
+  }
 
-  try {
-    const float32 = tileExtent.getFloat32();
-    tile.float32 = float32;
-  } catch {}
+  if (tileExtent.isFloat32()) {
+    tile.float32 = tileExtent.getFloat32();
+  }
 
-  try {
-    const float64 = tileExtent.getFloat64();
-    tile.float64 = float64;
-  } catch {}
+  if (tileExtent.isFloat64()) {
+    tile.float64 = tileExtent.getFloat64();
+  }
 
   return tile;
 };
@@ -268,65 +262,68 @@ export const deserializeFilter = (filter: Filter): FilterV2 => {
   return {
     type: filter.getType() as FilterType,
     data: deserializeFilterData(filter.getData()),
+    floatScaleConfig: deserializeFloatScaleConfig(filter.getFloatScaleConfig())
   };
 };
 
+export const deserializeFloatScaleConfig = (floatScaleConfig: FloatScaleConfigCapnp): FloatScaleConfig => {
+  return {
+    byteWidth: floatScaleConfig.getByteWidth().toNumber(),
+    offset: floatScaleConfig.getOffset(),
+    scale: floatScaleConfig.getScale()
+  }
+}
+
 export const deserializeFilterData = (data: Filter_Data) => {
-  let filterData = {};
-  try {
-    const text = data.getText();
-    Object.assign(filterData, { text });
-  } catch {}
+  let filterData: FilterData = {};
 
-  try {
-    const int8 = data.getInt8();
-    Object.assign(filterData, { int8 });
-  } catch {}
+  if (data.isText()) {
+    filterData.text = data.getText();
+  }
 
-  try {
-    const uint8 = data.getUint8();
-    Object.assign(filterData, { uint8 });
-  } catch {}
+  if (data.isInt8()) {
+    filterData.int8 = data.getInt8();
+  }
 
-  try {
-    const int16 = data.getInt16();
-    Object.assign(filterData, { int16 });
-  } catch {}
+  if (data.isUint8()) {
+    filterData.uint8 = data.getUint8();
+  }
 
-  try {
-    const uint16 = data.getUint16();
-    Object.assign(filterData, { uint16 });
-  } catch {}
+  if (data.isInt16()) {
+    filterData.int16 = data.getInt16();
+  }
 
-  try {
-    const int32 = data.getInt32();
-    Object.assign(filterData, { int32 });
-  } catch {}
+  if (data.isUint16()) {
+    filterData.uint16 = data.getUint16();
+  }
 
-  try {
-    const uint32 = data.getUint32();
-    Object.assign(filterData, { uint32 });
-  } catch {}
+  if (data.isInt32()) {
+    filterData.int32 = data.getInt32();
+  }
 
-  try {
-    const int64 = data.getInt16();
-    Object.assign(filterData, { int64 });
-  } catch {}
+  if (data.isUint32()) {
+    filterData.uint32 = data.getUint32();
+  }
 
-  try {
-    const uint64 = data.getUint16();
-    Object.assign(filterData, { uint64 });
-  } catch {}
+  if (data.isInt64()) {
+    filterData.int64 = data.getInt64().toNumber();
+  }
 
-  try {
-    const float32 = data.getFloat32();
-    Object.assign(filterData, { float32 });
-  } catch {}
+  if (data.isUint64()) {
+    filterData.uint64 = data.getUint64().toNumber();
+  }
 
-  try {
-    const float64 = data.getFloat64();
-    Object.assign(filterData, { float64 });
-  } catch {}
+  if (data.isFloat32()) {
+    filterData.float32 = data.getFloat32();
+  }
+
+  if (data.isFloat64()) {
+    filterData.float64 = data.getFloat64();
+  }
+
+  if (data.isBytes()) {
+    filterData.bytes = data.getBytes().toArray();
+  }
 
   return filterData;
 };

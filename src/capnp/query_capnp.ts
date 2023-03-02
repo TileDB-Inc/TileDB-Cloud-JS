@@ -406,6 +406,16 @@ export class ArraySchema extends __S {
     setTimestampRange(value: capnp.List<capnp.Uint64>): void { __S.copyFrom(value, __S.getPointer(11, this)); }
     toString(): string { return "ArraySchema_" + super.toString(); }
 }
+export class FloatScaleConfig extends __S {
+    static readonly _capnp = { displayName: "FloatScaleConfig", id: "e2405479453349b4", size: new __O(24, 0) };
+    getScale(): number { return __S.getFloat64(0, this); }
+    setScale(value: number): void { __S.setFloat64(0, value, this); }
+    getOffset(): number { return __S.getFloat64(8, this); }
+    setOffset(value: number): void { __S.setFloat64(8, value, this); }
+    getByteWidth(): capnp.Uint64 { return __S.getUint64(16, this); }
+    setByteWidth(value: capnp.Uint64): void { __S.setUint64(16, value, this); }
+    toString(): string { return "FloatScaleConfig_" + super.toString(); }
+}
 export enum Filter_Data_Which {
     TEXT = 0,
     BYTES = 1,
@@ -433,7 +443,7 @@ export class Filter_Data extends __S {
     static readonly UINT64 = Filter_Data_Which.UINT64;
     static readonly FLOAT32 = Filter_Data_Which.FLOAT32;
     static readonly FLOAT64 = Filter_Data_Which.FLOAT64;
-    static readonly _capnp = { displayName: "data", id: "f7e88fec77255f9a", size: new __O(16, 2) };
+    static readonly _capnp = { displayName: "data", id: "f7e88fec77255f9a", size: new __O(16, 3) };
     getText(): string {
         __S.testWhich("text", __S.getUint16(0, this), 0, this);
         return __S.getText(1, this);
@@ -556,11 +566,17 @@ export class Filter_Data extends __S {
     which(): Filter_Data_Which { return __S.getUint16(0, this); }
 }
 export class Filter extends __S {
-    static readonly _capnp = { displayName: "Filter", id: "dac88a0a3b53a50a", size: new __O(16, 2) };
+    static readonly _capnp = { displayName: "Filter", id: "dac88a0a3b53a50a", size: new __O(16, 3) };
     getType(): string { return __S.getText(0, this); }
     setType(value: string): void { __S.setText(0, value, this); }
     getData(): Filter_Data { return __S.getAs(Filter_Data, this); }
     initData(): Filter_Data { return __S.getAs(Filter_Data, this); }
+    adoptFloatScaleConfig(value: capnp.Orphan<FloatScaleConfig>): void { __S.adopt(value, __S.getPointer(2, this)); }
+    disownFloatScaleConfig(): capnp.Orphan<FloatScaleConfig> { return __S.disown(this.getFloatScaleConfig()); }
+    getFloatScaleConfig(): FloatScaleConfig { return __S.getStruct(2, FloatScaleConfig, this); }
+    hasFloatScaleConfig(): boolean { return !__S.isNull(__S.getPointer(2, this)); }
+    initFloatScaleConfig(): FloatScaleConfig { return __S.initStructAt(2, FloatScaleConfig, this); }
+    setFloatScaleConfig(value: FloatScaleConfig): void { __S.copyFrom(value, __S.getPointer(2, this)); }
     toString(): string { return "Filter_" + super.toString(); }
 }
 export class FilterPipeline extends __S {

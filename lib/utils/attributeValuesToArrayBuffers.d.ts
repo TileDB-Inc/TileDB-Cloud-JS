@@ -5,6 +5,6 @@ interface ValueBuffer {
     offsetsBuffer: ArrayBuffer;
     valuesBuffer: ArrayBuffer;
 }
-export declare type ValueBuffers = Record<string, ValueBuffer>;
+export type ValueBuffers = Record<string, ValueBuffer>;
 declare const attributeValuesToArrayBuffers: (values: AttributeValues, dimensions: Dimension[], attributes: Attribute[]) => ValueBuffers;
 export default attributeValuesToArrayBuffers;

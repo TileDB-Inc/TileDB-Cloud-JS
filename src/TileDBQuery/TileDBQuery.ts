@@ -349,7 +349,7 @@ export class TileDBQuery {
   async ArrayOpen(namespace: string, array: string, queryType: Querytype) {
     const arrayFetch = arrayFetchFromConfig(this.config, queryType);
     const arrayFetchCapnp: any = capnpArrayFetchSerializer(arrayFetch);
-    this.arrayAPIV2
+
     const response = await this.arrayAPIV2.getArray(
       namespace,
       array,

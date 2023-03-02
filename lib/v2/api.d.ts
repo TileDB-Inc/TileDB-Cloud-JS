@@ -957,6 +957,12 @@ export interface Filter {
     type: FilterType;
     /**
      *
+     * @type {FloatScaleConfig}
+     * @memberof Filter
+     */
+    floatScaleConfig?: FloatScaleConfig;
+    /**
+     *
      * @type {FilterData}
      * @memberof Filter
      */
@@ -968,6 +974,18 @@ export interface Filter {
  * @interface FilterData
  */
 export interface FilterData {
+    /**
+     *
+     * @type {string}
+     * @memberof FilterData
+     */
+    text?: string;
+    /**
+     *
+     * @type {Array<number>}
+     * @memberof FilterData
+     */
+    bytes?: Array<number>;
     /**
      *
      * @type {number}
@@ -1058,7 +1076,37 @@ export declare enum FilterType {
     BitWidthReduction = "FILTER_BIT_WIDTH_REDUCTION",
     Bitshuffle = "FILTER_BITSHUFFLE",
     Byteshuffle = "FILTER_BYTESHUFFLE",
-    PositiveDelta = "FILTER_POSITIVE_DELTA"
+    PositiveDelta = "FILTER_POSITIVE_DELTA",
+    ScaleFloat = "FILTER_SCALE_FLOAT",
+    Webp = "FILTER_WEBP",
+    ChecksumMd5 = "FILTER_CHECKSUM_MD5",
+    ChecksumSha256 = "FILTER_CHECKSUM_SHA256",
+    Dictionary = "FILTER_DICTIONARY"
+}
+/**
+ * FloatScaleConfig
+ * @export
+ * @interface FloatScaleConfig
+ */
+export interface FloatScaleConfig {
+    /**
+     *
+     * @type {number}
+     * @memberof FloatScaleConfig
+     */
+    scale?: number;
+    /**
+     *
+     * @type {number}
+     * @memberof FloatScaleConfig
+     */
+    offset?: number;
+    /**
+     *
+     * @type {number}
+     * @memberof FloatScaleConfig
+     */
+    byteWidth?: number;
 }
 /**
  * Updates the contents group
@@ -1898,7 +1946,7 @@ export declare const ArrayApiAxiosParamCreator: (configuration?: Configuration) 
      * @param {string} array name/uri of array that is url-encoded
      * @param {number} [start] Start time of window of fetch logs, unix epoch in seconds (default: seven days ago)
      * @param {number} [end] End time of window of fetch logs, unix epoch in seconds (default: current utc timestamp)
-     * @param {Array<string>} [eventTypes] Event values can be one or more of the following read, write, create, delete, register, deregister, comma separated
+     * @param {Array<string>} [eventTypes] Refer to ActivityEventType for possible values
      * @param {string} [taskId] Array task id To filter activity to
      * @param {boolean} [hasTaskId] Excludes activity log results that does not contain an array task uuid
      * @param {number} [page] pagination offset
@@ -1929,7 +1977,7 @@ export declare const ArrayApiFp: (configuration?: Configuration) => {
      * @param {string} array name/uri of array that is url-encoded
      * @param {number} [start] Start time of window of fetch logs, unix epoch in seconds (default: seven days ago)
      * @param {number} [end] End time of window of fetch logs, unix epoch in seconds (default: current utc timestamp)
-     * @param {Array<string>} [eventTypes] Event values can be one or more of the following read, write, create, delete, register, deregister, comma separated
+     * @param {Array<string>} [eventTypes] Refer to ActivityEventType for possible values
      * @param {string} [taskId] Array task id To filter activity to
      * @param {boolean} [hasTaskId] Excludes activity log results that does not contain an array task uuid
      * @param {number} [page] pagination offset
@@ -1960,7 +2008,7 @@ export declare const ArrayApiFactory: (configuration?: Configuration, basePath?:
      * @param {string} array name/uri of array that is url-encoded
      * @param {number} [start] Start time of window of fetch logs, unix epoch in seconds (default: seven days ago)
      * @param {number} [end] End time of window of fetch logs, unix epoch in seconds (default: current utc timestamp)
-     * @param {Array<string>} [eventTypes] Event values can be one or more of the following read, write, create, delete, register, deregister, comma separated
+     * @param {Array<string>} [eventTypes] Refer to ActivityEventType for possible values
      * @param {string} [taskId] Array task id To filter activity to
      * @param {boolean} [hasTaskId] Excludes activity log results that does not contain an array task uuid
      * @param {number} [page] pagination offset
@@ -1993,7 +2041,7 @@ export declare class ArrayApi extends BaseAPI {
      * @param {string} array name/uri of array that is url-encoded
      * @param {number} [start] Start time of window of fetch logs, unix epoch in seconds (default: seven days ago)
      * @param {number} [end] End time of window of fetch logs, unix epoch in seconds (default: current utc timestamp)
-     * @param {Array<string>} [eventTypes] Event values can be one or more of the following read, write, create, delete, register, deregister, comma separated
+     * @param {Array<string>} [eventTypes] Refer to ActivityEventType for possible values
      * @param {string} [taskId] Array task id To filter activity to
      * @param {boolean} [hasTaskId] Excludes activity log results that does not contain an array task uuid
      * @param {number} [page] pagination offset

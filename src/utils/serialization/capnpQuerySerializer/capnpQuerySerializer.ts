@@ -12,6 +12,7 @@ import {
   NonEmptyDomain,
   ArrayMetadata,
   ArraySchemaMap,
+  FloatScaleConfig,
 } from "../../../v2";
 import {
   Query,
@@ -27,6 +28,7 @@ import {
   NonEmptyDomain as NonEmptyDomainCapnp,
   ArrayMetadata as ArrayMetadataCapnp,
   ArraySchemaMap as ArraySchemaMapCapnp,
+  FloatScaleConfig as FloatScaleConfigCapnp,
 } from "../../../capnp/query_capnp";
 import * as capnp from "capnp-ts";
 
@@ -504,6 +506,10 @@ const serializeFilterPipeline = (
       data.setUint64(capnp.Uint64.fromNumber(filterData.data.uint64));
     }
 
+    if (filterData.floatScaleConfig) {
+      serializeFloatScaleConfig(filter.initFloatScaleConfig(), filterData.floatScaleConfig)
+    }
+
     return filter;
   });
 
@@ -511,6 +517,20 @@ const serializeFilterPipeline = (
 
   return filterPipelineCapnp;
 };
+
+const serializeFloatScaleConfig = (floatScaleConfig: FloatScaleConfigCapnp, floatScaleData: FloatScaleConfig) => {
+  if (floatScaleData.byteWidth) {
+    floatScaleConfig.setByteWidth(capnp.Uint64.fromNumber(floatScaleData.byteWidth))
+  }
+
+  if (floatScaleData.offset) {
+    floatScaleConfig.setOffset(floatScaleData.offset)
+  }
+
+  if (floatScaleData.scale) {
+    floatScaleConfig.setScale(floatScaleData.scale)
+  }
+}
 
 const serializeDomainArray = (
   domainArray: DomainArrayCapnp,
