@@ -1,11 +1,14 @@
-import { ArrayMetadata } from "../capnp/arrayMetadata_capnp";
-import { Query } from "../v2";
+import { ArrayMetadata } from "../../../capnp/arrayMetadata_capnp";
+import { ArrayFetch, Query } from "../../../v2";
 import * as capnp from "capnp-ts";
-import { ArrayMetadata as ArrayMetadataType } from "../v1/api";
-import capnpQuerySerializer from "./capnpQuerySerializer";
+import { ArrayMetadata as ArrayMetadataType } from "../../../v1/api";
+import capnpQuerySerializer from "../capnpQuerySerializer";
+import capnpArrayFetchSerializer from "../capnpArrayFetchSerializer";
 
 const capnpSerializer = (data: any) => {
-  if (isArrayMetadata(data)) {
+  if (isArrayFetch(data)) {
+    return capnpArrayFetchSerializer(data);
+  } else if (isArrayMetadata(data)) {
     return serializeArrayMetadata(data);
   } else if (isQuerydata(data)) {
     return capnpQuerySerializer(data);
@@ -52,6 +55,13 @@ const isArrayMetadata = (data: any): data is ArrayMetadataType => {
 
 const isQuerydata = (data: any): data is Query => {
   if (data && (data.reader || data.writer)) {
+    return true;
+  }
+  return false;
+};
+
+const isArrayFetch = (data: any): data is ArrayFetch => {
+  if (data && data.queryType && data.config) {
     return true;
   }
   return false;

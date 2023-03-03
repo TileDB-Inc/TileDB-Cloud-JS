@@ -1,7 +1,7 @@
 import { ArraySchema } from "../v1";
 import dataToQueryWriter from "./dataToQueryWriter";
 import attributeValuesToArrayBuffers from "./attributeValuesToArrayBuffers";
-import capnpQuerySerializer from "./capnpQuerySerializer";
+import capnpQuerySerializer from "./serialization/capnpQuerySerializer";
 import concatArrayBuffers from "./concatArrayBuffers";
 import { QueryWrite } from "../TileDBQuery/TileDBQuery";
 

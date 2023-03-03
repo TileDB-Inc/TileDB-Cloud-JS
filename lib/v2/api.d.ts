@@ -30,6 +30,37 @@ export interface AWSCredential {
      * @memberof AWSCredential
      */
     secret_access_key?: string;
+    /**
+     * The endpoint used for this credential
+     * @type {string}
+     * @memberof AWSCredential
+     */
+    endpoint?: string | null;
+}
+/**
+ * Role information to access Amazon Web Services
+ * @export
+ * @interface AWSRole
+ */
+export interface AWSRole {
+    /**
+     * The role arn used to access
+     * @type {string}
+     * @memberof AWSRole
+     */
+    role_arn?: string;
+    /**
+     * The role external id used to access
+     * @type {string}
+     * @memberof AWSRole
+     */
+    external_id?: string;
+    /**
+     * The endpoint used for this role
+     * @type {string}
+     * @memberof AWSRole
+     */
+    endpoint?: string | null;
 }
 /**
  * A union type which may contain a credential to access any one cloud provider.
@@ -73,6 +104,12 @@ export interface AccessCredential {
      * @memberof AccessCredential
      */
     credential?: AccessCredentialCredential;
+    /**
+     *
+     * @type {AccessCredentialRole}
+     * @memberof AccessCredential
+     */
+    role?: AccessCredentialRole;
 }
 /**
  * The credential information itself. Exactly one sub-field may be set. The names match those in the CloudProvider enum.
@@ -92,6 +129,19 @@ export interface AccessCredentialCredential {
      * @memberof AccessCredentialCredential
      */
     azure?: AzureCredential | null;
+}
+/**
+ * The role information itself. Exactly one sub-field may be set. The names match those in the CloudProvider enum.
+ * @export
+ * @interface AccessCredentialRole
+ */
+export interface AccessCredentialRole {
+    /**
+     *
+     * @type {AWSRole}
+     * @memberof AccessCredentialRole
+     */
+    aws?: AWSRole | null;
 }
 /**
  * Object including credentials and pagination metadata
@@ -214,6 +264,311 @@ export interface ArrayActivityLogData {
      * @memberof ArrayActivityLogData
      */
     pagination_metadata?: PaginationMetadata;
+}
+/**
+ * Represents an open array
+ * @export
+ * @interface ArrayData
+ */
+export interface ArrayData {
+    /**
+     *
+     * @type {Querytype}
+     * @memberof ArrayData
+     */
+    queryType: Querytype;
+    /**
+     * Array uri
+     * @type {string}
+     * @memberof ArrayData
+     */
+    uri: string;
+    /**
+     * Ending timestamp (epoch milliseconds) array is opened at
+     * @type {number}
+     * @memberof ArrayData
+     */
+    endTimestamp?: number;
+    /**
+     * Starting timestamp (epoch milliseconds) array is opened at
+     * @type {number}
+     * @memberof ArrayData
+     */
+    startTimestamp?: number;
+    /**
+     *
+     * @type {ArraySchema}
+     * @memberof ArrayData
+     */
+    arraySchemaLatest?: ArraySchema;
+    /**
+     *
+     * @type {ArraySchemaMap}
+     * @memberof ArrayData
+     */
+    arraySchemasAll?: ArraySchemaMap;
+    /**
+     *
+     * @type {ArrayMetadata}
+     * @memberof ArrayData
+     */
+    arrayMetadata?: ArrayMetadata;
+    /**
+     *
+     * @type {NonEmptyDomainList}
+     * @memberof ArrayData
+     */
+    nonEmptyDomain?: NonEmptyDomainList;
+}
+/**
+ * Model for opening an array v2
+ * @export
+ * @interface ArrayFetch
+ */
+export interface ArrayFetch {
+    /**
+     *
+     * @type {TileDBConfig}
+     * @memberof ArrayFetch
+     */
+    config?: TileDBConfig;
+    /**
+     *
+     * @type {Querytype}
+     * @memberof ArrayFetch
+     */
+    queryType?: Querytype;
+}
+/**
+ * user\'s TileDB array metadata
+ * @export
+ * @interface ArrayMetadata
+ */
+export interface ArrayMetadata {
+    /**
+     * List of metadata entries
+     * @type {Array<ArrayMetadataEntry>}
+     * @memberof ArrayMetadata
+     */
+    entries?: Array<ArrayMetadataEntry>;
+}
+/**
+ * key/value pair representing an array metadata map entry
+ * @export
+ * @interface ArrayMetadataEntry
+ */
+export interface ArrayMetadataEntry {
+    /**
+     *
+     * @type {string}
+     * @memberof ArrayMetadataEntry
+     */
+    key?: string;
+    /**
+     *
+     * @type {string}
+     * @memberof ArrayMetadataEntry
+     */
+    type?: string;
+    /**
+     *
+     * @type {number}
+     * @memberof ArrayMetadataEntry
+     */
+    valueNum?: number;
+    /**
+     *
+     * @type {Array<number>}
+     * @memberof ArrayMetadataEntry
+     */
+    value?: Array<number>;
+    /**
+     *
+     * @type {boolean}
+     * @memberof ArrayMetadataEntry
+     */
+    del?: boolean;
+}
+/**
+ * ArraySchema during creation or retrieval
+ * @export
+ * @interface ArraySchema
+ */
+export interface ArraySchema {
+    /**
+     * URI of schema
+     * @type {string}
+     * @memberof ArraySchema
+     */
+    uri?: string;
+    /**
+     * name of schema
+     * @type {string}
+     * @memberof ArraySchema
+     */
+    name?: string;
+    /**
+     * file format version
+     * @type {Array<number>}
+     * @memberof ArraySchema
+     */
+    version: Array<number>;
+    /**
+     *
+     * @type {ArrayType}
+     * @memberof ArraySchema
+     */
+    arrayType: ArrayType;
+    /**
+     *
+     * @type {Layout}
+     * @memberof ArraySchema
+     */
+    tileOrder: Layout;
+    /**
+     *
+     * @type {Layout}
+     * @memberof ArraySchema
+     */
+    cellOrder: Layout;
+    /**
+     * Capacity of array
+     * @type {number}
+     * @memberof ArraySchema
+     */
+    capacity: number;
+    /**
+     *
+     * @type {FilterPipeline}
+     * @memberof ArraySchema
+     */
+    coordsFilterPipeline: FilterPipeline;
+    /**
+     *
+     * @type {FilterPipeline}
+     * @memberof ArraySchema
+     */
+    offsetFilterPipeline: FilterPipeline;
+    /**
+     *
+     * @type {FilterPipeline}
+     * @memberof ArraySchema
+     */
+    validityFilterPipeline?: FilterPipeline;
+    /**
+     *
+     * @type {Domain}
+     * @memberof ArraySchema
+     */
+    domain: Domain;
+    /**
+     * Attributes of array
+     * @type {Array<Attribute>}
+     * @memberof ArraySchema
+     */
+    attributes: Array<Attribute>;
+    /**
+     * True if the array allows coordinate duplicates. Applicable only to sparse arrays.
+     * @type {boolean}
+     * @memberof ArraySchema
+     */
+    allowsDuplicates?: boolean;
+    /**
+     * The list of sizes per range
+     * @type {Array<number>}
+     * @memberof ArraySchema
+     */
+    timestampRange?: Array<number>;
+}
+/**
+ * key/value pair representing an array schema map entry
+ * @export
+ * @interface ArraySchemaEntry
+ */
+export interface ArraySchemaEntry {
+    /**
+     *
+     * @type {string}
+     * @memberof ArraySchemaEntry
+     */
+    key?: string;
+    /**
+     *
+     * @type {ArraySchema}
+     * @memberof ArraySchemaEntry
+     */
+    value?: ArraySchema;
+}
+/**
+ * array\'s schemas
+ * @export
+ * @interface ArraySchemaMap
+ */
+export interface ArraySchemaMap {
+    /**
+     * List of array schemas entries
+     * @type {Array<ArraySchemaEntry>}
+     * @memberof ArraySchemaMap
+     */
+    entries?: Array<ArraySchemaEntry>;
+}
+/**
+ * TileDB array type
+ * @export
+ * @enum {string}
+ */
+export declare enum ArrayType {
+    Dense = "dense",
+    Sparse = "sparse"
+}
+/**
+ * Attribute of array
+ * @export
+ * @interface Attribute
+ */
+export interface Attribute {
+    /**
+     * Attribute name
+     * @type {string}
+     * @memberof Attribute
+     */
+    name: string;
+    /**
+     *
+     * @type {Datatype}
+     * @memberof Attribute
+     */
+    type: Datatype;
+    /**
+     *
+     * @type {FilterPipeline}
+     * @memberof Attribute
+     */
+    filterPipeline: FilterPipeline;
+    /**
+     * Attribute number of values per cell
+     * @type {number}
+     * @memberof Attribute
+     */
+    cellValNum: number;
+    /**
+     * Is attribute nullable
+     * @type {boolean}
+     * @memberof Attribute
+     */
+    nullable?: boolean;
+    /**
+     * Default validity fill value for nullable attributes
+     * @type {boolean}
+     * @memberof Attribute
+     */
+    fillValueValidity?: boolean;
+    /**
+     * The default fill value
+     * @type {Array<number>}
+     * @memberof Attribute
+     */
+    fillValue?: Array<number>;
 }
 /**
  * Represents an attribute buffer header information
@@ -356,6 +711,147 @@ export declare enum Datatype {
     Any = "ANY"
 }
 /**
+ * Dimension of array
+ * @export
+ * @interface Dimension
+ */
+export interface Dimension {
+    /**
+     * Dimension name
+     * @type {string}
+     * @memberof Dimension
+     */
+    name?: string;
+    /**
+     *
+     * @type {Datatype}
+     * @memberof Dimension
+     */
+    type: Datatype;
+    /**
+     *
+     * @type {DomainArray}
+     * @memberof Dimension
+     */
+    domain: DomainArray;
+    /**
+     * Is tile extent null
+     * @type {boolean}
+     * @memberof Dimension
+     */
+    nullTileExtent: boolean;
+    /**
+     *
+     * @type {DimensionTileExtent}
+     * @memberof Dimension
+     */
+    tileExtent?: DimensionTileExtent;
+    /**
+     *
+     * @type {FilterPipeline}
+     * @memberof Dimension
+     */
+    filterPipeline?: FilterPipeline;
+}
+/**
+ * Extent of tile
+ * @export
+ * @interface DimensionTileExtent
+ */
+export interface DimensionTileExtent {
+    /**
+     *
+     * @type {number}
+     * @memberof DimensionTileExtent
+     */
+    int8?: number;
+    /**
+     *
+     * @type {number}
+     * @memberof DimensionTileExtent
+     */
+    uint8?: number;
+    /**
+     *
+     * @type {number}
+     * @memberof DimensionTileExtent
+     */
+    int16?: number;
+    /**
+     *
+     * @type {number}
+     * @memberof DimensionTileExtent
+     */
+    uint16?: number;
+    /**
+     *
+     * @type {number}
+     * @memberof DimensionTileExtent
+     */
+    int32?: number;
+    /**
+     *
+     * @type {number}
+     * @memberof DimensionTileExtent
+     */
+    uint32?: number;
+    /**
+     *
+     * @type {number}
+     * @memberof DimensionTileExtent
+     */
+    int64?: number;
+    /**
+     *
+     * @type {number}
+     * @memberof DimensionTileExtent
+     */
+    uint64?: number;
+    /**
+     *
+     * @type {number}
+     * @memberof DimensionTileExtent
+     */
+    float32?: number;
+    /**
+     *
+     * @type {number}
+     * @memberof DimensionTileExtent
+     */
+    float64?: number;
+}
+/**
+ * Domain of array
+ * @export
+ * @interface Domain
+ */
+export interface Domain {
+    /**
+     *
+     * @type {Datatype}
+     * @memberof Domain
+     */
+    type: Datatype;
+    /**
+     *
+     * @type {Layout}
+     * @memberof Domain
+     */
+    tileOrder: Layout;
+    /**
+     *
+     * @type {Layout}
+     * @memberof Domain
+     */
+    cellOrder: Layout;
+    /**
+     * Array of dimensions
+     * @type {Array<Dimension>}
+     * @memberof Domain
+     */
+    dimensions: Array<Dimension>;
+}
+/**
  * Domain object for an array of each type
  * @export
  * @interface DomainArray
@@ -421,6 +917,196 @@ export interface DomainArray {
      * @memberof DomainArray
      */
     float64?: Array<number>;
+}
+/**
+ * Uploaded file name and information
+ * @export
+ * @interface FileUploaded
+ */
+export interface FileUploaded {
+    /**
+     * output location of the TileDB File
+     * @type {string}
+     * @memberof FileUploaded
+     */
+    output_uri?: string;
+    /**
+     * name of the file uploaded
+     * @type {string}
+     * @memberof FileUploaded
+     */
+    file_name?: string;
+    /**
+     * unique ID of the uploaded file
+     * @type {string}
+     * @memberof FileUploaded
+     */
+    id: string;
+}
+/**
+ * Filter
+ * @export
+ * @interface Filter
+ */
+export interface Filter {
+    /**
+     *
+     * @type {FilterType}
+     * @memberof Filter
+     */
+    type: FilterType;
+    /**
+     *
+     * @type {FloatScaleConfig}
+     * @memberof Filter
+     */
+    floatScaleConfig?: FloatScaleConfig;
+    /**
+     *
+     * @type {FilterData}
+     * @memberof Filter
+     */
+    data?: FilterData;
+}
+/**
+ * Filter data
+ * @export
+ * @interface FilterData
+ */
+export interface FilterData {
+    /**
+     *
+     * @type {string}
+     * @memberof FilterData
+     */
+    text?: string;
+    /**
+     *
+     * @type {Array<number>}
+     * @memberof FilterData
+     */
+    bytes?: Array<number>;
+    /**
+     *
+     * @type {number}
+     * @memberof FilterData
+     */
+    int8?: number;
+    /**
+     *
+     * @type {number}
+     * @memberof FilterData
+     */
+    uint8?: number;
+    /**
+     *
+     * @type {number}
+     * @memberof FilterData
+     */
+    int16?: number;
+    /**
+     *
+     * @type {number}
+     * @memberof FilterData
+     */
+    uint16?: number;
+    /**
+     *
+     * @type {number}
+     * @memberof FilterData
+     */
+    int32?: number;
+    /**
+     *
+     * @type {number}
+     * @memberof FilterData
+     */
+    uint32?: number;
+    /**
+     *
+     * @type {number}
+     * @memberof FilterData
+     */
+    int64?: number;
+    /**
+     *
+     * @type {number}
+     * @memberof FilterData
+     */
+    uint64?: number;
+    /**
+     *
+     * @type {number}
+     * @memberof FilterData
+     */
+    float32?: number;
+    /**
+     *
+     * @type {number}
+     * @memberof FilterData
+     */
+    float64?: number;
+}
+/**
+ * One or more filters to apply
+ * @export
+ * @interface FilterPipeline
+ */
+export interface FilterPipeline {
+    /**
+     *
+     * @type {Array<Filter>}
+     * @memberof FilterPipeline
+     */
+    filters?: Array<Filter>;
+}
+/**
+ * TileDB filter types
+ * @export
+ * @enum {string}
+ */
+export declare enum FilterType {
+    None = "FILTER_NONE",
+    Gzip = "FILTER_GZIP",
+    Zstd = "FILTER_ZSTD",
+    Lz4 = "FILTER_LZ4",
+    Rle = "FILTER_RLE",
+    Bzip2 = "FILTER_BZIP2",
+    DoubleDelta = "FILTER_DOUBLE_DELTA",
+    BitWidthReduction = "FILTER_BIT_WIDTH_REDUCTION",
+    Bitshuffle = "FILTER_BITSHUFFLE",
+    Byteshuffle = "FILTER_BYTESHUFFLE",
+    PositiveDelta = "FILTER_POSITIVE_DELTA",
+    ScaleFloat = "FILTER_SCALE_FLOAT",
+    Webp = "FILTER_WEBP",
+    ChecksumMd5 = "FILTER_CHECKSUM_MD5",
+    ChecksumSha256 = "FILTER_CHECKSUM_SHA256",
+    Dictionary = "FILTER_DICTIONARY"
+}
+/**
+ * FloatScaleConfig
+ * @export
+ * @interface FloatScaleConfig
+ */
+export interface FloatScaleConfig {
+    /**
+     *
+     * @type {number}
+     * @memberof FloatScaleConfig
+     */
+    scale?: number;
+    /**
+     *
+     * @type {number}
+     * @memberof FloatScaleConfig
+     */
+    offset?: number;
+    /**
+     *
+     * @type {number}
+     * @memberof FloatScaleConfig
+     */
+    byteWidth?: number;
 }
 /**
  * Updates the contents group
@@ -788,31 +1474,6 @@ export interface MetadataEntry {
     del?: boolean;
 }
 /**
- * Represents an open array
- * @export
- * @interface ModelArray
- */
-export interface ModelArray {
-    /**
-     * timestamp (epoch milliseconds) array is opened at
-     * @type {number}
-     * @memberof ModelArray
-     */
-    timestamp: number;
-    /**
-     *
-     * @type {Querytype}
-     * @memberof ModelArray
-     */
-    queryType: Querytype;
-    /**
-     * Array uri
-     * @type {string}
-     * @memberof ModelArray
-     */
-    uri: string;
-}
-/**
  *
  * @export
  * @interface ModelError
@@ -830,6 +1491,44 @@ export interface ModelError {
      * @memberof ModelError
      */
     message?: string;
+}
+/**
+ * object representing a non-empty domain
+ * @export
+ * @interface NonEmptyDomain
+ */
+export interface NonEmptyDomain {
+    /**
+     *
+     * @type {DomainArray}
+     * @memberof NonEmptyDomain
+     */
+    nonEmptyDomain: DomainArray;
+    /**
+     * Is non-empty domain really empty?
+     * @type {boolean}
+     * @memberof NonEmptyDomain
+     */
+    isEmpty: boolean;
+    /**
+     * Number of elements in DomainArray for var length
+     * @type {Array<number>}
+     * @memberof NonEmptyDomain
+     */
+    sizes?: Array<number>;
+}
+/**
+ * object containing non empty domains
+ * @export
+ * @interface NonEmptyDomainList
+ */
+export interface NonEmptyDomainList {
+    /**
+     * Array\'s non empty domain
+     * @type {Array<NonEmptyDomain>}
+     * @memberof NonEmptyDomainList
+     */
+    nonEmptyDomains?: Array<NonEmptyDomain>;
 }
 /**
  *
@@ -906,10 +1605,10 @@ export interface Query {
     reader?: QueryReader;
     /**
      *
-     * @type {any}
+     * @type {ArrayData}
      * @memberof Query
      */
-    array: any;
+    array: ArrayData;
     /**
      * Total number of bytes in fixed size attribute buffers.
      * @type {number}
@@ -1247,7 +1946,7 @@ export declare const ArrayApiAxiosParamCreator: (configuration?: Configuration) 
      * @param {string} array name/uri of array that is url-encoded
      * @param {number} [start] Start time of window of fetch logs, unix epoch in seconds (default: seven days ago)
      * @param {number} [end] End time of window of fetch logs, unix epoch in seconds (default: current utc timestamp)
-     * @param {Array<string>} [eventTypes] Event values can be one or more of the following read, write, create, delete, register, deregister, comma separated
+     * @param {Array<string>} [eventTypes] Refer to ActivityEventType for possible values
      * @param {string} [taskId] Array task id To filter activity to
      * @param {boolean} [hasTaskId] Excludes activity log results that does not contain an array task uuid
      * @param {number} [page] pagination offset
@@ -1256,6 +1955,16 @@ export declare const ArrayApiAxiosParamCreator: (configuration?: Configuration) 
      * @throws {RequiredError}
      */
     arrayActivityLog: (namespace: string, array: string, start?: number, end?: number, eventTypes?: Array<string>, taskId?: string, hasTaskId?: boolean, page?: number, perPage?: number, options?: any) => Promise<RequestArgs>;
+    /**
+     * Get a array at a specified URI registered to a group/project
+     * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
+     * @param {string} array name/uri of array that is url-encoded
+     * @param {string} contentType Content Type of input and return mime
+     * @param {ArrayFetch} arrayFetch Details for array being fetched
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getArray: (namespace: string, array: string, contentType: string, arrayFetch: ArrayFetch, options?: any) => Promise<RequestArgs>;
 };
 /**
  * ArrayApi - functional programming interface
@@ -1268,7 +1977,7 @@ export declare const ArrayApiFp: (configuration?: Configuration) => {
      * @param {string} array name/uri of array that is url-encoded
      * @param {number} [start] Start time of window of fetch logs, unix epoch in seconds (default: seven days ago)
      * @param {number} [end] End time of window of fetch logs, unix epoch in seconds (default: current utc timestamp)
-     * @param {Array<string>} [eventTypes] Event values can be one or more of the following read, write, create, delete, register, deregister, comma separated
+     * @param {Array<string>} [eventTypes] Refer to ActivityEventType for possible values
      * @param {string} [taskId] Array task id To filter activity to
      * @param {boolean} [hasTaskId] Excludes activity log results that does not contain an array task uuid
      * @param {number} [page] pagination offset
@@ -1277,6 +1986,16 @@ export declare const ArrayApiFp: (configuration?: Configuration) => {
      * @throws {RequiredError}
      */
     arrayActivityLog(namespace: string, array: string, start?: number, end?: number, eventTypes?: Array<string>, taskId?: string, hasTaskId?: boolean, page?: number, perPage?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArrayActivityLogData>>;
+    /**
+     * Get a array at a specified URI registered to a group/project
+     * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
+     * @param {string} array name/uri of array that is url-encoded
+     * @param {string} contentType Content Type of input and return mime
+     * @param {ArrayFetch} arrayFetch Details for array being fetched
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getArray(namespace: string, array: string, contentType: string, arrayFetch: ArrayFetch, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArrayData>>;
 };
 /**
  * ArrayApi - factory interface
@@ -1289,7 +2008,7 @@ export declare const ArrayApiFactory: (configuration?: Configuration, basePath?:
      * @param {string} array name/uri of array that is url-encoded
      * @param {number} [start] Start time of window of fetch logs, unix epoch in seconds (default: seven days ago)
      * @param {number} [end] End time of window of fetch logs, unix epoch in seconds (default: current utc timestamp)
-     * @param {Array<string>} [eventTypes] Event values can be one or more of the following read, write, create, delete, register, deregister, comma separated
+     * @param {Array<string>} [eventTypes] Refer to ActivityEventType for possible values
      * @param {string} [taskId] Array task id To filter activity to
      * @param {boolean} [hasTaskId] Excludes activity log results that does not contain an array task uuid
      * @param {number} [page] pagination offset
@@ -1298,6 +2017,16 @@ export declare const ArrayApiFactory: (configuration?: Configuration, basePath?:
      * @throws {RequiredError}
      */
     arrayActivityLog(namespace: string, array: string, start?: number, end?: number, eventTypes?: Array<string>, taskId?: string, hasTaskId?: boolean, page?: number, perPage?: number, options?: any): AxiosPromise<ArrayActivityLogData>;
+    /**
+     * Get a array at a specified URI registered to a group/project
+     * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
+     * @param {string} array name/uri of array that is url-encoded
+     * @param {string} contentType Content Type of input and return mime
+     * @param {ArrayFetch} arrayFetch Details for array being fetched
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getArray(namespace: string, array: string, contentType: string, arrayFetch: ArrayFetch, options?: any): AxiosPromise<ArrayData>;
 };
 /**
  * ArrayApi - object-oriented interface
@@ -1312,7 +2041,7 @@ export declare class ArrayApi extends BaseAPI {
      * @param {string} array name/uri of array that is url-encoded
      * @param {number} [start] Start time of window of fetch logs, unix epoch in seconds (default: seven days ago)
      * @param {number} [end] End time of window of fetch logs, unix epoch in seconds (default: current utc timestamp)
-     * @param {Array<string>} [eventTypes] Event values can be one or more of the following read, write, create, delete, register, deregister, comma separated
+     * @param {Array<string>} [eventTypes] Refer to ActivityEventType for possible values
      * @param {string} [taskId] Array task id To filter activity to
      * @param {boolean} [hasTaskId] Excludes activity log results that does not contain an array task uuid
      * @param {number} [page] pagination offset
@@ -1322,6 +2051,104 @@ export declare class ArrayApi extends BaseAPI {
      * @memberof ArrayApi
      */
     arrayActivityLog(namespace: string, array: string, start?: number, end?: number, eventTypes?: Array<string>, taskId?: string, hasTaskId?: boolean, page?: number, perPage?: number, options?: any): Promise<import("axios").AxiosResponse<ArrayActivityLogData>>;
+    /**
+     * Get a array at a specified URI registered to a group/project
+     * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
+     * @param {string} array name/uri of array that is url-encoded
+     * @param {string} contentType Content Type of input and return mime
+     * @param {ArrayFetch} arrayFetch Details for array being fetched
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ArrayApi
+     */
+    getArray(namespace: string, array: string, contentType: string, arrayFetch: ArrayFetch, options?: any): Promise<import("axios").AxiosResponse<ArrayData>>;
+}
+/**
+ * FilesApi - axios parameter creator
+ * @export
+ */
+export declare const FilesApiAxiosParamCreator: (configuration?: Configuration) => {
+    /**
+     * Upload a file at the specified location and wrap it in TileDB Array
+     * @param {string} namespace The namespace of the file
+     * @param {string} array name/uri of array that is url-encoded
+     * @param {string} contentType Content Type of input
+     * @param {number} filesize size of the file to upload in bytes
+     * @param {any} file file to upload
+     * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+     * @param {string} [name] name of the TileDB array to create, if missing {array} is used
+     * @param {string} [filename] original file name
+     * @param {string} [mimetype] Mime type of the uploaded file. Autogenerated clients do not always support changing the content type param. Server will always use mimetype query param to set mimetype for file, if it is not set Content-Type will be used
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    handleUploadFile: (namespace: string, array: string, contentType: string, filesize: number, file: any, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, name?: string, filename?: string, mimetype?: string, options?: any) => Promise<RequestArgs>;
+};
+/**
+ * FilesApi - functional programming interface
+ * @export
+ */
+export declare const FilesApiFp: (configuration?: Configuration) => {
+    /**
+     * Upload a file at the specified location and wrap it in TileDB Array
+     * @param {string} namespace The namespace of the file
+     * @param {string} array name/uri of array that is url-encoded
+     * @param {string} contentType Content Type of input
+     * @param {number} filesize size of the file to upload in bytes
+     * @param {any} file file to upload
+     * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+     * @param {string} [name] name of the TileDB array to create, if missing {array} is used
+     * @param {string} [filename] original file name
+     * @param {string} [mimetype] Mime type of the uploaded file. Autogenerated clients do not always support changing the content type param. Server will always use mimetype query param to set mimetype for file, if it is not set Content-Type will be used
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    handleUploadFile(namespace: string, array: string, contentType: string, filesize: number, file: any, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, name?: string, filename?: string, mimetype?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<FileUploaded>>;
+};
+/**
+ * FilesApi - factory interface
+ * @export
+ */
+export declare const FilesApiFactory: (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) => {
+    /**
+     * Upload a file at the specified location and wrap it in TileDB Array
+     * @param {string} namespace The namespace of the file
+     * @param {string} array name/uri of array that is url-encoded
+     * @param {string} contentType Content Type of input
+     * @param {number} filesize size of the file to upload in bytes
+     * @param {any} file file to upload
+     * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+     * @param {string} [name] name of the TileDB array to create, if missing {array} is used
+     * @param {string} [filename] original file name
+     * @param {string} [mimetype] Mime type of the uploaded file. Autogenerated clients do not always support changing the content type param. Server will always use mimetype query param to set mimetype for file, if it is not set Content-Type will be used
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    handleUploadFile(namespace: string, array: string, contentType: string, filesize: number, file: any, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, name?: string, filename?: string, mimetype?: string, options?: any): AxiosPromise<FileUploaded>;
+};
+/**
+ * FilesApi - object-oriented interface
+ * @export
+ * @class FilesApi
+ * @extends {BaseAPI}
+ */
+export declare class FilesApi extends BaseAPI {
+    /**
+     * Upload a file at the specified location and wrap it in TileDB Array
+     * @param {string} namespace The namespace of the file
+     * @param {string} array name/uri of array that is url-encoded
+     * @param {string} contentType Content Type of input
+     * @param {number} filesize size of the file to upload in bytes
+     * @param {any} file file to upload
+     * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+     * @param {string} [name] name of the TileDB array to create, if missing {array} is used
+     * @param {string} [filename] original file name
+     * @param {string} [mimetype] Mime type of the uploaded file. Autogenerated clients do not always support changing the content type param. Server will always use mimetype query param to set mimetype for file, if it is not set Content-Type will be used
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof FilesApi
+     */
+    handleUploadFile(namespace: string, array: string, contentType: string, filesize: number, file: any, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, name?: string, filename?: string, mimetype?: string, options?: any): Promise<import("axios").AxiosResponse<FileUploaded>>;
 }
 /**
  * GroupsApi - axios parameter creator

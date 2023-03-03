@@ -67,6 +67,73 @@ export declare class Query extends __S {
     setStats(value: Stats): void;
     toString(): string;
 }
+export declare class NonEmptyDomain extends __S {
+    static readonly _capnp: {
+        displayName: string;
+        id: string;
+        size: capnp.ObjectSize;
+    };
+    adoptNonEmptyDomain(value: capnp.Orphan<DomainArray>): void;
+    disownNonEmptyDomain(): capnp.Orphan<DomainArray>;
+    getNonEmptyDomain(): DomainArray;
+    hasNonEmptyDomain(): boolean;
+    initNonEmptyDomain(): DomainArray;
+    setNonEmptyDomain(value: DomainArray): void;
+    getIsEmpty(): boolean;
+    setIsEmpty(value: boolean): void;
+    adoptSizes(value: capnp.Orphan<capnp.List<capnp.Uint64>>): void;
+    disownSizes(): capnp.Orphan<capnp.List<capnp.Uint64>>;
+    getSizes(): capnp.List<capnp.Uint64>;
+    hasSizes(): boolean;
+    initSizes(length: number): capnp.List<capnp.Uint64>;
+    setSizes(value: capnp.List<capnp.Uint64>): void;
+    toString(): string;
+}
+export declare class NonEmptyDomainList extends __S {
+    static readonly _capnp: {
+        displayName: string;
+        id: string;
+        size: capnp.ObjectSize;
+    };
+    static _NonEmptyDomains: capnp.ListCtor<NonEmptyDomain>;
+    adoptNonEmptyDomains(value: capnp.Orphan<capnp.List<NonEmptyDomain>>): void;
+    disownNonEmptyDomains(): capnp.Orphan<capnp.List<NonEmptyDomain>>;
+    getNonEmptyDomains(): capnp.List<NonEmptyDomain>;
+    hasNonEmptyDomains(): boolean;
+    initNonEmptyDomains(length: number): capnp.List<NonEmptyDomain>;
+    setNonEmptyDomains(value: capnp.List<NonEmptyDomain>): void;
+    toString(): string;
+}
+export declare class Attribute extends __S {
+    static readonly _capnp: {
+        displayName: string;
+        id: string;
+        size: capnp.ObjectSize;
+    };
+    getCellValNum(): number;
+    setCellValNum(value: number): void;
+    getName(): string;
+    setName(value: string): void;
+    getType(): string;
+    setType(value: string): void;
+    adoptFilterPipeline(value: capnp.Orphan<FilterPipeline>): void;
+    disownFilterPipeline(): capnp.Orphan<FilterPipeline>;
+    getFilterPipeline(): FilterPipeline;
+    hasFilterPipeline(): boolean;
+    initFilterPipeline(): FilterPipeline;
+    setFilterPipeline(value: FilterPipeline): void;
+    adoptFillValue(value: capnp.Orphan<capnp.Data>): void;
+    disownFillValue(): capnp.Orphan<capnp.Data>;
+    getFillValue(): capnp.Data;
+    hasFillValue(): boolean;
+    initFillValue(length: number): capnp.Data;
+    setFillValue(value: capnp.Data): void;
+    getNullable(): boolean;
+    setNullable(value: boolean): void;
+    getFillValueValidity(): boolean;
+    setFillValueValidity(value: boolean): void;
+    toString(): string;
+}
 export declare class AttributeBufferHeader extends __S {
     static readonly _capnp: {
         displayName: string;
@@ -89,6 +156,116 @@ export declare class AttributeBufferHeader extends __S {
     setOriginalValidityLenBufferSizeInBytes(value: capnp.Uint64): void;
     toString(): string;
 }
+export declare enum Dimension_TileExtent_Which {
+    INT8 = 0,
+    UINT8 = 1,
+    INT16 = 2,
+    UINT16 = 3,
+    INT32 = 4,
+    UINT32 = 5,
+    INT64 = 6,
+    UINT64 = 7,
+    FLOAT32 = 8,
+    FLOAT64 = 9
+}
+export declare class Dimension_TileExtent extends __S {
+    static readonly INT8 = Dimension_TileExtent_Which.INT8;
+    static readonly UINT8 = Dimension_TileExtent_Which.UINT8;
+    static readonly INT16 = Dimension_TileExtent_Which.INT16;
+    static readonly UINT16 = Dimension_TileExtent_Which.UINT16;
+    static readonly INT32 = Dimension_TileExtent_Which.INT32;
+    static readonly UINT32 = Dimension_TileExtent_Which.UINT32;
+    static readonly INT64 = Dimension_TileExtent_Which.INT64;
+    static readonly UINT64 = Dimension_TileExtent_Which.UINT64;
+    static readonly FLOAT32 = Dimension_TileExtent_Which.FLOAT32;
+    static readonly FLOAT64 = Dimension_TileExtent_Which.FLOAT64;
+    static readonly _capnp: {
+        displayName: string;
+        id: string;
+        size: capnp.ObjectSize;
+    };
+    getInt8(): number;
+    isInt8(): boolean;
+    setInt8(value: number): void;
+    getUint8(): number;
+    isUint8(): boolean;
+    setUint8(value: number): void;
+    getInt16(): number;
+    isInt16(): boolean;
+    setInt16(value: number): void;
+    getUint16(): number;
+    isUint16(): boolean;
+    setUint16(value: number): void;
+    getInt32(): number;
+    isInt32(): boolean;
+    setInt32(value: number): void;
+    getUint32(): number;
+    isUint32(): boolean;
+    setUint32(value: number): void;
+    getInt64(): capnp.Int64;
+    isInt64(): boolean;
+    setInt64(value: capnp.Int64): void;
+    getUint64(): capnp.Uint64;
+    isUint64(): boolean;
+    setUint64(value: capnp.Uint64): void;
+    getFloat32(): number;
+    isFloat32(): boolean;
+    setFloat32(value: number): void;
+    getFloat64(): number;
+    isFloat64(): boolean;
+    setFloat64(value: number): void;
+    toString(): string;
+    which(): Dimension_TileExtent_Which;
+}
+export declare class Dimension extends __S {
+    static readonly _capnp: {
+        displayName: string;
+        id: string;
+        size: capnp.ObjectSize;
+    };
+    getName(): string;
+    setName(value: string): void;
+    getNullTileExtent(): boolean;
+    setNullTileExtent(value: boolean): void;
+    getType(): string;
+    setType(value: string): void;
+    getTileExtent(): Dimension_TileExtent;
+    initTileExtent(): Dimension_TileExtent;
+    adoptDomain(value: capnp.Orphan<DomainArray>): void;
+    disownDomain(): capnp.Orphan<DomainArray>;
+    getDomain(): DomainArray;
+    hasDomain(): boolean;
+    initDomain(): DomainArray;
+    setDomain(value: DomainArray): void;
+    adoptFilterPipeline(value: capnp.Orphan<FilterPipeline>): void;
+    disownFilterPipeline(): capnp.Orphan<FilterPipeline>;
+    getFilterPipeline(): FilterPipeline;
+    hasFilterPipeline(): boolean;
+    initFilterPipeline(): FilterPipeline;
+    setFilterPipeline(value: FilterPipeline): void;
+    toString(): string;
+}
+export declare class Domain extends __S {
+    static readonly _capnp: {
+        displayName: string;
+        id: string;
+        size: capnp.ObjectSize;
+    };
+    static _Dimensions: capnp.ListCtor<Dimension>;
+    getCellOrder(): string;
+    setCellOrder(value: string): void;
+    adoptDimensions(value: capnp.Orphan<capnp.List<Dimension>>): void;
+    disownDimensions(): capnp.Orphan<capnp.List<Dimension>>;
+    getDimensions(): capnp.List<Dimension>;
+    hasDimensions(): boolean;
+    initDimensions(length: number): capnp.List<Dimension>;
+    setDimensions(value: capnp.List<Dimension>): void;
+    getTileOrder(): string;
+    setTileOrder(value: string): void;
+    getType(): string;
+    setType(value: string): void;
+    toString(): string;
+}
 export declare class Array extends __S {
     static readonly _capnp: {
         displayName: string;
@@ -103,21 +280,125 @@ export declare class Array extends __S {
     setUri(value: string): void;
     getStartTimestamp(): capnp.Uint64;
     setStartTimestamp(value: capnp.Uint64): void;
+    adoptArraySchemaLatest(value: capnp.Orphan<ArraySchema>): void;
+    disownArraySchemaLatest(): capnp.Orphan<ArraySchema>;
+    getArraySchemaLatest(): ArraySchema;
+    hasArraySchemaLatest(): boolean;
+    initArraySchemaLatest(): ArraySchema;
+    setArraySchemaLatest(value: ArraySchema): void;
+    adoptArraySchemasAll(value: capnp.Orphan<ArraySchemaMap>): void;
+    disownArraySchemasAll(): capnp.Orphan<ArraySchemaMap>;
+    getArraySchemasAll(): ArraySchemaMap;
+    hasArraySchemasAll(): boolean;
+    initArraySchemasAll(): ArraySchemaMap;
+    setArraySchemasAll(value: ArraySchemaMap): void;
+    adoptNonEmptyDomain(value: capnp.Orphan<NonEmptyDomainList>): void;
+    disownNonEmptyDomain(): capnp.Orphan<NonEmptyDomainList>;
+    getNonEmptyDomain(): NonEmptyDomainList;
+    hasNonEmptyDomain(): boolean;
+    initNonEmptyDomain(): NonEmptyDomainList;
+    setNonEmptyDomain(value: NonEmptyDomainList): void;
+    adoptArrayMetadata(value: capnp.Orphan<ArrayMetadata>): void;
+    disownArrayMetadata(): capnp.Orphan<ArrayMetadata>;
+    getArrayMetadata(): ArrayMetadata;
+    hasArrayMetadata(): boolean;
+    initArrayMetadata(): ArrayMetadata;
+    setArrayMetadata(value: ArrayMetadata): void;
     toString(): string;
 }
-export declare class FilterPipeline extends __S {
+export declare class ArrayOpen extends __S {
     static readonly _capnp: {
         displayName: string;
         id: string;
         size: capnp.ObjectSize;
     };
-    static _Filters: capnp.ListCtor<Filter>;
-    adoptFilters(value: capnp.Orphan<capnp.List<Filter>>): void;
-    disownFilters(): capnp.Orphan<capnp.List<Filter>>;
-    getFilters(): capnp.List<Filter>;
-    hasFilters(): boolean;
-    initFilters(length: number): capnp.List<Filter>;
-    setFilters(value: capnp.List<Filter>): void;
+    adoptConfig(value: capnp.Orphan<Config>): void;
+    disownConfig(): capnp.Orphan<Config>;
+    getConfig(): Config;
+    hasConfig(): boolean;
+    initConfig(): Config;
+    setConfig(value: Config): void;
+    getQueryType(): string;
+    setQueryType(value: string): void;
+    toString(): string;
+}
+export declare class ArraySchema extends __S {
+    static readonly _capnp: {
+        displayName: string;
+        id: string;
+        size: capnp.ObjectSize;
+    };
+    static _Attributes: capnp.ListCtor<Attribute>;
+    getArrayType(): string;
+    setArrayType(value: string): void;
+    adoptAttributes(value: capnp.Orphan<capnp.List<Attribute>>): void;
+    disownAttributes(): capnp.Orphan<capnp.List<Attribute>>;
+    getAttributes(): capnp.List<Attribute>;
+    hasAttributes(): boolean;
+    initAttributes(length: number): capnp.List<Attribute>;
+    setAttributes(value: capnp.List<Attribute>): void;
+    getCapacity(): capnp.Uint64;
+    setCapacity(value: capnp.Uint64): void;
+    getCellOrder(): string;
+    setCellOrder(value: string): void;
+    adoptCoordsFilterPipeline(value: capnp.Orphan<FilterPipeline>): void;
+    disownCoordsFilterPipeline(): capnp.Orphan<FilterPipeline>;
+    getCoordsFilterPipeline(): FilterPipeline;
+    hasCoordsFilterPipeline(): boolean;
+    initCoordsFilterPipeline(): FilterPipeline;
+    setCoordsFilterPipeline(value: FilterPipeline): void;
+    adoptDomain(value: capnp.Orphan<Domain>): void;
+    disownDomain(): capnp.Orphan<Domain>;
+    getDomain(): Domain;
+    hasDomain(): boolean;
+    initDomain(): Domain;
+    setDomain(value: Domain): void;
+    adoptOffsetFilterPipeline(value: capnp.Orphan<FilterPipeline>): void;
+    disownOffsetFilterPipeline(): capnp.Orphan<FilterPipeline>;
+    getOffsetFilterPipeline(): FilterPipeline;
+    hasOffsetFilterPipeline(): boolean;
+    initOffsetFilterPipeline(): FilterPipeline;
+    setOffsetFilterPipeline(value: FilterPipeline): void;
+    getTileOrder(): string;
+    setTileOrder(value: string): void;
+    getUri(): string;
+    setUri(value: string): void;
+    adoptVersion(value: capnp.Orphan<capnp.List<number>>): void;
+    disownVersion(): capnp.Orphan<capnp.List<number>>;
+    getVersion(): capnp.List<number>;
+    hasVersion(): boolean;
+    initVersion(length: number): capnp.List<number>;
+    setVersion(value: capnp.List<number>): void;
+    getAllowsDuplicates(): boolean;
+    setAllowsDuplicates(value: boolean): void;
+    adoptValidityFilterPipeline(value: capnp.Orphan<FilterPipeline>): void;
+    disownValidityFilterPipeline(): capnp.Orphan<FilterPipeline>;
+    getValidityFilterPipeline(): FilterPipeline;
+    hasValidityFilterPipeline(): boolean;
+    initValidityFilterPipeline(): FilterPipeline;
+    setValidityFilterPipeline(value: FilterPipeline): void;
+    getName(): string;
+    setName(value: string): void;
+    adoptTimestampRange(value: capnp.Orphan<capnp.List<capnp.Uint64>>): void;
+    disownTimestampRange(): capnp.Orphan<capnp.List<capnp.Uint64>>;
+    getTimestampRange(): capnp.List<capnp.Uint64>;
+    hasTimestampRange(): boolean;
+    initTimestampRange(length: number): capnp.List<capnp.Uint64>;
+    setTimestampRange(value: capnp.List<capnp.Uint64>): void;
+    toString(): string;
+}
+export declare class FloatScaleConfig extends __S {
+    static readonly _capnp: {
+        displayName: string;
+        id: string;
+        size: capnp.ObjectSize;
+    };
+    getScale(): number;
+    setScale(value: number): void;
+    getOffset(): number;
+    setOffset(value: number): void;
+    getByteWidth(): capnp.Uint64;
+    setByteWidth(value: capnp.Uint64): void;
     toString(): string;
 }
 export declare enum Filter_Data_Which {
@@ -205,6 +486,93 @@ export declare class Filter extends __S {
     setType(value: string): void;
     getData(): Filter_Data;
     initData(): Filter_Data;
+    adoptFloatScaleConfig(value: capnp.Orphan<FloatScaleConfig>): void;
+    disownFloatScaleConfig(): capnp.Orphan<FloatScaleConfig>;
+    getFloatScaleConfig(): FloatScaleConfig;
+    hasFloatScaleConfig(): boolean;
+    initFloatScaleConfig(): FloatScaleConfig;
+    setFloatScaleConfig(value: FloatScaleConfig): void;
+    toString(): string;
+}
+export declare class FilterPipeline extends __S {
+    static readonly _capnp: {
+        displayName: string;
+        id: string;
+        size: capnp.ObjectSize;
+    };
+    static _Filters: capnp.ListCtor<Filter>;
+    adoptFilters(value: capnp.Orphan<capnp.List<Filter>>): void;
+    disownFilters(): capnp.Orphan<capnp.List<Filter>>;
+    getFilters(): capnp.List<Filter>;
+    hasFilters(): boolean;
+    initFilters(length: number): capnp.List<Filter>;
+    setFilters(value: capnp.List<Filter>): void;
+    toString(): string;
+}
+export declare class ArraySchemaMap_Entry extends __S {
+    static readonly _capnp: {
+        displayName: string;
+        id: string;
+        size: capnp.ObjectSize;
+    };
+    getKey(): string;
+    setKey(value: string): void;
+    adoptValue(value: capnp.Orphan<ArraySchema>): void;
+    disownValue(): capnp.Orphan<ArraySchema>;
+    getValue(): ArraySchema;
+    hasValue(): boolean;
+    initValue(): ArraySchema;
+    setValue(value: ArraySchema): void;
+    toString(): string;
+}
+export declare class ArraySchemaMap extends __S {
+    static readonly Entry: typeof ArraySchemaMap_Entry;
+    static readonly _capnp: {
+        displayName: string;
+        id: string;
+        size: capnp.ObjectSize;
+    };
+    static _Entries: capnp.ListCtor<ArraySchemaMap_Entry>;
+    adoptEntries(value: capnp.Orphan<capnp.List<ArraySchemaMap_Entry>>): void;
+    disownEntries(): capnp.Orphan<capnp.List<ArraySchemaMap_Entry>>;
+    getEntries(): capnp.List<ArraySchemaMap_Entry>;
+    hasEntries(): boolean;
+    initEntries(length: number): capnp.List<ArraySchemaMap_Entry>;
+    setEntries(value: capnp.List<ArraySchemaMap_Entry>): void;
+    toString(): string;
+}
+export declare class Map_Entry extends __S {
+    static readonly _capnp: {
+        displayName: string;
+        id: string;
+        size: capnp.ObjectSize;
+    };
+    adoptKey(value: capnp.Orphan<capnp.Pointer>): void;
+    disownKey(): capnp.Orphan<capnp.Pointer>;
+    getKey(): capnp.Pointer;
+    hasKey(): boolean;
+    setKey(value: capnp.Pointer): void;
+    adoptValue(value: capnp.Orphan<capnp.Pointer>): void;
+    disownValue(): capnp.Orphan<capnp.Pointer>;
+    getValue(): capnp.Pointer;
+    hasValue(): boolean;
+    setValue(value: capnp.Pointer): void;
+    toString(): string;
+}
+export declare class Map extends __S {
+    static readonly Entry: typeof Map_Entry;
+    static readonly _capnp: {
+        displayName: string;
+        id: string;
+        size: capnp.ObjectSize;
+    };
+    static _Entries: capnp.ListCtor<Map_Entry>;
+    adoptEntries(value: capnp.Orphan<capnp.List<Map_Entry>>): void;
+    disownEntries(): capnp.Orphan<capnp.List<Map_Entry>>;
+    getEntries(): capnp.List<Map_Entry>;
+    hasEntries(): boolean;
+    initEntries(length: number): capnp.List<Map_Entry>;
+    setEntries(value: capnp.List<Map_Entry>): void;
     toString(): string;
 }
 export declare class KV extends __S {
@@ -663,5 +1031,43 @@ export declare class AttributeBufferSize extends __S {
     setDataBytes(value: capnp.Uint64): void;
     getValidityBytes(): capnp.Uint64;
     setValidityBytes(value: capnp.Uint64): void;
+    toString(): string;
+}
+export declare class ArrayMetadata_MetadataEntry extends __S {
+    static readonly _capnp: {
+        displayName: string;
+        id: string;
+        size: capnp.ObjectSize;
+    };
+    getKey(): string;
+    setKey(value: string): void;
+    getType(): string;
+    setType(value: string): void;
+    getValueNum(): number;
+    setValueNum(value: number): void;
+    adoptValue(value: capnp.Orphan<capnp.Data>): void;
+    disownValue(): capnp.Orphan<capnp.Data>;
+    getValue(): capnp.Data;
+    hasValue(): boolean;
+    initValue(length: number): capnp.Data;
+    setValue(value: capnp.Data): void;
+    getDel(): boolean;
+    setDel(value: boolean): void;
+    toString(): string;
+}
+export declare class ArrayMetadata extends __S {
+    static readonly MetadataEntry: typeof ArrayMetadata_MetadataEntry;
+    static readonly _capnp: {
+        displayName: string;
+        id: string;
+        size: capnp.ObjectSize;
+    };
+    static _Entries: capnp.ListCtor<ArrayMetadata_MetadataEntry>;
+    adoptEntries(value: capnp.Orphan<capnp.List<ArrayMetadata_MetadataEntry>>): void;
+    disownEntries(): capnp.Orphan<capnp.List<ArrayMetadata_MetadataEntry>>;
+    getEntries(): capnp.List<ArrayMetadata_MetadataEntry>;
+    hasEntries(): boolean;
+    initEntries(length: number): capnp.List<ArrayMetadata_MetadataEntry>;
+    setEntries(value: capnp.List<ArrayMetadata_MetadataEntry>): void;
     toString(): string;
 }
