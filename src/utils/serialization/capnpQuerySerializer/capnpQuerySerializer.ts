@@ -27,8 +27,12 @@ import {
   NonEmptyDomainList as NonEmptyDomainListCapnp,
   NonEmptyDomain as NonEmptyDomainCapnp,
   ArrayMetadata as ArrayMetadataCapnp,
-  ArraySchemaMap as ArraySchemaMapCapnp,
+  // Map_Entry as Map_EntryCapnp,
+  // ArraySchemaMap as ArraySchemaMapCapnp,
+  Map as MapCapnp,
   FloatScaleConfig as FloatScaleConfigCapnp,
+  // FilterPipeline,
+  // Filter,
 } from "../../../capnp/query_capnp";
 import * as capnp from "capnp-ts";
 
@@ -235,14 +239,131 @@ export const serializeArray = (arrayCapNp: ArrayCapnp, array: ArrayData) => {
 };
 
 const serializeArraySchemasAll = (
-  arraySchemasAllCapnp: ArraySchemaMapCapnp,
+  arraySchemasAllCapnp: MapCapnp,
   arraySchemasAll: ArraySchemaMap
 ) => {
-  const entriesCapnp = arraySchemasAllCapnp.initEntries(arraySchemasAll.entries.length);
+  const entriesCapnp = arraySchemasAllCapnp.initEntries(
+    arraySchemasAll.entries.length
+  );
+
   entriesCapnp.forEach((entryCapnp, i) => {
     const entry = arraySchemasAll.entries[i];
-    entryCapnp.setKey(entry.key);
-    serializeArraySchema(entryCapnp.initValue(), entry.value);
+    const arraySchema = entry.value;
+    const key = entry.key;
+
+    const keyPointer = entryCapnp.getKey();
+    const keyText = capnp.Text.fromPointer(keyPointer);
+    keyText.set(0, key);
+    entryCapnp.setKey(keyText);
+
+    const arrSchemaMsg = new capnp.Message();
+    const arraySchemaCapnp = arrSchemaMsg.initRoot(ArraySchemaCapnp);
+
+    arraySchemaCapnp.setArrayType(arraySchema.arrayType);
+    arraySchemaCapnp.setCapacity(capnp.Uint64.fromNumber(arraySchema.capacity));
+    arraySchemaCapnp.setCellOrder(arraySchema.cellOrder);
+    arraySchemaCapnp.setTileOrder(arraySchema.tileOrder);
+    arraySchemaCapnp.setUri(arraySchema.uri);
+    arraySchemaCapnp.setAllowsDuplicates(arraySchema.allowsDuplicates);
+    arraySchemaCapnp.setName(arraySchema.name);
+    arraySchemaCapnp.initAttributes(arraySchema.attributes.length);
+    arraySchemaCapnp.initDomain();
+
+    const versions = arraySchemaCapnp.initVersion(
+      arraySchema.version.length || 0
+    );
+    arraySchema.version.forEach((num, i) => {
+      versions.set(i, num);
+    });
+
+    const timestamps = arraySchemaCapnp.initTimestampRange(
+      arraySchema.timestampRange.length || 0
+    );
+
+    arraySchema.timestampRange.forEach((num, i) => {
+      timestamps.set(i, capnp.Uint64.fromNumber(num));
+    });
+
+    if (arraySchema.coordsFilterPipeline) {
+      serializeFilterPipeline(
+        arraySchemaCapnp.initCoordsFilterPipeline(),
+        arraySchema.coordsFilterPipeline
+      );
+    }
+
+    if (arraySchema.offsetFilterPipeline) {
+      serializeFilterPipeline(
+        arraySchemaCapnp.initOffsetFilterPipeline(),
+        arraySchema.offsetFilterPipeline
+      );
+    }
+
+    if (arraySchema.validityFilterPipeline) {
+      serializeFilterPipeline(
+        arraySchemaCapnp.initValidityFilterPipeline(),
+        arraySchema.validityFilterPipeline
+      );
+    }
+
+    if (arraySchema.attributes?.length) {
+      const attributes = arraySchemaCapnp.initAttributes(
+        arraySchema.attributes.length
+      );
+
+      attributes.forEach((attributeCapnp, i) => {
+        const attribute = arraySchema.attributes[i];
+
+        attributeCapnp.setCellValNum(attribute.cellValNum);
+        attributeCapnp.setName(attribute.name);
+        attributeCapnp.setType(attribute.type);
+        attributeCapnp.setNullable(attribute.nullable);
+        attributeCapnp.setFillValueValidity(attribute.fillValueValidity);
+        if (attribute.fillValue.length) {
+          const fillValueData = attributeCapnp.initFillValue(
+            attribute.fillValue.length
+          );
+          attribute.fillValue.forEach((fillValue, i) => {
+            fillValueData.set(i, fillValue);
+          });
+        }
+        // if (attribute.filterPipeline) {
+        //   const filterPipelineCapnp = attributeCapnp.initFilterPipeline();
+        //   console.log(filterPipelineCapnp);
+        //   // const filterPipelineCapnp = new capnp.Message().initRoot(FilterPipelineCapnp);
+
+        //   // serializeFilterPipeline(filterPipelineCapnp, attribute.filterPipeline);
+        //   // attributeCapnp.setFilterPipeline(filterPipelineCapnp);
+        // }
+        
+      });
+    }
+
+    const domain = arraySchema.domain;
+    
+    if (domain) {
+      const domainCapnp = arraySchemaCapnp.initDomain();
+      domainCapnp.setCellOrder(domain.cellOrder);
+      domainCapnp.setTileOrder(domain.tileOrder);
+      domainCapnp.setType(domain.type);
+      const dimensions = domainCapnp.initDimensions(domain.dimensions.length);
+
+      dimensions.forEach((dimensionCapnp, i) => {
+        const dimension = domain.dimensions[i];
+        dimensionCapnp.setName(dimension.name);
+        dimensionCapnp.setNullTileExtent(dimension.nullTileExtent);
+        dimensionCapnp.setType(dimension.type);
+        
+      });
+
+      // console.log(dimensions);
+      // dimensions.forEach((dimensionCapnp, i) => {
+      //   serializeDimension(dimensionCapnp, domain.dimensions[i]);
+      // });
+    }
+
+    // serializeDomain(arraySchemaCapnp.initDomain(), arraySchema.domain);
+
+    entryCapnp.setValue(arraySchemaCapnp);
   });
 };
 
@@ -447,10 +568,14 @@ const serializeAttribute = (
     });
   }
 
-  serializeFilterPipeline(
-    attributeCapnp.initFilterPipeline(),
-    attribute.filterPipeline
-  );
+  if (attribute.filterPipeline) {
+    serializeFilterPipeline(
+      attributeCapnp.initFilterPipeline(),
+      attribute.filterPipeline
+    );
+  }
+
+  return attributeCapnp;
 };
 
 const serializeFilterPipeline = (
@@ -507,7 +632,10 @@ const serializeFilterPipeline = (
     }
 
     if (filterData.floatScaleConfig) {
-      serializeFloatScaleConfig(filter.initFloatScaleConfig(), filterData.floatScaleConfig)
+      serializeFloatScaleConfig(
+        filter.initFloatScaleConfig(),
+        filterData.floatScaleConfig
+      );
     }
 
     return filter;
@@ -518,19 +646,24 @@ const serializeFilterPipeline = (
   return filterPipelineCapnp;
 };
 
-const serializeFloatScaleConfig = (floatScaleConfig: FloatScaleConfigCapnp, floatScaleData: FloatScaleConfig) => {
+const serializeFloatScaleConfig = (
+  floatScaleConfig: FloatScaleConfigCapnp,
+  floatScaleData: FloatScaleConfig
+) => {
   if (floatScaleData.byteWidth) {
-    floatScaleConfig.setByteWidth(capnp.Uint64.fromNumber(floatScaleData.byteWidth))
+    floatScaleConfig.setByteWidth(
+      capnp.Uint64.fromNumber(floatScaleData.byteWidth)
+    );
   }
 
   if (floatScaleData.offset) {
-    floatScaleConfig.setOffset(floatScaleData.offset)
+    floatScaleConfig.setOffset(floatScaleData.offset);
   }
 
   if (floatScaleData.scale) {
-    floatScaleConfig.setScale(floatScaleData.scale)
+    floatScaleConfig.setScale(floatScaleData.scale);
   }
-}
+};
 
 const serializeDomainArray = (
   domainArray: DomainArrayCapnp,

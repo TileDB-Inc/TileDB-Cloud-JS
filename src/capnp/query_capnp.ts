@@ -313,12 +313,12 @@ export class Array extends __S {
     hasArraySchemaLatest(): boolean { return !__S.isNull(__S.getPointer(2, this)); }
     initArraySchemaLatest(): ArraySchema { return __S.initStructAt(2, ArraySchema, this); }
     setArraySchemaLatest(value: ArraySchema): void { __S.copyFrom(value, __S.getPointer(2, this)); }
-    adoptArraySchemasAll(value: capnp.Orphan<ArraySchemaMap>): void { __S.adopt(value, __S.getPointer(3, this)); }
-    disownArraySchemasAll(): capnp.Orphan<ArraySchemaMap> { return __S.disown(this.getArraySchemasAll()); }
-    getArraySchemasAll(): ArraySchemaMap { return __S.getStruct(3, ArraySchemaMap, this); }
+    adoptArraySchemasAll(value: capnp.Orphan<Map>): void { __S.adopt(value, __S.getPointer(3, this)); }
+    disownArraySchemasAll(): capnp.Orphan<Map> { return __S.disown(this.getArraySchemasAll()); }
+    getArraySchemasAll(): Map { return __S.getStruct(3, Map, this); }
     hasArraySchemasAll(): boolean { return !__S.isNull(__S.getPointer(3, this)); }
-    initArraySchemasAll(): ArraySchemaMap { return __S.initStructAt(3, ArraySchemaMap, this); }
-    setArraySchemasAll(value: ArraySchemaMap): void { __S.copyFrom(value, __S.getPointer(3, this)); }
+    initArraySchemasAll(): Map { return __S.initStructAt(3, Map, this); }
+    setArraySchemasAll(value: Map): void { __S.copyFrom(value, __S.getPointer(3, this)); }
     adoptNonEmptyDomain(value: capnp.Orphan<NonEmptyDomainList>): void { __S.adopt(value, __S.getPointer(4, this)); }
     disownNonEmptyDomain(): capnp.Orphan<NonEmptyDomainList> { return __S.disown(this.getNonEmptyDomain()); }
     getNonEmptyDomain(): NonEmptyDomainList { return __S.getStruct(4, NonEmptyDomainList, this); }

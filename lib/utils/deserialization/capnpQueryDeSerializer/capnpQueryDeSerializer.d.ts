@@ -1,4 +1,4 @@
-import { Array as ArrayCapnp, ArraySchema, Attribute, Dimension, Dimension_TileExtent, Domain, Filter_Data, Config, DomainArray, Filter, FilterPipeline, MapFloat64, MapUInt64, Query, QueryReader, Stats, Subarray, NonEmptyDomainList, NonEmptyDomain, ArraySchemaMap_Entry, FloatScaleConfig as FloatScaleConfigCapnp } from "../../../capnp/query_capnp";
+import { Array as ArrayCapnp, ArraySchema, Attribute, Dimension, Dimension_TileExtent, Domain, Filter_Data, Config, DomainArray, Filter, FilterPipeline, MapFloat64, MapUInt64, Query, QueryReader, Stats, Subarray, NonEmptyDomainList, NonEmptyDomain, FloatScaleConfig as FloatScaleConfigCapnp, Map_Entry } from "../../../capnp/query_capnp";
 import { ArrayMetadata, ArrayMetadata_MetadataEntry } from "../../../capnp/arrayMetadata_capnp";
 import { DomainArray as DomainArrayV2, DimensionTileExtent, ArrayData, FloatScaleConfig, ArraySchema as ArraySchemaV2, FilterPipeline as FilterPipelineV2, Filter as FilterV2, Domain as DomainV2, Dimension as DimensionV2, Attribute as AttributeV2, ArraySchemaEntry, FilterData } from "../../../v2";
 /**
@@ -234,7 +234,7 @@ declare const capnpQueryDeSerializer: (buffer: ArrayBuffer | ArrayBufferLike) =>
 };
 export default capnpQueryDeSerializer;
 export declare const deserializeArray: (arr: ArrayCapnp) => ArrayData;
-export declare const deserializeMapEntry: (mapEntry: ArraySchemaMap_Entry) => ArraySchemaEntry;
+export declare const deserializeMapEntry: (mapEntry: Map_Entry) => ArraySchemaEntry;
 export declare const deserializeNonEmptyDomainList: (nonEmptyDomainList: NonEmptyDomainList) => {
     nonEmptyDomains: {
         isEmpty: boolean;

@@ -286,12 +286,12 @@ export declare class Array extends __S {
     hasArraySchemaLatest(): boolean;
     initArraySchemaLatest(): ArraySchema;
     setArraySchemaLatest(value: ArraySchema): void;
-    adoptArraySchemasAll(value: capnp.Orphan<ArraySchemaMap>): void;
-    disownArraySchemasAll(): capnp.Orphan<ArraySchemaMap>;
-    getArraySchemasAll(): ArraySchemaMap;
+    adoptArraySchemasAll(value: capnp.Orphan<Map>): void;
+    disownArraySchemasAll(): capnp.Orphan<Map>;
+    getArraySchemasAll(): Map;
     hasArraySchemasAll(): boolean;
-    initArraySchemasAll(): ArraySchemaMap;
-    setArraySchemasAll(value: ArraySchemaMap): void;
+    initArraySchemasAll(): Map;
+    setArraySchemasAll(value: Map): void;
     adoptNonEmptyDomain(value: capnp.Orphan<NonEmptyDomainList>): void;
     disownNonEmptyDomain(): capnp.Orphan<NonEmptyDomainList>;
     getNonEmptyDomain(): NonEmptyDomainList;

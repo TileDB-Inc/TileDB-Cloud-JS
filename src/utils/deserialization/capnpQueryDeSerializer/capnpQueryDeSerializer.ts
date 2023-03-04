@@ -24,10 +24,10 @@ import {
   SubarrayPartitioner_PartitionInfo,
   SubarrayPartitioner_State,
   NonEmptyDomainList,
-  ArraySchemaMap as ArraySchemaMapCapnp,
+  Map as MapCapnp,
   NonEmptyDomain,
-  ArraySchemaMap_Entry,
   FloatScaleConfig as FloatScaleConfigCapnp,
+  Map_Entry,
 } from "../../../capnp/query_capnp";
 import * as capnp from "capnp-ts";
 import {
@@ -100,16 +100,18 @@ export const deserializeArray = (arr: ArrayCapnp): ArrayData => {
   };
 };
 
-const deserializeArraySchemasAll = (map: ArraySchemaMapCapnp): ArraySchemaMap => {
+const deserializeArraySchemasAll = (map: MapCapnp): ArraySchemaMap => {
   return {
     entries: map.getEntries().map(deserializeMapEntry)
   }
 }
 
-export const deserializeMapEntry = (mapEntry: ArraySchemaMap_Entry): ArraySchemaEntry => {
+export const deserializeMapEntry = (mapEntry: Map_Entry): ArraySchemaEntry => {
+  const valuePointer = mapEntry.getValue();
+
   return {
-    key: mapEntry.getKey(),
-    value: deserializeArraySchema(mapEntry.getValue())
+    key: capnp.Text.fromPointer(mapEntry.getKey()).get(),
+    value: deserializeArraySchema(new ArraySchema(valuePointer.segment, valuePointer.byteOffset))
   }
 }
 

@@ -179,7 +179,7 @@ struct Array {
   arraySchemaLatest @4 :ArraySchema;
   # latest array schema
 
-  arraySchemasAll @5 :ArraySchemaMap;
+  arraySchemasAll @5 :Map(Text, ArraySchema);
   # map of all Array Schemas
 
   nonEmptyDomain @6 :NonEmptyDomainList;
