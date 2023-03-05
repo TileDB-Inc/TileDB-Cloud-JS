@@ -31,8 +31,8 @@ import {
   // ArraySchemaMap as ArraySchemaMapCapnp,
   Map as MapCapnp,
   FloatScaleConfig as FloatScaleConfigCapnp,
+  // Filter as FilterCapnp,
   // FilterPipeline,
-  // Filter,
 } from "../../../capnp/query_capnp";
 import * as capnp from "capnp-ts";
 
@@ -255,9 +255,19 @@ const serializeArraySchemasAll = (
     const keyText = capnp.Text.fromPointer(keyPointer);
     keyText.set(0, key);
     entryCapnp.setKey(keyText);
+    // console.log(entryCapnp.segment.byteLength)
+
+    // // entryCapnp.segment.allocate(100000000);
+
+    // console.log(entryCapnp.segment.byteLength)
 
     const arrSchemaMsg = new capnp.Message();
     const arraySchemaCapnp = arrSchemaMsg.initRoot(ArraySchemaCapnp);
+    // arrSchemaMsg.allocateSegment(30000);
+    // entryCapnp.segment.id;
+    // entryCapnp.setValue(arraySchemaCapnp);
+
+    // console.log(arraySchemaCapnp.byteOffset);
 
     arraySchemaCapnp.setArrayType(arraySchema.arrayType);
     arraySchemaCapnp.setCapacity(capnp.Uint64.fromNumber(arraySchema.capacity));
@@ -326,17 +336,62 @@ const serializeArraySchemasAll = (
             fillValueData.set(i, fillValue);
           });
         }
-        // if (attribute.filterPipeline) {
-        //   const filterPipelineCapnp = attributeCapnp.initFilterPipeline();
-        //   console.log(filterPipelineCapnp);
-        //   // const filterPipelineCapnp = new capnp.Message().initRoot(FilterPipelineCapnp);
+        if (attribute.filterPipeline) {
+          // attributeCapnp.segment.allocate(10000)
+          // const filterPipelineCapnp = attributeCapnp.initFilterPipeline();
+          // const a = attributeCapnp.initFilterPipeline()
+          // console.log(filterPipelineCapnp);
+          const filterPipelinePointer = new capnp.Message().initRoot(FilterPipelineCapnp).segment.allocate(1000000);
+          const filterCapnp = new FilterPipelineCapnp(filterPipelinePointer.segment, filterPipelinePointer.byteOffset);
 
-        //   // serializeFilterPipeline(filterPipelineCapnp, attribute.filterPipeline);
-        //   // attributeCapnp.setFilterPipeline(filterPipelineCapnp);
-        // }
+          console.log(filterCapnp.segment.byteLength);
+          // const filtersCapnp = filterCapnp.getFilters();
+          // console.log(filtersCapnp.getLength())
+          // serializeFilterPipeline(filterCapnp, attribute.filterPipeline);
+          // if (attribute.filterPipeline.filters.length) {
+          //   // filterCapnp.initFilters(attribute.filterPipeline.filters.length);
+          //   // const segment = capnp.Message.allocateSegment(100000, new capnp.Message());
+          //   // const filtersCapnp = new FilterPipelineCapnp._Filters(segment, segment.byteLength);
+
+          //   const filtersCapnp = filterCapnp.getFilters();
+            
+          //   // // console.log(filtersCapnp.segment.byteLength);
+
+          //   const filtersPointer = filtersCapnp.segment.allocate(10000);
+          //   // new capnp.Message()
+          //   // const filtersMsg = capnp.Message.allocateSegment()
+          //   const filtersCapnpWithAllocated = new capnp.List<FilterCapnp>(filtersPointer.segment, filtersPointer.byteOffset);
+          //   console.log(filtersCapnpWithAllocated);
+          //   // // filtersCapnp.forEach((filterCapnp: any, i) => {
+          //   // //   const filter = attribute.filterPipeline.filters[i];
+          //   // //   filterCapnp.setType(filter.type);
+          //   // // })
+          //   // // console.log(FilterCapnp);
+          //   // attribute.filterPipeline.filters.forEach((filter, i) => {
+          //   //   // const filterCapnp = filtersCapnp.get(i);
+          //   //   const filterPointer = new capnp.Message().initRoot(FilterCapnp).segment.allocate(100000);
+          //   //   // msg.segment.allocate
+          //   //   const filterCapnp = new FilterCapnp(filterPointer.segment, filterPointer.byteOffset);
+          //   //   // const filter = attribute.filterPipeline.filters[i];
+          //   //   filterCapnp.setType(filter.type);
+
+          //   //   filtersCapnp.set(i, filterCapnp);
+          //   // });
+          //   filterCapnp.setFilters(filtersCapnp);
+          // }
+
+          // filtersCapnp
+
+          // serializeFilterPipeline(filterPipelineCapnp, attribute.filterPipeline);
+          // attributeCapnp.setFilterPipeline(filterPipelineCapnp);
+
+          attributeCapnp.setFilterPipeline(filterCapnp);
+        }
         
       });
     }
+
+    entryCapnp.setValue(arraySchemaCapnp);
 
     const domain = arraySchema.domain;
     
@@ -363,7 +418,7 @@ const serializeArraySchemasAll = (
 
     // serializeDomain(arraySchemaCapnp.initDomain(), arraySchema.domain);
 
-    entryCapnp.setValue(arraySchemaCapnp);
+    // entryCapnp.setValue(arraySchemaCapnp);
   });
 };
 
