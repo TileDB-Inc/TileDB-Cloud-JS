@@ -28,6 +28,9 @@ import {
   NonEmptyDomain,
   ArraySchemaMap_Entry,
   FloatScaleConfig as FloatScaleConfigCapnp,
+  ArrayDirectory as ArrayDirectoryCapnp,
+  ArrayDirectory_TimestampedURI,
+  ArrayDirectory_DeleteAndUpdateTileLocation,
 } from "../../../capnp/query_capnp";
 import * as capnp from "capnp-ts";
 import {
@@ -94,11 +97,47 @@ export const deserializeArray = (arr: ArrayCapnp): ArrayData => {
     uri: arr.getUri(),
     startTimestamp: arr.getStartTimestamp().toNumber(),
     arraySchemaLatest: deserializeArraySchema(arr.getArraySchemaLatest()),
-    arrayMetadata: deserializeArrayMetadata(arr.getArrayMetadata()),
+    arraySchemasAll: deserializeArraySchemasAll(arr.getArraySchemasAll()),
     nonEmptyDomain: deserializeNonEmptyDomainList(arr.getNonEmptyDomain()),
-    arraySchemasAll: deserializeArraySchemasAll(arr.getArraySchemasAll())
-  };
+    arrayMetadata: deserializeArrayMetadata(arr.getArrayMetadata()),
+    arrayDirectory: deserializeArrayDirectory(arr.getArrayDirectory()),
+  } as any;
 };
+
+const deserializeArrayDirectory = (arrayDirectory: ArrayDirectoryCapnp): any => {
+  return {
+    unfilteredFragmentUris: arrayDirectory.getUnfilteredFragmentUris().toArray(),
+    consolidatedCommitUris: arrayDirectory.getConsolidatedCommitUris().toArray(),
+    arraySchemaUris: arrayDirectory.getArraySchemaUris().toArray(),
+    latestArraySchemaUri: arrayDirectory.getLatestArraySchemaUri(),
+    arrayMetaUrisToVacuum: arrayDirectory.getArrayMetaUrisToVacuum().toArray(),
+    arrayMetaVacUrisToVacuum: arrayDirectory.getArrayMetaVacUrisToVacuum().toArray(),
+    commitUrisToConsolidate: arrayDirectory.getCommitUrisToConsolidate().toArray(),
+    commitUrisToVacuum: arrayDirectory.getCommitUrisToVacuum().toArray(),
+    consolidatedCommitUrisToVacuum: arrayDirectory.getConsolidatedCommitUrisToVacuum().toArray(),
+    arrayMetaUris: arrayDirectory.getArrayMetaUris().map(deserialiazeTimestampedURI),
+    fragmentMetaUris: arrayDirectory.getFragmentMetaUris().toArray(),
+    deleteAndUpdateTileLocation: arrayDirectory.getDeleteAndUpdateTileLocation().map(deserializeDeleteAndUpdateTileLocation),
+    timestampStart: arrayDirectory.getTimestampStart().toNumber(),
+    timestampEnd: arrayDirectory.getTimestampEnd().toNumber(),
+  }
+}
+
+const deserializeDeleteAndUpdateTileLocation = (deleteAndUpdateTileLocation: ArrayDirectory_DeleteAndUpdateTileLocation) => {
+  return {
+    uri: deleteAndUpdateTileLocation.getUri(),
+    conditionMarker: deleteAndUpdateTileLocation.getConditionMarker(),
+    offset: deleteAndUpdateTileLocation.getOffset().toNumber()
+  }
+}
+
+const deserialiazeTimestampedURI = (timestampedURI: ArrayDirectory_TimestampedURI) => {
+  return {
+    uri: timestampedURI.getUri(),
+    timestampStart: timestampedURI.getTimestampStart().toNumber(),
+    timestampEnd: timestampedURI.getTimestampEnd().toNumber(),
+  }
+}
 
 const deserializeArraySchemasAll = (map: ArraySchemaMapCapnp): ArraySchemaMap => {
   return {
