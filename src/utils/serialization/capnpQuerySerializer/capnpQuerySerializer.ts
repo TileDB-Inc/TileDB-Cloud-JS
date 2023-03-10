@@ -20,6 +20,7 @@ import {
   ArrayDirectory,
   TimestampedURI,
   DeleteAndUpdateTileLocation,
+  FragmentMetadata,
 } from "../../../v2";
 import {
   Query,
@@ -37,6 +38,7 @@ import {
   ArraySchemaMap as ArraySchemaMapCapnp,
   FloatScaleConfig as FloatScaleConfigCapnp,
   ArrayDirectory as ArrayDirectoryCapnp,
+  FragmentMetadata as FragmentMetadataCapnp,
 } from "../../../capnp/query_capnp";
 import * as capnp from "capnp-ts";
 
@@ -247,7 +249,56 @@ export const serializeArray = (arrayCapNp: ArrayCapnp, array: ArrayData) => {
       array.arrayDirectory
     );
   }
+
+  arrayCapNp.setOpenedAtEndTimestamp(capnp.Uint64.fromNumber(array.openedAtEndTimestamp));
+
+  if (array.fragmentMetadataAll.length) {
+    arrayCapNp.initFragmentMetadataAll(array.fragmentMetadataAll.length).map((fragmentMetadataAllCapnp, i) => serializeFragmentMetadataAll(fragmentMetadataAllCapnp, array.fragmentMetadataAll[i]))
+  }
 };
+
+const serializeFragmentMetadataAll = (fragmentMetadataCapnp: FragmentMetadataCapnp ,fragmentMetadata: FragmentMetadata) => {
+  if (fragmentMetadata.fileSizes.length) {
+    const fileSizesCapnp = fragmentMetadataCapnp.initFileSizes(fragmentMetadata.fileSizes.length);
+
+    fragmentMetadata.fileSizes.forEach((fileSize, i) => {
+      fileSizesCapnp.set(i, capnp.Uint64.fromNumber(fileSize))
+    });
+  }
+
+  if (fragmentMetadata.fileVarSizes.length) {
+    const fileVarSizesCapnp = fragmentMetadataCapnp.initFileVarSizes(fragmentMetadata.fileVarSizes.length);
+
+    fragmentMetadata.fileVarSizes.forEach((fileSize, i) => {
+      fileVarSizesCapnp.set(i, capnp.Uint64.fromNumber(fileSize))
+    });
+  }
+
+  if (fragmentMetadata.fileValiditySizes.length) {
+    const fileValiditySizesCapnp = fragmentMetadataCapnp.initFileValiditySizes(fragmentMetadata.fileValiditySizes.length);
+
+    fragmentMetadata.fileValiditySizes.forEach((fileSize, i) => {
+      fileValiditySizesCapnp.set(i, capnp.Uint64.fromNumber(fileSize))
+    });
+  }
+
+  fragmentMetadataCapnp.setFragmentUri(fragmentMetadata.fragmentUri);
+  fragmentMetadataCapnp.setHasTimestamps(fragmentMetadata.hasTimestamps);
+  fragmentMetadataCapnp.setHasDeleteMeta(fragmentMetadata.hasDeleteMeta);
+  fragmentMetadataCapnp.setSparseTileNum(capnp.Uint64.fromNumber(fragmentMetadata.sparseTileNum));
+  fragmentMetadataCapnp.setTileIndexBase(capnp.Uint64.fromNumber(fragmentMetadata.tileIndexBase));
+  
+  if (fragmentMetadata.tileOffsets.length) {
+    const tilefOffsetsCapnp = fragmentMetadataCapnp.initTileOffsets(fragmentMetadata.tileOffsets.length);
+    tilefOffsetsCapnp.forEach((tileOffsetCapnp, i) => {
+      capnp.Uint64List.initList(capnp.ListElementSize.BYTE_8, fragmentMetadata.tileOffsets[i].length, tileOffsetCapnp);
+      
+      tileOffsetCapnp.forEach((_, j) => {
+        tileOffsetCapnp.set(j, capnp.Uint64.fromNumber(fragmentMetadata.tileOffsets[i][j]));
+      });
+    });
+  }
+}
 
 const serializeArrayDirectory = (
   arrayDirectoryCapnp: ArrayDirectoryCapnp,

@@ -107,6 +107,7 @@ export const deserializeArray = (arr: ArrayCapnp): ArrayData => {
     arrayMetadata: deserializeArrayMetadata(arr.getArrayMetadata()),
     arrayDirectory: deserializeArrayDirectory(arr.getArrayDirectory()),
     fragmentMetadataAll: arr.getFragmentMetadataAll().map(deserializeFragmentMetadata),
+    openedAtEndTimestamp: arr.getOpenedAtEndTimestamp().toNumber()
   };
 };
 

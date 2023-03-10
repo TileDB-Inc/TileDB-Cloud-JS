@@ -331,6 +331,12 @@ export interface ArrayData {
      * @memberof ArrayData
      */
     fragmentMetadataAll?: Array<FragmentMetadata>;
+    /**
+     * The ending timestamp that the array was last opened at
+     * @type {number}
+     * @memberof ArrayData
+     */
+    openedAtEndTimestamp?: number;
 }
 /**
  * Array directory (for reads)
