@@ -31,7 +31,7 @@ import {
   ArrayDirectory as ArrayDirectoryCapnp,
   ArrayDirectory_TimestampedURI,
   ArrayDirectory_DeleteAndUpdateTileLocation,
-  FragmentMetadata,
+  FragmentMetadata as FragmentMetadataCapnp,
   FragmentMetadata_GenericTileOffsets,
 } from "../../../capnp/query_capnp";
 import * as capnp from "capnp-ts";
@@ -56,8 +56,11 @@ import {
   Dimension as DimensionV2,
   Attribute as AttributeV2,
   ArraySchemaMap,
+  FragmentMetadata,
   ArraySchemaEntry,
   FilterData,
+  ArrayDirectory,
+  GenericTileOffsets,
 } from "../../../v2";
 
 /**
@@ -104,14 +107,14 @@ export const deserializeArray = (arr: ArrayCapnp): ArrayData => {
     arrayMetadata: deserializeArrayMetadata(arr.getArrayMetadata()),
     arrayDirectory: deserializeArrayDirectory(arr.getArrayDirectory()),
     fragmentMetadataAll: arr.getFragmentMetadataAll().map(deserializeFragmentMetadata),
-  } as any;
+  };
 };
 
-const deserializeFragmentMetadata = (fragmentMetadata: FragmentMetadata) => {
+const deserializeFragmentMetadata = (fragmentMetadata: FragmentMetadataCapnp): FragmentMetadata => {
   return {
-    fileSizes: fragmentMetadata.getFileSizes().toArray(),
-    fileVarSizes: fragmentMetadata.getFileVarSizes().toArray(),
-    fileValiditySizes: fragmentMetadata.getFileValiditySizes().toArray(),
+    fileSizes: fragmentMetadata.getFileSizes().map((v) => v.toNumber()),
+    fileVarSizes: fragmentMetadata.getFileVarSizes().toArray().map((v) => v.toNumber()),
+    fileValiditySizes: fragmentMetadata.getFileValiditySizes().toArray().map((v) => v.toNumber()),
     fragmentUri: fragmentMetadata.getFragmentUri(),
     hasTimestamps: fragmentMetadata.getHasTimestamps(),
     hasDeleteMeta: fragmentMetadata.getHasDeleteMeta(),
@@ -135,13 +138,13 @@ const deserializeFragmentMetadata = (fragmentMetadata: FragmentMetadata) => {
     timestampRange: fragmentMetadata.getTimestampRange().toArray().map((v) => v.toNumber()),
     lastTileCellNum: fragmentMetadata.getLastTileCellNum().toNumber(),
     nonEmptyDomain: deserializeNonEmptyDomainList(fragmentMetadata.getNonEmptyDomain()),
-    rtree: fragmentMetadata.getRtree().toArray(),
+    rtree: fragmentMetadata.getRtree().toArrayBuffer(),
     hasConsolidatedFooter: fragmentMetadata.getHasConsolidatedFooter(),
     gtOffsets: deserializeGenericTileOffsets(fragmentMetadata.getGtOffsets())
   }
 }
 
-const deserializeGenericTileOffsets = (genericTileOffsets: FragmentMetadata_GenericTileOffsets) => {
+const deserializeGenericTileOffsets = (genericTileOffsets: FragmentMetadata_GenericTileOffsets): GenericTileOffsets => {
   return {
     rtree: genericTileOffsets.getRtree().toNumber(),
     tileOffsets: genericTileOffsets.getTileOffsets().map(v => v.toNumber()),
@@ -157,7 +160,7 @@ const deserializeGenericTileOffsets = (genericTileOffsets: FragmentMetadata_Gene
   }
 }
 
-const deserializeArrayDirectory = (arrayDirectory: ArrayDirectoryCapnp): any => {
+const deserializeArrayDirectory = (arrayDirectory: ArrayDirectoryCapnp): ArrayDirectory => {
   return {
     unfilteredFragmentUris: arrayDirectory.getUnfilteredFragmentUris().toArray(),
     consolidatedCommitUris: arrayDirectory.getConsolidatedCommitUris().toArray(),

@@ -1,4 +1,8 @@
 import {
+  ArrayDirectory_DeleteAndUpdateTileLocation,
+  ArrayDirectory_TimestampedURI,
+} from "./../../../capnp/query_capnp";
+import {
   Query as QueryType,
   Subarray as SubarrayType,
   DomainArray,
@@ -13,6 +17,9 @@ import {
   ArrayMetadata,
   ArraySchemaMap,
   FloatScaleConfig,
+  ArrayDirectory,
+  TimestampedURI,
+  DeleteAndUpdateTileLocation,
 } from "../../../v2";
 import {
   Query,
@@ -29,6 +36,7 @@ import {
   ArrayMetadata as ArrayMetadataCapnp,
   ArraySchemaMap as ArraySchemaMapCapnp,
   FloatScaleConfig as FloatScaleConfigCapnp,
+  ArrayDirectory as ArrayDirectoryCapnp,
 } from "../../../capnp/query_capnp";
 import * as capnp from "capnp-ts";
 
@@ -232,13 +240,184 @@ export const serializeArray = (arrayCapNp: ArrayCapnp, array: ArrayData) => {
       array.arraySchemasAll
     );
   }
+
+  if (array.arrayDirectory) {
+    serializeArrayDirectory(
+      arrayCapNp.initArrayDirectory(),
+      array.arrayDirectory
+    );
+  }
+};
+
+const serializeArrayDirectory = (
+  arrayDirectoryCapnp: ArrayDirectoryCapnp,
+  arrayDirectory: ArrayDirectory
+) => {
+  if (arrayDirectory.unfilteredFragmentUris.length) {
+    const unfilteredFragmentUrisCapnp =
+      arrayDirectoryCapnp.initUnfilteredFragmentUris(
+        arrayDirectory.unfilteredFragmentUris.length
+      );
+    arrayDirectory.unfilteredFragmentUris.forEach(
+      (unfilteredFragmentUri, i) => {
+        unfilteredFragmentUrisCapnp.set(i, unfilteredFragmentUri);
+      }
+    );
+  }
+
+  if (arrayDirectory.consolidatedCommitUris.length) {
+    const consolidatedCommitUrisCapnp =
+      arrayDirectoryCapnp.initConsolidatedCommitUris(
+        arrayDirectory.consolidatedCommitUris.length
+      );
+
+    arrayDirectory.consolidatedCommitUris.forEach(
+      (consolidatedCommitUri, i) => {
+        consolidatedCommitUrisCapnp.set(i, consolidatedCommitUri);
+      }
+    );
+  }
+
+  if (arrayDirectory.arraySchemaUris.length) {
+    const arraySchemaUrisCapnp = arrayDirectoryCapnp.initArraySchemaUris(
+      arrayDirectory.arraySchemaUris.length
+    );
+
+    arrayDirectory.arraySchemaUris.forEach((arraySchemaUri, i) => {
+      arraySchemaUrisCapnp.set(i, arraySchemaUri);
+    });
+  }
+
+  arrayDirectoryCapnp.setLatestArraySchemaUri(
+    arrayDirectory.latestArraySchemaUri
+  );
+
+  if (arrayDirectory.arrayMetaUrisToVacuum.length) {
+    const arrayMetaUrisToVacuumCapnp =
+      arrayDirectoryCapnp.initArrayMetaUrisToVacuum(
+        arrayDirectory.arrayMetaUrisToVacuum.length
+      );
+
+    arrayDirectory.arrayMetaUrisToVacuum.forEach((arrayMetaUriToVacuum, i) => {
+      arrayMetaUrisToVacuumCapnp.set(i, arrayMetaUriToVacuum);
+    });
+  }
+
+  if (arrayDirectory.arrayMetaVacUrisToVacuum.length) {
+    const arrayMetaVacUrisToVacuumCapnp =
+      arrayDirectoryCapnp.initArrayMetaVacUrisToVacuum(
+        arrayDirectory.arrayMetaVacUrisToVacuum.length
+      );
+
+    arrayDirectory.arrayMetaVacUrisToVacuum.forEach(
+      (arrayMetaVacUriToVacuum, i) => {
+        arrayMetaVacUrisToVacuumCapnp.set(i, arrayMetaVacUriToVacuum);
+      }
+    );
+  }
+
+  if (arrayDirectory.commitUrisToConsolidate.length) {
+    const commitUrisToConsolidateCapnp =
+      arrayDirectoryCapnp.initCommitUrisToConsolidate(
+        arrayDirectory.commitUrisToConsolidate.length
+      );
+
+    arrayDirectory.commitUrisToConsolidate.forEach(
+      (commitUriToConsolidate, i) => {
+        commitUrisToConsolidateCapnp.set(i, commitUriToConsolidate);
+      }
+    );
+  }
+
+  if (arrayDirectory.commitUrisToVacuum.length) {
+    const commitUrisToVacuumCapnp = arrayDirectoryCapnp.initCommitUrisToVacuum(
+      arrayDirectory.commitUrisToVacuum.length
+    );
+
+    arrayDirectory.commitUrisToVacuum.forEach((commitUriToVacuum, i) => {
+      commitUrisToVacuumCapnp.set(i, commitUriToVacuum);
+    });
+  }
+
+  if (arrayDirectory.consolidatedCommitUrisToVacuum.length) {
+    const consolidatedCommitUrisToVacuumCapnp =
+      arrayDirectoryCapnp.initConsolidatedCommitUrisToVacuum(
+        arrayDirectory.consolidatedCommitUrisToVacuum.length
+      );
+
+    arrayDirectory.consolidatedCommitUrisToVacuum.forEach(
+      (consolidatedCommitUriToVacuum, i) => {
+        consolidatedCommitUrisToVacuumCapnp.set(
+          i,
+          consolidatedCommitUriToVacuum
+        );
+      }
+    );
+  }
+
+  if (arrayDirectory.arrayMetaUris.length) {
+    arrayDirectoryCapnp
+      .initArrayMetaUris(arrayDirectory.arrayMetaUris.length)
+      .map((metaURICapnp, i) =>
+        serializeArrayMetaUri(metaURICapnp, arrayDirectory.arrayMetaUris[i])
+      );
+  }
+
+  if (arrayDirectory.fragmentMetaUris.length) {
+    const fragmentMetaUrisCapnp = arrayDirectoryCapnp.initFragmentMetaUris(
+      arrayDirectory.fragmentMetaUris.length
+    );
+    arrayDirectory.fragmentMetaUris.forEach((fragmentURI, i) => {
+      fragmentMetaUrisCapnp.set(i, fragmentURI);
+    });
+  }
+
+  if (arrayDirectory.deleteAndUpdateTileLocation.length) {
+    arrayDirectoryCapnp
+      .initDeleteAndUpdateTileLocation(
+        arrayDirectory.deleteAndUpdateTileLocation.length
+      )
+      .map((deleteAndUpdateTileLocationCapnp, i) =>
+        serializeDeleteAndUpdateTileLocation(
+          deleteAndUpdateTileLocationCapnp,
+          arrayDirectory.deleteAndUpdateTileLocation[i]
+        )
+      );
+  }
+
+  arrayDirectoryCapnp.setTimestampStart(capnp.Uint64.fromNumber(arrayDirectory.timestampStart || 0));
+  arrayDirectoryCapnp.setTimestampEnd(capnp.Uint64.fromNumber(arrayDirectory.timestampEnd || 0));
+};
+
+const serializeDeleteAndUpdateTileLocation = (
+  deleteAndUpdateTileLocationCapnp: ArrayDirectory_DeleteAndUpdateTileLocation,
+  deleteAndUpdateTileLocation: DeleteAndUpdateTileLocation
+) => {
+  deleteAndUpdateTileLocationCapnp.setConditionMarker(deleteAndUpdateTileLocation.conditionMarker);
+  deleteAndUpdateTileLocationCapnp.setUri(deleteAndUpdateTileLocation.uri);
+  deleteAndUpdateTileLocationCapnp.setOffset(capnp.Uint64.fromNumber(deleteAndUpdateTileLocation.offset));
+};
+
+const serializeArrayMetaUri = (
+  arrayMetaUriCapnp: ArrayDirectory_TimestampedURI,
+  timestampedURI: TimestampedURI
+) => {
+  arrayMetaUriCapnp.setTimestampStart(
+    capnp.Uint64.fromNumber(timestampedURI.timestampStart)
+  );
+  arrayMetaUriCapnp.setTimestampEnd(
+    capnp.Uint64.fromNumber(timestampedURI.timestampEnd)
+  );
+  arrayMetaUriCapnp.setUri(timestampedURI.uri);
 };
 
 const serializeArraySchemasAll = (
   arraySchemasAllCapnp: ArraySchemaMapCapnp,
   arraySchemasAll: ArraySchemaMap
 ) => {
-  const entriesCapnp = arraySchemasAllCapnp.initEntries(arraySchemasAll.entries.length);
+  const entriesCapnp = arraySchemasAllCapnp.initEntries(
+    arraySchemasAll.entries.length
+  );
   entriesCapnp.forEach((entryCapnp, i) => {
     const entry = arraySchemasAll.entries[i];
     entryCapnp.setKey(entry.key);
@@ -507,7 +686,10 @@ const serializeFilterPipeline = (
     }
 
     if (filterData.floatScaleConfig) {
-      serializeFloatScaleConfig(filter.initFloatScaleConfig(), filterData.floatScaleConfig)
+      serializeFloatScaleConfig(
+        filter.initFloatScaleConfig(),
+        filterData.floatScaleConfig
+      );
     }
 
     return filter;
@@ -518,19 +700,24 @@ const serializeFilterPipeline = (
   return filterPipelineCapnp;
 };
 
-const serializeFloatScaleConfig = (floatScaleConfig: FloatScaleConfigCapnp, floatScaleData: FloatScaleConfig) => {
+const serializeFloatScaleConfig = (
+  floatScaleConfig: FloatScaleConfigCapnp,
+  floatScaleData: FloatScaleConfig
+) => {
   if (floatScaleData.byteWidth) {
-    floatScaleConfig.setByteWidth(capnp.Uint64.fromNumber(floatScaleData.byteWidth))
+    floatScaleConfig.setByteWidth(
+      capnp.Uint64.fromNumber(floatScaleData.byteWidth)
+    );
   }
 
   if (floatScaleData.offset) {
-    floatScaleConfig.setOffset(floatScaleData.offset)
+    floatScaleConfig.setOffset(floatScaleData.offset);
   }
 
   if (floatScaleData.scale) {
-    floatScaleConfig.setScale(floatScaleData.scale)
+    floatScaleConfig.setScale(floatScaleData.scale);
   }
-}
+};
 
 const serializeDomainArray = (
   domainArray: DomainArrayCapnp,

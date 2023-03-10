@@ -329,6 +329,109 @@ export interface ArrayData {
      * @memberof ArrayData
      */
     nonEmptyDomain?: NonEmptyDomainList;
+    /**
+     * 
+     * @type {ArrayDirectory}
+     * @memberof ArrayData
+     */
+    arrayDirectory?: ArrayDirectory;
+    /**
+     * metadata for all fragments (for reads)
+     * @type {Array<FragmentMetadata>}
+     * @memberof ArrayData
+     */
+    fragmentMetadataAll?: Array<FragmentMetadata>;
+}
+/**
+ * Array directory (for reads)
+ * @export
+ * @interface ArrayDirectory
+ */
+export interface ArrayDirectory {
+    /**
+     * fragment URIs
+     * @type {Array<string>}
+     * @memberof ArrayDirectory
+     */
+    unfilteredFragmentUris?: Array<string>;
+    /**
+     * consolidated commit URI set
+     * @type {Array<string>}
+     * @memberof ArrayDirectory
+     */
+    consolidatedCommitUris?: Array<string>;
+    /**
+     * URIs of all the array schema files
+     * @type {Array<string>}
+     * @memberof ArrayDirectory
+     */
+    arraySchemaUris?: Array<string>;
+    /**
+     * latest array schema URI.
+     * @type {string}
+     * @memberof ArrayDirectory
+     */
+    latestArraySchemaUri?: string;
+    /**
+     * the array metadata files to vacuum
+     * @type {Array<string>}
+     * @memberof ArrayDirectory
+     */
+    arrayMetaUrisToVacuum?: Array<string>;
+    /**
+     * the array metadata vac files to vacuum
+     * @type {Array<string>}
+     * @memberof ArrayDirectory
+     */
+    arrayMetaVacUrisToVacuum?: Array<string>;
+    /**
+     * the commit files to consolidate
+     * @type {Array<string>}
+     * @memberof ArrayDirectory
+     */
+    commitUrisToConsolidate?: Array<string>;
+    /**
+     * the commit files to vacuum
+     * @type {Array<string>}
+     * @memberof ArrayDirectory
+     */
+    commitUrisToVacuum?: Array<string>;
+    /**
+     * the consolidated commit files to vacuum
+     * @type {Array<string>}
+     * @memberof ArrayDirectory
+     */
+    consolidatedCommitUrisToVacuum?: Array<string>;
+    /**
+     * the URIs of the consolidated fragment metadata files
+     * @type {Array<string>}
+     * @memberof ArrayDirectory
+     */
+    fragmentMetaUris?: Array<string>;
+    /**
+     * Only the files created after timestamp_start are listed
+     * @type {number}
+     * @memberof ArrayDirectory
+     */
+    timestampStart?: number;
+    /**
+     * Only the files created before timestamp_end are listed
+     * @type {number}
+     * @memberof ArrayDirectory
+     */
+    timestampEnd?: number;
+    /**
+     * the timestamped filtered array metadata URIs, after removing the ones that need to be vacuumed and those that do not fall within
+     * @type {Array<TimestampedURI>}
+     * @memberof ArrayDirectory
+     */
+    arrayMetaUris?: Array<TimestampedURI>;
+    /**
+     * the location of delete tiles
+     * @type {Array<DeleteAndUpdateTileLocation>}
+     * @memberof ArrayDirectory
+     */
+    deleteAndUpdateTileLocation?: Array<DeleteAndUpdateTileLocation>;
 }
 /**
  * Model for opening an array v2
@@ -723,6 +826,31 @@ export enum Datatype {
     Any = 'ANY'
 }
 
+/**
+ * the location of delete tiles
+ * @export
+ * @interface DeleteAndUpdateTileLocation
+ */
+export interface DeleteAndUpdateTileLocation {
+    /**
+     * the uri
+     * @type {string}
+     * @memberof DeleteAndUpdateTileLocation
+     */
+    uri?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof DeleteAndUpdateTileLocation
+     */
+    conditionMarker?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof DeleteAndUpdateTileLocation
+     */
+    offset?: number;
+}
 /**
  * Dimension of array
  * @export
@@ -1121,6 +1249,260 @@ export interface FloatScaleConfig {
      * @memberof FloatScaleConfig
      */
     byteWidth?: number;
+}
+/**
+ * Metadata of a fragment
+ * @export
+ * @interface FragmentMetadata
+ */
+export interface FragmentMetadata {
+    /**
+     * The size of each attribute file
+     * @type {Array<number>}
+     * @memberof FragmentMetadata
+     */
+    fileSizes?: Array<number>;
+    /**
+     * The size of each var attribute file
+     * @type {Array<number>}
+     * @memberof FragmentMetadata
+     */
+    fileVarSizes?: Array<number>;
+    /**
+     * The size of each validity attribute file
+     * @type {Array<number>}
+     * @memberof FragmentMetadata
+     */
+    fileValiditySizes?: Array<number>;
+    /**
+     * The uri of the fragment this metadata belongs to
+     * @type {string}
+     * @memberof FragmentMetadata
+     */
+    fragmentUri?: string;
+    /**
+     * True if the fragment has timestamps
+     * @type {boolean}
+     * @memberof FragmentMetadata
+     */
+    hasTimestamps?: boolean;
+    /**
+     * True if the fragment has delete metadata
+     * @type {boolean}
+     * @memberof FragmentMetadata
+     */
+    hasDeleteMeta?: boolean;
+    /**
+     * The number of sparse tiles
+     * @type {number}
+     * @memberof FragmentMetadata
+     */
+    sparseTileNum?: number;
+    /**
+     * Used to track the tile index base between global order writes
+     * @type {number}
+     * @memberof FragmentMetadata
+     */
+    tileIndexBase?: number;
+    /**
+     * Tile offsets in their attribute files
+     * @type {Array<Array<number>>}
+     * @memberof FragmentMetadata
+     */
+    tileOffsets?: Array<Array<number>>;
+    /**
+     * Variable tile offsets in their attribute files
+     * @type {Array<Array<number>>}
+     * @memberof FragmentMetadata
+     */
+    tileVarOffsets?: Array<Array<number>>;
+    /**
+     * The sizes of the uncompressed variable tiles
+     * @type {Array<Array<number>>}
+     * @memberof FragmentMetadata
+     */
+    tileVarSizes?: Array<Array<number>>;
+    /**
+     * Validity tile offests in their attribute files
+     * @type {Array<Array<number>>}
+     * @memberof FragmentMetadata
+     */
+    tileValidityOffsets?: Array<Array<number>>;
+    /**
+     * tile min buffers
+     * @type {Array<Array<number>>}
+     * @memberof FragmentMetadata
+     */
+    tileMinBuffer?: Array<Array<number>>;
+    /**
+     * tile min buffers for var length data
+     * @type {Array<Array<number>>}
+     * @memberof FragmentMetadata
+     */
+    tileMinVarBuffer?: Array<Array<number>>;
+    /**
+     * tile max buffers
+     * @type {Array<Array<number>>}
+     * @memberof FragmentMetadata
+     */
+    tileMaxBuffer?: Array<Array<number>>;
+    /**
+     * tile max buffers for var length data
+     * @type {Array<Array<number>>}
+     * @memberof FragmentMetadata
+     */
+    tileMaxVarBuffer?: Array<Array<number>>;
+    /**
+     * tile sum values
+     * @type {Array<Array<number>>}
+     * @memberof FragmentMetadata
+     */
+    tileSums?: Array<Array<number>>;
+    /**
+     * tile null count values
+     * @type {Array<Array<number>>}
+     * @memberof FragmentMetadata
+     */
+    tileNullCounts?: Array<Array<number>>;
+    /**
+     * fragment min values
+     * @type {Array<Array<number>>}
+     * @memberof FragmentMetadata
+     */
+    fragmentMins?: Array<Array<number>>;
+    /**
+     * fragment max values
+     * @type {Array<Array<number>>}
+     * @memberof FragmentMetadata
+     */
+    fragmentMaxs?: Array<Array<number>>;
+    /**
+     * fragment sum values
+     * @type {Array<number>}
+     * @memberof FragmentMetadata
+     */
+    fragmentSums?: Array<number>;
+    /**
+     * fragment null count values
+     * @type {Array<number>}
+     * @memberof FragmentMetadata
+     */
+    fragmentNullCounts?: Array<number>;
+    /**
+     * the format version of this metadata
+     * @type {number}
+     * @memberof FragmentMetadata
+     */
+    version?: number;
+    /**
+     * A pair of timestamps for fragment
+     * @type {Array<number>}
+     * @memberof FragmentMetadata
+     */
+    timestampRange?: Array<number>;
+    /**
+     * The number of cells in the last tile
+     * @type {number}
+     * @memberof FragmentMetadata
+     */
+    lastTileCellNum?: number;
+    /**
+     * 
+     * @type {NonEmptyDomainList}
+     * @memberof FragmentMetadata
+     */
+    nonEmptyDomain?: NonEmptyDomainList;
+    /**
+     * The RTree for the MBRs serialized as a blob
+     * @type {any}
+     * @memberof FragmentMetadata
+     */
+    rtree?: any;
+    /**
+     * if the fragment metadata footer appears in a consolidated file
+     * @type {boolean}
+     * @memberof FragmentMetadata
+     */
+    hasConsolidatedFooter?: boolean;
+    /**
+     * 
+     * @type {GenericTileOffsets}
+     * @memberof FragmentMetadata
+     */
+    gtOffsets?: GenericTileOffsets;
+}
+/**
+ * Array directory (for reads)
+ * @export
+ * @interface GenericTileOffsets
+ */
+export interface GenericTileOffsets {
+    /**
+     * RTree serialized as a blob
+     * @type {number}
+     * @memberof GenericTileOffsets
+     */
+    rtree?: number;
+    /**
+     * tile offsets
+     * @type {Array<number>}
+     * @memberof GenericTileOffsets
+     */
+    tileOffsets?: Array<number>;
+    /**
+     * variable tile offsets
+     * @type {Array<number>}
+     * @memberof GenericTileOffsets
+     */
+    tileVarOffsets?: Array<number>;
+    /**
+     * sizes of the uncompressed variable tiles offsets
+     * @type {Array<number>}
+     * @memberof GenericTileOffsets
+     */
+    tileVarSizes?: Array<number>;
+    /**
+     * tile validity offsets
+     * @type {Array<number>}
+     * @memberof GenericTileOffsets
+     */
+    tileValidityOffsets?: Array<number>;
+    /**
+     * min tile offsets
+     * @type {Array<number>}
+     * @memberof GenericTileOffsets
+     */
+    tileMinOffsets?: Array<number>;
+    /**
+     * max tile offsets
+     * @type {Array<number>}
+     * @memberof GenericTileOffsets
+     */
+    tileMaxOffsets?: Array<number>;
+    /**
+     * tile sum offsets
+     * @type {Array<number>}
+     * @memberof GenericTileOffsets
+     */
+    tileSumOffsets?: Array<number>;
+    /**
+     * null count offsets
+     * @type {Array<number>}
+     * @memberof GenericTileOffsets
+     */
+    tileNullCountOffsets?: Array<number>;
+    /**
+     * fragment min/max/sum/nullcount offsets
+     * @type {number}
+     * @memberof GenericTileOffsets
+     */
+    fragmentMinMaxSumNullCountOffset?: number;
+    /**
+     * processed conditions offsets
+     * @type {number}
+     * @memberof GenericTileOffsets
+     */
+    processedConditionsOffsets?: number;
 }
 /**
  * Updates the contents group
@@ -1916,6 +2298,31 @@ export interface TileDBConfigEntries {
      * @memberof TileDBConfigEntries
      */
     value?: string;
+}
+/**
+ * the timestamped filtered array metadata URIs, after removing the ones that need to be vacuumed and those that do not fall within
+ * @export
+ * @interface TimestampedURI
+ */
+export interface TimestampedURI {
+    /**
+     * the uri
+     * @type {string}
+     * @memberof TimestampedURI
+     */
+    uri?: string;
+    /**
+     * start of timestamp
+     * @type {number}
+     * @memberof TimestampedURI
+     */
+    timestampStart?: number;
+    /**
+     * end of timestamp
+     * @type {number}
+     * @memberof TimestampedURI
+     */
+    timestampEnd?: number;
 }
 /**
  * 
