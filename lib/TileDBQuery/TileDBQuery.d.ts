@@ -1,5 +1,5 @@
 import { ArraySchema } from "../v1";
-import { ConfigurationParameters, Query, Querytype } from "../v2";
+import { ConfigurationParameters, Query, Querytype, ArrayData } from "../v2";
 import { Options } from "../utils/getResultsFromArrayBuffer";
 import { AxiosInstance } from "axios";
 type Range = number[] | string[];
@@ -230,7 +230,7 @@ export declare class TileDBQuery {
                 }[];
             };
         };
-        array: import("../v2").ArrayData;
+        array: ArrayData;
         totalFixedLengthBufferBytes: number;
         totalVarLenBufferBytes: number;
         totalValidityBufferBytes: number;
@@ -262,6 +262,6 @@ export declare class TileDBQuery {
     ReadQuery(namespace: string, arrayName: string, body: QueryData, arraySchema?: ArraySchema): AsyncGenerator<{}, void, unknown>;
     private getResultsFromArrayBuffer;
     private throwError;
-    ArrayOpen(namespace: string, array: string, queryType: Querytype): Promise<unknown>;
+    ArrayOpen(namespace: string, array: string, queryType: Querytype): Promise<ArrayData>;
 }
 export default TileDBQuery;

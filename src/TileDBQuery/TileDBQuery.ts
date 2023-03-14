@@ -10,6 +10,7 @@ import {
   ArrayApi as ArrayApiV2,
   Querystatus,
   Querytype,
+  ArrayData,
 } from "../v2";
 import getWriterBody from "../utils/getWriterBody";
 import convertToArrayBufferIfNodeBuffer from "../utils/convertToArrayBufferIfNodeBuffer";
@@ -193,13 +194,12 @@ export class TileDBQuery {
     try {
       // Get ArraySchema of arrray, to get type information of the dimensions and the attributes
       if (typeof arraySchema === "undefined") {
-        // TODO: fix
-        const arrayFromCapnp: any = await this.ArrayOpen(
+        const arrayFromCapnp = await this.ArrayOpen(
           namespace,
           arrayName,
           Querytype.Read
         );
-        arraySchema = arrayFromCapnp.arraySchemaLatest;
+        arraySchema = arrayFromCapnp.arraySchemaLatest as ArraySchema;
       }
 
       const options = {
@@ -349,7 +349,7 @@ export class TileDBQuery {
     }
   }
 
-  async ArrayOpen(namespace: string, array: string, queryType: Querytype) {
+  async ArrayOpen(namespace: string, array: string, queryType: Querytype): Promise<ArrayData> {
     const arrayFetch = arrayFetchFromConfig(this.config, queryType);
     const arrayFetchCapnp: any = capnpArrayFetchSerializer(arrayFetch);
 
