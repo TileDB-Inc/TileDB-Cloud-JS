@@ -28,6 +28,11 @@ import {
   NonEmptyDomain,
   ArraySchemaMap_Entry,
   FloatScaleConfig as FloatScaleConfigCapnp,
+  ArrayDirectory as ArrayDirectoryCapnp,
+  ArrayDirectory_TimestampedURI,
+  ArrayDirectory_DeleteAndUpdateTileLocation,
+  FragmentMetadata as FragmentMetadataCapnp,
+  FragmentMetadata_GenericTileOffsets,
 } from "../../../capnp/query_capnp";
 import * as capnp from "capnp-ts";
 import {
@@ -51,8 +56,11 @@ import {
   Dimension as DimensionV2,
   Attribute as AttributeV2,
   ArraySchemaMap,
+  FragmentMetadata,
   ArraySchemaEntry,
   FilterData,
+  ArrayDirectory,
+  GenericTileOffsets,
 } from "../../../v2";
 
 /**
@@ -94,11 +102,99 @@ export const deserializeArray = (arr: ArrayCapnp): ArrayData => {
     uri: arr.getUri(),
     startTimestamp: arr.getStartTimestamp().toNumber(),
     arraySchemaLatest: deserializeArraySchema(arr.getArraySchemaLatest()),
-    arrayMetadata: deserializeArrayMetadata(arr.getArrayMetadata()),
+    arraySchemasAll: deserializeArraySchemasAll(arr.getArraySchemasAll()),
     nonEmptyDomain: deserializeNonEmptyDomainList(arr.getNonEmptyDomain()),
-    arraySchemasAll: deserializeArraySchemasAll(arr.getArraySchemasAll())
+    arrayMetadata: deserializeArrayMetadata(arr.getArrayMetadata()),
+    arrayDirectory: deserializeArrayDirectory(arr.getArrayDirectory()),
+    fragmentMetadataAll: arr.getFragmentMetadataAll().map(deserializeFragmentMetadata),
+    openedAtEndTimestamp: arr.getOpenedAtEndTimestamp().toNumber()
   };
 };
+
+const deserializeFragmentMetadata = (fragmentMetadata: FragmentMetadataCapnp): FragmentMetadata => {
+  return {
+    fileSizes: fragmentMetadata.getFileSizes().map((v) => v.toNumber()),
+    fileVarSizes: fragmentMetadata.getFileVarSizes().toArray().map((v) => v.toNumber()),
+    fileValiditySizes: fragmentMetadata.getFileValiditySizes().toArray().map((v) => v.toNumber()),
+    fragmentUri: fragmentMetadata.getFragmentUri(),
+    hasTimestamps: fragmentMetadata.getHasTimestamps(),
+    hasDeleteMeta: fragmentMetadata.getHasDeleteMeta(),
+    sparseTileNum: fragmentMetadata.getSparseTileNum().toNumber(),
+    tileIndexBase: fragmentMetadata.getTileIndexBase().toNumber(),
+    tileOffsets: fragmentMetadata.getTileOffsets().toArray().map((v) => v.toArray().map((v) => v.toNumber())),
+    tileVarOffsets: fragmentMetadata.getTileVarOffsets().toArray().map((v) => v.toArray().map((v) => v.toNumber())),
+    tileVarSizes: fragmentMetadata.getTileVarSizes().toArray().map((v) => v.toArray().map((v) => v.toNumber())),
+    tileValidityOffsets: fragmentMetadata.getTileValidityOffsets().toArray().map((v) => v.toArray().map((v) => v.toNumber())),
+    tileMinBuffer: fragmentMetadata.getTileMinBuffer().toArray().map(v => v.toArray()),
+    tileMinVarBuffer: fragmentMetadata.getTileMinVarBuffer().toArray().map(v => v.toArray()),
+    tileMaxBuffer: fragmentMetadata.getTileMaxBuffer().toArray().map(v => v.toArray()),
+    tileMaxVarBuffer: fragmentMetadata.getTileMaxVarBuffer().toArray().map(v => v.toArray()),
+    tileSums: fragmentMetadata.getTileSums().toArray().map(v => v.toArray()),
+    tileNullCounts: fragmentMetadata.getTileNullCounts().toArray().map((v) => v.toArray().map((v) => v.toNumber())),
+    fragmentMins: fragmentMetadata.getFragmentMins().toArray().map(v => v.toArray()),
+    fragmentMaxs: fragmentMetadata.getFragmentMaxs().toArray().map(v => v.toArray()),
+    fragmentSums: fragmentMetadata.getFragmentSums().toArray().map((v) => v.toNumber()),
+    fragmentNullCounts: fragmentMetadata.getFragmentNullCounts().toArray().map((v) => v.toNumber()),
+    version: fragmentMetadata.getVersion(),
+    timestampRange: fragmentMetadata.getTimestampRange().toArray().map((v) => v.toNumber()),
+    lastTileCellNum: fragmentMetadata.getLastTileCellNum().toNumber(),
+    nonEmptyDomain: deserializeNonEmptyDomainList(fragmentMetadata.getNonEmptyDomain()),
+    rtree: fragmentMetadata.getRtree().toArrayBuffer(),
+    hasConsolidatedFooter: fragmentMetadata.getHasConsolidatedFooter(),
+    gtOffsets: deserializeGenericTileOffsets(fragmentMetadata.getGtOffsets())
+  }
+}
+
+const deserializeGenericTileOffsets = (genericTileOffsets: FragmentMetadata_GenericTileOffsets): GenericTileOffsets => {
+  return {
+    rtree: genericTileOffsets.getRtree().toNumber(),
+    tileOffsets: genericTileOffsets.getTileOffsets().map(v => v.toNumber()),
+    tileVarOffsets: genericTileOffsets.getTileVarOffsets().map(v => v.toNumber()),
+    tileVarSizes: genericTileOffsets.getTileVarSizes().map(v => v.toNumber()),
+    tileValidityOffsets: genericTileOffsets.getTileValidityOffsets().map(v => v.toNumber()),
+    tileMinOffsets: genericTileOffsets.getTileMinOffsets().map(v => v.toNumber()),
+    tileMaxOffsets: genericTileOffsets.getTileMaxOffsets().map(v => v.toNumber()),
+    tileSumOffsets: genericTileOffsets.getTileSumOffsets().map(v => v.toNumber()),
+    tileNullCountOffsets: genericTileOffsets.getTileNullCountOffsets().map(v => v.toNumber()),
+    fragmentMinMaxSumNullCountOffset: genericTileOffsets.getFragmentMinMaxSumNullCountOffset().toNumber(),
+    processedConditionsOffsets: genericTileOffsets.getProcessedConditionsOffsets().toNumber(),
+  }
+}
+
+const deserializeArrayDirectory = (arrayDirectory: ArrayDirectoryCapnp): ArrayDirectory => {
+  return {
+    unfilteredFragmentUris: arrayDirectory.getUnfilteredFragmentUris().toArray(),
+    consolidatedCommitUris: arrayDirectory.getConsolidatedCommitUris().toArray(),
+    arraySchemaUris: arrayDirectory.getArraySchemaUris().toArray(),
+    latestArraySchemaUri: arrayDirectory.getLatestArraySchemaUri(),
+    arrayMetaUrisToVacuum: arrayDirectory.getArrayMetaUrisToVacuum().toArray(),
+    arrayMetaVacUrisToVacuum: arrayDirectory.getArrayMetaVacUrisToVacuum().toArray(),
+    commitUrisToConsolidate: arrayDirectory.getCommitUrisToConsolidate().toArray(),
+    commitUrisToVacuum: arrayDirectory.getCommitUrisToVacuum().toArray(),
+    consolidatedCommitUrisToVacuum: arrayDirectory.getConsolidatedCommitUrisToVacuum().toArray(),
+    arrayMetaUris: arrayDirectory.getArrayMetaUris().map(deserialiazeTimestampedURI),
+    fragmentMetaUris: arrayDirectory.getFragmentMetaUris().toArray(),
+    deleteAndUpdateTileLocation: arrayDirectory.getDeleteAndUpdateTileLocation().map(deserializeDeleteAndUpdateTileLocation),
+    timestampStart: arrayDirectory.getTimestampStart().toNumber(),
+    timestampEnd: arrayDirectory.getTimestampEnd().toNumber(),
+  }
+}
+
+const deserializeDeleteAndUpdateTileLocation = (deleteAndUpdateTileLocation: ArrayDirectory_DeleteAndUpdateTileLocation) => {
+  return {
+    uri: deleteAndUpdateTileLocation.getUri(),
+    conditionMarker: deleteAndUpdateTileLocation.getConditionMarker(),
+    offset: deleteAndUpdateTileLocation.getOffset().toNumber()
+  }
+}
+
+const deserialiazeTimestampedURI = (timestampedURI: ArrayDirectory_TimestampedURI) => {
+  return {
+    uri: timestampedURI.getUri(),
+    timestampStart: timestampedURI.getTimestampStart().toNumber(),
+    timestampEnd: timestampedURI.getTimestampEnd().toNumber(),
+  }
+}
 
 const deserializeArraySchemasAll = (map: ArraySchemaMapCapnp): ArraySchemaMap => {
   return {

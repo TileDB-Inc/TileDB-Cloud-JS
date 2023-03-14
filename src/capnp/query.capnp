@@ -1,5 +1,5 @@
 
-@0xb57d9224b587d87e;
+@0xb57d9224b587d87f;
 
 struct Query {
     attributeBufferHeaders @0 :List(AttributeBufferHeader);
@@ -188,16 +188,190 @@ struct Array {
   arrayMetadata @7 :ArrayMetadata;
   # array metadata
 
-  # The rest of the field are not needed for Array Open v2
-  # arrayDirectory @8 :ArrayDirectory;
+  arrayDirectory @8 :ArrayDirectory;
   # array directory (for reads)
 
-  # fragmentMetadataAll @9 :List(FragmentMetadata);
+  fragmentMetadataAll @9 :List(FragmentMetadata);
   # metadata for all fragments (for reads)
 
-  # openedAtEndTimestamp @10 :UInt64;
+  openedAtEndTimestamp @10 :UInt64;
   # The ending timestamp that the array was last opened at
 }
+
+struct ArrayDirectory {
+  # object representing an array directory
+
+  struct TimestampedURI {
+    uri @0 :Text;
+    timestampStart @1 :UInt64;
+    timestampEnd @2 :UInt64;
+  }
+
+  struct DeleteAndUpdateTileLocation {
+    uri @0 :Text;
+    conditionMarker @1 :Text;
+    offset @2 :UInt64;
+  }
+
+  unfilteredFragmentUris @0 :List(Text);
+  # fragment URIs
+
+  consolidatedCommitUris @1 :List(Text);
+  # consolidated commit URI set
+
+  arraySchemaUris @2 :List(Text);
+  # URIs of all the array schema files
+
+  latestArraySchemaUri @3 :Text;
+  # latest array schema URI.
+
+  arrayMetaUrisToVacuum @4 :List(Text);
+  # the array metadata files to vacuum
+
+  arrayMetaVacUrisToVacuum @5 :List(Text);
+  # the array metadata vac files to vacuum
+
+  commitUrisToConsolidate @6 :List(Text);
+  # the commit files to consolidate
+
+  commitUrisToVacuum @7 :List(Text);
+  # the commit files to vacuum
+
+  consolidatedCommitUrisToVacuum @8 :List(Text);
+  # the consolidated commit files to vacuum
+
+  arrayMetaUris @9 :List(TimestampedURI);
+  # the timestamped filtered array metadata URIs, after removing
+  # the ones that need to be vacuumed and those that do not fall within
+  # [timestamp_start, timestamp_end]
+
+  fragmentMetaUris @10 :List(Text);
+  # the URIs of the consolidated fragment metadata files
+
+  deleteAndUpdateTileLocation @11 :List(DeleteAndUpdateTileLocation);
+  # the location of delete tiles
+
+  timestampStart @12 :UInt64;
+   # Only the files created after timestamp_start are listed
+
+  timestampEnd @13 :UInt64;
+  # Only the files created before timestamp_end are listed
+}
+
+struct FragmentMetadata {
+  struct GenericTileOffsets {
+      rtree @0 :UInt64;
+      # RTree serialized as a blob
+      tileOffsets @1 :List(UInt64);
+      # tile offsets
+      tileVarOffsets @2 :List(UInt64);
+      # variable tile offsets
+      tileVarSizes @3 :List(UInt64);
+      # sizes of the uncompressed variable tiles offsets
+      tileValidityOffsets @4 :List(UInt64);
+      # tile validity offsets
+      tileMinOffsets @5 :List(UInt64);
+      # min tile offsets
+      tileMaxOffsets @6 :List(UInt64);
+      # max tile offsets
+      tileSumOffsets @7 :List(UInt64);
+      # tile sum offsets
+      tileNullCountOffsets @8 :List(UInt64);
+      # null count offsets
+      fragmentMinMaxSumNullCountOffset @9 :UInt64;
+      # fragment min/max/sum/nullcount offsets
+      processedConditionsOffsets @10 :UInt64;
+      # processed conditions offsets
+  }
+
+  fileSizes @0 :List(UInt64);
+  # The size of each attribute file
+
+  fileVarSizes @1 :List(UInt64);
+  # The size of each var attribute file
+
+  fileValiditySizes @2 :List(UInt64);
+  # The size of each validity attribute file
+
+  fragmentUri @3 :Text;
+  # The uri of the fragment this metadata belongs to
+
+  hasTimestamps @4 :Bool;
+  # True if the fragment has timestamps
+
+  hasDeleteMeta @5 :Bool;
+  # True if the fragment has delete metadata
+
+  sparseTileNum @6 :UInt64;
+  # The number of sparse tiles
+
+  tileIndexBase@7 :UInt64;
+  # Used to track the tile index base between global order writes
+
+  tileOffsets @8 :List(List(UInt64));
+  # Tile offsets in their attribute files
+
+  tileVarOffsets @9 :List(List(UInt64));
+  # Variable tile offsets in their attribute files
+
+  tileVarSizes @10 :List(List(UInt64));
+  # The sizes of the uncompressed variable tiles
+
+  tileValidityOffsets @11 :List(List(UInt64));
+  # Validity tile offests in their attribute files
+
+  tileMinBuffer @12 :List(List(UInt8));
+  # tile min buffers
+
+  tileMinVarBuffer @13 :List(List(UInt8));
+  # tile min buffers for var length data
+
+  tileMaxBuffer @14 :List(List(UInt8));
+  # tile max buffers
+
+  tileMaxVarBuffer @15 :List(List(UInt8));
+  # tile max buffers for var length data
+
+  tileSums @16 :List(List(UInt8));
+  # tile sum values
+
+  tileNullCounts @17 :List(List(UInt64));
+  # tile null count values
+
+  fragmentMins @18 :List(List(UInt8));
+  # fragment min values
+
+  fragmentMaxs @19 :List(List(UInt8));
+  # fragment max values
+
+  fragmentSums @20 :List(UInt64);
+  # fragment sum values
+
+  fragmentNullCounts @21 :List(UInt64);
+  # fragment null count values
+
+  version @22 :UInt32;
+  # the format version of this metadata
+
+  timestampRange @23 :List(UInt64);
+  # A pair of timestamps for fragment
+
+  lastTileCellNum @24 :UInt64;
+  # The number of cells in the last tile
+
+  nonEmptyDomain @25 :NonEmptyDomainList;
+  # The non empty domain of the fragment
+
+  rtree @26 :Data;
+  # The RTree for the MBRs serialized as a blob
+
+  hasConsolidatedFooter @27 :Bool;
+  # if the fragment metadata footer appears in a consolidated file
+
+  gtOffsets @28 :GenericTileOffsets;
+  # the start offsets of the generic tiles stored in the metadata file
+}
+
 
 struct ArrayOpen {
   config @0 :Config;

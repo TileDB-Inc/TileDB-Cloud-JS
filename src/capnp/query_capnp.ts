@@ -6,9 +6,9 @@
 
 import * as capnp from "capnp-ts";
 import { ObjectSize as __O, Struct as __S } from 'capnp-ts';
-export const _capnpFileId = "b57d9224b587d87e";
+export const _capnpFileId = "b57d9224b587d87f";
 export class Query extends __S {
-    static readonly _capnp = { displayName: "Query", id: "ea34268ae031ac7a", size: new __O(32, 10) };
+    static readonly _capnp = { displayName: "Query", id: "96ba49d0f8b23ccc", size: new __O(32, 10) };
     static _AttributeBufferHeaders: capnp.ListCtor<AttributeBufferHeader>;
     adoptAttributeBufferHeaders(value: capnp.Orphan<capnp.List<AttributeBufferHeader>>): void { __S.adopt(value, __S.getPointer(0, this)); }
     disownAttributeBufferHeaders(): capnp.Orphan<capnp.List<AttributeBufferHeader>> { return __S.disown(this.getAttributeBufferHeaders()); }
@@ -67,7 +67,7 @@ export class Query extends __S {
     toString(): string { return "Query_" + super.toString(); }
 }
 export class NonEmptyDomain extends __S {
-    static readonly _capnp = { displayName: "NonEmptyDomain", id: "8ee6e91f0369a459", size: new __O(8, 2) };
+    static readonly _capnp = { displayName: "NonEmptyDomain", id: "9df6f2a42c4e5f0b", size: new __O(8, 2) };
     adoptNonEmptyDomain(value: capnp.Orphan<DomainArray>): void { __S.adopt(value, __S.getPointer(0, this)); }
     disownNonEmptyDomain(): capnp.Orphan<DomainArray> { return __S.disown(this.getNonEmptyDomain()); }
     getNonEmptyDomain(): DomainArray { return __S.getStruct(0, DomainArray, this); }
@@ -85,7 +85,7 @@ export class NonEmptyDomain extends __S {
     toString(): string { return "NonEmptyDomain_" + super.toString(); }
 }
 export class NonEmptyDomainList extends __S {
-    static readonly _capnp = { displayName: "NonEmptyDomainList", id: "ec4d493d30f4b23d", size: new __O(0, 1) };
+    static readonly _capnp = { displayName: "NonEmptyDomainList", id: "a18264549448ece3", size: new __O(0, 1) };
     static _NonEmptyDomains: capnp.ListCtor<NonEmptyDomain>;
     adoptNonEmptyDomains(value: capnp.Orphan<capnp.List<NonEmptyDomain>>): void { __S.adopt(value, __S.getPointer(0, this)); }
     disownNonEmptyDomains(): capnp.Orphan<capnp.List<NonEmptyDomain>> { return __S.disown(this.getNonEmptyDomains()); }
@@ -96,7 +96,7 @@ export class NonEmptyDomainList extends __S {
     toString(): string { return "NonEmptyDomainList_" + super.toString(); }
 }
 export class Attribute extends __S {
-    static readonly _capnp = { displayName: "Attribute", id: "c3c6d96fc6043315", size: new __O(8, 4) };
+    static readonly _capnp = { displayName: "Attribute", id: "92ad78f56de3d76a", size: new __O(8, 4) };
     getCellValNum(): number { return __S.getUint32(0, this); }
     setCellValNum(value: number): void { __S.setUint32(0, value, this); }
     getName(): string { return __S.getText(0, this); }
@@ -122,7 +122,7 @@ export class Attribute extends __S {
     toString(): string { return "Attribute_" + super.toString(); }
 }
 export class AttributeBufferHeader extends __S {
-    static readonly _capnp = { displayName: "AttributeBufferHeader", id: "9884df9a1b40f364", size: new __O(48, 1) };
+    static readonly _capnp = { displayName: "AttributeBufferHeader", id: "d20a578112fa92a2", size: new __O(48, 1) };
     getName(): string { return __S.getText(0, this); }
     setName(value: string): void { __S.setText(0, value, this); }
     getFixedLenBufferSizeInBytes(): capnp.Uint64 { return __S.getUint64(0, this); }
@@ -162,7 +162,7 @@ export class Dimension_TileExtent extends __S {
     static readonly UINT64 = Dimension_TileExtent_Which.UINT64;
     static readonly FLOAT32 = Dimension_TileExtent_Which.FLOAT32;
     static readonly FLOAT64 = Dimension_TileExtent_Which.FLOAT64;
-    static readonly _capnp = { displayName: "tileExtent", id: "e669e109ac3471bd", size: new __O(16, 4) };
+    static readonly _capnp = { displayName: "tileExtent", id: "a2a652536db09fa0", size: new __O(16, 4) };
     getInt8(): number {
         __S.testWhich("int8", __S.getUint16(2, this), 0, this);
         return __S.getInt8(1, this);
@@ -257,7 +257,7 @@ export class Dimension_TileExtent extends __S {
     which(): Dimension_TileExtent_Which { return __S.getUint16(2, this); }
 }
 export class Dimension extends __S {
-    static readonly _capnp = { displayName: "Dimension", id: "8740d96d749301b9", size: new __O(16, 4) };
+    static readonly _capnp = { displayName: "Dimension", id: "95e26a84d32d8223", size: new __O(16, 4) };
     getName(): string { return __S.getText(0, this); }
     setName(value: string): void { __S.setText(0, value, this); }
     getNullTileExtent(): boolean { return __S.getBit(0, this); }
@@ -281,7 +281,7 @@ export class Dimension extends __S {
     toString(): string { return "Dimension_" + super.toString(); }
 }
 export class Domain extends __S {
-    static readonly _capnp = { displayName: "Domain", id: "f8ef6fb69336c12f", size: new __O(0, 4) };
+    static readonly _capnp = { displayName: "Domain", id: "de030f447664754c", size: new __O(0, 4) };
     static _Dimensions: capnp.ListCtor<Dimension>;
     getCellOrder(): string { return __S.getText(0, this); }
     setCellOrder(value: string): void { __S.setText(0, value, this); }
@@ -298,7 +298,8 @@ export class Domain extends __S {
     toString(): string { return "Domain_" + super.toString(); }
 }
 export class Array extends __S {
-    static readonly _capnp = { displayName: "Array", id: "e8b44da5a3b284a4", size: new __O(16, 6) };
+    static readonly _capnp = { displayName: "Array", id: "a45730f57e0460b4", size: new __O(24, 8) };
+    static _FragmentMetadataAll: capnp.ListCtor<FragmentMetadata>;
     getEndTimestamp(): capnp.Uint64 { return __S.getUint64(0, this); }
     setEndTimestamp(value: capnp.Uint64): void { __S.setUint64(0, value, this); }
     getQueryType(): string { return __S.getText(0, this); }
@@ -331,10 +332,341 @@ export class Array extends __S {
     hasArrayMetadata(): boolean { return !__S.isNull(__S.getPointer(5, this)); }
     initArrayMetadata(): ArrayMetadata { return __S.initStructAt(5, ArrayMetadata, this); }
     setArrayMetadata(value: ArrayMetadata): void { __S.copyFrom(value, __S.getPointer(5, this)); }
+    adoptArrayDirectory(value: capnp.Orphan<ArrayDirectory>): void { __S.adopt(value, __S.getPointer(6, this)); }
+    disownArrayDirectory(): capnp.Orphan<ArrayDirectory> { return __S.disown(this.getArrayDirectory()); }
+    getArrayDirectory(): ArrayDirectory { return __S.getStruct(6, ArrayDirectory, this); }
+    hasArrayDirectory(): boolean { return !__S.isNull(__S.getPointer(6, this)); }
+    initArrayDirectory(): ArrayDirectory { return __S.initStructAt(6, ArrayDirectory, this); }
+    setArrayDirectory(value: ArrayDirectory): void { __S.copyFrom(value, __S.getPointer(6, this)); }
+    adoptFragmentMetadataAll(value: capnp.Orphan<capnp.List<FragmentMetadata>>): void { __S.adopt(value, __S.getPointer(7, this)); }
+    disownFragmentMetadataAll(): capnp.Orphan<capnp.List<FragmentMetadata>> { return __S.disown(this.getFragmentMetadataAll()); }
+    getFragmentMetadataAll(): capnp.List<FragmentMetadata> { return __S.getList(7, Array._FragmentMetadataAll, this); }
+    hasFragmentMetadataAll(): boolean { return !__S.isNull(__S.getPointer(7, this)); }
+    initFragmentMetadataAll(length: number): capnp.List<FragmentMetadata> { return __S.initList(7, Array._FragmentMetadataAll, length, this); }
+    setFragmentMetadataAll(value: capnp.List<FragmentMetadata>): void { __S.copyFrom(value, __S.getPointer(7, this)); }
+    getOpenedAtEndTimestamp(): capnp.Uint64 { return __S.getUint64(16, this); }
+    setOpenedAtEndTimestamp(value: capnp.Uint64): void { __S.setUint64(16, value, this); }
     toString(): string { return "Array_" + super.toString(); }
 }
+export class ArrayDirectory_TimestampedURI extends __S {
+    static readonly _capnp = { displayName: "TimestampedURI", id: "d9d27c082dec9e26", size: new __O(16, 1) };
+    getUri(): string { return __S.getText(0, this); }
+    setUri(value: string): void { __S.setText(0, value, this); }
+    getTimestampStart(): capnp.Uint64 { return __S.getUint64(0, this); }
+    setTimestampStart(value: capnp.Uint64): void { __S.setUint64(0, value, this); }
+    getTimestampEnd(): capnp.Uint64 { return __S.getUint64(8, this); }
+    setTimestampEnd(value: capnp.Uint64): void { __S.setUint64(8, value, this); }
+    toString(): string { return "ArrayDirectory_TimestampedURI_" + super.toString(); }
+}
+export class ArrayDirectory_DeleteAndUpdateTileLocation extends __S {
+    static readonly _capnp = { displayName: "DeleteAndUpdateTileLocation", id: "9eb745af522d087c", size: new __O(8, 2) };
+    getUri(): string { return __S.getText(0, this); }
+    setUri(value: string): void { __S.setText(0, value, this); }
+    getConditionMarker(): string { return __S.getText(1, this); }
+    setConditionMarker(value: string): void { __S.setText(1, value, this); }
+    getOffset(): capnp.Uint64 { return __S.getUint64(0, this); }
+    setOffset(value: capnp.Uint64): void { __S.setUint64(0, value, this); }
+    toString(): string { return "ArrayDirectory_DeleteAndUpdateTileLocation_" + super.toString(); }
+}
+export class ArrayDirectory extends __S {
+    static readonly TimestampedURI = ArrayDirectory_TimestampedURI;
+    static readonly DeleteAndUpdateTileLocation = ArrayDirectory_DeleteAndUpdateTileLocation;
+    static readonly _capnp = { displayName: "ArrayDirectory", id: "9317f20ce509d918", size: new __O(16, 12) };
+    static _ArrayMetaUris: capnp.ListCtor<ArrayDirectory_TimestampedURI>;
+    static _DeleteAndUpdateTileLocation: capnp.ListCtor<ArrayDirectory_DeleteAndUpdateTileLocation>;
+    adoptUnfilteredFragmentUris(value: capnp.Orphan<capnp.List<string>>): void { __S.adopt(value, __S.getPointer(0, this)); }
+    disownUnfilteredFragmentUris(): capnp.Orphan<capnp.List<string>> { return __S.disown(this.getUnfilteredFragmentUris()); }
+    getUnfilteredFragmentUris(): capnp.List<string> { return __S.getList(0, capnp.TextList, this); }
+    hasUnfilteredFragmentUris(): boolean { return !__S.isNull(__S.getPointer(0, this)); }
+    initUnfilteredFragmentUris(length: number): capnp.List<string> { return __S.initList(0, capnp.TextList, length, this); }
+    setUnfilteredFragmentUris(value: capnp.List<string>): void { __S.copyFrom(value, __S.getPointer(0, this)); }
+    adoptConsolidatedCommitUris(value: capnp.Orphan<capnp.List<string>>): void { __S.adopt(value, __S.getPointer(1, this)); }
+    disownConsolidatedCommitUris(): capnp.Orphan<capnp.List<string>> { return __S.disown(this.getConsolidatedCommitUris()); }
+    getConsolidatedCommitUris(): capnp.List<string> { return __S.getList(1, capnp.TextList, this); }
+    hasConsolidatedCommitUris(): boolean { return !__S.isNull(__S.getPointer(1, this)); }
+    initConsolidatedCommitUris(length: number): capnp.List<string> { return __S.initList(1, capnp.TextList, length, this); }
+    setConsolidatedCommitUris(value: capnp.List<string>): void { __S.copyFrom(value, __S.getPointer(1, this)); }
+    adoptArraySchemaUris(value: capnp.Orphan<capnp.List<string>>): void { __S.adopt(value, __S.getPointer(2, this)); }
+    disownArraySchemaUris(): capnp.Orphan<capnp.List<string>> { return __S.disown(this.getArraySchemaUris()); }
+    getArraySchemaUris(): capnp.List<string> { return __S.getList(2, capnp.TextList, this); }
+    hasArraySchemaUris(): boolean { return !__S.isNull(__S.getPointer(2, this)); }
+    initArraySchemaUris(length: number): capnp.List<string> { return __S.initList(2, capnp.TextList, length, this); }
+    setArraySchemaUris(value: capnp.List<string>): void { __S.copyFrom(value, __S.getPointer(2, this)); }
+    getLatestArraySchemaUri(): string { return __S.getText(3, this); }
+    setLatestArraySchemaUri(value: string): void { __S.setText(3, value, this); }
+    adoptArrayMetaUrisToVacuum(value: capnp.Orphan<capnp.List<string>>): void { __S.adopt(value, __S.getPointer(4, this)); }
+    disownArrayMetaUrisToVacuum(): capnp.Orphan<capnp.List<string>> { return __S.disown(this.getArrayMetaUrisToVacuum()); }
+    getArrayMetaUrisToVacuum(): capnp.List<string> { return __S.getList(4, capnp.TextList, this); }
+    hasArrayMetaUrisToVacuum(): boolean { return !__S.isNull(__S.getPointer(4, this)); }
+    initArrayMetaUrisToVacuum(length: number): capnp.List<string> { return __S.initList(4, capnp.TextList, length, this); }
+    setArrayMetaUrisToVacuum(value: capnp.List<string>): void { __S.copyFrom(value, __S.getPointer(4, this)); }
+    adoptArrayMetaVacUrisToVacuum(value: capnp.Orphan<capnp.List<string>>): void { __S.adopt(value, __S.getPointer(5, this)); }
+    disownArrayMetaVacUrisToVacuum(): capnp.Orphan<capnp.List<string>> { return __S.disown(this.getArrayMetaVacUrisToVacuum()); }
+    getArrayMetaVacUrisToVacuum(): capnp.List<string> { return __S.getList(5, capnp.TextList, this); }
+    hasArrayMetaVacUrisToVacuum(): boolean { return !__S.isNull(__S.getPointer(5, this)); }
+    initArrayMetaVacUrisToVacuum(length: number): capnp.List<string> { return __S.initList(5, capnp.TextList, length, this); }
+    setArrayMetaVacUrisToVacuum(value: capnp.List<string>): void { __S.copyFrom(value, __S.getPointer(5, this)); }
+    adoptCommitUrisToConsolidate(value: capnp.Orphan<capnp.List<string>>): void { __S.adopt(value, __S.getPointer(6, this)); }
+    disownCommitUrisToConsolidate(): capnp.Orphan<capnp.List<string>> { return __S.disown(this.getCommitUrisToConsolidate()); }
+    getCommitUrisToConsolidate(): capnp.List<string> { return __S.getList(6, capnp.TextList, this); }
+    hasCommitUrisToConsolidate(): boolean { return !__S.isNull(__S.getPointer(6, this)); }
+    initCommitUrisToConsolidate(length: number): capnp.List<string> { return __S.initList(6, capnp.TextList, length, this); }
+    setCommitUrisToConsolidate(value: capnp.List<string>): void { __S.copyFrom(value, __S.getPointer(6, this)); }
+    adoptCommitUrisToVacuum(value: capnp.Orphan<capnp.List<string>>): void { __S.adopt(value, __S.getPointer(7, this)); }
+    disownCommitUrisToVacuum(): capnp.Orphan<capnp.List<string>> { return __S.disown(this.getCommitUrisToVacuum()); }
+    getCommitUrisToVacuum(): capnp.List<string> { return __S.getList(7, capnp.TextList, this); }
+    hasCommitUrisToVacuum(): boolean { return !__S.isNull(__S.getPointer(7, this)); }
+    initCommitUrisToVacuum(length: number): capnp.List<string> { return __S.initList(7, capnp.TextList, length, this); }
+    setCommitUrisToVacuum(value: capnp.List<string>): void { __S.copyFrom(value, __S.getPointer(7, this)); }
+    adoptConsolidatedCommitUrisToVacuum(value: capnp.Orphan<capnp.List<string>>): void { __S.adopt(value, __S.getPointer(8, this)); }
+    disownConsolidatedCommitUrisToVacuum(): capnp.Orphan<capnp.List<string>> { return __S.disown(this.getConsolidatedCommitUrisToVacuum()); }
+    getConsolidatedCommitUrisToVacuum(): capnp.List<string> { return __S.getList(8, capnp.TextList, this); }
+    hasConsolidatedCommitUrisToVacuum(): boolean { return !__S.isNull(__S.getPointer(8, this)); }
+    initConsolidatedCommitUrisToVacuum(length: number): capnp.List<string> { return __S.initList(8, capnp.TextList, length, this); }
+    setConsolidatedCommitUrisToVacuum(value: capnp.List<string>): void { __S.copyFrom(value, __S.getPointer(8, this)); }
+    adoptArrayMetaUris(value: capnp.Orphan<capnp.List<ArrayDirectory_TimestampedURI>>): void { __S.adopt(value, __S.getPointer(9, this)); }
+    disownArrayMetaUris(): capnp.Orphan<capnp.List<ArrayDirectory_TimestampedURI>> { return __S.disown(this.getArrayMetaUris()); }
+    getArrayMetaUris(): capnp.List<ArrayDirectory_TimestampedURI> { return __S.getList(9, ArrayDirectory._ArrayMetaUris, this); }
+    hasArrayMetaUris(): boolean { return !__S.isNull(__S.getPointer(9, this)); }
+    initArrayMetaUris(length: number): capnp.List<ArrayDirectory_TimestampedURI> { return __S.initList(9, ArrayDirectory._ArrayMetaUris, length, this); }
+    setArrayMetaUris(value: capnp.List<ArrayDirectory_TimestampedURI>): void { __S.copyFrom(value, __S.getPointer(9, this)); }
+    adoptFragmentMetaUris(value: capnp.Orphan<capnp.List<string>>): void { __S.adopt(value, __S.getPointer(10, this)); }
+    disownFragmentMetaUris(): capnp.Orphan<capnp.List<string>> { return __S.disown(this.getFragmentMetaUris()); }
+    getFragmentMetaUris(): capnp.List<string> { return __S.getList(10, capnp.TextList, this); }
+    hasFragmentMetaUris(): boolean { return !__S.isNull(__S.getPointer(10, this)); }
+    initFragmentMetaUris(length: number): capnp.List<string> { return __S.initList(10, capnp.TextList, length, this); }
+    setFragmentMetaUris(value: capnp.List<string>): void { __S.copyFrom(value, __S.getPointer(10, this)); }
+    adoptDeleteAndUpdateTileLocation(value: capnp.Orphan<capnp.List<ArrayDirectory_DeleteAndUpdateTileLocation>>): void { __S.adopt(value, __S.getPointer(11, this)); }
+    disownDeleteAndUpdateTileLocation(): capnp.Orphan<capnp.List<ArrayDirectory_DeleteAndUpdateTileLocation>> { return __S.disown(this.getDeleteAndUpdateTileLocation()); }
+    getDeleteAndUpdateTileLocation(): capnp.List<ArrayDirectory_DeleteAndUpdateTileLocation> { return __S.getList(11, ArrayDirectory._DeleteAndUpdateTileLocation, this); }
+    hasDeleteAndUpdateTileLocation(): boolean { return !__S.isNull(__S.getPointer(11, this)); }
+    initDeleteAndUpdateTileLocation(length: number): capnp.List<ArrayDirectory_DeleteAndUpdateTileLocation> { return __S.initList(11, ArrayDirectory._DeleteAndUpdateTileLocation, length, this); }
+    setDeleteAndUpdateTileLocation(value: capnp.List<ArrayDirectory_DeleteAndUpdateTileLocation>): void { __S.copyFrom(value, __S.getPointer(11, this)); }
+    getTimestampStart(): capnp.Uint64 { return __S.getUint64(0, this); }
+    setTimestampStart(value: capnp.Uint64): void { __S.setUint64(0, value, this); }
+    getTimestampEnd(): capnp.Uint64 { return __S.getUint64(8, this); }
+    setTimestampEnd(value: capnp.Uint64): void { __S.setUint64(8, value, this); }
+    toString(): string { return "ArrayDirectory_" + super.toString(); }
+}
+export class FragmentMetadata_GenericTileOffsets extends __S {
+    static readonly _capnp = { displayName: "GenericTileOffsets", id: "89aa8f4e88036b9e", size: new __O(24, 8) };
+    getRtree(): capnp.Uint64 { return __S.getUint64(0, this); }
+    setRtree(value: capnp.Uint64): void { __S.setUint64(0, value, this); }
+    adoptTileOffsets(value: capnp.Orphan<capnp.List<capnp.Uint64>>): void { __S.adopt(value, __S.getPointer(0, this)); }
+    disownTileOffsets(): capnp.Orphan<capnp.List<capnp.Uint64>> { return __S.disown(this.getTileOffsets()); }
+    getTileOffsets(): capnp.List<capnp.Uint64> { return __S.getList(0, capnp.Uint64List, this); }
+    hasTileOffsets(): boolean { return !__S.isNull(__S.getPointer(0, this)); }
+    initTileOffsets(length: number): capnp.List<capnp.Uint64> { return __S.initList(0, capnp.Uint64List, length, this); }
+    setTileOffsets(value: capnp.List<capnp.Uint64>): void { __S.copyFrom(value, __S.getPointer(0, this)); }
+    adoptTileVarOffsets(value: capnp.Orphan<capnp.List<capnp.Uint64>>): void { __S.adopt(value, __S.getPointer(1, this)); }
+    disownTileVarOffsets(): capnp.Orphan<capnp.List<capnp.Uint64>> { return __S.disown(this.getTileVarOffsets()); }
+    getTileVarOffsets(): capnp.List<capnp.Uint64> { return __S.getList(1, capnp.Uint64List, this); }
+    hasTileVarOffsets(): boolean { return !__S.isNull(__S.getPointer(1, this)); }
+    initTileVarOffsets(length: number): capnp.List<capnp.Uint64> { return __S.initList(1, capnp.Uint64List, length, this); }
+    setTileVarOffsets(value: capnp.List<capnp.Uint64>): void { __S.copyFrom(value, __S.getPointer(1, this)); }
+    adoptTileVarSizes(value: capnp.Orphan<capnp.List<capnp.Uint64>>): void { __S.adopt(value, __S.getPointer(2, this)); }
+    disownTileVarSizes(): capnp.Orphan<capnp.List<capnp.Uint64>> { return __S.disown(this.getTileVarSizes()); }
+    getTileVarSizes(): capnp.List<capnp.Uint64> { return __S.getList(2, capnp.Uint64List, this); }
+    hasTileVarSizes(): boolean { return !__S.isNull(__S.getPointer(2, this)); }
+    initTileVarSizes(length: number): capnp.List<capnp.Uint64> { return __S.initList(2, capnp.Uint64List, length, this); }
+    setTileVarSizes(value: capnp.List<capnp.Uint64>): void { __S.copyFrom(value, __S.getPointer(2, this)); }
+    adoptTileValidityOffsets(value: capnp.Orphan<capnp.List<capnp.Uint64>>): void { __S.adopt(value, __S.getPointer(3, this)); }
+    disownTileValidityOffsets(): capnp.Orphan<capnp.List<capnp.Uint64>> { return __S.disown(this.getTileValidityOffsets()); }
+    getTileValidityOffsets(): capnp.List<capnp.Uint64> { return __S.getList(3, capnp.Uint64List, this); }
+    hasTileValidityOffsets(): boolean { return !__S.isNull(__S.getPointer(3, this)); }
+    initTileValidityOffsets(length: number): capnp.List<capnp.Uint64> { return __S.initList(3, capnp.Uint64List, length, this); }
+    setTileValidityOffsets(value: capnp.List<capnp.Uint64>): void { __S.copyFrom(value, __S.getPointer(3, this)); }
+    adoptTileMinOffsets(value: capnp.Orphan<capnp.List<capnp.Uint64>>): void { __S.adopt(value, __S.getPointer(4, this)); }
+    disownTileMinOffsets(): capnp.Orphan<capnp.List<capnp.Uint64>> { return __S.disown(this.getTileMinOffsets()); }
+    getTileMinOffsets(): capnp.List<capnp.Uint64> { return __S.getList(4, capnp.Uint64List, this); }
+    hasTileMinOffsets(): boolean { return !__S.isNull(__S.getPointer(4, this)); }
+    initTileMinOffsets(length: number): capnp.List<capnp.Uint64> { return __S.initList(4, capnp.Uint64List, length, this); }
+    setTileMinOffsets(value: capnp.List<capnp.Uint64>): void { __S.copyFrom(value, __S.getPointer(4, this)); }
+    adoptTileMaxOffsets(value: capnp.Orphan<capnp.List<capnp.Uint64>>): void { __S.adopt(value, __S.getPointer(5, this)); }
+    disownTileMaxOffsets(): capnp.Orphan<capnp.List<capnp.Uint64>> { return __S.disown(this.getTileMaxOffsets()); }
+    getTileMaxOffsets(): capnp.List<capnp.Uint64> { return __S.getList(5, capnp.Uint64List, this); }
+    hasTileMaxOffsets(): boolean { return !__S.isNull(__S.getPointer(5, this)); }
+    initTileMaxOffsets(length: number): capnp.List<capnp.Uint64> { return __S.initList(5, capnp.Uint64List, length, this); }
+    setTileMaxOffsets(value: capnp.List<capnp.Uint64>): void { __S.copyFrom(value, __S.getPointer(5, this)); }
+    adoptTileSumOffsets(value: capnp.Orphan<capnp.List<capnp.Uint64>>): void { __S.adopt(value, __S.getPointer(6, this)); }
+    disownTileSumOffsets(): capnp.Orphan<capnp.List<capnp.Uint64>> { return __S.disown(this.getTileSumOffsets()); }
+    getTileSumOffsets(): capnp.List<capnp.Uint64> { return __S.getList(6, capnp.Uint64List, this); }
+    hasTileSumOffsets(): boolean { return !__S.isNull(__S.getPointer(6, this)); }
+    initTileSumOffsets(length: number): capnp.List<capnp.Uint64> { return __S.initList(6, capnp.Uint64List, length, this); }
+    setTileSumOffsets(value: capnp.List<capnp.Uint64>): void { __S.copyFrom(value, __S.getPointer(6, this)); }
+    adoptTileNullCountOffsets(value: capnp.Orphan<capnp.List<capnp.Uint64>>): void { __S.adopt(value, __S.getPointer(7, this)); }
+    disownTileNullCountOffsets(): capnp.Orphan<capnp.List<capnp.Uint64>> { return __S.disown(this.getTileNullCountOffsets()); }
+    getTileNullCountOffsets(): capnp.List<capnp.Uint64> { return __S.getList(7, capnp.Uint64List, this); }
+    hasTileNullCountOffsets(): boolean { return !__S.isNull(__S.getPointer(7, this)); }
+    initTileNullCountOffsets(length: number): capnp.List<capnp.Uint64> { return __S.initList(7, capnp.Uint64List, length, this); }
+    setTileNullCountOffsets(value: capnp.List<capnp.Uint64>): void { __S.copyFrom(value, __S.getPointer(7, this)); }
+    getFragmentMinMaxSumNullCountOffset(): capnp.Uint64 { return __S.getUint64(8, this); }
+    setFragmentMinMaxSumNullCountOffset(value: capnp.Uint64): void { __S.setUint64(8, value, this); }
+    getProcessedConditionsOffsets(): capnp.Uint64 { return __S.getUint64(16, this); }
+    setProcessedConditionsOffsets(value: capnp.Uint64): void { __S.setUint64(16, value, this); }
+    toString(): string { return "FragmentMetadata_GenericTileOffsets_" + super.toString(); }
+}
+export class FragmentMetadata extends __S {
+    static readonly GenericTileOffsets = FragmentMetadata_GenericTileOffsets;
+    static readonly _capnp = { displayName: "FragmentMetadata", id: "cde352fc27e7ca61", size: new __O(32, 22) };
+    static _TileOffsets: capnp.ListCtor<capnp.List<capnp.Uint64>>;
+    static _TileVarOffsets: capnp.ListCtor<capnp.List<capnp.Uint64>>;
+    static _TileVarSizes: capnp.ListCtor<capnp.List<capnp.Uint64>>;
+    static _TileValidityOffsets: capnp.ListCtor<capnp.List<capnp.Uint64>>;
+    static _TileMinBuffer: capnp.ListCtor<capnp.List<number>>;
+    static _TileMinVarBuffer: capnp.ListCtor<capnp.List<number>>;
+    static _TileMaxBuffer: capnp.ListCtor<capnp.List<number>>;
+    static _TileMaxVarBuffer: capnp.ListCtor<capnp.List<number>>;
+    static _TileSums: capnp.ListCtor<capnp.List<number>>;
+    static _TileNullCounts: capnp.ListCtor<capnp.List<capnp.Uint64>>;
+    static _FragmentMins: capnp.ListCtor<capnp.List<number>>;
+    static _FragmentMaxs: capnp.ListCtor<capnp.List<number>>;
+    adoptFileSizes(value: capnp.Orphan<capnp.List<capnp.Uint64>>): void { __S.adopt(value, __S.getPointer(0, this)); }
+    disownFileSizes(): capnp.Orphan<capnp.List<capnp.Uint64>> { return __S.disown(this.getFileSizes()); }
+    getFileSizes(): capnp.List<capnp.Uint64> { return __S.getList(0, capnp.Uint64List, this); }
+    hasFileSizes(): boolean { return !__S.isNull(__S.getPointer(0, this)); }
+    initFileSizes(length: number): capnp.List<capnp.Uint64> { return __S.initList(0, capnp.Uint64List, length, this); }
+    setFileSizes(value: capnp.List<capnp.Uint64>): void { __S.copyFrom(value, __S.getPointer(0, this)); }
+    adoptFileVarSizes(value: capnp.Orphan<capnp.List<capnp.Uint64>>): void { __S.adopt(value, __S.getPointer(1, this)); }
+    disownFileVarSizes(): capnp.Orphan<capnp.List<capnp.Uint64>> { return __S.disown(this.getFileVarSizes()); }
+    getFileVarSizes(): capnp.List<capnp.Uint64> { return __S.getList(1, capnp.Uint64List, this); }
+    hasFileVarSizes(): boolean { return !__S.isNull(__S.getPointer(1, this)); }
+    initFileVarSizes(length: number): capnp.List<capnp.Uint64> { return __S.initList(1, capnp.Uint64List, length, this); }
+    setFileVarSizes(value: capnp.List<capnp.Uint64>): void { __S.copyFrom(value, __S.getPointer(1, this)); }
+    adoptFileValiditySizes(value: capnp.Orphan<capnp.List<capnp.Uint64>>): void { __S.adopt(value, __S.getPointer(2, this)); }
+    disownFileValiditySizes(): capnp.Orphan<capnp.List<capnp.Uint64>> { return __S.disown(this.getFileValiditySizes()); }
+    getFileValiditySizes(): capnp.List<capnp.Uint64> { return __S.getList(2, capnp.Uint64List, this); }
+    hasFileValiditySizes(): boolean { return !__S.isNull(__S.getPointer(2, this)); }
+    initFileValiditySizes(length: number): capnp.List<capnp.Uint64> { return __S.initList(2, capnp.Uint64List, length, this); }
+    setFileValiditySizes(value: capnp.List<capnp.Uint64>): void { __S.copyFrom(value, __S.getPointer(2, this)); }
+    getFragmentUri(): string { return __S.getText(3, this); }
+    setFragmentUri(value: string): void { __S.setText(3, value, this); }
+    getHasTimestamps(): boolean { return __S.getBit(0, this); }
+    setHasTimestamps(value: boolean): void { __S.setBit(0, value, this); }
+    getHasDeleteMeta(): boolean { return __S.getBit(1, this); }
+    setHasDeleteMeta(value: boolean): void { __S.setBit(1, value, this); }
+    getSparseTileNum(): capnp.Uint64 { return __S.getUint64(8, this); }
+    setSparseTileNum(value: capnp.Uint64): void { __S.setUint64(8, value, this); }
+    getTileIndexBase(): capnp.Uint64 { return __S.getUint64(16, this); }
+    setTileIndexBase(value: capnp.Uint64): void { __S.setUint64(16, value, this); }
+    adoptTileOffsets(value: capnp.Orphan<capnp.List<capnp.List<capnp.Uint64>>>): void { __S.adopt(value, __S.getPointer(4, this)); }
+    disownTileOffsets(): capnp.Orphan<capnp.List<capnp.List<capnp.Uint64>>> { return __S.disown(this.getTileOffsets()); }
+    getTileOffsets(): capnp.List<capnp.List<capnp.Uint64>> { return __S.getList(4, FragmentMetadata._TileOffsets, this); }
+    hasTileOffsets(): boolean { return !__S.isNull(__S.getPointer(4, this)); }
+    initTileOffsets(length: number): capnp.List<capnp.List<capnp.Uint64>> { return __S.initList(4, FragmentMetadata._TileOffsets, length, this); }
+    setTileOffsets(value: capnp.List<capnp.List<capnp.Uint64>>): void { __S.copyFrom(value, __S.getPointer(4, this)); }
+    adoptTileVarOffsets(value: capnp.Orphan<capnp.List<capnp.List<capnp.Uint64>>>): void { __S.adopt(value, __S.getPointer(5, this)); }
+    disownTileVarOffsets(): capnp.Orphan<capnp.List<capnp.List<capnp.Uint64>>> { return __S.disown(this.getTileVarOffsets()); }
+    getTileVarOffsets(): capnp.List<capnp.List<capnp.Uint64>> { return __S.getList(5, FragmentMetadata._TileVarOffsets, this); }
+    hasTileVarOffsets(): boolean { return !__S.isNull(__S.getPointer(5, this)); }
+    initTileVarOffsets(length: number): capnp.List<capnp.List<capnp.Uint64>> { return __S.initList(5, FragmentMetadata._TileVarOffsets, length, this); }
+    setTileVarOffsets(value: capnp.List<capnp.List<capnp.Uint64>>): void { __S.copyFrom(value, __S.getPointer(5, this)); }
+    adoptTileVarSizes(value: capnp.Orphan<capnp.List<capnp.List<capnp.Uint64>>>): void { __S.adopt(value, __S.getPointer(6, this)); }
+    disownTileVarSizes(): capnp.Orphan<capnp.List<capnp.List<capnp.Uint64>>> { return __S.disown(this.getTileVarSizes()); }
+    getTileVarSizes(): capnp.List<capnp.List<capnp.Uint64>> { return __S.getList(6, FragmentMetadata._TileVarSizes, this); }
+    hasTileVarSizes(): boolean { return !__S.isNull(__S.getPointer(6, this)); }
+    initTileVarSizes(length: number): capnp.List<capnp.List<capnp.Uint64>> { return __S.initList(6, FragmentMetadata._TileVarSizes, length, this); }
+    setTileVarSizes(value: capnp.List<capnp.List<capnp.Uint64>>): void { __S.copyFrom(value, __S.getPointer(6, this)); }
+    adoptTileValidityOffsets(value: capnp.Orphan<capnp.List<capnp.List<capnp.Uint64>>>): void { __S.adopt(value, __S.getPointer(7, this)); }
+    disownTileValidityOffsets(): capnp.Orphan<capnp.List<capnp.List<capnp.Uint64>>> { return __S.disown(this.getTileValidityOffsets()); }
+    getTileValidityOffsets(): capnp.List<capnp.List<capnp.Uint64>> { return __S.getList(7, FragmentMetadata._TileValidityOffsets, this); }
+    hasTileValidityOffsets(): boolean { return !__S.isNull(__S.getPointer(7, this)); }
+    initTileValidityOffsets(length: number): capnp.List<capnp.List<capnp.Uint64>> { return __S.initList(7, FragmentMetadata._TileValidityOffsets, length, this); }
+    setTileValidityOffsets(value: capnp.List<capnp.List<capnp.Uint64>>): void { __S.copyFrom(value, __S.getPointer(7, this)); }
+    adoptTileMinBuffer(value: capnp.Orphan<capnp.List<capnp.List<number>>>): void { __S.adopt(value, __S.getPointer(8, this)); }
+    disownTileMinBuffer(): capnp.Orphan<capnp.List<capnp.List<number>>> { return __S.disown(this.getTileMinBuffer()); }
+    getTileMinBuffer(): capnp.List<capnp.List<number>> { return __S.getList(8, FragmentMetadata._TileMinBuffer, this); }
+    hasTileMinBuffer(): boolean { return !__S.isNull(__S.getPointer(8, this)); }
+    initTileMinBuffer(length: number): capnp.List<capnp.List<number>> { return __S.initList(8, FragmentMetadata._TileMinBuffer, length, this); }
+    setTileMinBuffer(value: capnp.List<capnp.List<number>>): void { __S.copyFrom(value, __S.getPointer(8, this)); }
+    adoptTileMinVarBuffer(value: capnp.Orphan<capnp.List<capnp.List<number>>>): void { __S.adopt(value, __S.getPointer(9, this)); }
+    disownTileMinVarBuffer(): capnp.Orphan<capnp.List<capnp.List<number>>> { return __S.disown(this.getTileMinVarBuffer()); }
+    getTileMinVarBuffer(): capnp.List<capnp.List<number>> { return __S.getList(9, FragmentMetadata._TileMinVarBuffer, this); }
+    hasTileMinVarBuffer(): boolean { return !__S.isNull(__S.getPointer(9, this)); }
+    initTileMinVarBuffer(length: number): capnp.List<capnp.List<number>> { return __S.initList(9, FragmentMetadata._TileMinVarBuffer, length, this); }
+    setTileMinVarBuffer(value: capnp.List<capnp.List<number>>): void { __S.copyFrom(value, __S.getPointer(9, this)); }
+    adoptTileMaxBuffer(value: capnp.Orphan<capnp.List<capnp.List<number>>>): void { __S.adopt(value, __S.getPointer(10, this)); }
+    disownTileMaxBuffer(): capnp.Orphan<capnp.List<capnp.List<number>>> { return __S.disown(this.getTileMaxBuffer()); }
+    getTileMaxBuffer(): capnp.List<capnp.List<number>> { return __S.getList(10, FragmentMetadata._TileMaxBuffer, this); }
+    hasTileMaxBuffer(): boolean { return !__S.isNull(__S.getPointer(10, this)); }
+    initTileMaxBuffer(length: number): capnp.List<capnp.List<number>> { return __S.initList(10, FragmentMetadata._TileMaxBuffer, length, this); }
+    setTileMaxBuffer(value: capnp.List<capnp.List<number>>): void { __S.copyFrom(value, __S.getPointer(10, this)); }
+    adoptTileMaxVarBuffer(value: capnp.Orphan<capnp.List<capnp.List<number>>>): void { __S.adopt(value, __S.getPointer(11, this)); }
+    disownTileMaxVarBuffer(): capnp.Orphan<capnp.List<capnp.List<number>>> { return __S.disown(this.getTileMaxVarBuffer()); }
+    getTileMaxVarBuffer(): capnp.List<capnp.List<number>> { return __S.getList(11, FragmentMetadata._TileMaxVarBuffer, this); }
+    hasTileMaxVarBuffer(): boolean { return !__S.isNull(__S.getPointer(11, this)); }
+    initTileMaxVarBuffer(length: number): capnp.List<capnp.List<number>> { return __S.initList(11, FragmentMetadata._TileMaxVarBuffer, length, this); }
+    setTileMaxVarBuffer(value: capnp.List<capnp.List<number>>): void { __S.copyFrom(value, __S.getPointer(11, this)); }
+    adoptTileSums(value: capnp.Orphan<capnp.List<capnp.List<number>>>): void { __S.adopt(value, __S.getPointer(12, this)); }
+    disownTileSums(): capnp.Orphan<capnp.List<capnp.List<number>>> { return __S.disown(this.getTileSums()); }
+    getTileSums(): capnp.List<capnp.List<number>> { return __S.getList(12, FragmentMetadata._TileSums, this); }
+    hasTileSums(): boolean { return !__S.isNull(__S.getPointer(12, this)); }
+    initTileSums(length: number): capnp.List<capnp.List<number>> { return __S.initList(12, FragmentMetadata._TileSums, length, this); }
+    setTileSums(value: capnp.List<capnp.List<number>>): void { __S.copyFrom(value, __S.getPointer(12, this)); }
+    adoptTileNullCounts(value: capnp.Orphan<capnp.List<capnp.List<capnp.Uint64>>>): void { __S.adopt(value, __S.getPointer(13, this)); }
+    disownTileNullCounts(): capnp.Orphan<capnp.List<capnp.List<capnp.Uint64>>> { return __S.disown(this.getTileNullCounts()); }
+    getTileNullCounts(): capnp.List<capnp.List<capnp.Uint64>> { return __S.getList(13, FragmentMetadata._TileNullCounts, this); }
+    hasTileNullCounts(): boolean { return !__S.isNull(__S.getPointer(13, this)); }
+    initTileNullCounts(length: number): capnp.List<capnp.List<capnp.Uint64>> { return __S.initList(13, FragmentMetadata._TileNullCounts, length, this); }
+    setTileNullCounts(value: capnp.List<capnp.List<capnp.Uint64>>): void { __S.copyFrom(value, __S.getPointer(13, this)); }
+    adoptFragmentMins(value: capnp.Orphan<capnp.List<capnp.List<number>>>): void { __S.adopt(value, __S.getPointer(14, this)); }
+    disownFragmentMins(): capnp.Orphan<capnp.List<capnp.List<number>>> { return __S.disown(this.getFragmentMins()); }
+    getFragmentMins(): capnp.List<capnp.List<number>> { return __S.getList(14, FragmentMetadata._FragmentMins, this); }
+    hasFragmentMins(): boolean { return !__S.isNull(__S.getPointer(14, this)); }
+    initFragmentMins(length: number): capnp.List<capnp.List<number>> { return __S.initList(14, FragmentMetadata._FragmentMins, length, this); }
+    setFragmentMins(value: capnp.List<capnp.List<number>>): void { __S.copyFrom(value, __S.getPointer(14, this)); }
+    adoptFragmentMaxs(value: capnp.Orphan<capnp.List<capnp.List<number>>>): void { __S.adopt(value, __S.getPointer(15, this)); }
+    disownFragmentMaxs(): capnp.Orphan<capnp.List<capnp.List<number>>> { return __S.disown(this.getFragmentMaxs()); }
+    getFragmentMaxs(): capnp.List<capnp.List<number>> { return __S.getList(15, FragmentMetadata._FragmentMaxs, this); }
+    hasFragmentMaxs(): boolean { return !__S.isNull(__S.getPointer(15, this)); }
+    initFragmentMaxs(length: number): capnp.List<capnp.List<number>> { return __S.initList(15, FragmentMetadata._FragmentMaxs, length, this); }
+    setFragmentMaxs(value: capnp.List<capnp.List<number>>): void { __S.copyFrom(value, __S.getPointer(15, this)); }
+    adoptFragmentSums(value: capnp.Orphan<capnp.List<capnp.Uint64>>): void { __S.adopt(value, __S.getPointer(16, this)); }
+    disownFragmentSums(): capnp.Orphan<capnp.List<capnp.Uint64>> { return __S.disown(this.getFragmentSums()); }
+    getFragmentSums(): capnp.List<capnp.Uint64> { return __S.getList(16, capnp.Uint64List, this); }
+    hasFragmentSums(): boolean { return !__S.isNull(__S.getPointer(16, this)); }
+    initFragmentSums(length: number): capnp.List<capnp.Uint64> { return __S.initList(16, capnp.Uint64List, length, this); }
+    setFragmentSums(value: capnp.List<capnp.Uint64>): void { __S.copyFrom(value, __S.getPointer(16, this)); }
+    adoptFragmentNullCounts(value: capnp.Orphan<capnp.List<capnp.Uint64>>): void { __S.adopt(value, __S.getPointer(17, this)); }
+    disownFragmentNullCounts(): capnp.Orphan<capnp.List<capnp.Uint64>> { return __S.disown(this.getFragmentNullCounts()); }
+    getFragmentNullCounts(): capnp.List<capnp.Uint64> { return __S.getList(17, capnp.Uint64List, this); }
+    hasFragmentNullCounts(): boolean { return !__S.isNull(__S.getPointer(17, this)); }
+    initFragmentNullCounts(length: number): capnp.List<capnp.Uint64> { return __S.initList(17, capnp.Uint64List, length, this); }
+    setFragmentNullCounts(value: capnp.List<capnp.Uint64>): void { __S.copyFrom(value, __S.getPointer(17, this)); }
+    getVersion(): number { return __S.getUint32(4, this); }
+    setVersion(value: number): void { __S.setUint32(4, value, this); }
+    adoptTimestampRange(value: capnp.Orphan<capnp.List<capnp.Uint64>>): void { __S.adopt(value, __S.getPointer(18, this)); }
+    disownTimestampRange(): capnp.Orphan<capnp.List<capnp.Uint64>> { return __S.disown(this.getTimestampRange()); }
+    getTimestampRange(): capnp.List<capnp.Uint64> { return __S.getList(18, capnp.Uint64List, this); }
+    hasTimestampRange(): boolean { return !__S.isNull(__S.getPointer(18, this)); }
+    initTimestampRange(length: number): capnp.List<capnp.Uint64> { return __S.initList(18, capnp.Uint64List, length, this); }
+    setTimestampRange(value: capnp.List<capnp.Uint64>): void { __S.copyFrom(value, __S.getPointer(18, this)); }
+    getLastTileCellNum(): capnp.Uint64 { return __S.getUint64(24, this); }
+    setLastTileCellNum(value: capnp.Uint64): void { __S.setUint64(24, value, this); }
+    adoptNonEmptyDomain(value: capnp.Orphan<NonEmptyDomainList>): void { __S.adopt(value, __S.getPointer(19, this)); }
+    disownNonEmptyDomain(): capnp.Orphan<NonEmptyDomainList> { return __S.disown(this.getNonEmptyDomain()); }
+    getNonEmptyDomain(): NonEmptyDomainList { return __S.getStruct(19, NonEmptyDomainList, this); }
+    hasNonEmptyDomain(): boolean { return !__S.isNull(__S.getPointer(19, this)); }
+    initNonEmptyDomain(): NonEmptyDomainList { return __S.initStructAt(19, NonEmptyDomainList, this); }
+    setNonEmptyDomain(value: NonEmptyDomainList): void { __S.copyFrom(value, __S.getPointer(19, this)); }
+    adoptRtree(value: capnp.Orphan<capnp.Data>): void { __S.adopt(value, __S.getPointer(20, this)); }
+    disownRtree(): capnp.Orphan<capnp.Data> { return __S.disown(this.getRtree()); }
+    getRtree(): capnp.Data { return __S.getData(20, this); }
+    hasRtree(): boolean { return !__S.isNull(__S.getPointer(20, this)); }
+    initRtree(length: number): capnp.Data { return __S.initData(20, length, this); }
+    setRtree(value: capnp.Data): void { __S.copyFrom(value, __S.getPointer(20, this)); }
+    getHasConsolidatedFooter(): boolean { return __S.getBit(2, this); }
+    setHasConsolidatedFooter(value: boolean): void { __S.setBit(2, value, this); }
+    adoptGtOffsets(value: capnp.Orphan<FragmentMetadata_GenericTileOffsets>): void { __S.adopt(value, __S.getPointer(21, this)); }
+    disownGtOffsets(): capnp.Orphan<FragmentMetadata_GenericTileOffsets> { return __S.disown(this.getGtOffsets()); }
+    getGtOffsets(): FragmentMetadata_GenericTileOffsets { return __S.getStruct(21, FragmentMetadata_GenericTileOffsets, this); }
+    hasGtOffsets(): boolean { return !__S.isNull(__S.getPointer(21, this)); }
+    initGtOffsets(): FragmentMetadata_GenericTileOffsets { return __S.initStructAt(21, FragmentMetadata_GenericTileOffsets, this); }
+    setGtOffsets(value: FragmentMetadata_GenericTileOffsets): void { __S.copyFrom(value, __S.getPointer(21, this)); }
+    toString(): string { return "FragmentMetadata_" + super.toString(); }
+}
 export class ArrayOpen extends __S {
-    static readonly _capnp = { displayName: "ArrayOpen", id: "98080e8276f32101", size: new __O(0, 2) };
+    static readonly _capnp = { displayName: "ArrayOpen", id: "facceeafd4472c68", size: new __O(0, 2) };
     adoptConfig(value: capnp.Orphan<Config>): void { __S.adopt(value, __S.getPointer(0, this)); }
     disownConfig(): capnp.Orphan<Config> { return __S.disown(this.getConfig()); }
     getConfig(): Config { return __S.getStruct(0, Config, this); }
@@ -346,7 +678,7 @@ export class ArrayOpen extends __S {
     toString(): string { return "ArrayOpen_" + super.toString(); }
 }
 export class ArraySchema extends __S {
-    static readonly _capnp = { displayName: "ArraySchema", id: "e4e6fd8e4b4df3bd", size: new __O(16, 12) };
+    static readonly _capnp = { displayName: "ArraySchema", id: "d71de32f98e296fe", size: new __O(16, 12) };
     static _Attributes: capnp.ListCtor<Attribute>;
     getArrayType(): string { return __S.getText(0, this); }
     setArrayType(value: string): void { __S.setText(0, value, this); }
@@ -407,7 +739,7 @@ export class ArraySchema extends __S {
     toString(): string { return "ArraySchema_" + super.toString(); }
 }
 export class FloatScaleConfig extends __S {
-    static readonly _capnp = { displayName: "FloatScaleConfig", id: "e2405479453349b4", size: new __O(24, 0) };
+    static readonly _capnp = { displayName: "FloatScaleConfig", id: "fda1cb9663a55b70", size: new __O(24, 0) };
     getScale(): number { return __S.getFloat64(0, this); }
     setScale(value: number): void { __S.setFloat64(0, value, this); }
     getOffset(): number { return __S.getFloat64(8, this); }
@@ -443,7 +775,7 @@ export class Filter_Data extends __S {
     static readonly UINT64 = Filter_Data_Which.UINT64;
     static readonly FLOAT32 = Filter_Data_Which.FLOAT32;
     static readonly FLOAT64 = Filter_Data_Which.FLOAT64;
-    static readonly _capnp = { displayName: "data", id: "f7e88fec77255f9a", size: new __O(16, 3) };
+    static readonly _capnp = { displayName: "data", id: "9ceaf832b3ab897f", size: new __O(16, 3) };
     getText(): string {
         __S.testWhich("text", __S.getUint16(0, this), 0, this);
         return __S.getText(1, this);
@@ -566,7 +898,7 @@ export class Filter_Data extends __S {
     which(): Filter_Data_Which { return __S.getUint16(0, this); }
 }
 export class Filter extends __S {
-    static readonly _capnp = { displayName: "Filter", id: "dac88a0a3b53a50a", size: new __O(16, 3) };
+    static readonly _capnp = { displayName: "Filter", id: "e7175047415b3f97", size: new __O(16, 3) };
     getType(): string { return __S.getText(0, this); }
     setType(value: string): void { __S.setText(0, value, this); }
     getData(): Filter_Data { return __S.getAs(Filter_Data, this); }
@@ -580,7 +912,7 @@ export class Filter extends __S {
     toString(): string { return "Filter_" + super.toString(); }
 }
 export class FilterPipeline extends __S {
-    static readonly _capnp = { displayName: "FilterPipeline", id: "a6d903a3c84d4809", size: new __O(0, 1) };
+    static readonly _capnp = { displayName: "FilterPipeline", id: "bc4583f733eac4f5", size: new __O(0, 1) };
     static _Filters: capnp.ListCtor<Filter>;
     adoptFilters(value: capnp.Orphan<capnp.List<Filter>>): void { __S.adopt(value, __S.getPointer(0, this)); }
     disownFilters(): capnp.Orphan<capnp.List<Filter>> { return __S.disown(this.getFilters()); }
@@ -591,7 +923,7 @@ export class FilterPipeline extends __S {
     toString(): string { return "FilterPipeline_" + super.toString(); }
 }
 export class ArraySchemaMap_Entry extends __S {
-    static readonly _capnp = { displayName: "Entry", id: "f6918b8d3d6aaece", size: new __O(0, 2) };
+    static readonly _capnp = { displayName: "Entry", id: "a83848fc842105d1", size: new __O(0, 2) };
     getKey(): string { return __S.getText(0, this); }
     setKey(value: string): void { __S.setText(0, value, this); }
     adoptValue(value: capnp.Orphan<ArraySchema>): void { __S.adopt(value, __S.getPointer(1, this)); }
@@ -604,7 +936,7 @@ export class ArraySchemaMap_Entry extends __S {
 }
 export class ArraySchemaMap extends __S {
     static readonly Entry = ArraySchemaMap_Entry;
-    static readonly _capnp = { displayName: "ArraySchemaMap", id: "fd01f8198120e948", size: new __O(0, 1) };
+    static readonly _capnp = { displayName: "ArraySchemaMap", id: "bc7f485a864cc075", size: new __O(0, 1) };
     static _Entries: capnp.ListCtor<ArraySchemaMap_Entry>;
     adoptEntries(value: capnp.Orphan<capnp.List<ArraySchemaMap_Entry>>): void { __S.adopt(value, __S.getPointer(0, this)); }
     disownEntries(): capnp.Orphan<capnp.List<ArraySchemaMap_Entry>> { return __S.disown(this.getEntries()); }
@@ -615,7 +947,7 @@ export class ArraySchemaMap extends __S {
     toString(): string { return "ArraySchemaMap_" + super.toString(); }
 }
 export class Map_Entry extends __S {
-    static readonly _capnp = { displayName: "Entry", id: "9d58857f4eaf2e0b", size: new __O(0, 2) };
+    static readonly _capnp = { displayName: "Entry", id: "db5514c8aaf6faea", size: new __O(0, 2) };
     adoptKey(value: capnp.Orphan<capnp.Pointer>): void { __S.adopt(value, __S.getPointer(0, this)); }
     disownKey(): capnp.Orphan<capnp.Pointer> { return __S.disown(this.getKey()); }
     getKey(): capnp.Pointer { return __S.getPointer(0, this); }
@@ -630,7 +962,7 @@ export class Map_Entry extends __S {
 }
 export class Map extends __S {
     static readonly Entry = Map_Entry;
-    static readonly _capnp = { displayName: "Map", id: "d49ce2e3753dec00", size: new __O(0, 1) };
+    static readonly _capnp = { displayName: "Map", id: "f179c194ae71718c", size: new __O(0, 1) };
     static _Entries: capnp.ListCtor<Map_Entry>;
     adoptEntries(value: capnp.Orphan<capnp.List<Map_Entry>>): void { __S.adopt(value, __S.getPointer(0, this)); }
     disownEntries(): capnp.Orphan<capnp.List<Map_Entry>> { return __S.disown(this.getEntries()); }
@@ -641,7 +973,7 @@ export class Map extends __S {
     toString(): string { return "Map_" + super.toString(); }
 }
 export class KV extends __S {
-    static readonly _capnp = { displayName: "KV", id: "f81811af0443b7bd", size: new __O(0, 2) };
+    static readonly _capnp = { displayName: "KV", id: "e3dadf2bf211bc97", size: new __O(0, 2) };
     getKey(): string { return __S.getText(0, this); }
     setKey(value: string): void { __S.setText(0, value, this); }
     getValue(): string { return __S.getText(1, this); }
@@ -649,7 +981,7 @@ export class KV extends __S {
     toString(): string { return "KV_" + super.toString(); }
 }
 export class Config extends __S {
-    static readonly _capnp = { displayName: "Config", id: "84e9e25074e7b66d", size: new __O(0, 1) };
+    static readonly _capnp = { displayName: "Config", id: "b6c95b4b8111ad36", size: new __O(0, 1) };
     static _Entries: capnp.ListCtor<KV>;
     adoptEntries(value: capnp.Orphan<capnp.List<KV>>): void { __S.adopt(value, __S.getPointer(0, this)); }
     disownEntries(): capnp.Orphan<capnp.List<KV>> { return __S.disown(this.getEntries()); }
@@ -660,7 +992,7 @@ export class Config extends __S {
     toString(): string { return "Config_" + super.toString(); }
 }
 export class Stats extends __S {
-    static readonly _capnp = { displayName: "Stats", id: "ef6314d713d0ab34", size: new __O(0, 2) };
+    static readonly _capnp = { displayName: "Stats", id: "c7e036a11506a1a4", size: new __O(0, 2) };
     adoptTimers(value: capnp.Orphan<MapFloat64>): void { __S.adopt(value, __S.getPointer(0, this)); }
     disownTimers(): capnp.Orphan<MapFloat64> { return __S.disown(this.getTimers()); }
     getTimers(): MapFloat64 { return __S.getStruct(0, MapFloat64, this); }
@@ -676,7 +1008,7 @@ export class Stats extends __S {
     toString(): string { return "Stats_" + super.toString(); }
 }
 export class Writer extends __S {
-    static readonly _capnp = { displayName: "Writer", id: "fe68eabb8ab4dcfa", size: new __O(8, 3) };
+    static readonly _capnp = { displayName: "Writer", id: "8ba60147a0e6735e", size: new __O(8, 3) };
     getCheckCoordDups(): boolean { return __S.getBit(0, this); }
     setCheckCoordDups(value: boolean): void { __S.setBit(0, value, this); }
     getCheckCoordOOB(): boolean { return __S.getBit(1, this); }
@@ -704,7 +1036,7 @@ export class Writer extends __S {
     toString(): string { return "Writer_" + super.toString(); }
 }
 export class QueryReader extends __S {
-    static readonly _capnp = { displayName: "QueryReader", id: "97a817df79d1095d", size: new __O(0, 5) };
+    static readonly _capnp = { displayName: "QueryReader", id: "e19754f813ccf79c", size: new __O(0, 5) };
     getLayout(): string { return __S.getText(0, this); }
     setLayout(value: string): void { __S.setText(0, value, this); }
     adoptSubarray(value: capnp.Orphan<Subarray>): void { __S.adopt(value, __S.getPointer(1, this)); }
@@ -734,7 +1066,7 @@ export class QueryReader extends __S {
     toString(): string { return "QueryReader_" + super.toString(); }
 }
 export class SubarrayRanges extends __S {
-    static readonly _capnp = { displayName: "SubarrayRanges", id: "8587733f29e10a41", size: new __O(8, 4) };
+    static readonly _capnp = { displayName: "SubarrayRanges", id: "86cfc12d74ed4aa0", size: new __O(8, 4) };
     getType(): string { return __S.getText(0, this); }
     setType(value: string): void { __S.setText(0, value, this); }
     getHasDefaultRange(): boolean { return __S.getBit(0, this); }
@@ -760,7 +1092,7 @@ export class SubarrayRanges extends __S {
     toString(): string { return "SubarrayRanges_" + super.toString(); }
 }
 export class Subarray extends __S {
-    static readonly _capnp = { displayName: "Subarray", id: "da36de34a7124afb", size: new __O(0, 3) };
+    static readonly _capnp = { displayName: "Subarray", id: "dba20dec138adac9", size: new __O(0, 3) };
     static _Ranges: capnp.ListCtor<SubarrayRanges>;
     getLayout(): string { return __S.getText(0, this); }
     setLayout(value: string): void { __S.setText(0, value, this); }
@@ -779,7 +1111,7 @@ export class Subarray extends __S {
     toString(): string { return "Subarray_" + super.toString(); }
 }
 export class SubarrayPartitioner_PartitionInfo extends __S {
-    static readonly _capnp = { displayName: "PartitionInfo", id: "c195bcd1baa34c68", size: new __O(24, 1) };
+    static readonly _capnp = { displayName: "PartitionInfo", id: "f86b7bf97823250f", size: new __O(24, 1) };
     adoptSubarray(value: capnp.Orphan<Subarray>): void { __S.adopt(value, __S.getPointer(0, this)); }
     disownSubarray(): capnp.Orphan<Subarray> { return __S.disown(this.getSubarray()); }
     getSubarray(): Subarray { return __S.getStruct(0, Subarray, this); }
@@ -795,7 +1127,7 @@ export class SubarrayPartitioner_PartitionInfo extends __S {
     toString(): string { return "SubarrayPartitioner_PartitionInfo_" + super.toString(); }
 }
 export class SubarrayPartitioner_State extends __S {
-    static readonly _capnp = { displayName: "State", id: "cbd6edafbf7bb215", size: new __O(16, 2) };
+    static readonly _capnp = { displayName: "State", id: "fdd9e47288724221", size: new __O(16, 2) };
     static _SingleRange: capnp.ListCtor<Subarray>;
     static _MultiRange: capnp.ListCtor<Subarray>;
     getStart(): capnp.Uint64 { return __S.getUint64(0, this); }
@@ -819,7 +1151,7 @@ export class SubarrayPartitioner_State extends __S {
 export class SubarrayPartitioner extends __S {
     static readonly PartitionInfo = SubarrayPartitioner_PartitionInfo;
     static readonly State = SubarrayPartitioner_State;
-    static readonly _capnp = { displayName: "SubarrayPartitioner", id: "98222aaeac2b06c0", size: new __O(24, 5) };
+    static readonly _capnp = { displayName: "SubarrayPartitioner", id: "ff14003c70494585", size: new __O(24, 5) };
     static _Budget: capnp.ListCtor<AttributeBufferSize>;
     adoptSubarray(value: capnp.Orphan<Subarray>): void { __S.adopt(value, __S.getPointer(0, this)); }
     disownSubarray(): capnp.Orphan<Subarray> { return __S.disown(this.getSubarray()); }
@@ -860,7 +1192,7 @@ export class SubarrayPartitioner extends __S {
     toString(): string { return "SubarrayPartitioner_" + super.toString(); }
 }
 export class ReadState extends __S {
-    static readonly _capnp = { displayName: "ReadState", id: "910b5afbbc6a0745", size: new __O(8, 1) };
+    static readonly _capnp = { displayName: "ReadState", id: "cbe1e7c13508aa2c", size: new __O(8, 1) };
     getOverflowed(): boolean { return __S.getBit(0, this); }
     setOverflowed(value: boolean): void { __S.setBit(0, value, this); }
     getUnsplittable(): boolean { return __S.getBit(1, this); }
@@ -876,7 +1208,7 @@ export class ReadState extends __S {
     toString(): string { return "ReadState_" + super.toString(); }
 }
 export class ConditionClause extends __S {
-    static readonly _capnp = { displayName: "ConditionClause", id: "fa99a0f16eaa03a5", size: new __O(0, 3) };
+    static readonly _capnp = { displayName: "ConditionClause", id: "dac6a7f675c57409", size: new __O(0, 3) };
     getFieldName(): string { return __S.getText(0, this); }
     setFieldName(value: string): void { __S.setText(0, value, this); }
     adoptValue(value: capnp.Orphan<capnp.Data>): void { __S.adopt(value, __S.getPointer(1, this)); }
@@ -890,7 +1222,7 @@ export class ConditionClause extends __S {
     toString(): string { return "ConditionClause_" + super.toString(); }
 }
 export class Condition extends __S {
-    static readonly _capnp = { displayName: "Condition", id: "fb156e2d8b8f4cf3", size: new __O(0, 2) };
+    static readonly _capnp = { displayName: "Condition", id: "eaf57cb9871fc06f", size: new __O(0, 2) };
     static _Clauses: capnp.ListCtor<ConditionClause>;
     adoptClauses(value: capnp.Orphan<capnp.List<ConditionClause>>): void { __S.adopt(value, __S.getPointer(0, this)); }
     disownClauses(): capnp.Orphan<capnp.List<ConditionClause>> { return __S.disown(this.getClauses()); }
@@ -907,7 +1239,7 @@ export class Condition extends __S {
     toString(): string { return "Condition_" + super.toString(); }
 }
 export class DomainArray extends __S {
-    static readonly _capnp = { displayName: "DomainArray", id: "bc387f87af7fdffb", size: new __O(0, 10) };
+    static readonly _capnp = { displayName: "DomainArray", id: "ce5904e6f9410cec", size: new __O(0, 10) };
     adoptInt8(value: capnp.Orphan<capnp.List<number>>): void { __S.adopt(value, __S.getPointer(0, this)); }
     disownInt8(): capnp.Orphan<capnp.List<number>> { return __S.disown(this.getInt8()); }
     getInt8(): capnp.List<number> { return __S.getList(0, capnp.Int8List, this); }
@@ -971,7 +1303,7 @@ export class DomainArray extends __S {
     toString(): string { return "DomainArray_" + super.toString(); }
 }
 export class MapFloat64_Entry extends __S {
-    static readonly _capnp = { displayName: "Entry", id: "bc6fa37d7f8e67b0", size: new __O(8, 1) };
+    static readonly _capnp = { displayName: "Entry", id: "bb80cdbc3f312934", size: new __O(8, 1) };
     getKey(): string { return __S.getText(0, this); }
     setKey(value: string): void { __S.setText(0, value, this); }
     getValue(): number { return __S.getFloat64(0, this); }
@@ -980,7 +1312,7 @@ export class MapFloat64_Entry extends __S {
 }
 export class MapFloat64 extends __S {
     static readonly Entry = MapFloat64_Entry;
-    static readonly _capnp = { displayName: "MapFloat64", id: "a240366668f18d8e", size: new __O(0, 1) };
+    static readonly _capnp = { displayName: "MapFloat64", id: "9354174d952207d2", size: new __O(0, 1) };
     static _Entries: capnp.ListCtor<MapFloat64_Entry>;
     adoptEntries(value: capnp.Orphan<capnp.List<MapFloat64_Entry>>): void { __S.adopt(value, __S.getPointer(0, this)); }
     disownEntries(): capnp.Orphan<capnp.List<MapFloat64_Entry>> { return __S.disown(this.getEntries()); }
@@ -991,7 +1323,7 @@ export class MapFloat64 extends __S {
     toString(): string { return "MapFloat64_" + super.toString(); }
 }
 export class MapUInt64_Entry extends __S {
-    static readonly _capnp = { displayName: "Entry", id: "977674438c18071e", size: new __O(8, 1) };
+    static readonly _capnp = { displayName: "Entry", id: "82d7452da7cd249a", size: new __O(8, 1) };
     getKey(): string { return __S.getText(0, this); }
     setKey(value: string): void { __S.setText(0, value, this); }
     getValue(): capnp.Uint64 { return __S.getUint64(0, this); }
@@ -1000,7 +1332,7 @@ export class MapUInt64_Entry extends __S {
 }
 export class MapUInt64 extends __S {
     static readonly Entry = MapUInt64_Entry;
-    static readonly _capnp = { displayName: "MapUInt64", id: "de734faff53aa239", size: new __O(0, 1) };
+    static readonly _capnp = { displayName: "MapUInt64", id: "d3c5983c670e0f42", size: new __O(0, 1) };
     static _Entries: capnp.ListCtor<MapUInt64_Entry>;
     adoptEntries(value: capnp.Orphan<capnp.List<MapUInt64_Entry>>): void { __S.adopt(value, __S.getPointer(0, this)); }
     disownEntries(): capnp.Orphan<capnp.List<MapUInt64_Entry>> { return __S.disown(this.getEntries()); }
@@ -1011,7 +1343,7 @@ export class MapUInt64 extends __S {
     toString(): string { return "MapUInt64_" + super.toString(); }
 }
 export class AttributeBufferSize extends __S {
-    static readonly _capnp = { displayName: "AttributeBufferSize", id: "e8c3366db226bb6a", size: new __O(24, 1) };
+    static readonly _capnp = { displayName: "AttributeBufferSize", id: "9be1921b07e6cd2d", size: new __O(24, 1) };
     getAttribute(): string { return __S.getText(0, this); }
     setAttribute(value: string): void { __S.setText(0, value, this); }
     getOffsetBytes(): capnp.Uint64 { return __S.getUint64(0, this); }
@@ -1023,7 +1355,7 @@ export class AttributeBufferSize extends __S {
     toString(): string { return "AttributeBufferSize_" + super.toString(); }
 }
 export class ArrayMetadata_MetadataEntry extends __S {
-    static readonly _capnp = { displayName: "MetadataEntry", id: "dc11d0ec5c20f3f9", size: new __O(8, 3) };
+    static readonly _capnp = { displayName: "MetadataEntry", id: "926fe1c3b12ed651", size: new __O(8, 3) };
     getKey(): string { return __S.getText(0, this); }
     setKey(value: string): void { __S.setText(0, value, this); }
     getType(): string { return __S.getText(1, this); }
@@ -1042,7 +1374,7 @@ export class ArrayMetadata_MetadataEntry extends __S {
 }
 export class ArrayMetadata extends __S {
     static readonly MetadataEntry = ArrayMetadata_MetadataEntry;
-    static readonly _capnp = { displayName: "ArrayMetadata", id: "b34f96d2ab41185f", size: new __O(0, 1) };
+    static readonly _capnp = { displayName: "ArrayMetadata", id: "9737dcafdfce31bb", size: new __O(0, 1) };
     static _Entries: capnp.ListCtor<ArrayMetadata_MetadataEntry>;
     adoptEntries(value: capnp.Orphan<capnp.List<ArrayMetadata_MetadataEntry>>): void { __S.adopt(value, __S.getPointer(0, this)); }
     disownEntries(): capnp.Orphan<capnp.List<ArrayMetadata_MetadataEntry>> { return __S.disown(this.getEntries()); }
@@ -1055,6 +1387,21 @@ export class ArrayMetadata extends __S {
 Query._AttributeBufferHeaders = capnp.CompositeList(AttributeBufferHeader);
 NonEmptyDomainList._NonEmptyDomains = capnp.CompositeList(NonEmptyDomain);
 Domain._Dimensions = capnp.CompositeList(Dimension);
+Array._FragmentMetadataAll = capnp.CompositeList(FragmentMetadata);
+ArrayDirectory._ArrayMetaUris = capnp.CompositeList(ArrayDirectory_TimestampedURI);
+ArrayDirectory._DeleteAndUpdateTileLocation = capnp.CompositeList(ArrayDirectory_DeleteAndUpdateTileLocation);
+FragmentMetadata._TileOffsets = capnp.PointerList(capnp.Uint64List);
+FragmentMetadata._TileVarOffsets = capnp.PointerList(capnp.Uint64List);
+FragmentMetadata._TileVarSizes = capnp.PointerList(capnp.Uint64List);
+FragmentMetadata._TileValidityOffsets = capnp.PointerList(capnp.Uint64List);
+FragmentMetadata._TileMinBuffer = capnp.PointerList(capnp.Uint8List);
+FragmentMetadata._TileMinVarBuffer = capnp.PointerList(capnp.Uint8List);
+FragmentMetadata._TileMaxBuffer = capnp.PointerList(capnp.Uint8List);
+FragmentMetadata._TileMaxVarBuffer = capnp.PointerList(capnp.Uint8List);
+FragmentMetadata._TileSums = capnp.PointerList(capnp.Uint8List);
+FragmentMetadata._TileNullCounts = capnp.PointerList(capnp.Uint64List);
+FragmentMetadata._FragmentMins = capnp.PointerList(capnp.Uint8List);
+FragmentMetadata._FragmentMaxs = capnp.PointerList(capnp.Uint8List);
 ArraySchema._Attributes = capnp.CompositeList(Attribute);
 FilterPipeline._Filters = capnp.CompositeList(Filter);
 ArraySchemaMap._Entries = capnp.CompositeList(ArraySchemaMap_Entry);

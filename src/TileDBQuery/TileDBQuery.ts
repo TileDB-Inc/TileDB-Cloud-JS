@@ -10,6 +10,7 @@ import {
   ArrayApi as ArrayApiV2,
   Querystatus,
   Querytype,
+  ArrayData,
 } from "../v2";
 import getWriterBody from "../utils/getWriterBody";
 import convertToArrayBufferIfNodeBuffer from "../utils/convertToArrayBufferIfNodeBuffer";
@@ -19,7 +20,7 @@ import getResultsFromArrayBuffer, {
 } from "../utils/getResultsFromArrayBuffer";
 import globalAxios, { AxiosInstance } from "axios";
 import capnpArrayDeserializer from "../utils/deserialization/capnpArrayDeserializer";
-import arrayFetchFromConfig from '../utils/arrayFetchFromConfig';
+import arrayFetchFromConfig from "../utils/arrayFetchFromConfig";
 import capnpArrayFetchSerializer from "../utils/serialization/capnpArrayFetchSerializer";
 
 type Range = number[] | string[];
@@ -193,10 +194,12 @@ export class TileDBQuery {
     try {
       // Get ArraySchema of arrray, to get type information of the dimensions and the attributes
       if (typeof arraySchema === "undefined") {
-        // TODO: fix 
-        const arrayFromCapnp: any = await this.ArrayOpen(namespace,
-          arrayName, Querytype.Read);
-        arraySchema = arrayFromCapnp.arraySchemaLatest;
+        const arrayFromCapnp = await this.ArrayOpen(
+          namespace,
+          arrayName,
+          Querytype.Read
+        );
+        arraySchema = arrayFromCapnp.arraySchemaLatest as ArraySchema;
       }
 
       const options = {
@@ -346,26 +349,38 @@ export class TileDBQuery {
     }
   }
 
-  async ArrayOpen(namespace: string, array: string, queryType: Querytype) {
+  async ArrayOpen(namespace: string, array: string, queryType: Querytype): Promise<ArrayData> {
     const arrayFetch = arrayFetchFromConfig(this.config, queryType);
     const arrayFetchCapnp: any = capnpArrayFetchSerializer(arrayFetch);
 
-    const response = await this.arrayAPIV2.getArray(
-      namespace,
-      array,
-      "application/capnp",
-      arrayFetchCapnp,
-      {
-        headers: {
-          "Content-Type": "application/capnp",
-        },
-        responseType: "arraybuffer",
+    return new Promise(async (resolve, reject) => {
+      try {
+        const response = await this.arrayAPIV2.getArray(
+          namespace,
+          array,
+          "application/capnp",
+          arrayFetchCapnp,
+          {
+            headers: {
+              "Content-Type": "application/capnp",
+            },
+            responseType: "arraybuffer",
+          }
+        );
+
+        const arrayStructAsArrayBuffer = convertToArrayBufferIfNodeBuffer(response.data);
+        const deserializedArrayStruct = capnpArrayDeserializer(arrayStructAsArrayBuffer);
+
+        resolve(deserializedArrayStruct);
+      } catch (e) {
+        if (e.response.data) {
+          const err = new Error(new TextDecoder().decode(e.response.data));
+          reject(err);
+        } else {
+          reject(e);
+        }
       }
-    );
-
-    const arrayData = convertToArrayBufferIfNodeBuffer(response.data);
-
-    return capnpArrayDeserializer(arrayData);
+    });
   }
 }
 
