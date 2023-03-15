@@ -12,7 +12,7 @@ declare const dataToQueryWriter: (data: QueryWrite, dimensions: Dimension[], val
         originalVarLenBufferSizeInBytes: number;
         originalValidityLenBufferSizeInBytes: number;
     }[];
-    layout: import("../v2").Layout;
+    layout: import("../v3").Layout;
     status: Querystatus;
     type: Querytype;
     writer: {
@@ -32,9 +32,9 @@ declare const dataToQueryWriter: (data: QueryWrite, dimensions: Dimension[], val
             float64: any[];
         };
         subarrayRanges: {
-            layout: import("../v2").Layout;
+            layout: import("../v3").Layout;
             ranges: {
-                type: import("../v1").Datatype;
+                type: import("../v2").Datatype;
                 hasDefaultRange: boolean;
                 buffer: any;
                 bufferSizes: number[];

@@ -1,5 +1,5 @@
-import { Attribute, Dimension } from "../v1";
-import { Query } from "../v2";
+import { ArrayData } from "../v2";
+import { ArraySchema, Query } from "../v2";
 import { QueryData } from "../TileDBQuery/TileDBQuery";
 import { Options } from "./getResultsFromArrayBuffer";
 /**
@@ -12,5 +12,5 @@ import { Options } from "./getResultsFromArrayBuffer";
  * @param dimensions
  * @returns Query object
  */
-declare const dataToQuery: (data: QueryData, attributes: Attribute[], dimensions: Dimension[], options: Options) => Query;
+declare const dataToQuery: (data: QueryData, arraySchema: ArraySchema, array: ArrayData, options: Options) => Query;
 export default dataToQuery;

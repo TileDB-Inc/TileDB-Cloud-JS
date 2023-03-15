@@ -1,5 +1,5 @@
 import { ArraySchema } from "../v1";
-import { ConfigurationParameters, Query, Querytype, ArrayData } from "../v2";
+import { ConfigurationParameters, Query, Querytype, ArrayData } from "../v3";
 import { Options } from "../utils/getResultsFromArrayBuffer";
 import { AxiosInstance } from "axios";
 type Range = number[] | string[];
@@ -230,7 +230,7 @@ export declare class TileDBQuery {
                 }[];
             };
         };
-        array: ArrayData;
+        array: import("../v2").ArrayData;
         totalFixedLengthBufferBytes: number;
         totalVarLenBufferBytes: number;
         totalValidityBufferBytes: number;

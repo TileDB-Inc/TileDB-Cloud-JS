@@ -7,10 +7,12 @@ import {
   ConfigurationParameters,
   Query,
   QueryApi,
-  ArrayApi as ArrayApiV2,
   Querystatus,
   Querytype,
   ArrayData,
+} from "../v3";
+import {
+  ArrayApi as ArrayApiV2
 } from "../v2";
 import getWriterBody from "../utils/getWriterBody";
 import convertToArrayBufferIfNodeBuffer from "../utils/convertToArrayBufferIfNodeBuffer";
@@ -59,14 +61,20 @@ export class TileDBQuery {
 
     const config = new Configuration(this.configurationParams);
     const baseV1 = config.basePath?.replace("v2", "v1");
+    const baseV3 = config.basePath?.replace("v2", "v3");
     // Add versioning if basePath exists
     const configV1 = new Configuration({
       ...this.configurationParams,
       // Override basePath v2 for v1 to make calls to get ArraySchema (from v1 API)
       ...(baseV1 ? { basePath: baseV1 } : {}),
     });
+    const configV3 = new Configuration({
+      ...this.configurationParams,
+      // Override basePath v2 for v1 to make calls to get ArraySchema (from v1 API)
+      ...(baseV3 ? { basePath: baseV3 } : {}),
+    });
     this.config = configV1;
-    this.queryAPI = new QueryApi(config, undefined, this.axios);
+    this.queryAPI = new QueryApi(configV3, undefined, this.axios);
     this.arrayAPI = new ArrayApi(configV1, undefined, this.axios);
     this.arrayAPIV2 = new ArrayApiV2(config, undefined, this.axios);
   }
@@ -193,13 +201,13 @@ export class TileDBQuery {
   ) {
     try {
       // Get ArraySchema of arrray, to get type information of the dimensions and the attributes
-      if (typeof arraySchema === "undefined") {
-        const arrayFromCapnp = await this.ArrayOpen(
-          namespace,
-          arrayName,
-          Querytype.Read
-        );
-        arraySchema = arrayFromCapnp.arraySchemaLatest as ArraySchema;
+      const arrayStruct = await this.ArrayOpen(
+        namespace,
+        arrayName,
+        Querytype.Read
+      );
+      if (!arraySchema) {
+        arraySchema = arrayStruct.arraySchemaLatest as ArraySchema;
       }
 
       const options = {
@@ -219,8 +227,8 @@ export class TileDBQuery {
         "application/capnp",
         dataToQuery(
           body,
-          arraySchema.attributes,
-          arraySchema.domain.dimensions,
+          arraySchema,
+          arrayStruct,
           options
         ),
         undefined,
