@@ -300,7 +300,7 @@ export const deserializeDimension = (dimension: Dimension): DimensionV2 => {
     domain: deserializeDomainArray(dimension.getDomain()),
     nullTileExtent: dimension.getNullTileExtent(),
     tileExtent: deserializeTileExtent(dimension.getTileExtent()),
-    filterPipeline: deserializeFilterPipeline(dimension.getFilterPipeline()),
+    filterPipeline: dimension.hasFilterPipeline() ? deserializeFilterPipeline(dimension.getFilterPipeline()): {},
   };
 };
 
