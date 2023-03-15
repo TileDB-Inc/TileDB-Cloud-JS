@@ -220,17 +220,19 @@ export class TileDBQuery {
        * Get the query response in capnp, we set responseType to arraybuffer instead of JSON
        * in order to deserialize the query capnp object.
        */
+      const queryJSON = dataToQuery(
+        body,
+        arraySchema,
+        arrayStruct,
+        options
+      );
+      
       const queryResponse = await this.queryAPI.submitQuery(
         namespace,
         arrayName,
         Querytype.Read,
         "application/capnp",
-        dataToQuery(
-          body,
-          arraySchema,
-          arrayStruct,
-          options
-        ),
+        queryJSON,
         undefined,
         undefined,
         undefined,

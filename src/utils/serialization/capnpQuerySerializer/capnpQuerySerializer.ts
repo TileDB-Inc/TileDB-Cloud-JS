@@ -543,11 +543,13 @@ const serializeGenericOffsets = (genericOffsetsCapnp: FragmentMetadata_GenericTi
   }
 
   if (gtOffsets.fragmentMinMaxSumNullCountOffset) {
-    genericOffsetsCapnp.setFragmentMinMaxSumNullCountOffset(capnp.Uint64.fromNumber(gtOffsets.fragmentMinMaxSumNullCountOffset));
+    const clampedFragmentMinMaxSumNullCountOffset = clamp(gtOffsets.fragmentMinMaxSumNullCountOffset, 0, Number.MAX_SAFE_INTEGER);
+    genericOffsetsCapnp.setFragmentMinMaxSumNullCountOffset(capnp.Uint64.fromNumber(clampedFragmentMinMaxSumNullCountOffset));
   }
 
   if (gtOffsets.processedConditionsOffsets) {
-    genericOffsetsCapnp.setProcessedConditionsOffsets(capnp.Uint64.fromNumber(gtOffsets.processedConditionsOffsets));
+    const clampedProcessedConditionsOffsets = clamp(gtOffsets.processedConditionsOffsets, 0, Number.MAX_SAFE_INTEGER);
+    genericOffsetsCapnp.setProcessedConditionsOffsets(capnp.Uint64.fromNumber(clampedProcessedConditionsOffsets));
   }
 }
 
