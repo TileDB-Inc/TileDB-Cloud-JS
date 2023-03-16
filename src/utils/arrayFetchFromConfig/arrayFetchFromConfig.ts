@@ -25,6 +25,20 @@ const arrayFetchFromConfig = (config: Configuration, queryType: Querytype): Arra
         queryType,
     }
 
+    if (config.basePath) {
+        /**
+         * Remove the version at the end of the basePath
+         * http://api.tiledb.com/v1 -> http://api.tiledb.com
+         */
+        const restServerURL = config.basePath.replace(/\/v\d$/, '');
+
+        const entry = {
+            key: 'rest.server_address',
+            value: restServerURL
+        }
+        arrayFetch.config.entries.push(entry);
+    }
+
     if (config.accessToken) {
         const entry = {
             key: 'rest.token',

@@ -267,7 +267,7 @@ export const deserializeArraySchema = (schema: ArraySchema): ArraySchemaV2 => {
     validityFilterPipeline: deserializeFilterPipeline(
       schema.getValidityFilterPipeline()
     ),
-    domain: deserializeDomain(schema.getDomain()),
+    domain: schema.hasDomain() ? deserializeDomain(schema.getDomain()) : undefined,
     attributes: schema.getAttributes().map(deserializeAttribute),
   };
 };
@@ -289,7 +289,7 @@ export const deserializeDomain = (domain: Domain): DomainV2 => {
     type: domain.getType() as Datatype,
     tileOrder: domain.getTileOrder() as Layout,
     cellOrder: domain.getCellOrder() as Layout,
-    dimensions: domain.getDimensions().map(deserializeDimension),
+    dimensions: domain.hasDimensions() ? domain.getDimensions().map(deserializeDimension) : [],
   };
 };
 
@@ -297,7 +297,7 @@ export const deserializeDimension = (dimension: Dimension): DimensionV2 => {
   return {
     name: dimension.getName(),
     type: dimension.getType() as Datatype,
-    domain: deserializeDomainArray(dimension.getDomain()),
+    domain: dimension.hasDomain() ? deserializeDomainArray(dimension.getDomain()) : undefined,
     nullTileExtent: dimension.getNullTileExtent(),
     tileExtent: deserializeTileExtent(dimension.getTileExtent()),
     filterPipeline: dimension.hasFilterPipeline() ? deserializeFilterPipeline(dimension.getFilterPipeline()): {},
