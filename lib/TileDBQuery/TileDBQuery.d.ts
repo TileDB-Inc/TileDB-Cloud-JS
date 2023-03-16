@@ -1,5 +1,5 @@
-import { ArraySchema } from "../v1";
 import { ConfigurationParameters, Query, Querytype, ArrayData } from "../v3";
+import { ArraySchema } from "../v2";
 import { Options } from "../utils/getResultsFromArrayBuffer";
 import { AxiosInstance } from "axios";
 type Range = number[] | string[];
@@ -24,7 +24,6 @@ export declare class TileDBQuery {
     configurationParams: ConfigurationParameters;
     private axios;
     private queryAPI;
-    private arrayAPI;
     private arrayAPIV2;
     private config;
     constructor(params: ConfigurationParameters, axios?: AxiosInstance);

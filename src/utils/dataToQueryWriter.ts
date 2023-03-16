@@ -1,6 +1,5 @@
-import { Dimension } from "../v1";
 import { ValueBuffers } from "./attributeValuesToArrayBuffers";
-import { Querystatus, Querytype } from "../v2";
+import { Querystatus, Querytype, Dimension, ArrayData } from "../v2";
 import getRanges from "./getRanges";
 import { QueryWrite } from '../TileDBQuery/TileDBQuery';
 import flatten from "./flatten";
@@ -8,6 +7,7 @@ import flatten from "./flatten";
 const dataToQueryWriter = (
   data: QueryWrite,
   dimensions: Dimension[],
+  array: ArrayData,
   valueBuffer: ValueBuffers
 ) => {
   const attributeBufferHeaders = Object.entries(valueBuffer).map(
@@ -46,6 +46,7 @@ const dataToQueryWriter = (
     layout: data.layout,
     status: Querystatus.Uninitialized,
     type: Querytype.Write,
+    array,
     writer: {
       checkCoordDups: false,
       checkCoordOOB: false,

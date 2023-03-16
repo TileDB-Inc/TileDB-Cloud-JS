@@ -1,5 +1,4 @@
-import { Attribute, Dimension } from "../v1";
-import { AttributeBufferHeader } from "../v2";
+import { AttributeBufferHeader, Attribute, Dimension } from "../v2";
 export interface Options {
     /**
      * Results will return without setting nullables, used on big data

@@ -1,8 +1,7 @@
-import { Dimension } from "../v1";
 import { ValueBuffers } from "./attributeValuesToArrayBuffers";
-import { Querystatus, Querytype } from "../v2";
+import { Querystatus, Querytype, Dimension, ArrayData } from "../v2";
 import { QueryWrite } from '../TileDBQuery/TileDBQuery';
-declare const dataToQueryWriter: (data: QueryWrite, dimensions: Dimension[], valueBuffer: ValueBuffers) => {
+declare const dataToQueryWriter: (data: QueryWrite, dimensions: Dimension[], array: ArrayData, valueBuffer: ValueBuffers) => {
     attributeBufferHeaders: {
         name: string;
         fixedLenBufferSizeInBytes: number;
@@ -15,6 +14,7 @@ declare const dataToQueryWriter: (data: QueryWrite, dimensions: Dimension[], val
     layout: import("../v3").Layout;
     status: Querystatus;
     type: Querytype;
+    array: ArrayData;
     writer: {
         checkCoordDups: boolean;
         checkCoordOOB: boolean;

@@ -1,6 +1,5 @@
 import dataToQuery from "../utils/dataToQuery";
 import capnpQueryDeSerializer from "../utils/deserialization/capnpQueryDeSerializer";
-import { ArrayApi, ArraySchema } from "../v1";
 import {
   AttributeBufferHeader,
   Configuration,
@@ -12,7 +11,8 @@ import {
   ArrayData,
 } from "../v3";
 import {
-  ArrayApi as ArrayApiV2
+  ArrayApi as ArrayApiV2,
+  ArraySchema
 } from "../v2";
 import getWriterBody from "../utils/getWriterBody";
 import convertToArrayBufferIfNodeBuffer from "../utils/convertToArrayBufferIfNodeBuffer";
@@ -49,7 +49,6 @@ export class TileDBQuery {
   configurationParams: ConfigurationParameters;
   private axios: AxiosInstance;
   private queryAPI: QueryApi;
-  private arrayAPI: ArrayApi;
   private arrayAPIV2: ArrayApiV2;
   private config: Configuration;
 
@@ -75,19 +74,18 @@ export class TileDBQuery {
     });
     this.config = configV1;
     this.queryAPI = new QueryApi(configV3, undefined, this.axios);
-    this.arrayAPI = new ArrayApi(configV1, undefined, this.axios);
     this.arrayAPIV2 = new ArrayApiV2(config, undefined, this.axios);
   }
 
   async WriteQuery(namespace: string, arrayName: string, data: QueryWrite) {
     try {
-      const arraySchemaResponse = await this.arrayAPI.getArray(
+      const arrayStruct = await this.ArrayOpen(
         namespace,
         arrayName,
-        "application/json"
+        Querytype.Write
       );
-      const arraySchema = arraySchemaResponse.data;
-      const body = getWriterBody(data, arraySchema);
+
+      const body = getWriterBody(data, arrayStruct);
 
       const queryResponse = await this.queryAPI.submitQuery(
         namespace,
