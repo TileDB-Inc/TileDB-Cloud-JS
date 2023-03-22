@@ -196,7 +196,6 @@ export class TileDBQuery {
     arrayName: string,
     body: QueryData,
     arraySchema?: ArraySchema,
-    queryObj?: any,
   ) {
     try {
       // Get ArraySchema of arrray, to get type information of the dimensions and the attributes
@@ -219,7 +218,7 @@ export class TileDBQuery {
        * Get the query response in capnp, we set responseType to arraybuffer instead of JSON
        * in order to deserialize the query capnp object.
        */
-      const queryJSON = queryObj ? queryObj : dataToQuery(
+      const queryJSON = dataToQuery(
         body,
         arraySchema,
         arrayStruct,

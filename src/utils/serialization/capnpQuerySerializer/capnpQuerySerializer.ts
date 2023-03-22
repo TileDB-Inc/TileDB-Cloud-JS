@@ -961,7 +961,7 @@ const serializeDimension = (
     serializeDomainArray(dimensionCapnp.initDomain(), dimension.domain);
   }
   const { tileExtent } = dimension;
-  if (tileExtent) {
+  if (!tileExtent) {
     return;
   }
 
