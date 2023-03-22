@@ -950,12 +950,14 @@ const serializeDimension = (
   dimensionCapnp.setNullTileExtent(dimension.nullTileExtent);
   dimensionCapnp.setType(dimension.type);
 
-  serializeFilterPipeline(
-    dimensionCapnp.initFilterPipeline(),
-    dimension.filterPipeline
-  );
+  if (dimension.filterPipeline) {
+    serializeFilterPipeline(
+      dimensionCapnp.initFilterPipeline(),
+      dimension.filterPipeline
+    );
+  }
 
-  if (dimension.domain) {
+  if (dimension.domain && Object.keys(dimension.domain).length) {
     serializeDomainArray(dimensionCapnp.initDomain(), dimension.domain);
   }
   const { tileExtent } = dimension;

@@ -77,9 +77,9 @@ const capnpQueryDeSerializer = (buffer: ArrayBuffer | ArrayBufferLike) => {
     layout: query.getLayout(),
     status: query.getStatus(),
     type: query.getType(),
-    writer: deserializeWrite(query),
-    reader: deserializeQueryReader(query.getReader()),
-    array: deserializeArray(query.getArray()),
+    writer: query.hasWriter() ? deserializeWrite(query) : undefined,
+    reader: query.hasReader() ? deserializeQueryReader(query.getReader()) : undefined,
+    array: query.hasArray() ? deserializeArray(query.getArray()) : undefined,
     totalFixedLengthBufferBytes: query
       .getTotalFixedLengthBufferBytes()
       .toNumber(),
@@ -88,8 +88,8 @@ const capnpQueryDeSerializer = (buffer: ArrayBuffer | ArrayBufferLike) => {
     varOffsetsMode: query.getVarOffsetsMode(),
     varOffsetsAddExtraElement: query.getVarOffsetsAddExtraElement(),
     varOffsetsBitsize: query.getVarOffsetsBitsize(),
-    config: deserializeConfig(query.getConfig()),
-    stats: deserializeStats(query.getStats()),
+    config: query.hasConfig() ? deserializeConfig(query.getConfig()) : undefined,
+    stats: query.hasStats() ? deserializeStats(query.getStats()) : undefined,
   };
 };
 
