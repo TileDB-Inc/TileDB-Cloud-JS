@@ -24,6 +24,7 @@ import globalAxios, { AxiosInstance } from "axios";
 import capnpArrayDeserializer from "../utils/deserialization/capnpArrayDeserializer";
 import arrayFetchFromConfig from "../utils/arrayFetchFromConfig";
 import capnpArrayFetchSerializer from "../utils/serialization/capnpArrayFetchSerializer";
+import responseTypes from '../constants/responseTypes';
 
 type Range = number[] | string[];
 export interface QueryData extends Pick<Query, "layout">, Options {
@@ -357,30 +358,38 @@ export class TileDBQuery {
     }
   }
 
-  async ArrayOpen(namespace: string, array: string, queryType: Querytype): Promise<ArrayData> {
+  async ArrayOpen(namespace: string, array: string, queryType: Querytype, contentType: string | undefined = "application/json"): Promise<ArrayData> {
     const arrayFetch = arrayFetchFromConfig(this.config, queryType);
-    const arrayFetchCapnp: any = capnpArrayFetchSerializer(arrayFetch);
+    const isJSONEncoded = contentType === 'application/json';
+    const arrayFetchData: any = isJSONEncoded ? arrayFetch : capnpArrayFetchSerializer(arrayFetch);
 
     return new Promise(async (resolve, reject) => {
       try {
         const response = await this.arrayAPIV2.getArray(
           namespace,
           array,
-          "application/capnp",
-          arrayFetchCapnp,
+          contentType,
+          arrayFetchData,
           {
             headers: {
-              "Content-Type": "application/capnp",
+              "Content-Type": contentType,
             },
-            responseType: "arraybuffer",
+            responseType: responseTypes[contentType],
           }
         );
-
+        if (isJSONEncoded) {
+          resolve(response.data);
+          return;
+        }
         const arrayStructAsArrayBuffer = convertToArrayBufferIfNodeBuffer(response.data);
         const deserializedArrayStruct = capnpArrayDeserializer(arrayStructAsArrayBuffer);
 
         resolve(deserializedArrayStruct);
       } catch (e) {
+        if (isJSONEncoded) {
+          reject(e);
+          return;
+        }
         if (e.response.data) {
           const err = new Error(new TextDecoder().decode(e.response.data));
           reject(err);
@@ -391,5 +400,7 @@ export class TileDBQuery {
     });
   }
 }
+
+
 
 export default TileDBQuery;
