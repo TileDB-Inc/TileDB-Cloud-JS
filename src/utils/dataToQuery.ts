@@ -1,5 +1,5 @@
-import { Attribute, Dimension } from "../v1";
-import { Datatype, Query, Querystatus, Querytype } from "../v2";
+import { ArrayData, Attribute, Dimension } from "../v2";
+import { ArraySchema, Datatype, Query, Querystatus, Querytype } from "../v2";
 import { QueryData } from "../TileDBQuery/TileDBQuery";
 import getRanges from "./getRanges";
 import getByteLengthOfDatatype from "./getByteLengthOfDatatype";
@@ -84,10 +84,13 @@ const getMaxByteSizeOfAttribute = (attribute: Attribute | Dimension) => {
  */
 const dataToQuery = (
   data: QueryData,
-  attributes: Attribute[],
-  dimensions: Dimension[],
+  arraySchema: ArraySchema,
+  array: ArrayData,
   options: Options
 ): Query => {
+  const attributes = arraySchema.attributes;
+  const dimensions = arraySchema.domain.dimensions;
+
   if (!data.layout) {
     return data as any;
   }
@@ -112,6 +115,7 @@ const dataToQuery = (
     layout: data.layout,
     status: Querystatus.Uninitialized,
     type: Querytype.Read,
+    array,
     reader: {
       layout: data.layout,
       subarray: {

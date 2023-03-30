@@ -1,5 +1,4 @@
-import { Attribute, Dimension } from "../v1";
-import { AttributeBufferHeader } from "../v2";
+import { AttributeBufferHeader, Attribute, Dimension } from "../v2";
 import getAttributeSizeInBytes from "./getAttributeSizeInBytes";
 import getAttributeSchema from "./getAttributeSchema";
 import getAttributeResult, { bufferToInt8 } from "./bufferToData";

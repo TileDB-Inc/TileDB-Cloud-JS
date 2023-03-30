@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-API_SPEC_FILE=../TileDB-Cloud-API-Spec/openapi-v2.yaml
+API_SPEC_VERSION=$1
+API_SPEC_FILE="../TileDB-Cloud-API-Spec/openapi-$API_SPEC_VERSION.yaml"
 if [ -f "$API_SPEC_FILE" ]; then
     echo "$API_SPEC_FILE renaming Array struct."
 else 

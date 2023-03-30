@@ -1,4 +1,4 @@
-import { ArraySchema } from "../v1";
 import { QueryWrite } from "../TileDBQuery/TileDBQuery";
-declare const getWriterBody: (data: QueryWrite, arraySchema: ArraySchema) => ArrayBufferLike;
+import { ArrayData } from "../v2";
+declare const getWriterBody: (data: QueryWrite, arrayStruct: ArrayData) => ArrayBufferLike;
 export default getWriterBody;

@@ -1,4 +1,4 @@
-import { Attribute, Dimension } from "../v1";
+import { Attribute, Dimension } from "../v2";
 import isDimension from "./isDimension";
 
 const isAttributeNullable = (attribute: Attribute | Dimension) => {

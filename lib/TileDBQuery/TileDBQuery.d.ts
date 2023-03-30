@@ -1,5 +1,5 @@
-import { ArraySchema } from "../v1";
-import { ConfigurationParameters, Query, Querytype, ArrayData } from "../v2";
+import { ConfigurationParameters, Query, Querytype, ArrayData } from "../v3";
+import { ArraySchema } from "../v2";
 import { Options } from "../utils/getResultsFromArrayBuffer";
 import { AxiosInstance } from "axios";
 type Range = number[] | string[];
@@ -24,7 +24,6 @@ export declare class TileDBQuery {
     configurationParams: ConfigurationParameters;
     private axios;
     private queryAPI;
-    private arrayAPI;
     private arrayAPIV2;
     private config;
     constructor(params: ConfigurationParameters, axios?: AxiosInstance);
@@ -230,7 +229,7 @@ export declare class TileDBQuery {
                 }[];
             };
         };
-        array: ArrayData;
+        array: import("../v2").ArrayData;
         totalFixedLengthBufferBytes: number;
         totalVarLenBufferBytes: number;
         totalValidityBufferBytes: number;
@@ -259,9 +258,9 @@ export declare class TileDBQuery {
         results: Record<string, any>;
         queryAsArrayBuffer: ArrayBuffer;
     }>;
-    ReadQuery(namespace: string, arrayName: string, body: QueryData, arraySchema?: ArraySchema): AsyncGenerator<{}, void, unknown>;
+    ReadQuery(namespace: string, arrayName: string, body: QueryData, arrayStruct?: ArrayData): AsyncGenerator<{}, void, unknown>;
     private getResultsFromArrayBuffer;
     private throwError;
-    ArrayOpen(namespace: string, array: string, queryType: Querytype): Promise<ArrayData>;
+    ArrayOpen(namespace: string, array: string, queryType: Querytype, contentType?: string | undefined): Promise<ArrayData>;
 }
 export default TileDBQuery;

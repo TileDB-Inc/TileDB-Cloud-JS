@@ -1,5 +1,5 @@
 import { AttributeValues } from "../TileDBQuery/TileDBQuery";
-import { Attribute, Dimension } from "../v1";
+import { Attribute, Dimension } from "../v2";
 interface ValueBuffer {
     validityBuffer: ArrayBuffer;
     offsetsBuffer: ArrayBuffer;

@@ -1,7 +1,7 @@
 import rangesToBuffer from "./rangesToBuffer";
 import flatten from "./flatten";
 import { QueryData } from "../TileDBQuery/TileDBQuery";
-import { Dimension } from "../v1";
+import { Dimension } from "../v2";
 import getByteLengthOfdata from "./getByteLengthOfData";
 
 /**

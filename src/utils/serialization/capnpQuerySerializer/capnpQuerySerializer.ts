@@ -120,7 +120,9 @@ const capnpQuerySerializer = (data: Partial<QueryType>) => {
     const writerSubArray = queryWriter.initSubarrayRanges();
     serializeSubArray(writerSubArray, subarrayRanges);
     const writerDomain = queryWriter.initSubarray();
-    serializeDomainArray(writerDomain, subarray);
+    if (subarray) {
+      serializeDomainArray(writerDomain, subarray);
+    }
   }
 
   if (reader) {
@@ -199,8 +201,6 @@ const capnpQuerySerializer = (data: Partial<QueryType>) => {
   return message.toArrayBuffer();
 };
 
-const add = (a: number, b: number) => a + b;
-
 export default capnpQuerySerializer;
 
 export const serializeArrayData = (array: ArrayData) => {
@@ -227,7 +227,7 @@ export const serializeArray = (arrayCapNp: ArrayCapnp, array: ArrayData) => {
     );
   }
 
-  if (array.nonEmptyDomain) {
+  if (array.nonEmptyDomain && Object.keys(array.nonEmptyDomain).length) {
     serializeNonEmptyDomainList(
       arrayCapNp.initNonEmptyDomain(),
       array.nonEmptyDomain
@@ -256,7 +256,7 @@ export const serializeArray = (arrayCapNp: ArrayCapnp, array: ArrayData) => {
     capnp.Uint64.fromNumber(array.openedAtEndTimestamp)
   );
 
-  if (array.fragmentMetadataAll.length) {
+  if (array.fragmentMetadataAll?.length) {
     arrayCapNp
       .initFragmentMetadataAll(array.fragmentMetadataAll.length)
       .map((fragmentMetadataAllCapnp, i) =>
@@ -272,7 +272,7 @@ const serializeFragmentMetadataAll = (
   fragmentMetadataCapnp: FragmentMetadataCapnp,
   fragmentMetadata: FragmentMetadata
 ) => {
-  if (fragmentMetadata.fileSizes.length) {
+  if (fragmentMetadata.fileSizes?.length) {
     const fileSizesCapnp = fragmentMetadataCapnp.initFileSizes(
       fragmentMetadata.fileSizes.length
     );
@@ -282,7 +282,7 @@ const serializeFragmentMetadataAll = (
     });
   }
 
-  if (fragmentMetadata.fileVarSizes.length) {
+  if (fragmentMetadata.fileVarSizes?.length) {
     const fileVarSizesCapnp = fragmentMetadataCapnp.initFileVarSizes(
       fragmentMetadata.fileVarSizes.length
     );
@@ -292,7 +292,7 @@ const serializeFragmentMetadataAll = (
     });
   }
 
-  if (fragmentMetadata.fileValiditySizes.length) {
+  if (fragmentMetadata.fileValiditySizes?.length) {
     const fileValiditySizesCapnp = fragmentMetadataCapnp.initFileValiditySizes(
       fragmentMetadata.fileValiditySizes.length
     );
@@ -302,7 +302,7 @@ const serializeFragmentMetadataAll = (
     });
   }
 
-  fragmentMetadataCapnp.setFragmentUri(fragmentMetadata.fragmentUri);
+  fragmentMetadataCapnp.setFragmentUri(fragmentMetadata.fragmentUri || '');
   fragmentMetadataCapnp.setHasTimestamps(fragmentMetadata.hasTimestamps);
   fragmentMetadataCapnp.setHasDeleteMeta(fragmentMetadata.hasDeleteMeta);
   fragmentMetadataCapnp.setSparseTileNum(
@@ -312,7 +312,7 @@ const serializeFragmentMetadataAll = (
     capnp.Uint64.fromNumber(fragmentMetadata.tileIndexBase)
   );
 
-  if (fragmentMetadata.tileOffsets.length) {
+  if (fragmentMetadata.tileOffsets?.length) {
     serializeListListUint64(
       fragmentMetadataCapnp.initTileOffsets(
         fragmentMetadata.tileOffsets.length
@@ -321,7 +321,7 @@ const serializeFragmentMetadataAll = (
     );
   }
 
-  if (fragmentMetadata.tileVarOffsets.length) {
+  if (fragmentMetadata.tileVarOffsets?.length) {
     serializeListListUint64(
       fragmentMetadataCapnp.initTileVarOffsets(
         fragmentMetadata.tileVarOffsets.length
@@ -330,7 +330,7 @@ const serializeFragmentMetadataAll = (
     );
   }
 
-  if (fragmentMetadata.tileVarSizes.length) {
+  if (fragmentMetadata.tileVarSizes?.length) {
     serializeListListUint64(
       fragmentMetadataCapnp.initTileVarSizes(
         fragmentMetadata.tileVarSizes.length
@@ -339,7 +339,7 @@ const serializeFragmentMetadataAll = (
     );
   }
 
-  if (fragmentMetadata.tileValidityOffsets.length) {
+  if (fragmentMetadata.tileValidityOffsets?.length) {
     serializeListListUint64(
       fragmentMetadataCapnp.initTileValidityOffsets(
         fragmentMetadata.tileValidityOffsets.length
@@ -348,7 +348,7 @@ const serializeFragmentMetadataAll = (
     );
   }
 
-  if (fragmentMetadata.tileMinBuffer.length) {
+  if (fragmentMetadata.tileMinBuffer?.length) {
     serializeListListUint8(
       fragmentMetadataCapnp.initTileMinBuffer(
         fragmentMetadata.tileMinBuffer.length
@@ -357,7 +357,7 @@ const serializeFragmentMetadataAll = (
     );
   }
 
-  if (fragmentMetadata.tileMinVarBuffer.length) {
+  if (fragmentMetadata.tileMinVarBuffer?.length) {
     serializeListListUint8(
       fragmentMetadataCapnp.initTileMinVarBuffer(
         fragmentMetadata.tileMinVarBuffer.length
@@ -366,7 +366,7 @@ const serializeFragmentMetadataAll = (
     );
   }
 
-  if (fragmentMetadata.tileMaxBuffer.length) {
+  if (fragmentMetadata.tileMaxBuffer?.length) {
     serializeListListUint8(
       fragmentMetadataCapnp.initTileMaxBuffer(
         fragmentMetadata.tileMaxBuffer.length
@@ -375,7 +375,7 @@ const serializeFragmentMetadataAll = (
     );
   }
 
-  if (fragmentMetadata.tileMaxVarBuffer.length) {
+  if (fragmentMetadata.tileMaxVarBuffer?.length) {
     serializeListListUint8(
       fragmentMetadataCapnp.initTileMaxVarBuffer(
         fragmentMetadata.tileMaxVarBuffer.length
@@ -384,14 +384,14 @@ const serializeFragmentMetadataAll = (
     );
   }
 
-  if (fragmentMetadata.tileSums.length) {
+  if (fragmentMetadata.tileSums?.length) {
     serializeListListUint8(
       fragmentMetadataCapnp.initTileSums(fragmentMetadata.tileSums.length),
       fragmentMetadata.tileSums
     );
   }
 
-  if (fragmentMetadata.tileNullCounts.length) {
+  if (fragmentMetadata.tileNullCounts?.length) {
     serializeListListUint64(
       fragmentMetadataCapnp.initTileNullCounts(
         fragmentMetadata.tileNullCounts.length
@@ -400,7 +400,7 @@ const serializeFragmentMetadataAll = (
     );
   }
 
-  if (fragmentMetadata.fragmentMins.length) {
+  if (fragmentMetadata.fragmentMins?.length) {
     serializeListListUint8(
       fragmentMetadataCapnp.initFragmentMins(
         fragmentMetadata.fragmentMins.length
@@ -409,7 +409,7 @@ const serializeFragmentMetadataAll = (
     );
   }
 
-  if (fragmentMetadata.fragmentMaxs.length) {
+  if (fragmentMetadata.fragmentMaxs?.length) {
     serializeListListUint8(
       fragmentMetadataCapnp.initFragmentMaxs(
         fragmentMetadata.fragmentMaxs.length
@@ -418,7 +418,7 @@ const serializeFragmentMetadataAll = (
     );
   }
 
-  if (fragmentMetadata.fragmentSums.length) {
+  if (fragmentMetadata.fragmentSums?.length) {
     const fragmentSumsCapnp = fragmentMetadataCapnp.initFragmentSums(
       fragmentMetadata.fragmentSums.length
     );
@@ -427,10 +427,11 @@ const serializeFragmentMetadataAll = (
     });
   }
 
-  if (fragmentMetadata.fragmentNullCounts.length) {
-    const fragmentNullCountsCapnp = fragmentMetadataCapnp.initFragmentNullCounts(
-      fragmentMetadata.fragmentNullCounts.length
-    );
+  if (fragmentMetadata.fragmentNullCounts?.length) {
+    const fragmentNullCountsCapnp =
+      fragmentMetadataCapnp.initFragmentNullCounts(
+        fragmentMetadata.fragmentNullCounts.length
+      );
     fragmentMetadata.fragmentNullCounts.forEach((sum, i) => {
       fragmentNullCountsCapnp.set(i, capnp.Uint64.fromNumber(sum));
     });
@@ -440,7 +441,7 @@ const serializeFragmentMetadataAll = (
     fragmentMetadataCapnp.setVersion(fragmentMetadata.version);
   }
 
-  if (fragmentMetadata.timestampRange.length) {
+  if (fragmentMetadata.timestampRange?.length) {
     const timestampRangeCapnp = fragmentMetadataCapnp.initTimestampRange(
       fragmentMetadata.timestampRange.length
     );
@@ -450,7 +451,9 @@ const serializeFragmentMetadataAll = (
   }
 
   if (fragmentMetadata.lastTileCellNum) {
-    fragmentMetadataCapnp.setLastTileCellNum(capnp.Uint64.fromNumber(fragmentMetadata.lastTileCellNum));
+    fragmentMetadataCapnp.setLastTileCellNum(
+      capnp.Uint64.fromNumber(fragmentMetadata.lastTileCellNum)
+    );
   }
 
   if (fragmentMetadata.nonEmptyDomain) {
@@ -461,25 +464,35 @@ const serializeFragmentMetadataAll = (
   }
 
   if (fragmentMetadata.rtree && fragmentMetadata.rtree.byteLength) {
-    const rTreeDataCapnp = fragmentMetadataCapnp.initRtree(fragmentMetadata.rtree.byteLength);
+    const rTreeDataCapnp = fragmentMetadataCapnp.initRtree(
+      fragmentMetadata.rtree.byteLength
+    );
 
     rTreeDataCapnp.copyBuffer(fragmentMetadata.rtree);
     fragmentMetadataCapnp.setRtree(rTreeDataCapnp);
   }
 
-  fragmentMetadataCapnp.setHasConsolidatedFooter(fragmentMetadata.hasConsolidatedFooter);
-  serializeGenericOffsets(
-    fragmentMetadataCapnp.initGtOffsets(),
-    fragmentMetadata.gtOffsets
+  fragmentMetadataCapnp.setHasConsolidatedFooter(
+    fragmentMetadata.hasConsolidatedFooter
   );
-
+  if (fragmentMetadata.gtOffsets) {
+    serializeGenericOffsets(
+      fragmentMetadataCapnp.initGtOffsets(),
+      fragmentMetadata.gtOffsets
+    );
+  }
 };
 
-const serializeGenericOffsets = (genericOffsetsCapnp: FragmentMetadata_GenericTileOffsets, gtOffsets: GenericTileOffsets) => {
+const serializeGenericOffsets = (
+  genericOffsetsCapnp: FragmentMetadata_GenericTileOffsets,
+  gtOffsets: GenericTileOffsets
+) => {
   genericOffsetsCapnp.setRtree(capnp.Uint64.fromNumber(gtOffsets.rtree));
 
   if (gtOffsets.tileOffsets?.length) {
-    const tileOffsetsCapnp = genericOffsetsCapnp.initTileOffsets(gtOffsets.tileOffsets.length);
+    const tileOffsetsCapnp = genericOffsetsCapnp.initTileOffsets(
+      gtOffsets.tileOffsets.length
+    );
 
     gtOffsets.tileOffsets.forEach((offset, i) => {
       tileOffsetsCapnp.set(i, capnp.Uint64.fromNumber(offset));
@@ -487,7 +500,9 @@ const serializeGenericOffsets = (genericOffsetsCapnp: FragmentMetadata_GenericTi
   }
 
   if (gtOffsets.tileVarOffsets?.length) {
-    const tileVarOffsetsCapnp = genericOffsetsCapnp.initTileVarOffsets(gtOffsets.tileVarOffsets.length);
+    const tileVarOffsetsCapnp = genericOffsetsCapnp.initTileVarOffsets(
+      gtOffsets.tileVarOffsets.length
+    );
 
     gtOffsets.tileVarOffsets.forEach((offset, i) => {
       tileVarOffsetsCapnp.set(i, capnp.Uint64.fromNumber(offset));
@@ -495,7 +510,9 @@ const serializeGenericOffsets = (genericOffsetsCapnp: FragmentMetadata_GenericTi
   }
 
   if (gtOffsets.tileVarSizes?.length) {
-    const tileVarSizesCapnp = genericOffsetsCapnp.initTileVarSizes(gtOffsets.tileVarSizes.length);
+    const tileVarSizesCapnp = genericOffsetsCapnp.initTileVarSizes(
+      gtOffsets.tileVarSizes.length
+    );
 
     gtOffsets.tileVarSizes.forEach((size, i) => {
       tileVarSizesCapnp.set(i, capnp.Uint64.fromNumber(size));
@@ -503,7 +520,10 @@ const serializeGenericOffsets = (genericOffsetsCapnp: FragmentMetadata_GenericTi
   }
 
   if (gtOffsets.tileValidityOffsets?.length) {
-    const tileValidityOffsetsCapnp = genericOffsetsCapnp.initTileValidityOffsets(gtOffsets.tileValidityOffsets.length);
+    const tileValidityOffsetsCapnp =
+      genericOffsetsCapnp.initTileValidityOffsets(
+        gtOffsets.tileValidityOffsets.length
+      );
 
     gtOffsets.tileValidityOffsets.forEach((offset, i) => {
       tileValidityOffsetsCapnp.set(i, capnp.Uint64.fromNumber(offset));
@@ -511,7 +531,9 @@ const serializeGenericOffsets = (genericOffsetsCapnp: FragmentMetadata_GenericTi
   }
 
   if (gtOffsets.tileMinOffsets?.length) {
-    const tileMinOffsetsCapnp = genericOffsetsCapnp.initTileMinOffsets(gtOffsets.tileMinOffsets.length);
+    const tileMinOffsetsCapnp = genericOffsetsCapnp.initTileMinOffsets(
+      gtOffsets.tileMinOffsets.length
+    );
 
     gtOffsets.tileMinOffsets.forEach((offset, i) => {
       tileMinOffsetsCapnp.set(i, capnp.Uint64.fromNumber(offset));
@@ -519,7 +541,9 @@ const serializeGenericOffsets = (genericOffsetsCapnp: FragmentMetadata_GenericTi
   }
 
   if (gtOffsets.tileMaxOffsets?.length) {
-    const tileMaxOffsetsCapnp = genericOffsetsCapnp.initTileMaxOffsets(gtOffsets.tileMaxOffsets.length);
+    const tileMaxOffsetsCapnp = genericOffsetsCapnp.initTileMaxOffsets(
+      gtOffsets.tileMaxOffsets.length
+    );
 
     gtOffsets.tileMaxOffsets.forEach((offset, i) => {
       tileMaxOffsetsCapnp.set(i, capnp.Uint64.fromNumber(offset));
@@ -527,7 +551,9 @@ const serializeGenericOffsets = (genericOffsetsCapnp: FragmentMetadata_GenericTi
   }
 
   if (gtOffsets.tileSumOffsets?.length) {
-    const tileSumOffsetsCapnp = genericOffsetsCapnp.initTileSumOffsets(gtOffsets.tileSumOffsets.length);
+    const tileSumOffsetsCapnp = genericOffsetsCapnp.initTileSumOffsets(
+      gtOffsets.tileSumOffsets.length
+    );
 
     gtOffsets.tileSumOffsets.forEach((offset, i) => {
       tileSumOffsetsCapnp.set(i, capnp.Uint64.fromNumber(offset));
@@ -535,7 +561,10 @@ const serializeGenericOffsets = (genericOffsetsCapnp: FragmentMetadata_GenericTi
   }
 
   if (gtOffsets.tileNullCountOffsets?.length) {
-    const tileNullCountOffsetsCapnp = genericOffsetsCapnp.initTileNullCountOffsets(gtOffsets.tileNullCountOffsets.length);
+    const tileNullCountOffsetsCapnp =
+      genericOffsetsCapnp.initTileNullCountOffsets(
+        gtOffsets.tileNullCountOffsets.length
+      );
 
     gtOffsets.tileNullCountOffsets.forEach((offset, i) => {
       tileNullCountOffsetsCapnp.set(i, capnp.Uint64.fromNumber(offset));
@@ -543,13 +572,27 @@ const serializeGenericOffsets = (genericOffsetsCapnp: FragmentMetadata_GenericTi
   }
 
   if (gtOffsets.fragmentMinMaxSumNullCountOffset) {
-    genericOffsetsCapnp.setFragmentMinMaxSumNullCountOffset(capnp.Uint64.fromNumber(gtOffsets.fragmentMinMaxSumNullCountOffset));
+    const clampedFragmentMinMaxSumNullCountOffset = clamp(
+      gtOffsets.fragmentMinMaxSumNullCountOffset,
+      0,
+      Number.MAX_SAFE_INTEGER
+    );
+    genericOffsetsCapnp.setFragmentMinMaxSumNullCountOffset(
+      capnp.Uint64.fromNumber(clampedFragmentMinMaxSumNullCountOffset)
+    );
   }
 
   if (gtOffsets.processedConditionsOffsets) {
-    genericOffsetsCapnp.setProcessedConditionsOffsets(capnp.Uint64.fromNumber(gtOffsets.processedConditionsOffsets));
+    const clampedProcessedConditionsOffsets = clamp(
+      gtOffsets.processedConditionsOffsets,
+      0,
+      Number.MAX_SAFE_INTEGER
+    );
+    genericOffsetsCapnp.setProcessedConditionsOffsets(
+      capnp.Uint64.fromNumber(clampedProcessedConditionsOffsets)
+    );
   }
-}
+};
 
 const serializeListListUint8 = (
   listOfListsUint64: capnp.List<capnp.List<number>>,
@@ -589,7 +632,7 @@ const serializeArrayDirectory = (
   arrayDirectoryCapnp: ArrayDirectoryCapnp,
   arrayDirectory: ArrayDirectory
 ) => {
-  if (arrayDirectory.unfilteredFragmentUris.length) {
+  if (arrayDirectory.unfilteredFragmentUris?.length) {
     const unfilteredFragmentUrisCapnp =
       arrayDirectoryCapnp.initUnfilteredFragmentUris(
         arrayDirectory.unfilteredFragmentUris.length
@@ -601,7 +644,7 @@ const serializeArrayDirectory = (
     );
   }
 
-  if (arrayDirectory.consolidatedCommitUris.length) {
+  if (arrayDirectory.consolidatedCommitUris?.length) {
     const consolidatedCommitUrisCapnp =
       arrayDirectoryCapnp.initConsolidatedCommitUris(
         arrayDirectory.consolidatedCommitUris.length
@@ -614,7 +657,7 @@ const serializeArrayDirectory = (
     );
   }
 
-  if (arrayDirectory.arraySchemaUris.length) {
+  if (arrayDirectory.arraySchemaUris?.length) {
     const arraySchemaUrisCapnp = arrayDirectoryCapnp.initArraySchemaUris(
       arrayDirectory.arraySchemaUris.length
     );
@@ -625,10 +668,10 @@ const serializeArrayDirectory = (
   }
 
   arrayDirectoryCapnp.setLatestArraySchemaUri(
-    arrayDirectory.latestArraySchemaUri
+    arrayDirectory.latestArraySchemaUri || ''
   );
 
-  if (arrayDirectory.arrayMetaUrisToVacuum.length) {
+  if (arrayDirectory.arrayMetaUrisToVacuum?.length) {
     const arrayMetaUrisToVacuumCapnp =
       arrayDirectoryCapnp.initArrayMetaUrisToVacuum(
         arrayDirectory.arrayMetaUrisToVacuum.length
@@ -639,7 +682,7 @@ const serializeArrayDirectory = (
     });
   }
 
-  if (arrayDirectory.arrayMetaVacUrisToVacuum.length) {
+  if (arrayDirectory.arrayMetaVacUrisToVacuum?.length) {
     const arrayMetaVacUrisToVacuumCapnp =
       arrayDirectoryCapnp.initArrayMetaVacUrisToVacuum(
         arrayDirectory.arrayMetaVacUrisToVacuum.length
@@ -652,7 +695,7 @@ const serializeArrayDirectory = (
     );
   }
 
-  if (arrayDirectory.commitUrisToConsolidate.length) {
+  if (arrayDirectory.commitUrisToConsolidate?.length) {
     const commitUrisToConsolidateCapnp =
       arrayDirectoryCapnp.initCommitUrisToConsolidate(
         arrayDirectory.commitUrisToConsolidate.length
@@ -665,7 +708,7 @@ const serializeArrayDirectory = (
     );
   }
 
-  if (arrayDirectory.commitUrisToVacuum.length) {
+  if (arrayDirectory.commitUrisToVacuum?.length) {
     const commitUrisToVacuumCapnp = arrayDirectoryCapnp.initCommitUrisToVacuum(
       arrayDirectory.commitUrisToVacuum.length
     );
@@ -675,7 +718,7 @@ const serializeArrayDirectory = (
     });
   }
 
-  if (arrayDirectory.consolidatedCommitUrisToVacuum.length) {
+  if (arrayDirectory.consolidatedCommitUrisToVacuum?.length) {
     const consolidatedCommitUrisToVacuumCapnp =
       arrayDirectoryCapnp.initConsolidatedCommitUrisToVacuum(
         arrayDirectory.consolidatedCommitUrisToVacuum.length
@@ -691,7 +734,7 @@ const serializeArrayDirectory = (
     );
   }
 
-  if (arrayDirectory.arrayMetaUris.length) {
+  if (arrayDirectory.arrayMetaUris?.length) {
     arrayDirectoryCapnp
       .initArrayMetaUris(arrayDirectory.arrayMetaUris.length)
       .map((metaURICapnp, i) =>
@@ -699,7 +742,7 @@ const serializeArrayDirectory = (
       );
   }
 
-  if (arrayDirectory.fragmentMetaUris.length) {
+  if (arrayDirectory.fragmentMetaUris?.length) {
     const fragmentMetaUrisCapnp = arrayDirectoryCapnp.initFragmentMetaUris(
       arrayDirectory.fragmentMetaUris.length
     );
@@ -708,7 +751,7 @@ const serializeArrayDirectory = (
     });
   }
 
-  if (arrayDirectory.deleteAndUpdateTileLocation.length) {
+  if (arrayDirectory.deleteAndUpdateTileLocation?.length) {
     arrayDirectoryCapnp
       .initDeleteAndUpdateTileLocation(
         arrayDirectory.deleteAndUpdateTileLocation.length
@@ -736,7 +779,9 @@ const serializeDeleteAndUpdateTileLocation = (
   deleteAndUpdateTileLocationCapnp.setConditionMarker(
     deleteAndUpdateTileLocation.conditionMarker
   );
-  deleteAndUpdateTileLocationCapnp.setUri(deleteAndUpdateTileLocation.uri);
+  deleteAndUpdateTileLocationCapnp.setUri(
+    deleteAndUpdateTileLocation.uri || ""
+  );
   deleteAndUpdateTileLocationCapnp.setOffset(
     capnp.Uint64.fromNumber(deleteAndUpdateTileLocation.offset)
   );
@@ -752,7 +797,7 @@ const serializeArrayMetaUri = (
   arrayMetaUriCapnp.setTimestampEnd(
     capnp.Uint64.fromNumber(timestampedURI.timestampEnd)
   );
-  arrayMetaUriCapnp.setUri(timestampedURI.uri);
+  arrayMetaUriCapnp.setUri(timestampedURI.uri || "");
 };
 
 const serializeArraySchemasAll = (
@@ -817,10 +862,13 @@ const serializeNonEmptyDomain = (
   nonEmptyDomain: NonEmptyDomain
 ) => {
   nonEmptyDomainCapnp.setIsEmpty(nonEmptyDomain.isEmpty);
-  serializeDomainArray(
-    nonEmptyDomainCapnp.initNonEmptyDomain(),
-    nonEmptyDomain.nonEmptyDomain
-  );
+  if (nonEmptyDomain.nonEmptyDomain) {
+    serializeDomainArray(
+      nonEmptyDomainCapnp.initNonEmptyDomain(),
+      nonEmptyDomain.nonEmptyDomain
+    );
+  }
+
   const sizes = nonEmptyDomainCapnp.initSizes(nonEmptyDomain.sizes.length);
 
   nonEmptyDomain.sizes.forEach((size, i) => {
@@ -836,7 +884,7 @@ const serializeArraySchema = (
   arraySchemaCapnp.setCapacity(capnp.Uint64.fromNumber(arraySchema.capacity));
   arraySchemaCapnp.setCellOrder(arraySchema.cellOrder);
   arraySchemaCapnp.setTileOrder(arraySchema.tileOrder);
-  arraySchemaCapnp.setUri(arraySchema.uri);
+  arraySchemaCapnp.setUri(arraySchema.uri || "");
   arraySchemaCapnp.setAllowsDuplicates(arraySchema.allowsDuplicates);
   arraySchemaCapnp.setName(arraySchema.name);
 
@@ -855,18 +903,25 @@ const serializeArraySchema = (
     timestamps.set(i, capnp.Uint64.fromNumber(num));
   });
 
-  serializeFilterPipeline(
-    arraySchemaCapnp.initCoordsFilterPipeline(),
-    arraySchema.coordsFilterPipeline
-  );
-  serializeFilterPipeline(
-    arraySchemaCapnp.initOffsetFilterPipeline(),
-    arraySchema.offsetFilterPipeline
-  );
-  serializeFilterPipeline(
-    arraySchemaCapnp.initValidityFilterPipeline(),
-    arraySchema.validityFilterPipeline
-  );
+  if (arraySchema.coordsFilterPipeline) {
+    serializeFilterPipeline(
+      arraySchemaCapnp.initCoordsFilterPipeline(),
+      arraySchema.coordsFilterPipeline
+    );
+  }
+
+  if (arraySchema.offsetFilterPipeline) {
+    serializeFilterPipeline(
+      arraySchemaCapnp.initOffsetFilterPipeline(),
+      arraySchema.offsetFilterPipeline
+    );
+  }
+  if (arraySchema.validityFilterPipeline) {
+    serializeFilterPipeline(
+      arraySchemaCapnp.initValidityFilterPipeline(),
+      arraySchema.validityFilterPipeline
+    );
+  }
 
   if (arraySchema.attributes?.length) {
     const attributes = arraySchemaCapnp.initAttributes(
@@ -878,7 +933,9 @@ const serializeArraySchema = (
     );
   }
 
-  serializeDomain(arraySchemaCapnp.initDomain(), arraySchema.domain);
+  if (arraySchema.domain && Object.keys(arraySchema.domain).length) {
+    serializeDomain(arraySchemaCapnp.initDomain(), arraySchema.domain);
+  }
 
   return arraySchemaCapnp;
 };
@@ -888,10 +945,12 @@ const serializeDomain = (domainCapnp: DomainCapnp, domain: Domain) => {
   domainCapnp.setTileOrder(domain.tileOrder);
   domainCapnp.setType(domain.type);
 
-  const dimensions = domainCapnp.initDimensions(domain.dimensions.length);
-  dimensions.forEach((dimensionCapnp, i) => {
-    serializeDimension(dimensionCapnp, domain.dimensions[i]);
-  });
+  if (domain.dimensions.length) {
+    const dimensions = domainCapnp.initDimensions(domain.dimensions.length);
+    dimensions.forEach((dimensionCapnp, i) => {
+      serializeDimension(dimensionCapnp, domain.dimensions[i]);
+    });
+  }
 };
 
 const serializeDimension = (
@@ -902,13 +961,21 @@ const serializeDimension = (
   dimensionCapnp.setNullTileExtent(dimension.nullTileExtent);
   dimensionCapnp.setType(dimension.type);
 
-  serializeFilterPipeline(
-    dimensionCapnp.initFilterPipeline(),
-    dimension.filterPipeline
-  );
+  if (dimension.filterPipeline) {
+    serializeFilterPipeline(
+      dimensionCapnp.initFilterPipeline(),
+      dimension.filterPipeline
+    );
+  }
 
-  serializeDomainArray(dimensionCapnp.initDomain(), dimension.domain);
+  if (dimension.domain && Object.keys(dimension.domain).length) {
+    serializeDomainArray(dimensionCapnp.initDomain(), dimension.domain);
+  }
   const { tileExtent } = dimension;
+  if (!tileExtent) {
+    return;
+  }
+
   const tileExtentCapnp = dimensionCapnp.initTileExtent();
 
   if (tileExtent.float32) {
@@ -980,6 +1047,10 @@ const serializeFilterPipeline = (
   filterPipelineCapnp: FilterPipelineCapnp,
   filterPipeline: FilterPipeline
 ) => {
+  if (!filterPipeline.filters) {
+    return;
+  }
+
   const filters = filterPipelineCapnp.initFilters(
     filterPipeline.filters.length || 0
   );
@@ -987,46 +1058,47 @@ const serializeFilterPipeline = (
     const filterData = filterPipeline.filters[i];
 
     filter.setType(filterData.type);
-    const data = filter.initData();
+    if (filterData.data) {
+      const data = filter.initData();
+      if (filterData.data.float32) {
+        data.setFloat32(filterData.data.float32);
+      }
 
-    if (filterData.data.float32) {
-      data.setFloat32(filterData.data.float32);
-    }
+      if (filterData.data.float64) {
+        data.setFloat64(filterData.data.float64);
+      }
 
-    if (filterData.data.float64) {
-      data.setFloat64(filterData.data.float64);
-    }
+      if (filterData.data.int32) {
+        data.setInt32(filterData.data.int32);
+      }
 
-    if (filterData.data.int32) {
-      data.setInt32(filterData.data.int32);
-    }
+      if (filterData.data.int16) {
+        data.setInt16(filterData.data.int16);
+      }
 
-    if (filterData.data.int16) {
-      data.setInt16(filterData.data.int16);
-    }
+      if (filterData.data.int8) {
+        data.setInt8(filterData.data.int8);
+      }
 
-    if (filterData.data.int8) {
-      data.setInt8(filterData.data.int8);
-    }
+      if (filterData.data.int64) {
+        data.setInt64(capnp.Int64.fromNumber(filterData.data.int64));
+      }
 
-    if (filterData.data.int64) {
-      data.setInt64(capnp.Int64.fromNumber(filterData.data.int64));
-    }
+      if (filterData.data.uint16) {
+        data.setUint16(filterData.data.uint16);
+      }
 
-    if (filterData.data.uint16) {
-      data.setUint16(filterData.data.uint16);
-    }
+      if (filterData.data.uint32) {
+        data.setUint32(filterData.data.uint32);
+      }
 
-    if (filterData.data.uint32) {
-      data.setUint32(filterData.data.uint32);
-    }
+      if (filterData.data.uint8) {
+        data.setUint8(filterData.data.uint8);
+      }
 
-    if (filterData.data.uint8) {
-      data.setUint8(filterData.data.uint8);
-    }
-
-    if (filterData.data.uint64) {
-      data.setUint64(capnp.Uint64.fromNumber(filterData.data.uint64));
+      if (filterData.data.uint64) {
+        data.setUint64(capnp.Uint64.fromNumber(filterData.data.uint64));
+      }
     }
 
     if (filterData.floatScaleConfig) {
@@ -1142,8 +1214,7 @@ const serializeSubArray = (capSubArray: Subarray, subArray: SubarrayType) => {
     r.setType(range.type);
     r.setHasDefaultRange(range.hasDefaultRange);
 
-    const totalBufferSize = bufferSizesArray.reduce(add);
-    const bufferData = r.initBuffer(totalBufferSize);
+    const bufferData = r.initBuffer(range.buffer.length);
     const view = Uint8Array.from(range.buffer);
 
     bufferData.copyBuffer(view);

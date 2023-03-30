@@ -1,16 +1,18 @@
 import dataToQuery from "../utils/dataToQuery";
 import capnpQueryDeSerializer from "../utils/deserialization/capnpQueryDeSerializer";
-import { ArrayApi, ArraySchema } from "../v1";
 import {
   AttributeBufferHeader,
   Configuration,
   ConfigurationParameters,
   Query,
   QueryApi,
-  ArrayApi as ArrayApiV2,
   Querystatus,
   Querytype,
   ArrayData,
+} from "../v3";
+import {
+  ArrayApi as ArrayApiV2,
+  ArraySchema
 } from "../v2";
 import getWriterBody from "../utils/getWriterBody";
 import convertToArrayBufferIfNodeBuffer from "../utils/convertToArrayBufferIfNodeBuffer";
@@ -22,6 +24,7 @@ import globalAxios, { AxiosInstance } from "axios";
 import capnpArrayDeserializer from "../utils/deserialization/capnpArrayDeserializer";
 import arrayFetchFromConfig from "../utils/arrayFetchFromConfig";
 import capnpArrayFetchSerializer from "../utils/serialization/capnpArrayFetchSerializer";
+import responseTypes from '../constants/responseTypes';
 
 type Range = number[] | string[];
 export interface QueryData extends Pick<Query, "layout">, Options {
@@ -47,7 +50,6 @@ export class TileDBQuery {
   configurationParams: ConfigurationParameters;
   private axios: AxiosInstance;
   private queryAPI: QueryApi;
-  private arrayAPI: ArrayApi;
   private arrayAPIV2: ArrayApiV2;
   private config: Configuration;
 
@@ -59,27 +61,32 @@ export class TileDBQuery {
 
     const config = new Configuration(this.configurationParams);
     const baseV1 = config.basePath?.replace("v2", "v1");
+    const baseV3 = config.basePath?.replace("v2", "v3");
     // Add versioning if basePath exists
     const configV1 = new Configuration({
       ...this.configurationParams,
       // Override basePath v2 for v1 to make calls to get ArraySchema (from v1 API)
       ...(baseV1 ? { basePath: baseV1 } : {}),
     });
+    const configV3 = new Configuration({
+      ...this.configurationParams,
+      // Override basePath v2 for v1 to make calls to get ArraySchema (from v1 API)
+      ...(baseV3 ? { basePath: baseV3 } : {}),
+    });
     this.config = configV1;
-    this.queryAPI = new QueryApi(config, undefined, this.axios);
-    this.arrayAPI = new ArrayApi(configV1, undefined, this.axios);
+    this.queryAPI = new QueryApi(configV3, undefined, this.axios);
     this.arrayAPIV2 = new ArrayApiV2(config, undefined, this.axios);
   }
 
   async WriteQuery(namespace: string, arrayName: string, data: QueryWrite) {
     try {
-      const arraySchemaResponse = await this.arrayAPI.getArray(
+      const arrayStruct = await this.ArrayOpen(
         namespace,
         arrayName,
-        "application/json"
+        Querytype.Write
       );
-      const arraySchema = arraySchemaResponse.data;
-      const body = getWriterBody(data, arraySchema);
+
+      const body = getWriterBody(data, arrayStruct);
 
       const queryResponse = await this.queryAPI.submitQuery(
         namespace,
@@ -189,18 +196,24 @@ export class TileDBQuery {
     namespace: string,
     arrayName: string,
     body: QueryData,
-    arraySchema?: ArraySchema
+    arrayStruct?: ArrayData,
   ) {
     try {
-      // Get ArraySchema of arrray, to get type information of the dimensions and the attributes
-      if (typeof arraySchema === "undefined") {
-        const arrayFromCapnp = await this.ArrayOpen(
+      /**
+       * If we don't get the arrayStruct as an argument, we need to ArrayOpen
+       */
+      if (!arrayStruct) {
+        arrayStruct = await this.ArrayOpen(
           namespace,
           arrayName,
           Querytype.Read
         );
-        arraySchema = arrayFromCapnp.arraySchemaLatest as ArraySchema;
       }
+      
+      /**
+       * Use latest ArraySchema to get information of array's dimensions & attributes
+       */
+      const arraySchema = arrayStruct.arraySchemaLatest;
 
       const options = {
         ignoreNullables: body.ignoreNullables,
@@ -212,17 +225,19 @@ export class TileDBQuery {
        * Get the query response in capnp, we set responseType to arraybuffer instead of JSON
        * in order to deserialize the query capnp object.
        */
+      const queryJSON = dataToQuery(
+        body,
+        arraySchema,
+        arrayStruct,
+        options
+      );
+      
       const queryResponse = await this.queryAPI.submitQuery(
         namespace,
         arrayName,
         Querytype.Read,
         "application/capnp",
-        dataToQuery(
-          body,
-          arraySchema.attributes,
-          arraySchema.domain.dimensions,
-          options
-        ),
+        queryJSON,
         undefined,
         undefined,
         undefined,
@@ -349,30 +364,49 @@ export class TileDBQuery {
     }
   }
 
-  async ArrayOpen(namespace: string, array: string, queryType: Querytype): Promise<ArrayData> {
+  async ArrayOpen(namespace: string, array: string, queryType: Querytype, contentType: string | undefined = "application/json"): Promise<ArrayData> {
     const arrayFetch = arrayFetchFromConfig(this.config, queryType);
-    const arrayFetchCapnp: any = capnpArrayFetchSerializer(arrayFetch);
+    const isJSONEncoded = contentType === 'application/json';
+    /**
+     * If conntentType is application/capnp we need to serialize
+     * ArrayFetch object to capnp before sending the request.
+     */
+    const arrayFetchData: any = isJSONEncoded ? arrayFetch : capnpArrayFetchSerializer(arrayFetch);
 
     return new Promise(async (resolve, reject) => {
       try {
         const response = await this.arrayAPIV2.getArray(
           namespace,
           array,
-          "application/capnp",
-          arrayFetchCapnp,
+          contentType,
+          arrayFetchData,
           {
             headers: {
-              "Content-Type": "application/capnp",
+              "Content-Type": contentType,
             },
-            responseType: "arraybuffer",
+            responseType: responseTypes[contentType],
           }
         );
-
+        /**
+         * If we get back JSON encoded we resolve the promise
+         * if we get back capnp buffers, we need to deserialize it before resolving
+         */
+        if (isJSONEncoded) {
+          resolve(response.data);
+          return;
+        }
         const arrayStructAsArrayBuffer = convertToArrayBufferIfNodeBuffer(response.data);
         const deserializedArrayStruct = capnpArrayDeserializer(arrayStructAsArrayBuffer);
 
         resolve(deserializedArrayStruct);
       } catch (e) {
+        if (isJSONEncoded) {
+          reject(e);
+          return;
+        }
+        /**
+         * If we request application/capnp contentType, errors return as ArrayBuffer
+         */
         if (e.response.data) {
           const err = new Error(new TextDecoder().decode(e.response.data));
           reject(err);
@@ -383,5 +417,7 @@ export class TileDBQuery {
     });
   }
 }
+
+
 
 export default TileDBQuery;
