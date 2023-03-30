@@ -258,7 +258,7 @@ export declare class TileDBQuery {
         results: Record<string, any>;
         queryAsArrayBuffer: ArrayBuffer;
     }>;
-    ReadQuery(namespace: string, arrayName: string, body: QueryData, arraySchema?: ArraySchema): AsyncGenerator<{}, void, unknown>;
+    ReadQuery(namespace: string, arrayName: string, body: QueryData, arrayStruct?: ArrayData): AsyncGenerator<{}, void, unknown>;
     private getResultsFromArrayBuffer;
     private throwError;
     ArrayOpen(namespace: string, array: string, queryType: Querytype, contentType?: string | undefined): Promise<ArrayData>;

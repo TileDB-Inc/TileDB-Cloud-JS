@@ -196,18 +196,24 @@ export class TileDBQuery {
     namespace: string,
     arrayName: string,
     body: QueryData,
-    arraySchema?: ArraySchema,
+    arrayStruct?: ArrayData,
   ) {
     try {
-      // Get ArraySchema of arrray, to get type information of the dimensions and the attributes
-      const arrayStruct = await this.ArrayOpen(
-        namespace,
-        arrayName,
-        Querytype.Read
-      );
-      if (!arraySchema) {
-        arraySchema = arrayStruct.arraySchemaLatest as ArraySchema;
+      /**
+       * If we don't get the arrayStruct as an argument, we need to ArrayOpen
+       */
+      if (!arrayStruct) {
+        arrayStruct = await this.ArrayOpen(
+          namespace,
+          arrayName,
+          Querytype.Read
+        );
       }
+      
+      /**
+       * Use latest ArraySchema to get information of array's dimensions & attributes
+       */
+      const arraySchema = arrayStruct.arraySchemaLatest;
 
       const options = {
         ignoreNullables: body.ignoreNullables,
@@ -361,6 +367,10 @@ export class TileDBQuery {
   async ArrayOpen(namespace: string, array: string, queryType: Querytype, contentType: string | undefined = "application/json"): Promise<ArrayData> {
     const arrayFetch = arrayFetchFromConfig(this.config, queryType);
     const isJSONEncoded = contentType === 'application/json';
+    /**
+     * If conntentType is application/capnp we need to serialize
+     * ArrayFetch object to capnp before sending the request.
+     */
     const arrayFetchData: any = isJSONEncoded ? arrayFetch : capnpArrayFetchSerializer(arrayFetch);
 
     return new Promise(async (resolve, reject) => {
@@ -377,6 +387,10 @@ export class TileDBQuery {
             responseType: responseTypes[contentType],
           }
         );
+        /**
+         * If we get back JSON encoded we resolve the promise
+         * if we get back capnp buffers, we need to deserialize it before resolving
+         */
         if (isJSONEncoded) {
           resolve(response.data);
           return;
@@ -390,6 +404,9 @@ export class TileDBQuery {
           reject(e);
           return;
         }
+        /**
+         * If we request application/capnp contentType, errors return as ArrayBuffer
+         */
         if (e.response.data) {
           const err = new Error(new TextDecoder().decode(e.response.data));
           reject(err);
