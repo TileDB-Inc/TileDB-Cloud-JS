@@ -30,7 +30,7 @@ const getRanges = (
     const isArrayOfInts = isNumberArray(flatten(range));
     const isEmpty = !range.length;
     const domainKey = type?.toLowerCase() as keyof DomainArray | undefined;
-    const bounds = dimension?.domain[domainKey];
+    const bounds = dimension?.domain?.[domainKey];
 
     if (bounds && !checkRangeOutOfBounds(range, bounds)) {
       throw new Error(`Range ${JSON.stringify(range)} for dimension ${dimension?.name} is out of bounds`);
