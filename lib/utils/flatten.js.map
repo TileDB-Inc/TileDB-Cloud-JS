@@ -1,1 +1,1 @@
-{"version":3,"file":"flatten.js","sourceRoot":"","sources":["../../src/utils/flatten.ts"],"names":[],"mappings":";;AAAA;;GAEG;AACH,MAAM,OAAO,GAAG,CAAkB,IAAO,EAAE,EAAE,CAAE,IAAY,CAAC,IAAI,EAAE,CAAC;AAGnE,kBAAe,OAAO,CAAC"}
+{"version":3,"file":"flatten.js","sourceRoot":"","sources":["../../src/utils/flatten.ts"],"names":[],"mappings":";;AAAA;;GAEG;AACH,MAAM,OAAO,GAAG,CAAkB,IAAO,EAAE,EAAE,CAAC,IAAI,CAAC,IAAI,EAAE,CAAC;AAG1D,kBAAe,OAAO,CAAC"}

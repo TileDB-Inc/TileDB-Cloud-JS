@@ -23,7 +23,7 @@ import capnpArrayDeserializer from "../utils/deserialization/capnpArrayDeseriali
 import arrayFetchFromConfig from "../utils/arrayFetchFromConfig";
 import capnpArrayFetchSerializer from "../utils/serialization/capnpArrayFetchSerializer";
 
-type Range = number[] | string[];
+export type Range = number[] | string[];
 export interface QueryData extends Pick<Query, "layout">, Options {
   ranges: Array<Range | Array<Range>>;
   /**
