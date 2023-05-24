@@ -1,1 +1,0 @@
-{"version":3,"file":"getAttributeSizeInBytes.js","sourceRoot":"","sources":["../../src/utils/getAttributeSizeInBytes.ts"],"names":[],"mappings":";;AAEA;;;;GAIG;AACH,MAAM,uBAAuB,GAAG,CAAC,IAA2B,EAAE,EAAE;IAC9D,OAAO,CACL,IAAI,CAAC,yBAAyB;QAC9B,IAAI,CAAC,uBAAuB;QAC5B,IAAI,CAAC,4BAA4B,CAClC,CAAC;AACJ,CAAC,CAAC;AAEF,kBAAe,uBAAuB,CAAC"}

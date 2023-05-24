@@ -114,3 +114,7 @@ tmp/
 ./src/git_push.sh
 ./src/.openapi-generator
 .vscode
+
+
+# Build files
+lib

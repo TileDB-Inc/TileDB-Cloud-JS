@@ -1,1 +1,0 @@
-{"version":3,"file":"getAttributeSchema.js","sourceRoot":"","sources":["../../src/utils/getAttributeSchema.ts"],"names":[],"mappings":";;AAEA;;GAEG;AACF,MAAM,kBAAkB,GAAG,CACxB,QAAgB,EAChB,gBAA8C,EAC9C,EAAE;IACF,OAAO,gBAAgB,CAAC,IAAI,CAAC,CAAC,IAAI,EAAE,EAAE,CAAC,IAAI,CAAC,IAAI,KAAK,QAAQ,CAAC,CAAC;AACjE,CAAC,CAAC;AAEF,kBAAe,kBAAkB,CAAC"}
