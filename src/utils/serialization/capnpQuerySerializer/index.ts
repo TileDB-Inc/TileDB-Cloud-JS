@@ -1,4 +1,4 @@
-import capnpQuerySerializer from "./capnpQuerySerializer";
+import capnpQuerySerializer from './capnpQuerySerializer';
 
-export default capnpQuerySerializer
+export default capnpQuerySerializer;
 export * from './capnpQuerySerializer';

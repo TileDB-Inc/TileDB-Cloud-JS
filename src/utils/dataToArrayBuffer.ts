@@ -1,5 +1,5 @@
-import { Datatype } from "../v2";
-import getTypedArrayFromDataType from "./getTypedArrayFromDataType";
+import { Datatype } from '../v2';
+import getTypedArrayFromDataType from './getTypedArrayFromDataType';
 
 const dataToArrayBuffer = (data: any = [], type: Datatype): ArrayBuffer => {
   if (!data.length) {
@@ -42,18 +42,18 @@ const dataToArrayBuffer = (data: any = [], type: Datatype): ArrayBuffer => {
 export default dataToArrayBuffer;
 
 function utf16StrToArrayBuffer(str: string): ArrayBuffer {
-  var buf = new ArrayBuffer(str.length * 2); // 2 bytes for each char
-  var bufView = new Uint16Array(buf);
-  for (var i = 0, strLen = str.length; i < strLen; i++) {
+  const buf = new ArrayBuffer(str.length * 2); // 2 bytes for each char
+  const bufView = new Uint16Array(buf);
+  for (let i = 0, strLen = str.length; i < strLen; i++) {
     bufView[i] = str.charCodeAt(i);
   }
   return buf;
 }
 
 function utf32StrToArrayBuffer(str: string): ArrayBuffer {
-  var buf = new ArrayBuffer(str.length * 4); // 4 bytes for each char
-  var bufView = new Uint32Array(buf);
-  for (var i = 0, strLen = str.length; i < strLen; i++) {
+  const buf = new ArrayBuffer(str.length * 4); // 4 bytes for each char
+  const bufView = new Uint32Array(buf);
+  for (let i = 0, strLen = str.length; i < strLen; i++) {
     bufView[i] = str.charCodeAt(i);
   }
   return buf;

@@ -1,3 +1,3 @@
-import capnpArrayFetchDeserializer from "./capnpArrayFetchDeserializer";
+import capnpArrayFetchDeserializer from './capnpArrayFetchDeserializer';
 
 export default capnpArrayFetchDeserializer;

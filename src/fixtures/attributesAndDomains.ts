@@ -1,4 +1,4 @@
-import { Attribute, Dimension, Datatype } from "../v1";
+import { Attribute, Dimension, Datatype } from '../v1';
 
 const attributesAndDomains: Array<Dimension | Attribute> = [
   {
@@ -6,7 +6,7 @@ const attributesAndDomains: Array<Dimension | Attribute> = [
       int32: [1, 2],
     },
     filterPipeline: {},
-    name: "cols",
+    name: 'cols',
     nullTileExtent: false,
     tileExtent: {
       int32: 2,
@@ -16,19 +16,19 @@ const attributesAndDomains: Array<Dimension | Attribute> = [
   {
     cellValNum: 1,
     filterPipeline: {},
-    name: "a1",
+    name: 'a1',
     type: Datatype.Int32,
   },
   {
     cellValNum: 4294967295,
     filterPipeline: {},
-    name: "a2",
+    name: 'a2',
     type: Datatype.Int32,
   },
   {
     cellValNum: 4294967295,
     filterPipeline: {},
-    name: "a3",
+    name: 'a3',
     type: Datatype.StringUtf8,
   },
 ];

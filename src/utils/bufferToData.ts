@@ -1,4 +1,4 @@
-import { Datatype } from "../v2";
+import { Datatype } from '../v2';
 import { int64Types } from './mapToBigIntIfNeeded';
 import typedArrayToArray from './typedArrayToArray';
 
@@ -27,16 +27,16 @@ export const bufferToString = (arrayBuffer: ArrayBuffer) => {
   return utf8decoder.decode(arrayBuffer);
 };
 export const bufferToAscii = (arrayBuffer: ArrayBuffer) => {
-  const utf8decoder = new TextDecoder("ascii");
+  const utf8decoder = new TextDecoder('ascii');
   return utf8decoder.decode(arrayBuffer);
 };
 export const bufferToUTF16 = (arrayBuffer: ArrayBuffer) => {
-  const utf8decoder = new TextDecoder("utf-16");
+  const utf8decoder = new TextDecoder('utf-16');
   return utf8decoder.decode(arrayBuffer);
 };
 export const bufferToUTF32 = (arrayBuffer: ArrayBuffer) => {
   const view = new DataView(arrayBuffer, 0, arrayBuffer.byteLength);
-  let result = "";
+  let result = '';
 
   for (let i = 0; i < arrayBuffer.byteLength; i += 4) {
     result += String.fromCodePoint(view.getInt32(i, true));
@@ -44,7 +44,6 @@ export const bufferToUTF32 = (arrayBuffer: ArrayBuffer) => {
 
   return result;
 };
-
 
 /**
  * Convert an ArrayBuffer to its corresponding type

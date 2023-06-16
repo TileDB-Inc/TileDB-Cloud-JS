@@ -1,3 +1,3 @@
-import arrayFetchFromConfig from "./arrayFetchFromConfig";
+import arrayFetchFromConfig from './arrayFetchFromConfig';
 
 export default arrayFetchFromConfig;

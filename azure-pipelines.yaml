@@ -15,6 +15,7 @@ jobs:
           versionSpec: 18.x
       - script: |
           npm install \
+          && npm run lint \
           && npm run build-ts \
           && npm run test
         displayName: Install dependencies, build and run tests

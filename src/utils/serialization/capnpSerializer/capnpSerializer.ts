@@ -1,9 +1,9 @@
-import { ArrayMetadata } from "../../../capnp/arrayMetadata_capnp";
-import { ArrayFetch, Query } from "../../../v2";
-import * as capnp from "capnp-ts";
-import { ArrayMetadata as ArrayMetadataType } from "../../../v1/api";
-import capnpQuerySerializer from "../capnpQuerySerializer";
-import capnpArrayFetchSerializer from "../capnpArrayFetchSerializer";
+import { ArrayMetadata } from '../../../capnp/arrayMetadata_capnp';
+import { ArrayFetch, Query } from '../../../v2';
+import * as capnp from 'capnp-ts';
+import { ArrayMetadata as ArrayMetadataType } from '../../../v1/api';
+import capnpQuerySerializer from '../capnpQuerySerializer';
+import capnpArrayFetchSerializer from '../capnpArrayFetchSerializer';
 
 const capnpSerializer = (data: any) => {
   if (isArrayFetch(data)) {
@@ -13,7 +13,7 @@ const capnpSerializer = (data: any) => {
   } else if (isQuerydata(data)) {
     return capnpQuerySerializer(data);
   }
-  
+
   return data;
 };
 
@@ -44,7 +44,6 @@ const serializeArrayMetadata = (data: ArrayMetadataType) => {
 
   return message.toArrayBuffer();
 };
-
 
 const isArrayMetadata = (data: any): data is ArrayMetadataType => {
   if (data && Array.isArray(data.entries)) {

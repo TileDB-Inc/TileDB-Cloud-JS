@@ -5,9 +5,9 @@ import {
   UdfApi,
   UDFInfoUpdate,
   UDFSharing,
-  UDFType,
-} from "../v1";
-import globalAxios, { AxiosInstance } from "axios";
+  UDFType
+} from '../v1';
+import globalAxios, { AxiosInstance } from 'axios';
 
 class UDF {
   config: Configuration;
@@ -30,11 +30,11 @@ class UDF {
   public registerGenericUdf(
     namespace: string,
     name: string,
-    udf: Omit<UDFInfoUpdate, "type">
+    udf: Omit<UDFInfoUpdate, 'type'>
   ) {
     const udfObject = {
       ...udf,
-      type: UDFType.Generic,
+      type: UDFType.Generic
     };
     return this.API.registerUDFInfo(namespace, name, udfObject);
   }
@@ -42,11 +42,11 @@ class UDF {
   public registerSingleArrayUdf(
     namespace: string,
     name: string,
-    udf: Omit<UDFInfoUpdate, "type">
+    udf: Omit<UDFInfoUpdate, 'type'>
   ) {
     const udfObject = {
       ...udf,
-      type: UDFType.SingleArray,
+      type: UDFType.SingleArray
     };
     return this.API.registerUDFInfo(namespace, name, udfObject);
   }
@@ -58,11 +58,11 @@ class UDF {
   public updateGenericUdf(
     namespace: string,
     name: string,
-    udf: Omit<UDFInfoUpdate, "type">
+    udf: Omit<UDFInfoUpdate, 'type'>
   ) {
     const udfObject = {
       ...udf,
-      type: UDFType.Generic,
+      type: UDFType.Generic
     };
     return this.API.updateUDFInfo(namespace, name, udfObject);
   }
@@ -70,11 +70,11 @@ class UDF {
   public updateSingleArrayUdf(
     namespace: string,
     name: string,
-    udf: Omit<UDFInfoUpdate, "type">
+    udf: Omit<UDFInfoUpdate, 'type'>
   ) {
     const udfObject = {
       ...udf,
-      type: UDFType.SingleArray,
+      type: UDFType.SingleArray
     };
     return this.API.updateUDFInfo(namespace, name, udfObject);
   }
@@ -82,20 +82,22 @@ class UDF {
   public async exec(
     namespaceAndUdf: string,
     args?: Array<any>,
-    options?: Omit<GenericUDF, "argument" | "udf_info_name">
+    options?: Omit<GenericUDF, 'argument' | 'udf_info_name'>
   ) {
     if (!namespaceAndUdf.includes('/')) {
-      throw new Error("First argument should include namespace and the udf name separated by a '/' e.g. TileDB/myUDF");
+      throw new Error(
+        "First argument should include namespace and the udf name separated by a '/' e.g. TileDB/myUDF"
+      );
     }
 
     if (args && !Array.isArray(args)) {
-      throw new Error("Arguments should be contained in an array");
+      throw new Error('Arguments should be contained in an array');
     }
-    const [namespace] = namespaceAndUdf.split("/");
+    const [namespace] = namespaceAndUdf.split('/');
     const udf: GenericUDF = {
       udf_info_name: namespaceAndUdf,
       ...(args ? { argument: JSON.stringify(args) } : {}),
-      ...options,
+      ...options
     };
     const result = await this.API.submitGenericUDF(namespace, udf);
     return result.data;
@@ -116,7 +118,7 @@ class UDF {
   ) {
     const noActions = {
       namespace: namespaceToUnshare,
-      actions: [],
+      actions: []
     };
     return this.API.shareUDFInfo(namespace, udfName, noActions);
   }

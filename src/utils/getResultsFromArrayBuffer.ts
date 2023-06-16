@@ -1,13 +1,13 @@
-import { Attribute, Dimension } from "../v1";
-import { AttributeBufferHeader } from "../v2";
-import getAttributeSizeInBytes from "./getAttributeSizeInBytes";
-import getAttributeSchema from "./getAttributeSchema";
-import getAttributeResult, { bufferToInt8 } from "./bufferToData";
-import getByteLengthOfDatatype from "./getByteLengthOfDatatype";
-import setNullables from "./setNullables";
-import groupValuesByOffsetBytes from "./groupValuesByOffsetBytes";
-import concatChars from "./concatChars";
-import convertToArray from "./convertToArray";
+import { Attribute, Dimension } from '../v1';
+import { AttributeBufferHeader } from '../v2';
+import getAttributeSizeInBytes from './getAttributeSizeInBytes';
+import getAttributeSchema from './getAttributeSchema';
+import getAttributeResult, { bufferToInt8 } from './bufferToData';
+import getByteLengthOfDatatype from './getByteLengthOfDatatype';
+import setNullables from './setNullables';
+import groupValuesByOffsetBytes from './groupValuesByOffsetBytes';
+import concatChars from './concatChars';
+import convertToArray from './convertToArray';
 
 export interface Options {
   /**
@@ -30,7 +30,7 @@ export interface Options {
   returnRawBuffers?: boolean;
 }
 
-type Result = string[] | string | number[] | BigInt[] | number[][] | BigInt[][];
+type Result = string[] | string | number[] | bigint[] | number[][] | bigint[][];
 
 /**
  * Convert an ArrayBuffer to a map of attributes with their results
@@ -103,7 +103,7 @@ export const getResultsFromArrayBuffer = async (
       let result: Result = getAttributeResult(
         arrayBuffer.slice(start, end),
         selectedAttributeSchema.type
-      ) as string | number[] | BigInt[];
+      ) as string | number[] | bigint[];
 
       let offsets: number[] = [];
       if (isVarLengthSized && !options.ignoreOffsets) {
@@ -122,8 +122,8 @@ export const getResultsFromArrayBuffer = async (
          */
         const byteOffsets = Array.from(new BigUint64Array(offsetsBuffer));
         // Convert byte offsets to offsets
-        offsets = byteOffsets.map((o) => Number(o / BigInt(BYTE_PER_ELEMENT)));
-        const isString = typeof result === "string";
+        offsets = byteOffsets.map(o => Number(o / BigInt(BYTE_PER_ELEMENT)));
+        const isString = typeof result === 'string';
         const groupedValues = await groupValuesByOffsetBytes(
           convertToArray(result),
           offsets
@@ -131,7 +131,7 @@ export const getResultsFromArrayBuffer = async (
         // If it's a string we concat all the characters to create array of strings
         result = isString
           ? concatChars(groupedValues as string[][])
-          : (groupedValues as number[][] | BigInt[][]);
+          : (groupedValues as number[][] | bigint[][]);
       }
 
       if (isNullable && !options.ignoreNullables) {
@@ -152,13 +152,13 @@ export const getResultsFromArrayBuffer = async (
          */
         const nullablesArray = Array.from(nullablesTypedArray);
         const values = convertToArray(result) as Array<
-          string | BigInt | number
+          string | bigint | number
         >;
 
         result = (await setNullables(values, nullablesArray)) as
           | number[]
           | string[]
-          | BigInt[];
+          | bigint[];
       }
 
       data[attribute.name] = result;

@@ -1,4 +1,4 @@
-import save from "save-file";
+import save from 'save-file';
 import axios, { AxiosInstance } from 'axios';
 import {
   ArrayApi,
@@ -7,13 +7,13 @@ import {
   OrganizationApi,
   NotebookApi,
   TasksApi,
-  UserApi,
-} from "../v1";
-import UDF from "../UDF";
-import Sql from "../Sql";
-import Groups from "../Groups";
-import { ConfigurationParameters, Configuration, Layout } from "../v2";
-import TileDBQuery from "../TileDBQuery";
+  UserApi
+} from '../v1';
+import UDF from '../UDF';
+import Sql from '../Sql';
+import Groups from '../Groups';
+import { ConfigurationParameters, Configuration, Layout } from '../v2';
+import TileDBQuery from '../TileDBQuery';
 
 interface NotebookOrFileDimensions {
   contents: number[];
@@ -21,10 +21,10 @@ interface NotebookOrFileDimensions {
 }
 
 const defaultConfig: ConfigurationParameters = {
-  basePath: "https://api.tiledb.com",
+  basePath: 'https://api.tiledb.com'
 };
 
-const isNode = typeof process === "object";
+const isNode = typeof process === 'object';
 
 if (isNode) {
   if (process.env.TILEDB_REST_HOST) {
@@ -52,19 +52,19 @@ class TileDBClient {
   constructor(
     params: Omit<
       ConfigurationParameters,
-      "username" | "password"
+      'username' | 'password'
     > = defaultConfig
   ) {
     const config = {
       ...defaultConfig,
-      ...params,
+      ...params
     };
     this.axios = axios.create();
 
     this.config = new Configuration({
       ...config,
       // for v1 API calls basePath needs /v1 suffix
-      basePath: config.basePath + "/v1",
+      basePath: config.basePath + '/v1'
     });
 
     // Add versioning if basePath exists
@@ -72,11 +72,15 @@ class TileDBClient {
       ...defaultConfig,
       ...params,
       // for v2 API calls, basePath needs /v2 suffix
-      basePath: config.basePath + "/v2",
+      basePath: config.basePath + '/v2'
     });
 
     this.ArrayApi = new ArrayApi(this.config, undefined, this.axios);
-    this.OrganizationApi = new OrganizationApi(this.config, undefined, this.axios);
+    this.OrganizationApi = new OrganizationApi(
+      this.config,
+      undefined,
+      this.axios
+    );
     this.UserApi = new UserApi(this.config, undefined, this.axios);
     this.NotebookApi = new NotebookApi(this.config, undefined, this.axios);
     this.TasksApi = new TasksApi(this.config, undefined, this.axios);
@@ -151,7 +155,7 @@ class TileDBClient {
   ) {
     const noActions = {
       actions: [],
-      namespace: namespaceToUnshare,
+      namespace: namespaceToUnshare
     };
     return this.ArrayApi.shareArray(namespace, array, noActions, options);
   }
@@ -187,7 +191,7 @@ class TileDBClient {
       fileType,
       excludeFileType,
       fileProperty,
-      options,
+      options
     } = params;
     return this.ArrayApi.arraysBrowserOwnedGet(
       page,
@@ -236,7 +240,7 @@ class TileDBClient {
       fileType,
       excludeFileType,
       fileProperty,
-      options,
+      options
     } = params;
     return this.ArrayApi.arraysBrowserPublicGet(
       page,
@@ -285,7 +289,7 @@ class TileDBClient {
       fileType,
       excludeFileType,
       fileProperty,
-      options,
+      options
     } = params;
     return this.ArrayApi.arraysBrowserSharedGet(
       page,
@@ -334,7 +338,7 @@ class TileDBClient {
     options?: any
   ) {
     const notebookMetadata = {
-      name: notebookName,
+      name: notebookName
     };
     return this.NotebookApi.updateNotebookName(
       namespace,
@@ -363,12 +367,12 @@ class TileDBClient {
       layout: Layout.RowMajor,
       ranges: [[0, notebookSize]],
       bufferSize: notebookSize,
-      attributes: ["contents"],
+      attributes: ['contents']
     };
     // NotebookContents is an Array of Uint8
     let notebookContents: number[] = [];
 
-    for await (let results of this.query.ReadQuery(
+    for await (const results of this.query.ReadQuery(
       namespace,
       notebook,
       query
@@ -383,7 +387,7 @@ class TileDBClient {
     const json = decoder.decode(buffer);
 
     // Replace unprintable characters
-    return json.replace(/[^\x20-\x7E]/g, "");
+    return json.replace(/[^\x20-\x7E]/g, '');
   }
 
   public async downloadNotebookToFile(namespace: string, notebook: string) {
@@ -415,10 +419,10 @@ class TileDBClient {
       layout: Layout.RowMajor,
       ranges: [[0, file_size]],
       bufferSize: file_size,
-      attributes: ["contents"],
+      attributes: ['contents']
     };
 
-    for await (let results of this.query.ReadQuery(namespace, file, query)) {
+    for await (const results of this.query.ReadQuery(namespace, file, query)) {
       fileContents = fileContents.concat(
         (results as NotebookOrFileDimensions).contents
       );
@@ -429,7 +433,7 @@ class TileDBClient {
     return {
       buffer,
       originalFileName: original_file_name,
-      mimeType: mime_type,
+      mimeType: mime_type
     };
   }
 

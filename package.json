@@ -1,6 +1,6 @@
 {
   "name": "@tiledb-inc/tiledb-cloud",
-  "version": "1.0.12-alpha.2",
+  "version": "1.0.12",
   "description": "JavaScript client for the TileDB Cloud Service.",
   "main": "lib/index.js",
   "files": [
@@ -12,6 +12,8 @@
     "build": "npm run generate-openapi:v1 && npm run generate-openapi:v2 && tsc",
     "build-ts": "tsc",
     "test": "jest",
+    "lint": "eslint './src/**/*.{ts,tsx}'",
+    "lint:fix": "eslint './src/**/*.{ts,tsx}' --fix",
     "capnp": "capnpc -o ts src/capnp/arrayMetadata.capnp && capnpc -o ts src/capnp/query.capnp"
   },
   "dependencies": {
@@ -28,6 +30,12 @@
     "@types/jest": "^27.0.1",
     "axios-mock-adapter": "^1.20.0",
     "jest": "^27.2.0",
+    "@typescript-eslint/eslint-plugin": "^5.59.2",
+    "@typescript-eslint/parser": "^5.59.2",
+    "eslint": "^8.39.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-storybook": "^0.6.11",
     "ts-jest": "^27.0.5",
     "typescript": "^4.2.3"
   },

@@ -1,8 +1,8 @@
-import { Datatype } from "../v1";
+import { Datatype } from '../v1';
 
 export const fixedLenAttributesSchema = [
   {
-    name: "rows",
+    name: 'rows',
     nullTileExtent: false,
     type: Datatype.Int32,
     tileExtent: { int32: 4 },
@@ -10,7 +10,7 @@ export const fixedLenAttributesSchema = [
     filterPipeline: {},
   },
   {
-    name: "cols",
+    name: 'cols',
     nullTileExtent: false,
     type: Datatype.Int32,
     tileExtent: { int32: 4 },
@@ -19,7 +19,7 @@ export const fixedLenAttributesSchema = [
   },
   {
     cellValNum: 1,
-    name: "a3",
+    name: 'a3',
     type: Datatype.Int32,
     filterPipeline: {},
     fillValue: [0, 0, 0, 128],
@@ -28,7 +28,7 @@ export const fixedLenAttributesSchema = [
   },
   {
     cellValNum: 1,
-    name: "a0",
+    name: 'a0',
     type: Datatype.Int32,
     filterPipeline: {},
     fillValue: [0, 0, 0, 128],
@@ -39,7 +39,7 @@ export const fixedLenAttributesSchema = [
 
 export const varLenNullableAttributesSchema = [
   {
-    name: "rows",
+    name: 'rows',
     nullTileExtent: false,
     type: Datatype.Int32,
     tileExtent: { int32: 2 },
@@ -47,7 +47,7 @@ export const varLenNullableAttributesSchema = [
     filterPipeline: {},
   },
   {
-    name: "cols",
+    name: 'cols',
     nullTileExtent: false,
     type: Datatype.Int32,
     tileExtent: { int32: 2 },
@@ -56,7 +56,7 @@ export const varLenNullableAttributesSchema = [
   },
   {
     cellValNum: 1,
-    name: "a1",
+    name: 'a1',
     type: Datatype.Int32,
     filterPipeline: {},
     fillValue: [0, 0, 0, 128],
@@ -65,7 +65,7 @@ export const varLenNullableAttributesSchema = [
   },
   {
     cellValNum: 4294967295,
-    name: "a2",
+    name: 'a2',
     type: Datatype.Int32,
     filterPipeline: {},
     fillValue: [0, 0, 0, 128],
@@ -74,7 +74,7 @@ export const varLenNullableAttributesSchema = [
   },
   {
     cellValNum: 4294967295,
-    name: "a3",
+    name: 'a3',
     type: Datatype.StringUtf8,
     filterPipeline: {},
     fillValue: [0],

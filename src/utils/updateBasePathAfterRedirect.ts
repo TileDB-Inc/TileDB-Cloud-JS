@@ -1,4 +1,4 @@
-import { AxiosInstance } from "axios";
+import { AxiosInstance } from 'axios';
 
 const updateBasePathAfterRedirect = (
   axios: AxiosInstance,
@@ -6,7 +6,7 @@ const updateBasePathAfterRedirect = (
   baseAPI: any
 ) => {
   axios.interceptors.response.use(
-    (response) => {
+    response => {
       /**
        * Get responseURL from the response object
        * For browsers it's located in response.request.responseURL
@@ -28,7 +28,7 @@ const updateBasePathAfterRedirect = (
       }
       return response;
     },
-    function (error) {
+    error => {
       // Any status codes that falls outside the range of 2xx cause this function to trigger
       // Do something with response error
       return Promise.reject(error);

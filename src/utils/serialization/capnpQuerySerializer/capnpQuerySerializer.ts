@@ -1,7 +1,7 @@
 import {
   ArrayDirectory_DeleteAndUpdateTileLocation,
-  ArrayDirectory_TimestampedURI,
-} from "./../../../capnp/query_capnp";
+  ArrayDirectory_TimestampedURI
+} from './../../../capnp/query_capnp';
 import {
   Query as QueryType,
   Subarray as SubarrayType,
@@ -21,8 +21,8 @@ import {
   TimestampedURI,
   DeleteAndUpdateTileLocation,
   FragmentMetadata,
-  GenericTileOffsets,
-} from "../../../v2";
+  GenericTileOffsets
+} from '../../../v2';
 import {
   Query,
   Subarray,
@@ -40,9 +40,9 @@ import {
   FloatScaleConfig as FloatScaleConfigCapnp,
   ArrayDirectory as ArrayDirectoryCapnp,
   FragmentMetadata as FragmentMetadataCapnp,
-  FragmentMetadata_GenericTileOffsets,
-} from "../../../capnp/query_capnp";
-import * as capnp from "capnp-ts";
+  FragmentMetadata_GenericTileOffsets
+} from '../../../capnp/query_capnp';
+import * as capnp from 'capnp-ts';
 
 /**
  * Serialize the Query object to capnp
@@ -57,9 +57,9 @@ const capnpQuerySerializer = (data: Partial<QueryType>) => {
     writer = {},
     array,
     attributeBufferHeaders = [],
-    layout = "",
-    status = "",
-    type = "",
+    layout = '',
+    status = '',
+    type = ''
   } = data;
 
   queryData.setLayout(layout);
@@ -74,7 +74,7 @@ const capnpQuerySerializer = (data: Partial<QueryType>) => {
   queryData.setTotalValidityBufferBytes(
     capnp.Uint64.fromNumber(data.totalValidityBufferBytes)
   );
-  queryData.setVarOffsetsMode("bytes");
+  queryData.setVarOffsetsMode('bytes');
   queryData.setVarOffsetsAddExtraElement(false);
   queryData.setVarOffsetsBitsize(64);
   const attrBuffers = queryData.initAttributeBufferHeaders(
@@ -95,7 +95,7 @@ const capnpQuerySerializer = (data: Partial<QueryType>) => {
     const {
       originalFixedLenBufferSizeInBytes = 0,
       originalVarLenBufferSizeInBytes = 0,
-      originalValidityLenBufferSizeInBytes = 0,
+      originalValidityLenBufferSizeInBytes = 0
     } = attrHeader;
 
     attrBufferHeader.setOriginalFixedLenBufferSizeInBytes(
@@ -126,7 +126,7 @@ const capnpQuerySerializer = (data: Partial<QueryType>) => {
   if (reader) {
     const queryReader = queryData.initReader();
     const subArrayCap = queryReader.initSubarray();
-    const { subarray: subarrayData = {}, readState = {}, layout = "" } = reader;
+    const { subarray: subarrayData = {}, readState = {}, layout = '' } = reader;
     serializeSubArray(subArrayCap, subarrayData);
 
     queryReader.setLayout(layout);
@@ -145,7 +145,7 @@ const capnpQuerySerializer = (data: Partial<QueryType>) => {
       current = {},
       state = {},
       memoryBudget = 0,
-      memoryBudgetVar = 0,
+      memoryBudgetVar = 0
     } = subarrayPartitioner;
     const subPartitioner = readStateData.initSubarrayPartitioner();
     subPartitioner.setMemoryBudget(capnp.Uint64.fromNumber(memoryBudget));
@@ -217,8 +217,8 @@ export const serializeArray = (arrayCapNp: ArrayCapnp, array: ArrayData) => {
   const endTimeStamp = clamp(array.endTimestamp || Date.now(), 0, Date.now());
 
   arrayCapNp.setEndTimestamp(capnp.Uint64.fromNumber(endTimeStamp));
-  arrayCapNp.setQueryType(array.queryType || "");
-  arrayCapNp.setUri(array.uri || "");
+  arrayCapNp.setQueryType(array.queryType || '');
+  arrayCapNp.setUri(array.uri || '');
 
   if (array.arraySchemaLatest) {
     serializeArraySchema(
@@ -428,9 +428,10 @@ const serializeFragmentMetadataAll = (
   }
 
   if (fragmentMetadata.fragmentNullCounts.length) {
-    const fragmentNullCountsCapnp = fragmentMetadataCapnp.initFragmentNullCounts(
-      fragmentMetadata.fragmentNullCounts.length
-    );
+    const fragmentNullCountsCapnp =
+      fragmentMetadataCapnp.initFragmentNullCounts(
+        fragmentMetadata.fragmentNullCounts.length
+      );
     fragmentMetadata.fragmentNullCounts.forEach((sum, i) => {
       fragmentNullCountsCapnp.set(i, capnp.Uint64.fromNumber(sum));
     });
@@ -450,7 +451,9 @@ const serializeFragmentMetadataAll = (
   }
 
   if (fragmentMetadata.lastTileCellNum) {
-    fragmentMetadataCapnp.setLastTileCellNum(capnp.Uint64.fromNumber(fragmentMetadata.lastTileCellNum));
+    fragmentMetadataCapnp.setLastTileCellNum(
+      capnp.Uint64.fromNumber(fragmentMetadata.lastTileCellNum)
+    );
   }
 
   if (fragmentMetadata.nonEmptyDomain) {
@@ -461,25 +464,33 @@ const serializeFragmentMetadataAll = (
   }
 
   if (fragmentMetadata.rtree && fragmentMetadata.rtree.byteLength) {
-    const rTreeDataCapnp = fragmentMetadataCapnp.initRtree(fragmentMetadata.rtree.byteLength);
+    const rTreeDataCapnp = fragmentMetadataCapnp.initRtree(
+      fragmentMetadata.rtree.byteLength
+    );
 
     rTreeDataCapnp.copyBuffer(fragmentMetadata.rtree);
     fragmentMetadataCapnp.setRtree(rTreeDataCapnp);
   }
 
-  fragmentMetadataCapnp.setHasConsolidatedFooter(fragmentMetadata.hasConsolidatedFooter);
+  fragmentMetadataCapnp.setHasConsolidatedFooter(
+    fragmentMetadata.hasConsolidatedFooter
+  );
   serializeGenericOffsets(
     fragmentMetadataCapnp.initGtOffsets(),
     fragmentMetadata.gtOffsets
   );
-
 };
 
-const serializeGenericOffsets = (genericOffsetsCapnp: FragmentMetadata_GenericTileOffsets, gtOffsets: GenericTileOffsets) => {
+const serializeGenericOffsets = (
+  genericOffsetsCapnp: FragmentMetadata_GenericTileOffsets,
+  gtOffsets: GenericTileOffsets
+) => {
   genericOffsetsCapnp.setRtree(capnp.Uint64.fromNumber(gtOffsets.rtree));
 
   if (gtOffsets.tileOffsets?.length) {
-    const tileOffsetsCapnp = genericOffsetsCapnp.initTileOffsets(gtOffsets.tileOffsets.length);
+    const tileOffsetsCapnp = genericOffsetsCapnp.initTileOffsets(
+      gtOffsets.tileOffsets.length
+    );
 
     gtOffsets.tileOffsets.forEach((offset, i) => {
       tileOffsetsCapnp.set(i, capnp.Uint64.fromNumber(offset));
@@ -487,7 +498,9 @@ const serializeGenericOffsets = (genericOffsetsCapnp: FragmentMetadata_GenericTi
   }
 
   if (gtOffsets.tileVarOffsets?.length) {
-    const tileVarOffsetsCapnp = genericOffsetsCapnp.initTileVarOffsets(gtOffsets.tileVarOffsets.length);
+    const tileVarOffsetsCapnp = genericOffsetsCapnp.initTileVarOffsets(
+      gtOffsets.tileVarOffsets.length
+    );
 
     gtOffsets.tileVarOffsets.forEach((offset, i) => {
       tileVarOffsetsCapnp.set(i, capnp.Uint64.fromNumber(offset));
@@ -495,7 +508,9 @@ const serializeGenericOffsets = (genericOffsetsCapnp: FragmentMetadata_GenericTi
   }
 
   if (gtOffsets.tileVarSizes?.length) {
-    const tileVarSizesCapnp = genericOffsetsCapnp.initTileVarSizes(gtOffsets.tileVarSizes.length);
+    const tileVarSizesCapnp = genericOffsetsCapnp.initTileVarSizes(
+      gtOffsets.tileVarSizes.length
+    );
 
     gtOffsets.tileVarSizes.forEach((size, i) => {
       tileVarSizesCapnp.set(i, capnp.Uint64.fromNumber(size));
@@ -503,7 +518,10 @@ const serializeGenericOffsets = (genericOffsetsCapnp: FragmentMetadata_GenericTi
   }
 
   if (gtOffsets.tileValidityOffsets?.length) {
-    const tileValidityOffsetsCapnp = genericOffsetsCapnp.initTileValidityOffsets(gtOffsets.tileValidityOffsets.length);
+    const tileValidityOffsetsCapnp =
+      genericOffsetsCapnp.initTileValidityOffsets(
+        gtOffsets.tileValidityOffsets.length
+      );
 
     gtOffsets.tileValidityOffsets.forEach((offset, i) => {
       tileValidityOffsetsCapnp.set(i, capnp.Uint64.fromNumber(offset));
@@ -511,7 +529,9 @@ const serializeGenericOffsets = (genericOffsetsCapnp: FragmentMetadata_GenericTi
   }
 
   if (gtOffsets.tileMinOffsets?.length) {
-    const tileMinOffsetsCapnp = genericOffsetsCapnp.initTileMinOffsets(gtOffsets.tileMinOffsets.length);
+    const tileMinOffsetsCapnp = genericOffsetsCapnp.initTileMinOffsets(
+      gtOffsets.tileMinOffsets.length
+    );
 
     gtOffsets.tileMinOffsets.forEach((offset, i) => {
       tileMinOffsetsCapnp.set(i, capnp.Uint64.fromNumber(offset));
@@ -519,7 +539,9 @@ const serializeGenericOffsets = (genericOffsetsCapnp: FragmentMetadata_GenericTi
   }
 
   if (gtOffsets.tileMaxOffsets?.length) {
-    const tileMaxOffsetsCapnp = genericOffsetsCapnp.initTileMaxOffsets(gtOffsets.tileMaxOffsets.length);
+    const tileMaxOffsetsCapnp = genericOffsetsCapnp.initTileMaxOffsets(
+      gtOffsets.tileMaxOffsets.length
+    );
 
     gtOffsets.tileMaxOffsets.forEach((offset, i) => {
       tileMaxOffsetsCapnp.set(i, capnp.Uint64.fromNumber(offset));
@@ -527,7 +549,9 @@ const serializeGenericOffsets = (genericOffsetsCapnp: FragmentMetadata_GenericTi
   }
 
   if (gtOffsets.tileSumOffsets?.length) {
-    const tileSumOffsetsCapnp = genericOffsetsCapnp.initTileSumOffsets(gtOffsets.tileSumOffsets.length);
+    const tileSumOffsetsCapnp = genericOffsetsCapnp.initTileSumOffsets(
+      gtOffsets.tileSumOffsets.length
+    );
 
     gtOffsets.tileSumOffsets.forEach((offset, i) => {
       tileSumOffsetsCapnp.set(i, capnp.Uint64.fromNumber(offset));
@@ -535,7 +559,10 @@ const serializeGenericOffsets = (genericOffsetsCapnp: FragmentMetadata_GenericTi
   }
 
   if (gtOffsets.tileNullCountOffsets?.length) {
-    const tileNullCountOffsetsCapnp = genericOffsetsCapnp.initTileNullCountOffsets(gtOffsets.tileNullCountOffsets.length);
+    const tileNullCountOffsetsCapnp =
+      genericOffsetsCapnp.initTileNullCountOffsets(
+        gtOffsets.tileNullCountOffsets.length
+      );
 
     gtOffsets.tileNullCountOffsets.forEach((offset, i) => {
       tileNullCountOffsetsCapnp.set(i, capnp.Uint64.fromNumber(offset));
@@ -543,13 +570,17 @@ const serializeGenericOffsets = (genericOffsetsCapnp: FragmentMetadata_GenericTi
   }
 
   if (gtOffsets.fragmentMinMaxSumNullCountOffset) {
-    genericOffsetsCapnp.setFragmentMinMaxSumNullCountOffset(capnp.Uint64.fromNumber(gtOffsets.fragmentMinMaxSumNullCountOffset));
+    genericOffsetsCapnp.setFragmentMinMaxSumNullCountOffset(
+      capnp.Uint64.fromNumber(gtOffsets.fragmentMinMaxSumNullCountOffset)
+    );
   }
 
   if (gtOffsets.processedConditionsOffsets) {
-    genericOffsetsCapnp.setProcessedConditionsOffsets(capnp.Uint64.fromNumber(gtOffsets.processedConditionsOffsets));
+    genericOffsetsCapnp.setProcessedConditionsOffsets(
+      capnp.Uint64.fromNumber(gtOffsets.processedConditionsOffsets)
+    );
   }
-}
+};
 
 const serializeListListUint8 = (
   listOfListsUint64: capnp.List<capnp.List<number>>,
@@ -1077,7 +1108,7 @@ const serializeDomainArray = (
     uint8 = [],
     uint16 = [],
     uint32 = [],
-    uint64 = [],
+    uint64 = []
   } = data;
 
   const dFloat32 = domainArray.initFloat32(float32.length);
@@ -1132,7 +1163,7 @@ const serializeDomainArray = (
 };
 
 const serializeSubArray = (capSubArray: Subarray, subArray: SubarrayType) => {
-  const { ranges = [], layout = "" } = subArray;
+  const { ranges = [], layout = '' } = subArray;
   capSubArray.setLayout(layout);
   const capRanges = capSubArray.initRanges(ranges.length);
 

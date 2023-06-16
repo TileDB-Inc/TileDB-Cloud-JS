@@ -32,13 +32,13 @@ import {
   ArrayDirectory_TimestampedURI,
   ArrayDirectory_DeleteAndUpdateTileLocation,
   FragmentMetadata as FragmentMetadataCapnp,
-  FragmentMetadata_GenericTileOffsets,
-} from "../../../capnp/query_capnp";
-import * as capnp from "capnp-ts";
+  FragmentMetadata_GenericTileOffsets
+} from '../../../capnp/query_capnp';
+import * as capnp from 'capnp-ts';
 import {
   ArrayMetadata,
-  ArrayMetadata_MetadataEntry,
-} from "../../../capnp/arrayMetadata_capnp";
+  ArrayMetadata_MetadataEntry
+} from '../../../capnp/arrayMetadata_capnp';
 import {
   DomainArray as DomainArrayV2,
   DimensionTileExtent,
@@ -60,8 +60,8 @@ import {
   ArraySchemaEntry,
   FilterData,
   ArrayDirectory,
-  GenericTileOffsets,
-} from "../../../v2";
+  GenericTileOffsets
+} from '../../../v2';
 
 /**
  * Deserializes an ArrayBuffer to a Query object
@@ -89,7 +89,7 @@ const capnpQueryDeSerializer = (buffer: ArrayBuffer | ArrayBufferLike) => {
     varOffsetsAddExtraElement: query.getVarOffsetsAddExtraElement(),
     varOffsetsBitsize: query.getVarOffsetsBitsize(),
     config: deserializeConfig(query.getConfig()),
-    stats: deserializeStats(query.getStats()),
+    stats: deserializeStats(query.getStats())
   };
 };
 
@@ -106,108 +106,207 @@ export const deserializeArray = (arr: ArrayCapnp): ArrayData => {
     nonEmptyDomain: deserializeNonEmptyDomainList(arr.getNonEmptyDomain()),
     arrayMetadata: deserializeArrayMetadata(arr.getArrayMetadata()),
     arrayDirectory: deserializeArrayDirectory(arr.getArrayDirectory()),
-    fragmentMetadataAll: arr.getFragmentMetadataAll().map(deserializeFragmentMetadata),
+    fragmentMetadataAll: arr
+      .getFragmentMetadataAll()
+      .map(deserializeFragmentMetadata),
     openedAtEndTimestamp: arr.getOpenedAtEndTimestamp().toNumber()
   };
 };
 
-const deserializeFragmentMetadata = (fragmentMetadata: FragmentMetadataCapnp): FragmentMetadata => {
+const deserializeFragmentMetadata = (
+  fragmentMetadata: FragmentMetadataCapnp
+): FragmentMetadata => {
   return {
-    fileSizes: fragmentMetadata.getFileSizes().map((v) => v.toNumber()),
-    fileVarSizes: fragmentMetadata.getFileVarSizes().toArray().map((v) => v.toNumber()),
-    fileValiditySizes: fragmentMetadata.getFileValiditySizes().toArray().map((v) => v.toNumber()),
+    fileSizes: fragmentMetadata.getFileSizes().map(v => v.toNumber()),
+    fileVarSizes: fragmentMetadata
+      .getFileVarSizes()
+      .toArray()
+      .map(v => v.toNumber()),
+    fileValiditySizes: fragmentMetadata
+      .getFileValiditySizes()
+      .toArray()
+      .map(v => v.toNumber()),
     fragmentUri: fragmentMetadata.getFragmentUri(),
     hasTimestamps: fragmentMetadata.getHasTimestamps(),
     hasDeleteMeta: fragmentMetadata.getHasDeleteMeta(),
     sparseTileNum: fragmentMetadata.getSparseTileNum().toNumber(),
     tileIndexBase: fragmentMetadata.getTileIndexBase().toNumber(),
-    tileOffsets: fragmentMetadata.getTileOffsets().toArray().map((v) => v.toArray().map((v) => v.toNumber())),
-    tileVarOffsets: fragmentMetadata.getTileVarOffsets().toArray().map((v) => v.toArray().map((v) => v.toNumber())),
-    tileVarSizes: fragmentMetadata.getTileVarSizes().toArray().map((v) => v.toArray().map((v) => v.toNumber())),
-    tileValidityOffsets: fragmentMetadata.getTileValidityOffsets().toArray().map((v) => v.toArray().map((v) => v.toNumber())),
-    tileMinBuffer: fragmentMetadata.getTileMinBuffer().toArray().map(v => v.toArray()),
-    tileMinVarBuffer: fragmentMetadata.getTileMinVarBuffer().toArray().map(v => v.toArray()),
-    tileMaxBuffer: fragmentMetadata.getTileMaxBuffer().toArray().map(v => v.toArray()),
-    tileMaxVarBuffer: fragmentMetadata.getTileMaxVarBuffer().toArray().map(v => v.toArray()),
-    tileSums: fragmentMetadata.getTileSums().toArray().map(v => v.toArray()),
-    tileNullCounts: fragmentMetadata.getTileNullCounts().toArray().map((v) => v.toArray().map((v) => v.toNumber())),
-    fragmentMins: fragmentMetadata.getFragmentMins().toArray().map(v => v.toArray()),
-    fragmentMaxs: fragmentMetadata.getFragmentMaxs().toArray().map(v => v.toArray()),
-    fragmentSums: fragmentMetadata.getFragmentSums().toArray().map((v) => v.toNumber()),
-    fragmentNullCounts: fragmentMetadata.getFragmentNullCounts().toArray().map((v) => v.toNumber()),
+    tileOffsets: fragmentMetadata
+      .getTileOffsets()
+      .toArray()
+      .map(v => v.toArray().map(v => v.toNumber())),
+    tileVarOffsets: fragmentMetadata
+      .getTileVarOffsets()
+      .toArray()
+      .map(v => v.toArray().map(v => v.toNumber())),
+    tileVarSizes: fragmentMetadata
+      .getTileVarSizes()
+      .toArray()
+      .map(v => v.toArray().map(v => v.toNumber())),
+    tileValidityOffsets: fragmentMetadata
+      .getTileValidityOffsets()
+      .toArray()
+      .map(v => v.toArray().map(v => v.toNumber())),
+    tileMinBuffer: fragmentMetadata
+      .getTileMinBuffer()
+      .toArray()
+      .map(v => v.toArray()),
+    tileMinVarBuffer: fragmentMetadata
+      .getTileMinVarBuffer()
+      .toArray()
+      .map(v => v.toArray()),
+    tileMaxBuffer: fragmentMetadata
+      .getTileMaxBuffer()
+      .toArray()
+      .map(v => v.toArray()),
+    tileMaxVarBuffer: fragmentMetadata
+      .getTileMaxVarBuffer()
+      .toArray()
+      .map(v => v.toArray()),
+    tileSums: fragmentMetadata
+      .getTileSums()
+      .toArray()
+      .map(v => v.toArray()),
+    tileNullCounts: fragmentMetadata
+      .getTileNullCounts()
+      .toArray()
+      .map(v => v.toArray().map(v => v.toNumber())),
+    fragmentMins: fragmentMetadata
+      .getFragmentMins()
+      .toArray()
+      .map(v => v.toArray()),
+    fragmentMaxs: fragmentMetadata
+      .getFragmentMaxs()
+      .toArray()
+      .map(v => v.toArray()),
+    fragmentSums: fragmentMetadata
+      .getFragmentSums()
+      .toArray()
+      .map(v => v.toNumber()),
+    fragmentNullCounts: fragmentMetadata
+      .getFragmentNullCounts()
+      .toArray()
+      .map(v => v.toNumber()),
     version: fragmentMetadata.getVersion(),
-    timestampRange: fragmentMetadata.getTimestampRange().toArray().map((v) => v.toNumber()),
+    timestampRange: fragmentMetadata
+      .getTimestampRange()
+      .toArray()
+      .map(v => v.toNumber()),
     lastTileCellNum: fragmentMetadata.getLastTileCellNum().toNumber(),
-    nonEmptyDomain: deserializeNonEmptyDomainList(fragmentMetadata.getNonEmptyDomain()),
+    nonEmptyDomain: deserializeNonEmptyDomainList(
+      fragmentMetadata.getNonEmptyDomain()
+    ),
     rtree: fragmentMetadata.getRtree().toArrayBuffer(),
     hasConsolidatedFooter: fragmentMetadata.getHasConsolidatedFooter(),
     gtOffsets: deserializeGenericTileOffsets(fragmentMetadata.getGtOffsets())
-  }
-}
+  };
+};
 
-const deserializeGenericTileOffsets = (genericTileOffsets: FragmentMetadata_GenericTileOffsets): GenericTileOffsets => {
+const deserializeGenericTileOffsets = (
+  genericTileOffsets: FragmentMetadata_GenericTileOffsets
+): GenericTileOffsets => {
   return {
     rtree: genericTileOffsets.getRtree().toNumber(),
     tileOffsets: genericTileOffsets.getTileOffsets().map(v => v.toNumber()),
-    tileVarOffsets: genericTileOffsets.getTileVarOffsets().map(v => v.toNumber()),
+    tileVarOffsets: genericTileOffsets
+      .getTileVarOffsets()
+      .map(v => v.toNumber()),
     tileVarSizes: genericTileOffsets.getTileVarSizes().map(v => v.toNumber()),
-    tileValidityOffsets: genericTileOffsets.getTileValidityOffsets().map(v => v.toNumber()),
-    tileMinOffsets: genericTileOffsets.getTileMinOffsets().map(v => v.toNumber()),
-    tileMaxOffsets: genericTileOffsets.getTileMaxOffsets().map(v => v.toNumber()),
-    tileSumOffsets: genericTileOffsets.getTileSumOffsets().map(v => v.toNumber()),
-    tileNullCountOffsets: genericTileOffsets.getTileNullCountOffsets().map(v => v.toNumber()),
-    fragmentMinMaxSumNullCountOffset: genericTileOffsets.getFragmentMinMaxSumNullCountOffset().toNumber(),
-    processedConditionsOffsets: genericTileOffsets.getProcessedConditionsOffsets().toNumber(),
-  }
-}
+    tileValidityOffsets: genericTileOffsets
+      .getTileValidityOffsets()
+      .map(v => v.toNumber()),
+    tileMinOffsets: genericTileOffsets
+      .getTileMinOffsets()
+      .map(v => v.toNumber()),
+    tileMaxOffsets: genericTileOffsets
+      .getTileMaxOffsets()
+      .map(v => v.toNumber()),
+    tileSumOffsets: genericTileOffsets
+      .getTileSumOffsets()
+      .map(v => v.toNumber()),
+    tileNullCountOffsets: genericTileOffsets
+      .getTileNullCountOffsets()
+      .map(v => v.toNumber()),
+    fragmentMinMaxSumNullCountOffset: genericTileOffsets
+      .getFragmentMinMaxSumNullCountOffset()
+      .toNumber(),
+    processedConditionsOffsets: genericTileOffsets
+      .getProcessedConditionsOffsets()
+      .toNumber()
+  };
+};
 
-const deserializeArrayDirectory = (arrayDirectory: ArrayDirectoryCapnp): ArrayDirectory => {
+const deserializeArrayDirectory = (
+  arrayDirectory: ArrayDirectoryCapnp
+): ArrayDirectory => {
   return {
-    unfilteredFragmentUris: arrayDirectory.getUnfilteredFragmentUris().toArray(),
-    consolidatedCommitUris: arrayDirectory.getConsolidatedCommitUris().toArray(),
+    unfilteredFragmentUris: arrayDirectory
+      .getUnfilteredFragmentUris()
+      .toArray(),
+    consolidatedCommitUris: arrayDirectory
+      .getConsolidatedCommitUris()
+      .toArray(),
     arraySchemaUris: arrayDirectory.getArraySchemaUris().toArray(),
     latestArraySchemaUri: arrayDirectory.getLatestArraySchemaUri(),
     arrayMetaUrisToVacuum: arrayDirectory.getArrayMetaUrisToVacuum().toArray(),
-    arrayMetaVacUrisToVacuum: arrayDirectory.getArrayMetaVacUrisToVacuum().toArray(),
-    commitUrisToConsolidate: arrayDirectory.getCommitUrisToConsolidate().toArray(),
+    arrayMetaVacUrisToVacuum: arrayDirectory
+      .getArrayMetaVacUrisToVacuum()
+      .toArray(),
+    commitUrisToConsolidate: arrayDirectory
+      .getCommitUrisToConsolidate()
+      .toArray(),
     commitUrisToVacuum: arrayDirectory.getCommitUrisToVacuum().toArray(),
-    consolidatedCommitUrisToVacuum: arrayDirectory.getConsolidatedCommitUrisToVacuum().toArray(),
-    arrayMetaUris: arrayDirectory.getArrayMetaUris().map(deserialiazeTimestampedURI),
+    consolidatedCommitUrisToVacuum: arrayDirectory
+      .getConsolidatedCommitUrisToVacuum()
+      .toArray(),
+    arrayMetaUris: arrayDirectory
+      .getArrayMetaUris()
+      .map(deserialiazeTimestampedURI),
     fragmentMetaUris: arrayDirectory.getFragmentMetaUris().toArray(),
-    deleteAndUpdateTileLocation: arrayDirectory.getDeleteAndUpdateTileLocation().map(deserializeDeleteAndUpdateTileLocation),
+    deleteAndUpdateTileLocation: arrayDirectory
+      .getDeleteAndUpdateTileLocation()
+      .map(deserializeDeleteAndUpdateTileLocation),
     timestampStart: arrayDirectory.getTimestampStart().toNumber(),
-    timestampEnd: arrayDirectory.getTimestampEnd().toNumber(),
-  }
-}
+    timestampEnd: arrayDirectory.getTimestampEnd().toNumber()
+  };
+};
 
-const deserializeDeleteAndUpdateTileLocation = (deleteAndUpdateTileLocation: ArrayDirectory_DeleteAndUpdateTileLocation) => {
+const deserializeDeleteAndUpdateTileLocation = (
+  deleteAndUpdateTileLocation: ArrayDirectory_DeleteAndUpdateTileLocation
+) => {
   return {
     uri: deleteAndUpdateTileLocation.getUri(),
     conditionMarker: deleteAndUpdateTileLocation.getConditionMarker(),
     offset: deleteAndUpdateTileLocation.getOffset().toNumber()
-  }
-}
+  };
+};
 
-const deserialiazeTimestampedURI = (timestampedURI: ArrayDirectory_TimestampedURI) => {
+const deserialiazeTimestampedURI = (
+  timestampedURI: ArrayDirectory_TimestampedURI
+) => {
   return {
     uri: timestampedURI.getUri(),
     timestampStart: timestampedURI.getTimestampStart().toNumber(),
-    timestampEnd: timestampedURI.getTimestampEnd().toNumber(),
-  }
-}
+    timestampEnd: timestampedURI.getTimestampEnd().toNumber()
+  };
+};
 
-const deserializeArraySchemasAll = (map: ArraySchemaMapCapnp): ArraySchemaMap => {
+const deserializeArraySchemasAll = (
+  map: ArraySchemaMapCapnp
+): ArraySchemaMap => {
   return {
     entries: map.getEntries().map(deserializeMapEntry)
-  }
-}
+  };
+};
 
-export const deserializeMapEntry = (mapEntry: ArraySchemaMap_Entry): ArraySchemaEntry => {
+export const deserializeMapEntry = (
+  mapEntry: ArraySchemaMap_Entry
+): ArraySchemaEntry => {
   return {
     key: mapEntry.getKey(),
     value: deserializeArraySchema(mapEntry.getValue())
-  }
-}
+  };
+};
 
 export const deserializeNonEmptyDomainList = (
   nonEmptyDomainList: NonEmptyDomainList
@@ -215,7 +314,7 @@ export const deserializeNonEmptyDomainList = (
   return {
     nonEmptyDomains: nonEmptyDomainList
       .getNonEmptyDomains()
-      .map(deserializeNonEmptyDomain),
+      .map(deserializeNonEmptyDomain)
   };
 };
 
@@ -223,13 +322,13 @@ export const deserializeNonEmptyDomain = (nonEmptyDomain: NonEmptyDomain) => {
   return {
     isEmpty: nonEmptyDomain.getIsEmpty(),
     sizes: nonEmptyDomain.getSizes().map(Number),
-    nonEmptyDomain: deserializeDomainArray(nonEmptyDomain.getNonEmptyDomain()),
+    nonEmptyDomain: deserializeDomainArray(nonEmptyDomain.getNonEmptyDomain())
   };
 };
 
 export const deserializeArrayMetadata = (arrayMetadata: ArrayMetadata) => {
   return {
-    entries: arrayMetadata.getEntries().map(deserializeMetadataEntry),
+    entries: arrayMetadata.getEntries().map(deserializeMetadataEntry)
   };
 };
 
@@ -241,7 +340,7 @@ export const deserializeMetadataEntry = (
     type: entry.getType(),
     valueNum: entry.getValueNum(),
     del: entry.getDel(),
-    value: entry.getValue().toArray(),
+    value: entry.getValue().toArray()
   };
 
   return metadataEntry;
@@ -257,7 +356,7 @@ export const deserializeArraySchema = (schema: ArraySchema): ArraySchemaV2 => {
     version: schema.getVersion().toArray(),
     allowsDuplicates: schema.getAllowsDuplicates(),
     name: schema.getName(),
-    timestampRange: schema.getTimestampRange().map((v) => v.toNumber()),
+    timestampRange: schema.getTimestampRange().map(v => v.toNumber()),
     coordsFilterPipeline: deserializeFilterPipeline(
       schema.getCoordsFilterPipeline()
     ),
@@ -268,7 +367,7 @@ export const deserializeArraySchema = (schema: ArraySchema): ArraySchemaV2 => {
       schema.getValidityFilterPipeline()
     ),
     domain: deserializeDomain(schema.getDomain()),
-    attributes: schema.getAttributes().map(deserializeAttribute),
+    attributes: schema.getAttributes().map(deserializeAttribute)
   };
 };
 
@@ -280,7 +379,7 @@ export const deserializeAttribute = (attribute: Attribute): AttributeV2 => {
     filterPipeline: deserializeFilterPipeline(attribute.getFilterPipeline()),
     fillValue: attribute.getFillValue().toArray(),
     nullable: attribute.getNullable(),
-    fillValueValidity: attribute.getFillValueValidity(),
+    fillValueValidity: attribute.getFillValueValidity()
   };
 };
 
@@ -289,7 +388,7 @@ export const deserializeDomain = (domain: Domain): DomainV2 => {
     type: domain.getType() as Datatype,
     tileOrder: domain.getTileOrder() as Layout,
     cellOrder: domain.getCellOrder() as Layout,
-    dimensions: domain.getDimensions().map(deserializeDimension),
+    dimensions: domain.getDimensions().map(deserializeDimension)
   };
 };
 
@@ -300,12 +399,12 @@ export const deserializeDimension = (dimension: Dimension): DimensionV2 => {
     domain: deserializeDomainArray(dimension.getDomain()),
     nullTileExtent: dimension.getNullTileExtent(),
     tileExtent: deserializeTileExtent(dimension.getTileExtent()),
-    filterPipeline: deserializeFilterPipeline(dimension.getFilterPipeline()),
+    filterPipeline: deserializeFilterPipeline(dimension.getFilterPipeline())
   };
 };
 
 export const deserializeTileExtent = (tileExtent: Dimension_TileExtent) => {
-  let tile: DimensionTileExtent = {};
+  const tile: DimensionTileExtent = {};
 
   if (tileExtent.isInt8()) {
     tile.int8 = tileExtent.getInt8();
@@ -350,7 +449,7 @@ export const deserializeFilterPipeline = (
   filterPipeline: FilterPipeline
 ): FilterPipelineV2 => {
   return {
-    filters: filterPipeline.getFilters().map(deserializeFilter),
+    filters: filterPipeline.getFilters().map(deserializeFilter)
   };
 };
 
@@ -362,16 +461,18 @@ export const deserializeFilter = (filter: Filter): FilterV2 => {
   };
 };
 
-export const deserializeFloatScaleConfig = (floatScaleConfig: FloatScaleConfigCapnp): FloatScaleConfig => {
+export const deserializeFloatScaleConfig = (
+  floatScaleConfig: FloatScaleConfigCapnp
+): FloatScaleConfig => {
   return {
     byteWidth: floatScaleConfig.getByteWidth().toNumber(),
     offset: floatScaleConfig.getOffset(),
     scale: floatScaleConfig.getScale()
-  }
-}
+  };
+};
 
 export const deserializeFilterData = (data: Filter_Data) => {
-  let filterData: FilterData = {};
+  const filterData: FilterData = {};
 
   if (data.isText()) {
     filterData.text = data.getText();
@@ -425,9 +526,9 @@ export const deserializeFilterData = (data: Filter_Data) => {
 };
 
 export const deserializeConfig = (config: Config) => {
-  const entries = config.getEntries().map((entry) => ({
+  const entries = config.getEntries().map(entry => ({
     key: entry.getKey(),
-    value: entry.getValue(),
+    value: entry.getValue()
   }));
 
   return { entries };
@@ -439,7 +540,7 @@ export const deserializeQueryReader = (reader: QueryReader) => {
     subarray: deserializeSubarray(reader.getSubarray()),
     readState: deserializeReadState(reader.getReadState()),
     condition: deserializeCondition(reader.getCondition()),
-    stats: deserializeStats(reader.getStats()),
+    stats: deserializeStats(reader.getStats())
   };
 };
 
@@ -448,7 +549,7 @@ const deserializeCondition = (condition: Condition) => {
     clauses: condition.getClauses().map(deserializeConditionClause),
     clauseCombinationOps: condition
       .getClauseCombinationOps()
-      .map((op) => op.toString()),
+      .map(op => op.toString())
   };
 };
 
@@ -457,7 +558,7 @@ const deserializeConditionClause = (conditionClause: ConditionClause) => {
     fieldName: conditionClause.getFieldName(),
     // TODO: What kind of Data type? Is it an array of numbers?
     value: conditionClause.getValue().toArray(),
-    op: conditionClause.getOp(),
+    op: conditionClause.getOp()
   };
 };
 
@@ -468,7 +569,7 @@ const deserializeReadState = (readState: ReadState) => {
     initialized: readState.getInitialized(),
     subarrayPartitioner: deserializeSubarrayPartitioner(
       readState.getSubarrayPartitioner()
-    ),
+    )
   };
 };
 
@@ -487,7 +588,7 @@ const deserializeSubarrayPartitioner = (
     memoryBudgetValidity: subArrayPartitioner
       .getMemoryBudgetValidity()
       .toNumber(),
-    stats: deserializeStats(subArrayPartitioner.getStats()),
+    stats: deserializeStats(subArrayPartitioner.getStats())
   };
 };
 
@@ -499,10 +600,10 @@ const deserializeSubarrayPartitionerState = (
     end: partitionerState.getEnd().toNumber(),
     singleRange: partitionerState
       .getSingleRange()
-      .map((singleRange) => deserializeSubarray(singleRange)),
+      .map(singleRange => deserializeSubarray(singleRange)),
     multiRange: partitionerState
       .getMultiRange()
-      .map((singleRange) => deserializeSubarray(singleRange)),
+      .map(singleRange => deserializeSubarray(singleRange))
   };
 };
 
@@ -513,20 +614,20 @@ const deserializeSubarrayPartitionerPartitionInfo = (
     subarray: deserializeSubarray(partitionInfo.getSubarray()),
     start: partitionInfo.getStart().toNumber(),
     end: partitionInfo.getEnd().toNumber(),
-    splitMultiRange: partitionInfo.getSplitMultiRange(),
+    splitMultiRange: partitionInfo.getSplitMultiRange()
   };
 };
 
 const deserializeAttributeBufferSize = (
   attrBufferSizeList: capnp.List<AttributeBufferSize>
 ) => {
-  return attrBufferSizeList.map((attr) => ({
-    attribute: attr.getAttribute(),
+  return attrBufferSizeList.map(attr => ({
+    attribute: attr.getAttribute()
   }));
 };
 
 const deserializeAttributeBufferHeaders = (query: Query) => {
-  return query.getAttributeBufferHeaders().map((attrBufferHeader) => {
+  return query.getAttributeBufferHeaders().map(attrBufferHeader => {
     return {
       name: attrBufferHeader.getName(),
       fixedLenBufferSizeInBytes: attrBufferHeader
@@ -546,7 +647,7 @@ const deserializeAttributeBufferHeaders = (query: Query) => {
         .toNumber(),
       originalValidityLenBufferSizeInBytes: attrBufferHeader
         .getOriginalValidityLenBufferSizeInBytes()
-        .toNumber(),
+        .toNumber()
     };
   });
 };
@@ -560,12 +661,12 @@ export const deserializeWrite = (query: Query) => {
     dedupCoords: writer.getDedupCoords(),
     subarray: deserializeDomainArray(writer.getSubarray()),
     subarrayRanges: deserializeSubarray(writer.getSubarrayRanges()),
-    stats: deserializeStats(writer.getStats()),
+    stats: deserializeStats(writer.getStats())
   };
 };
 
 export const deserializeDomainArray = (domainArray: DomainArray) => {
-  let domain: DomainArrayV2 = {};
+  const domain: DomainArrayV2 = {};
 
   const int8 = domainArray.getInt8().toArray();
   const int16 = domainArray.getInt16().toArray();
@@ -616,11 +717,11 @@ export const deserializeSubarray = (subArray: Subarray) => {
   return {
     layout: subArray.getLayout(),
     stats: deserializeStats(subArray.getStats()),
-    ranges: subArray.getRanges().map((range) => {
+    ranges: subArray.getRanges().map(range => {
       const type = range.getType();
       const bufferSizes = range
         .getBufferSizes()
-        .map((uint64) => uint64.toNumber());
+        .map(uint64 => uint64.toNumber());
 
       return {
         type,
@@ -629,33 +730,33 @@ export const deserializeSubarray = (subArray: Subarray) => {
         bufferSizes: bufferSizes,
         bufferStartSizes: range
           .getBufferStartSizes()
-          .map((uint64) => uint64.toNumber()),
+          .map(uint64 => uint64.toNumber())
       };
-    }),
+    })
   };
 };
 
 export const deserializeStats = (stats: Stats) => {
   return {
     timers: deserializeMapFloat64(stats.getTimers()),
-    counters: deserializeMapUInt64(stats.getCounters()),
+    counters: deserializeMapUInt64(stats.getCounters())
   };
 };
 
 export const deserializeMapFloat64 = (mapFloat64: MapFloat64) => {
-  return mapFloat64.getEntries().map((entry) => {
+  return mapFloat64.getEntries().map(entry => {
     return {
       key: entry.getKey(),
-      value: entry.getValue(),
+      value: entry.getValue()
     };
   });
 };
 
 export const deserializeMapUInt64 = (mapUint64: MapUInt64) => {
-  return mapUint64.getEntries().map((entry) => {
+  return mapUint64.getEntries().map(entry => {
     return {
       key: entry.getKey(),
-      value: entry.getValue().toNumber(),
+      value: entry.getValue().toNumber()
     };
   });
 };

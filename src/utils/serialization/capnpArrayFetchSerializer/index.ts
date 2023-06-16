@@ -1,3 +1,3 @@
-import capnpArrayFetchSerializer from "./capnpArrayFetchSerializer";
+import capnpArrayFetchSerializer from './capnpArrayFetchSerializer';
 
-export default capnpArrayFetchSerializer
+export default capnpArrayFetchSerializer;

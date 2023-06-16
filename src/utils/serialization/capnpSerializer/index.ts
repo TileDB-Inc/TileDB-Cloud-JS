@@ -1,3 +1,3 @@
-import capnpSerializer from "./capnpSerializer";
+import capnpSerializer from './capnpSerializer';
 
-export default capnpSerializer
+export default capnpSerializer;

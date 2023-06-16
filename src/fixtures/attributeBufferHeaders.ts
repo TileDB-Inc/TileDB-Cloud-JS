@@ -1,6 +1,6 @@
 export const fixedAttrBufferHeaders = [
   {
-    name: "cols",
+    name: 'cols',
     fixedLenBufferSizeInBytes: 64,
     varLenBufferSizeInBytes: 0,
     validityLenBufferSizeInBytes: 0,
@@ -9,7 +9,7 @@ export const fixedAttrBufferHeaders = [
     originalValidityLenBufferSizeInBytes: 0,
   },
   {
-    name: "rows",
+    name: 'rows',
     fixedLenBufferSizeInBytes: 64,
     varLenBufferSizeInBytes: 0,
     validityLenBufferSizeInBytes: 0,
@@ -18,7 +18,7 @@ export const fixedAttrBufferHeaders = [
     originalValidityLenBufferSizeInBytes: 0,
   },
   {
-    name: "a0",
+    name: 'a0',
     fixedLenBufferSizeInBytes: 64,
     varLenBufferSizeInBytes: 0,
     validityLenBufferSizeInBytes: 0,
@@ -27,7 +27,7 @@ export const fixedAttrBufferHeaders = [
     originalValidityLenBufferSizeInBytes: 0,
   },
   {
-    name: "a3",
+    name: 'a3',
     fixedLenBufferSizeInBytes: 64,
     varLenBufferSizeInBytes: 0,
     validityLenBufferSizeInBytes: 0,
@@ -39,7 +39,7 @@ export const fixedAttrBufferHeaders = [
 
 export const nullableVarLengthAttrBufferHeaders = [
   {
-    name: "cols",
+    name: 'cols',
     fixedLenBufferSizeInBytes: 16,
     varLenBufferSizeInBytes: 0,
     validityLenBufferSizeInBytes: 0,
@@ -48,7 +48,7 @@ export const nullableVarLengthAttrBufferHeaders = [
     originalValidityLenBufferSizeInBytes: 0,
   },
   {
-    name: "a3",
+    name: 'a3',
     fixedLenBufferSizeInBytes: 32,
     varLenBufferSizeInBytes: 16,
     validityLenBufferSizeInBytes: 4,
@@ -57,7 +57,7 @@ export const nullableVarLengthAttrBufferHeaders = [
     originalValidityLenBufferSizeInBytes: 6944,
   },
   {
-    name: "rows",
+    name: 'rows',
     fixedLenBufferSizeInBytes: 16,
     varLenBufferSizeInBytes: 0,
     validityLenBufferSizeInBytes: 0,
@@ -66,7 +66,7 @@ export const nullableVarLengthAttrBufferHeaders = [
     originalValidityLenBufferSizeInBytes: 0,
   },
   {
-    name: "a2",
+    name: 'a2',
     fixedLenBufferSizeInBytes: 32,
     varLenBufferSizeInBytes: 32,
     validityLenBufferSizeInBytes: 4,
@@ -75,7 +75,7 @@ export const nullableVarLengthAttrBufferHeaders = [
     originalValidityLenBufferSizeInBytes: 6944,
   },
   {
-    name: "a1",
+    name: 'a1',
     fixedLenBufferSizeInBytes: 16,
     varLenBufferSizeInBytes: 0,
     validityLenBufferSizeInBytes: 4,
