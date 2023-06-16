@@ -1,11 +1,6 @@
-import {
-  Configuration,
-  GroupsApi,
-} from "../v1";
-import {
-  GroupsApi as GroupsV2Api,
-} from "../v2";
-import globalAxios, { AxiosInstance } from "axios";
+import { Configuration, GroupsApi } from '../v1';
+import { GroupsApi as GroupsV2Api } from '../v2';
+import globalAxios, { AxiosInstance } from 'axios';
 
 class Groups {
   API: GroupsApi;

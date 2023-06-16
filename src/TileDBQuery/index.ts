@@ -1,4 +1,3 @@
-import TileDBQuery from "./TileDBQuery";
-
+import TileDBQuery from './TileDBQuery';
 
 export default TileDBQuery;

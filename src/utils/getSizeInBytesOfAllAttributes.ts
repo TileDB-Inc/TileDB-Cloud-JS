@@ -1,5 +1,5 @@
-import getAttributeSizeInBytes from "./getAttributeSizeInBytes";
-import { AttributeBufferHeader } from "../v2";
+import getAttributeSizeInBytes from './getAttributeSizeInBytes';
+import { AttributeBufferHeader } from '../v2';
 
 /**
  * Calculate the total bytes of all the attributes

@@ -1,12 +1,12 @@
-import { Attribute, Dimension } from "../v1";
-import { Datatype, Query, Querystatus, Querytype } from "../v2";
-import { QueryData } from "../TileDBQuery/TileDBQuery";
-import getRanges from "./getRanges";
-import getByteLengthOfDatatype from "./getByteLengthOfDatatype";
-import emptyRangesToDomain from "./emptyRangesToDomain";
-import isAttributeVarLength from "./isAttributeVarLength";
-import isAttributeNullable from "./isAttributeNullable";
-import { Options } from "./getResultsFromArrayBuffer";
+import { Attribute, Dimension } from '../v1';
+import { Datatype, Query, Querystatus, Querytype } from '../v2';
+import { QueryData } from '../TileDBQuery/TileDBQuery';
+import getRanges from './getRanges';
+import getByteLengthOfDatatype from './getByteLengthOfDatatype';
+import emptyRangesToDomain from './emptyRangesToDomain';
+import isAttributeVarLength from './isAttributeVarLength';
+import isAttributeNullable from './isAttributeNullable';
+import { Options } from './getResultsFromArrayBuffer';
 
 const createAttributeBufferHeaders = (
   attributes: Array<Attribute | Dimension>,
@@ -16,7 +16,7 @@ const createAttributeBufferHeaders = (
     (accum, attr) => accum + getMaxByteSizeOfAttribute(attr),
     0
   );
-  const attributeBufferHeaders = attributes.map((attr) => {
+  const attributeBufferHeaders = attributes.map(attr => {
     const MAX_BYTES_FOR_ATTRIBUTE = getMaxByteSizeOfAttribute(attr);
     const WEIGHT =
       MAX_BYTES_FOR_ATTRIBUTE / MAX_BYTES_PER_ELEMENT_OF_ATTRIBUTES;
@@ -51,7 +51,7 @@ const createAttributeBufferHeaders = (
       originalVarLenBufferSizeInBytes: Math.floor(varLenBufferSizeInBytes),
       originalValidityLenBufferSizeInBytes: Math.floor(
         validityLenBufferSizeInBytes
-      ),
+      )
     };
   });
 
@@ -98,7 +98,7 @@ const dataToQuery = (
   const attributesAndDimensions = [...attributes, ...dimensions];
   // if user sets options.attributes we filter out all the other unwanted dimensions / attributes
   const selectedAttributes = options.attributes
-    ? attributesAndDimensions.filter((attr) =>
+    ? attributesAndDimensions.filter(attr =>
         options.attributes.includes(attr.name)
       )
     : attributesAndDimensions;
@@ -116,24 +116,24 @@ const dataToQuery = (
       layout: data.layout,
       subarray: {
         layout: data.layout,
-        ranges,
+        ranges
       },
       readState: {
         subarrayPartitioner: {
           subarray: {
             layout: data.layout,
-            ranges: [],
+            ranges: []
           },
           budget: [],
           current: {
             subarray: {
               layout: data.layout,
-              ranges: [],
-            },
-          },
-        },
-      },
-    },
+              ranges: []
+            }
+          }
+        }
+      }
+    }
   } as Query;
 };
 

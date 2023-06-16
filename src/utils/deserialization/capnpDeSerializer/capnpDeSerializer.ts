@@ -1,17 +1,17 @@
-import * as capnp from "capnp-ts";
-import { ArrayMetadata } from "../../../capnp/arrayMetadata_capnp";
+import * as capnp from 'capnp-ts';
+import { ArrayMetadata } from '../../../capnp/arrayMetadata_capnp';
 import capnpQueryDeSerializer from '../capnpQueryDeSerializer';
 import capnpArrayDeserializer from '../capnpArrayDeserializer';
 
 export enum DeserializableType {
-  "arrayMetadata",
-  "query",
-  "array"
+  'arrayMetadata',
+  'query',
+  'array'
 }
 
 export const deserializeCapnp = (data: any, type: DeserializableType) => {
   if (!isArrayBuffer(data)) {
-    throw new Error(`Data is not of type ArrayBuffer`);
+    throw new Error('Data is not of type ArrayBuffer');
   }
   if (type === DeserializableType.array) {
     return capnpArrayDeserializer(data);
@@ -22,13 +22,14 @@ export const deserializeCapnp = (data: any, type: DeserializableType) => {
   if (type === DeserializableType.arrayMetadata) {
     return capnpArrayMetadaDeSerializer(data);
   }
-}
+};
 
-const capnpArrayMetadaDeSerializer = (buffer: ArrayBuffer | ArrayBufferLike) => {
-  
+const capnpArrayMetadaDeSerializer = (
+  buffer: ArrayBuffer | ArrayBufferLike
+) => {
   const message = new capnp.Message(buffer, false);
   const arrayMetadata = message.getRoot(ArrayMetadata);
-  const entries = arrayMetadata.getEntries().map((entry) => {
+  const entries = arrayMetadata.getEntries().map(entry => {
     const value = entry.getValue().toArray();
 
     return {
@@ -36,16 +37,15 @@ const capnpArrayMetadaDeSerializer = (buffer: ArrayBuffer | ArrayBufferLike) => 
       del: entry.getDel(),
       key: entry.getKey(),
       type: entry.getType(),
-      valueNum: entry.getValueNum(),
+      valueNum: entry.getValueNum()
     };
   });
   return { entries };
 };
-
 
 const isArrayBuffer = (data: any): data is ArrayBuffer => {
   if (data && data.byteLength && data.slice) {
     return true;
   }
   return false;
-}
+};

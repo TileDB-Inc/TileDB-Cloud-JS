@@ -1,9 +1,9 @@
-import { ArraySchema } from "../v1";
-import dataToQueryWriter from "./dataToQueryWriter";
-import attributeValuesToArrayBuffers from "./attributeValuesToArrayBuffers";
-import capnpQuerySerializer from "./serialization/capnpQuerySerializer";
-import concatArrayBuffers from "./concatArrayBuffers";
-import { QueryWrite } from "../TileDBQuery/TileDBQuery";
+import { ArraySchema } from '../v1';
+import dataToQueryWriter from './dataToQueryWriter';
+import attributeValuesToArrayBuffers from './attributeValuesToArrayBuffers';
+import capnpQuerySerializer from './serialization/capnpQuerySerializer';
+import concatArrayBuffers from './concatArrayBuffers';
+import { QueryWrite } from '../TileDBQuery/TileDBQuery';
 
 const emptyArrayBuffer = new ArrayBuffer(0);
 
@@ -23,7 +23,7 @@ const getWriterBody = (data: QueryWrite, arraySchema: ArraySchema) => {
       const attributeBuffer = concatArrayBuffers(
         valueBuffer.offsetsBuffer,
         valueBuffer.valuesBuffer,
-        valueBuffer.validityBuffer,
+        valueBuffer.validityBuffer
       );
 
       return concatArrayBuffers(accum, attributeBuffer);

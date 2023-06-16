@@ -1,3 +1,3 @@
-import Sql from "./Sql";
+import Sql from './Sql';
 
 export default Sql;

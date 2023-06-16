@@ -1,3 +1,3 @@
-import TileDBClient from "./TileDBClient";
+import TileDBClient from './TileDBClient';
 
 export default TileDBClient;

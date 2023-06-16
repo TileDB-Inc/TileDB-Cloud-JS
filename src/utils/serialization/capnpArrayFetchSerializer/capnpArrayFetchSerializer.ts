@@ -1,12 +1,12 @@
-import { ArrayFetch } from "../../../v2";
-import * as capnp from "capnp-ts";
-import { ArrayOpen } from "../../../capnp/query_capnp";
+import { ArrayFetch } from '../../../v2';
+import * as capnp from 'capnp-ts';
+import { ArrayOpen } from '../../../capnp/query_capnp';
 
 const capnpArrayFetchSerializer = (arrayFetch: ArrayFetch): ArrayBuffer => {
   const message = new capnp.Message();
   const arrayFetchData = message.initRoot(ArrayOpen);
 
-  arrayFetchData.setQueryType(arrayFetch.queryType || "READ");
+  arrayFetchData.setQueryType(arrayFetch.queryType || 'READ');
   const entriesLength = arrayFetch.config?.entries?.length;
   if (entriesLength) {
     const config = arrayFetchData.initConfig();

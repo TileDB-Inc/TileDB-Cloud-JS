@@ -1,3 +1,3 @@
-import UDF from "./UDF";
+import UDF from './UDF';
 
 export default UDF;

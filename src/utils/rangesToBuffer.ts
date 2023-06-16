@@ -1,7 +1,7 @@
-import { Datatype } from "../v2";
-import flatten from "./flatten";
-import getTypedArrayFromDataType from "./getTypedArrayFromDataType";
-import mapToBigIntIfNeeded from "./mapToBigIntIfNeeded";
+import { Datatype } from '../v2';
+import flatten from './flatten';
+import getTypedArrayFromDataType from './getTypedArrayFromDataType';
+import mapToBigIntIfNeeded from './mapToBigIntIfNeeded';
 
 /**
  * Convert user defined ranges to a Uint8Array
@@ -16,7 +16,7 @@ const rangesToBuffer = (ranges: any[], type: Datatype) => {
     return Array.from(uint8Array);
   } else if (type === Datatype.StringAscii) {
     const asciiArray = (ranges as string[]).reduce((arr, str) => {
-      const charCodes = str.split('').map((s,i) => str.charCodeAt(i));
+      const charCodes = str.split('').map((s, i) => str.charCodeAt(i));
       return [...arr, ...charCodes];
     }, []);
     return flatten(asciiArray);

@@ -1,9 +1,9 @@
-import { Dimension } from "../v1";
-import { ValueBuffers } from "./attributeValuesToArrayBuffers";
-import { Querystatus, Querytype } from "../v2";
-import getRanges from "./getRanges";
+import { Dimension } from '../v1';
+import { ValueBuffers } from './attributeValuesToArrayBuffers';
+import { Querystatus, Querytype } from '../v2';
+import getRanges from './getRanges';
 import { QueryWrite } from '../TileDBQuery/TileDBQuery';
-import flatten from "./flatten";
+import flatten from './flatten';
 
 const dataToQueryWriter = (
   data: QueryWrite,
@@ -25,20 +25,24 @@ const dataToQueryWriter = (
         originalVarLenBufferSizeInBytes: isVarLength
           ? val.valuesBuffer.byteLength
           : 0,
-        originalValidityLenBufferSizeInBytes: val.validityBuffer.byteLength,
+        originalValidityLenBufferSizeInBytes: val.validityBuffer.byteLength
       };
     }
   );
-  const dimensionDomains = dimensions.map((dim) => {
+  const dimensionDomains = dimensions.map(dim => {
     if (!dim.domain) {
       return [];
     }
     const [firstValue] = Object.values(dim.domain);
     return firstValue;
   });
-  const {subarray: subarrayRanges} = data;
+  const { subarray: subarrayRanges } = data;
   const hasDefaultRange = subarrayRanges ? false : true;
-  const ranges = getRanges(subarrayRanges || dimensionDomains, dimensions, hasDefaultRange);
+  const ranges = getRanges(
+    subarrayRanges || dimensionDomains,
+    dimensions,
+    hasDefaultRange
+  );
   const subarray = getSubArray(subarrayRanges as Array<number[]>, dimensions);
 
   return {
@@ -53,15 +57,18 @@ const dataToQueryWriter = (
       subarray,
       subarrayRanges: {
         layout: data.layout,
-        ranges,
-      },
-    },
+        ranges
+      }
+    }
   };
 };
 
 export default dataToQueryWriter;
 
-const getSubArray = (ranges: Array<number[]> | undefined, dimensions: Dimension[]) => {
+const getSubArray = (
+  ranges: Array<number[]> | undefined,
+  dimensions: Dimension[]
+) => {
   const subarray = {
     int8: [],
     uint8: [],
@@ -72,7 +79,7 @@ const getSubArray = (ranges: Array<number[]> | undefined, dimensions: Dimension[
     int64: [],
     uint64: [],
     float32: [],
-    float64: [],
+    float64: []
   };
 
   if (!ranges) {
@@ -82,4 +89,4 @@ const getSubArray = (ranges: Array<number[]> | undefined, dimensions: Dimension[
   subarray[type.toLocaleLowerCase()] = flatten(ranges);
 
   return subarray;
-}
+};

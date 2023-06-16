@@ -1,5 +1,5 @@
-import Parallel from "paralleljs";
-import range from "./range";
+import Parallel from 'paralleljs';
+import range from './range';
 
 /**
  * Group values together according to offsets
@@ -16,14 +16,17 @@ const groupValuesByOffsetBytes = <T>(
     return Promise.resolve([values]);
   }
   const offsetIndex = range(0, offsetsLength - 1);
-  const offsetIndexTuple: [number, number][] = offsets.map((off, i) => [off, offsetIndex[i]]);
+  const offsetIndexTuple: [number, number][] = offsets.map((off, i) => [
+    off,
+    offsetIndex[i]
+  ]);
   const offsetsP = new Parallel(offsetIndexTuple, {
     env: {
       values,
-      offsets,
-    },
+      offsets
+    }
   });
-  return new Promise((resolve) => {
+  return new Promise(resolve => {
     offsetsP
       .map(([offset, i]: [number, number]) => {
         const vals = global.env.values as T[];

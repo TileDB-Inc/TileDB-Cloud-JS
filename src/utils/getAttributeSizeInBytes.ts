@@ -1,4 +1,4 @@
-import { AttributeBufferHeader } from "../v2";
+import { AttributeBufferHeader } from '../v2';
 
 /**
  * Add all buffers of an attribute

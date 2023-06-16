@@ -3,5 +3,4 @@
  */
 const flatten = <T extends any[]>(list: T) => list.flat();
 
-
 export default flatten;

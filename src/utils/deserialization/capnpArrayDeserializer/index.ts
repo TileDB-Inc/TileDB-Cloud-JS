@@ -1,3 +1,3 @@
 import deserializeArray from './capnpArrayDeserializer';
 
-export default deserializeArray
+export default deserializeArray;

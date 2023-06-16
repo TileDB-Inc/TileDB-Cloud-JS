@@ -5,6 +5,6 @@
  * ['TileDB', 'Cloud']
  */
 const concatChars = (strings: string[][]): string[] =>
-  strings.map((s) => s?.join(""));
+  strings.map(s => s?.join(''));
 
 export default concatChars;
