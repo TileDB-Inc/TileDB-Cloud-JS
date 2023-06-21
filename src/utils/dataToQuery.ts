@@ -112,7 +112,7 @@ const dataToQuery = (
     layout: data.layout,
     status: Querystatus.Uninitialized,
     type: Querytype.Read,
-    reader: {
+    denseReader: {
       layout: data.layout,
       subarray: {
         layout: data.layout,
