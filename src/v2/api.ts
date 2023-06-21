@@ -2010,6 +2010,12 @@ export interface Query {
     reader?: QueryReader;
     /**
      * 
+     * @type {QueryReader}
+     * @memberof Query
+     */
+    denseReader?: QueryReader;
+    /**
+     * 
      * @type {ArrayData}
      * @memberof Query
      */
