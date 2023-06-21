@@ -53,7 +53,7 @@ const isArrayMetadata = (data: any): data is ArrayMetadataType => {
 };
 
 const isQuerydata = (data: any): data is Query => {
-  if (data && (data.reader || data.writer)) {
+  if (data && (data.denseReader || data.writer)) {
     return true;
   }
   return false;

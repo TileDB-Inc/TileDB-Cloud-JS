@@ -2136,6 +2136,18 @@ export interface Subarray {
      * @memberof Subarray
      */
     ranges?: Array<SubarrayRanges>;
+    /**
+     * 
+     * @type {Array<number>}
+     * @memberof Subarray
+     */
+    relevantFragments?: Array<number>;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof Subarray
+     */
+    coalesceRanges?: boolean;
 }
 /**
  * The subarray partitioner

@@ -79,6 +79,7 @@ const capnpQueryDeSerializer = (buffer: ArrayBuffer | ArrayBufferLike) => {
     type: query.getType(),
     writer: deserializeWrite(query),
     reader: deserializeQueryReader(query.getReader()),
+    denseReader: deserializeQueryReader(query.getReader()),
     array: deserializeArray(query.getArray()),
     totalFixedLengthBufferBytes: query
       .getTotalFixedLengthBufferBytes()
@@ -717,6 +718,8 @@ export const deserializeSubarray = (subArray: Subarray) => {
   return {
     layout: subArray.getLayout(),
     stats: deserializeStats(subArray.getStats()),
+    coalesceRanges: subArray.getCoalesceRanges(),
+    relevantFragments: subArray.getRelevantFragments().toArray(),
     ranges: subArray.getRanges().map(range => {
       const type = range.getType();
       const bufferSizes = range

@@ -2973,7 +2973,8 @@ export class Subarray extends __S {
   static readonly _capnp = {
     displayName: 'Subarray',
     id: 'dba20dec138adac9',
-    size: new __O(0, 3)
+    size: new __O(8, 4),
+    defaultCoalesceRanges: capnp.getBitMask(true, 0)
   };
   static _Ranges: capnp.ListCtor<SubarrayRanges>;
   getLayout(): string {
@@ -3017,6 +3018,30 @@ export class Subarray extends __S {
   }
   setStats(value: Stats): void {
     __S.copyFrom(value, __S.getPointer(2, this));
+  }
+  adoptRelevantFragments(value: capnp.Orphan<capnp.List<number>>): void {
+    __S.adopt(value, __S.getPointer(3, this));
+  }
+  disownRelevantFragments(): capnp.Orphan<capnp.List<number>> {
+    return __S.disown(this.getRelevantFragments());
+  }
+  getRelevantFragments(): capnp.List<number> {
+    return __S.getList(3, capnp.Uint32List, this);
+  }
+  hasRelevantFragments(): boolean {
+    return !__S.isNull(__S.getPointer(3, this));
+  }
+  initRelevantFragments(length: number): capnp.List<number> {
+    return __S.initList(3, capnp.Uint32List, length, this);
+  }
+  setRelevantFragments(value: capnp.List<number>): void {
+    __S.copyFrom(value, __S.getPointer(3, this));
+  }
+  getCoalesceRanges(): boolean {
+    return __S.getBit(0, this, Subarray._capnp.defaultCoalesceRanges);
+  }
+  setCoalesceRanges(value: boolean): void {
+    __S.setBit(0, value, this);
   }
   toString(): string {
     return 'Subarray_' + super.toString();
