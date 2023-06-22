@@ -87,7 +87,7 @@ const dataToQuery = (
   attributes: Attribute[],
   dimensions: Dimension[],
   options: Options
-): Query => {
+): any => {
   if (!data.layout) {
     return data as any;
   }
@@ -107,33 +107,37 @@ const dataToQuery = (
     bufferSize
   );
 
-  return {
-    attributeBufferHeaders,
+  const reader = {
     layout: data.layout,
-    status: Querystatus.Uninitialized,
-    type: Querytype.Read,
-    denseReader: {
+    subarray: {
       layout: data.layout,
-      subarray: {
-        layout: data.layout,
-        ranges
-      },
-      readState: {
-        subarrayPartitioner: {
+      ranges
+    },
+    readState: {
+      subarrayPartitioner: {
+        subarray: {
+          layout: data.layout,
+          ranges: []
+        },
+        budget: [],
+        current: {
           subarray: {
             layout: data.layout,
             ranges: []
-          },
-          budget: [],
-          current: {
-            subarray: {
-              layout: data.layout,
-              ranges: []
-            }
           }
         }
       }
     }
+  };
+
+  return {
+    attributeBufferHeaders,
+    layout: data.layout,
+    readerIndex: { layout: data.layout, subarray: { layout: data.layout } },
+    status: Querystatus.Uninitialized,
+    type: Querytype.Read,
+    reader,
+    denseReader: reader
   } as Query;
 };
 

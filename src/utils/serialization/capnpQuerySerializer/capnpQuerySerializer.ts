@@ -1,8 +1,4 @@
 import {
-  ArrayDirectory_DeleteAndUpdateTileLocation,
-  ArrayDirectory_TimestampedURI
-} from './../../../capnp/query_capnp';
-import {
   Query as QueryType,
   Subarray as SubarrayType,
   DomainArray,
@@ -22,7 +18,13 @@ import {
   DeleteAndUpdateTileLocation,
   FragmentMetadata,
   QueryReader,
-  GenericTileOffsets
+  GenericTileOffsets,
+  ReaderIndex,
+  ReadStateIndex,
+  FragmentIndex,
+  ResultCellSlab,
+  Condition,
+  ConditionClause
 } from '../../../v2';
 import {
   Query,
@@ -42,7 +44,15 @@ import {
   ArrayDirectory as ArrayDirectoryCapnp,
   FragmentMetadata as FragmentMetadataCapnp,
   QueryReader as QueryReaderCapnp,
-  FragmentMetadata_GenericTileOffsets
+  ArrayDirectory_DeleteAndUpdateTileLocation,
+  ArrayDirectory_TimestampedURI,
+  ReaderIndex as ReaderIndexCapnp,
+  FragmentMetadata_GenericTileOffsets,
+  ReadStateIndex as ReadStateIndexCapnp,
+  FragmentIndex as FragmentIndexCapnp,
+  ResultCellSlab as ResultCellSlabCapnp,
+  Condition as ConditionCapnp,
+  ConditionClause as ConditionClauseCapnp
 } from '../../../capnp/query_capnp';
 import * as capnp from 'capnp-ts';
 
@@ -62,7 +72,8 @@ const capnpQuerySerializer = (data: Partial<QueryType>) => {
     attributeBufferHeaders = [],
     layout = '',
     status = '',
-    type = ''
+    type = '',
+    readerIndex
   } = data;
 
   queryData.setLayout(layout);
@@ -138,11 +149,137 @@ const capnpQuerySerializer = (data: Partial<QueryType>) => {
     serializeQueryReader(denseReader, queryDenseReader);
   }
 
+  if (readerIndex) {
+    serializeReaderIndex(queryData.initReaderIndex(), readerIndex);
+  }
+
   if (array) {
     serializeArray(queryData.initArray(), array);
   }
 
   return message.toArrayBuffer();
+};
+
+const serializeReaderIndex = (
+  readerIndexCapnp: ReaderIndexCapnp,
+  readerIndex: ReaderIndex
+) => {
+  const { layout, subarray, readState, condition } = readerIndex;
+  readerIndexCapnp.setLayout(layout);
+
+  if (subarray) {
+    serializeSubArray(readerIndexCapnp.initSubarray(), subarray);
+  }
+
+  if (readState) {
+    serializeReadStateIndex(readerIndexCapnp.initReadState(), readState);
+  }
+
+  if (condition) {
+    serializeCondition(readerIndexCapnp.initCondition(), condition);
+  }
+};
+
+const serializeCondition = (
+  conditionCapnp: ConditionCapnp,
+  condition: Condition
+) => {
+  const { clauseCombinationOps, clauses } = condition;
+
+  if (clauseCombinationOps?.length) {
+    const clausesCapnp = conditionCapnp.initClauseCombinationOps(
+      clauseCombinationOps.length
+    );
+
+    clauseCombinationOps.forEach((clause, i) => {
+      clausesCapnp.set(i, clause);
+    });
+  }
+
+  if (clauses?.length) {
+    const clausesCapnp = conditionCapnp.initClauses(clauses.length);
+    clausesCapnp.map((clauseCapnp, i) => {
+      serializeClause(clauseCapnp, clauses[i]);
+    });
+  }
+};
+
+const serializeClause = (
+  clauseCapnp: ConditionClauseCapnp,
+  clause: ConditionClause
+) => {
+  clauseCapnp.setFieldName(clause.fieldName);
+  clauseCapnp.setOp(clause.op);
+
+  if (clause.value) {
+    const valueUint8Array = Uint8Array.from(clause.value);
+    const valCapnp = clauseCapnp.initValue(valueUint8Array.byteLength);
+
+    valCapnp.copyBuffer(valueUint8Array.buffer);
+  }
+};
+
+const serializeReadStateIndex = (
+  readStateIndexCapnp: ReadStateIndexCapnp,
+  readState: ReadStateIndex
+) => {
+  const {
+    doneAddingResultTiles = false,
+    fragTileIdx,
+    resultCellSlab
+  } = readState;
+
+  readStateIndexCapnp.setDoneAddingResultTiles(doneAddingResultTiles);
+
+  if (fragTileIdx && fragTileIdx.length) {
+    const fragTiles = readStateIndexCapnp.initFragTileIdx(fragTileIdx.length);
+    fragTileIdx.forEach((fragTile, i) => {
+      const fragTileCapnp = fragTiles.get(i);
+
+      serializeFragmentIndex(fragTileCapnp, fragTile);
+    });
+  }
+
+  if (resultCellSlab && resultCellSlab.length) {
+    const resultCellSlabCapnp = readStateIndexCapnp.initResultCellSlab(
+      resultCellSlab.length
+    );
+
+    resultCellSlab.forEach((res, i) => {
+      const resultSlabCapnp = resultCellSlabCapnp.get(i);
+
+      serializeResultCellSlab(resultSlabCapnp, res);
+    });
+  }
+};
+
+const serializeResultCellSlab = (
+  resultCellSlabCapnp: ResultCellSlabCapnp,
+  resultCellSlab: ResultCellSlab
+) => {
+  resultCellSlabCapnp.setFragIdx(resultCellSlab.fragIdx);
+  resultCellSlabCapnp.setTileIdx(
+    capnp.Uint64.fromNumber(resultCellSlab.tileIdx)
+  );
+  resultCellSlabCapnp.setLength(capnp.Uint64.fromNumber(resultCellSlab.length));
+  resultCellSlabCapnp.setStart(capnp.Uint64.fromNumber(resultCellSlab.start));
+};
+
+const serializeFragmentIndex = (
+  fragmentIndexCapnp: FragmentIndexCapnp,
+  fragmentIndex: FragmentIndex
+) => {
+  if (fragmentIndex.cellIdx) {
+    fragmentIndexCapnp.setCellIdx(
+      capnp.Uint64.fromNumber(fragmentIndex.cellIdx)
+    );
+  }
+
+  if (fragmentIndex.tileIdx) {
+    fragmentIndexCapnp.setTileIdx(
+      capnp.Uint64.fromNumber(fragmentIndex.tileIdx)
+    );
+  }
 };
 
 const add = (a: number, b: number) => a + b;
