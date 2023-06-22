@@ -1892,6 +1892,70 @@ export enum Layout {
 }
 
 /**
+ * Stats struct
+ * @export
+ * @interface MapFloat64
+ */
+export interface MapFloat64 {
+    /**
+     * 
+     * @type {Array<MapFloat64Entries>}
+     * @memberof MapFloat64
+     */
+    entries?: Array<MapFloat64Entries>;
+}
+/**
+ * 
+ * @export
+ * @interface MapFloat64Entries
+ */
+export interface MapFloat64Entries {
+    /**
+     * 
+     * @type {string}
+     * @memberof MapFloat64Entries
+     */
+    key?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof MapFloat64Entries
+     */
+    value?: number;
+}
+/**
+ * Stats struct
+ * @export
+ * @interface MapUInt64
+ */
+export interface MapUInt64 {
+    /**
+     * 
+     * @type {Array<MapUInt64Entries>}
+     * @memberof MapUInt64
+     */
+    entries?: Array<MapUInt64Entries>;
+}
+/**
+ * 
+ * @export
+ * @interface MapUInt64Entries
+ */
+export interface MapUInt64Entries {
+    /**
+     * 
+     * @type {string}
+     * @memberof MapUInt64Entries
+     */
+    key?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof MapUInt64Entries
+     */
+    value?: number;
+}
+/**
  * user\'s TileDB metadata
  * @export
  * @interface Metadata
@@ -2238,6 +2302,12 @@ export interface ReaderIndex {
     readState?: ReadStateIndex;
     /**
      * 
+     * @type {Stats}
+     * @memberof ReaderIndex
+     */
+    stats?: Stats;
+    /**
+     * 
      * @type {Condition}
      * @memberof ReaderIndex
      */
@@ -2275,6 +2345,25 @@ export interface ResultCellSlab {
     length?: number;
 }
 /**
+ * Stats struct
+ * @export
+ * @interface Stats
+ */
+export interface Stats {
+    /**
+     * 
+     * @type {MapFloat64}
+     * @memberof Stats
+     */
+    timers?: MapFloat64;
+    /**
+     * 
+     * @type {MapUInt64}
+     * @memberof Stats
+     */
+    counters?: MapUInt64;
+}
+/**
  * A Subarray
  * @export
  * @interface Subarray
@@ -2286,6 +2375,12 @@ export interface Subarray {
      * @memberof Subarray
      */
     layout?: Layout;
+    /**
+     * 
+     * @type {Stats}
+     * @memberof Subarray
+     */
+    stats?: Stats;
     /**
      * List of 1D ranges, one per dimension
      * @type {Array<SubarrayRanges>}
