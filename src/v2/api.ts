@@ -794,6 +794,50 @@ export enum CloudProvider {
 }
 
 /**
+ * The query condition
+ * @export
+ * @interface Condition
+ */
+export interface Condition {
+    /**
+     * The operation that combines each condition
+     * @type {Array<string>}
+     * @memberof Condition
+     */
+    clauseCombinationOps?: Array<string>;
+    /**
+     * All clauses in this condition
+     * @type {Array<ConditionClause>}
+     * @memberof Condition
+     */
+    clauses?: Array<ConditionClause>;
+}
+/**
+ * A clause within a condition
+ * @export
+ * @interface ConditionClause
+ */
+export interface ConditionClause {
+    /**
+     * The name of the field this clause applies to
+     * @type {string}
+     * @memberof ConditionClause
+     */
+    fieldName?: string;
+    /**
+     * The comparison value
+     * @type {Array<number>}
+     * @memberof ConditionClause
+     */
+    value?: Array<number>;
+    /**
+     * The comparison operation
+     * @type {string}
+     * @memberof ConditionClause
+     */
+    op?: string;
+}
+/**
  * TileDB data type
  * @export
  * @enum {string}
@@ -1255,6 +1299,25 @@ export interface FloatScaleConfig {
      * @memberof FloatScaleConfig
      */
     byteWidth?: number;
+}
+/**
+ * Tile/cell index for fragment
+ * @export
+ * @interface FragmentIndex
+ */
+export interface FragmentIndex {
+    /**
+     * Tile index
+     * @type {number}
+     * @memberof FragmentIndex
+     */
+    tileIdx?: number;
+    /**
+     * Cell index
+     * @type {number}
+     * @memberof FragmentIndex
+     */
+    cellIdx?: number;
 }
 /**
  * Metadata of a fragment
@@ -2016,6 +2079,12 @@ export interface Query {
     denseReader?: QueryReader;
     /**
      * 
+     * @type {ReaderIndex}
+     * @memberof Query
+     */
+    readerIndex?: ReaderIndex;
+    /**
+     * 
      * @type {ArrayData}
      * @memberof Query
      */
@@ -2117,6 +2186,93 @@ export interface ReadState {
      * @memberof ReadState
      */
     subarrayPartitioner?: SubarrayPartitioner;
+}
+/**
+ * State of reader
+ * @export
+ * @interface ReadStateIndex
+ */
+export interface ReadStateIndex {
+    /**
+     * Is the reader done adding result tiles.
+     * @type {boolean}
+     * @memberof ReadStateIndex
+     */
+    doneAddingResultTiles?: boolean;
+    /**
+     * Tile/cell index for each fragments.
+     * @type {Array<FragmentIndex>}
+     * @memberof ReadStateIndex
+     */
+    fragTileIdx?: Array<FragmentIndex>;
+    /**
+     * Result cell slab.
+     * @type {Array<ResultCellSlab>}
+     * @memberof ReadStateIndex
+     */
+    resultCellSlab?: Array<ResultCellSlab>;
+}
+/**
+ * Contains data needed for continuation of incomplete sparse reads with index readers
+ * @export
+ * @interface ReaderIndex
+ */
+export interface ReaderIndex {
+    /**
+     * 
+     * @type {Layout}
+     * @memberof ReaderIndex
+     */
+    layout?: Layout;
+    /**
+     * 
+     * @type {Subarray}
+     * @memberof ReaderIndex
+     */
+    subarray?: Subarray;
+    /**
+     * 
+     * @type {ReadStateIndex}
+     * @memberof ReaderIndex
+     */
+    readState?: ReadStateIndex;
+    /**
+     * 
+     * @type {Condition}
+     * @memberof ReaderIndex
+     */
+    condition?: Condition;
+}
+/**
+ * Result cell slab
+ * @export
+ * @interface ResultCellSlab
+ */
+export interface ResultCellSlab {
+    /**
+     * Fragment index
+     * @type {number}
+     * @memberof ResultCellSlab
+     */
+    fragIdx?: number;
+    /**
+     * Tile index
+     * @type {number}
+     * @memberof ResultCellSlab
+     */
+    tileIdx?: number;
+    /**
+     * Start of the cell slab
+     * @type {number}
+     * @memberof ResultCellSlab
+     */
+    start?: number;
+    /**
+     * length of the cell slab
+     * @type {number}
+     * @memberof ResultCellSlab
+     */
+    length?: number;
 }
 /**
  * A Subarray
