@@ -2973,8 +2973,7 @@ export class Subarray extends __S {
   static readonly _capnp = {
     displayName: 'Subarray',
     id: 'dba20dec138adac9',
-    size: new __O(8, 4),
-    defaultCoalesceRanges: capnp.getBitMask(true, 0)
+    size: new __O(8, 4)
   };
   static _Ranges: capnp.ListCtor<SubarrayRanges>;
   getLayout(): string {
@@ -3038,7 +3037,7 @@ export class Subarray extends __S {
     __S.copyFrom(value, __S.getPointer(3, this));
   }
   getCoalesceRanges(): boolean {
-    return __S.getBit(0, this, Subarray._capnp.defaultCoalesceRanges);
+    return __S.getBit(0, this);
   }
   setCoalesceRanges(value: boolean): void {
     __S.setBit(0, value, this);

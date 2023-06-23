@@ -136,7 +136,6 @@ const dataToQuery = (
     readerIndex: { layout: data.layout, subarray: { layout: data.layout } },
     status: Querystatus.Uninitialized,
     type: Querytype.Read,
-    reader,
     denseReader: reader
   } as Query;
 };

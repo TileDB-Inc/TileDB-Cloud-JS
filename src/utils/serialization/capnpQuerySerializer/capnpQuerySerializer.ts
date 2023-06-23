@@ -24,6 +24,7 @@ import {
   FragmentIndex,
   ResultCellSlab,
   Condition,
+  SubarrayRanges,
   ConditionClause
 } from '../../../v2';
 import {
@@ -52,7 +53,8 @@ import {
   FragmentIndex as FragmentIndexCapnp,
   ResultCellSlab as ResultCellSlabCapnp,
   Condition as ConditionCapnp,
-  ConditionClause as ConditionClauseCapnp
+  ConditionClause as ConditionClauseCapnp,
+  SubarrayRanges as SubarrayRangesCapnp
 } from '../../../capnp/query_capnp';
 import * as capnp from 'capnp-ts';
 
@@ -165,7 +167,9 @@ const serializeReaderIndex = (
   readerIndex: ReaderIndex
 ) => {
   const { layout, subarray, readState, condition } = readerIndex;
-  readerIndexCapnp.setLayout(layout);
+  if (layout) {
+    readerIndexCapnp.setLayout(layout);
+  }
 
   if (subarray) {
     serializeSubArray(readerIndexCapnp.initSubarray(), subarray);
@@ -231,7 +235,7 @@ const serializeReadStateIndex = (
 
   readStateIndexCapnp.setDoneAddingResultTiles(doneAddingResultTiles);
 
-  if (fragTileIdx && fragTileIdx.length) {
+  if (fragTileIdx?.length) {
     const fragTiles = readStateIndexCapnp.initFragTileIdx(fragTileIdx.length);
     fragTileIdx.forEach((fragTile, i) => {
       const fragTileCapnp = fragTiles.get(i);
@@ -240,7 +244,7 @@ const serializeReadStateIndex = (
     });
   }
 
-  if (resultCellSlab && resultCellSlab.length) {
+  if (resultCellSlab?.length) {
     const resultCellSlabCapnp = readStateIndexCapnp.initResultCellSlab(
       resultCellSlab.length
     );
@@ -1323,48 +1327,63 @@ const serializeSubArray = (capSubArray: Subarray, subArray: SubarrayType) => {
     coalesceRanges,
     relevantFragments = []
   } = subArray;
-  capSubArray.setLayout(layout);
+  if (layout) {
+    capSubArray.setLayout(layout);
+  }
   capSubArray.setCoalesceRanges(coalesceRanges);
 
-  const relevantFragmentsCapnp = capSubArray.initRelevantFragments(
-    relevantFragments.length
-  );
-  relevantFragments.forEach((fragm, i) => {
-    relevantFragmentsCapnp.set(i, fragm);
-  });
-
-  const capRanges = capSubArray.initRanges(ranges.length);
-
-  ranges.forEach((range, i) => {
-    const r = capRanges.get(i);
-    const bufferSizesArray = range.bufferSizes || [];
-    r.setType(range.type);
-    r.setHasDefaultRange(range.hasDefaultRange);
-
-    const totalBufferSize = bufferSizesArray.reduce(add);
-    const bufferData = r.initBuffer(totalBufferSize);
-    const view = Uint8Array.from(range.buffer);
-
-    bufferData.copyBuffer(view);
-    r.setBuffer(bufferData);
-
-    const bufferSizes = r.initBufferSizes(bufferSizesArray.length);
-    bufferSizesArray.forEach((bsize, i) => {
-      bufferSizes.set(i, capnp.Uint64.fromNumber(bsize));
-    });
-
-    r.setBufferSizes(bufferSizes);
-
-    const bufferStartSizesArray = range.bufferStartSizes || [];
-    const bufferStartSizes = r.initBufferStartSizes(
-      bufferStartSizesArray.length
+  if (relevantFragments?.length) {
+    const relevantFragmentsCapnp = capSubArray.initRelevantFragments(
+      relevantFragments.length
     );
-    bufferStartSizesArray.forEach((bsize, i) => {
-      bufferStartSizes.set(i, capnp.Uint64.fromNumber(bsize));
+    relevantFragments.forEach((fragm, i) => {
+      relevantFragmentsCapnp.set(i, fragm);
     });
+  }
+  if (ranges?.length) {
+    const capRanges = capSubArray.initRanges(ranges.length);
 
-    r.setBufferStartSizes(bufferStartSizes);
+    ranges.forEach((range, i) => {
+      const subarrayRange = capRanges.get(i);
+
+      serializeSubArrayRange(subarrayRange, range);
+    });
+  }
+};
+
+const serializeSubArrayRange = (
+  subarrayRangeCapnp: SubarrayRangesCapnp,
+  range: SubarrayRanges
+) => {
+  const bufferSizesArray = range.bufferSizes || [];
+  subarrayRangeCapnp.setType(range.type);
+  subarrayRangeCapnp.setHasDefaultRange(range.hasDefaultRange);
+
+  const totalBufferSize = bufferSizesArray.reduce(add);
+  const bufferData = subarrayRangeCapnp.initBuffer(totalBufferSize);
+  const view = Uint8Array.from(range.buffer);
+
+  bufferData.copyBuffer(view);
+  subarrayRangeCapnp.setBuffer(bufferData);
+
+  const bufferSizes = subarrayRangeCapnp.initBufferSizes(
+    bufferSizesArray.length
+  );
+  bufferSizesArray.forEach((bsize, i) => {
+    bufferSizes.set(i, capnp.Uint64.fromNumber(bsize));
   });
+
+  subarrayRangeCapnp.setBufferSizes(bufferSizes);
+
+  const bufferStartSizesArray = range.bufferStartSizes || [];
+  const bufferStartSizes = subarrayRangeCapnp.initBufferStartSizes(
+    bufferStartSizesArray.length
+  );
+  bufferStartSizesArray.forEach((bsize, i) => {
+    bufferStartSizes.set(i, capnp.Uint64.fromNumber(bsize));
+  });
+
+  subarrayRangeCapnp.setBufferStartSizes(bufferStartSizes);
 };
 
 const clamp = (num: number, min: number, max: number) =>

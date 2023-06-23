@@ -87,9 +87,13 @@ const capnpQueryDeSerializer = (buffer: ArrayBuffer | ArrayBufferLike) => {
     type: query.getType(),
     writer: deserializeWrite(query),
     reader: deserializeQueryReader(query.getReader()),
-    denseReader: deserializeQueryReader(query.getDenseReader()),
+    denseReader: query.hasDenseReader()
+      ? deserializeQueryReader(query.getDenseReader())
+      : undefined,
+    readerIndex: query.hasReaderIndex()
+      ? deserializeReaderIndex(query.getReaderIndex())
+      : undefined,
     array: deserializeArray(query.getArray()),
-    readerIndex: deserializeReaderIndex(query.getReaderIndex()),
     totalFixedLengthBufferBytes: query
       .getTotalFixedLengthBufferBytes()
       .toNumber(),
@@ -110,10 +114,18 @@ export const deserializeReaderIndex = (
 ): ReaderIndex => {
   return {
     layout: readerIndex.getLayout() as Layout,
-    condition: deserializeCondition(readerIndex.getCondition()),
-    stats: deserializeStats(readerIndex.getStats()),
-    subarray: deserializeSubarray(readerIndex.getSubarray()),
-    readState: deserializeReadStateIndex(readerIndex.getReadState())
+    condition: readerIndex.hasCondition()
+      ? deserializeCondition(readerIndex.getCondition())
+      : undefined,
+    stats: readerIndex.hasStats()
+      ? deserializeStats(readerIndex.getStats())
+      : undefined,
+    subarray: readerIndex.hasSubarray()
+      ? deserializeSubarray(readerIndex.getSubarray())
+      : undefined,
+    readState: readerIndex.hasReadState()
+      ? deserializeReadStateIndex(readerIndex.getReadState())
+      : undefined
   };
 };
 
@@ -587,10 +599,16 @@ export const deserializeConfig = (config: Config) => {
 export const deserializeQueryReader = (reader: QueryReader) => {
   return {
     layout: reader.getLayout(),
-    subarray: deserializeSubarray(reader.getSubarray()),
-    readState: deserializeReadState(reader.getReadState()),
-    condition: deserializeCondition(reader.getCondition()),
-    stats: deserializeStats(reader.getStats())
+    subarray: reader.hasSubarray()
+      ? deserializeSubarray(reader.getSubarray())
+      : undefined,
+    readState: reader.hasReadState()
+      ? deserializeReadState(reader.getReadState())
+      : undefined,
+    condition: reader.hasCondition()
+      ? deserializeCondition(reader.getCondition())
+      : undefined,
+    stats: reader.hasStats() ? deserializeStats(reader.getStats()) : undefined
   };
 };
 
@@ -764,27 +782,28 @@ export const deserializeDomainArray = (domainArray: DomainArray) => {
 };
 
 export const deserializeSubarray = (subArray: SubarrayCapnp): Subarray => {
+  const ranges: any = subArray.getRanges().map(range => {
+    const type = range.getType();
+    const bufferSizes = range.getBufferSizes().map(uint64 => uint64.toNumber());
+
+    return {
+      type,
+      hasDefaultRange: range.getHasDefaultRange(),
+      buffer: range.getBuffer().toArray(),
+      bufferSizes: bufferSizes,
+      bufferStartSizes: range
+        .getBufferStartSizes()
+        .map(uint64 => uint64.toNumber())
+    };
+  });
   return {
     layout: subArray.getLayout() as Layout,
-    stats: deserializeStats(subArray.getStats()),
+    stats: subArray.hasStats()
+      ? deserializeStats(subArray.getStats())
+      : undefined,
     coalesceRanges: subArray.getCoalesceRanges(),
     relevantFragments: subArray.getRelevantFragments().toArray(),
-    ranges: subArray.getRanges().map(range => {
-      const type = range.getType();
-      const bufferSizes = range
-        .getBufferSizes()
-        .map(uint64 => uint64.toNumber());
-
-      return {
-        type,
-        hasDefaultRange: range.getHasDefaultRange(),
-        buffer: range.getBuffer().toArray(),
-        bufferSizes: bufferSizes,
-        bufferStartSizes: range
-          .getBufferStartSizes()
-          .map(uint64 => uint64.toNumber())
-      };
-    }) as any
+    ranges: subArray.hasRanges() ? ranges : undefined
   };
 };
 
