@@ -87,7 +87,7 @@ const capnpQueryDeSerializer = (buffer: ArrayBuffer | ArrayBufferLike) => {
     type: query.getType(),
     writer: deserializeWrite(query),
     reader: deserializeQueryReader(query.getReader()),
-    denseReader: deserializeQueryReader(query.getReader()),
+    denseReader: deserializeQueryReader(query.getDenseReader()),
     array: deserializeArray(query.getArray()),
     readerIndex: deserializeReaderIndex(query.getReaderIndex()),
     totalFixedLengthBufferBytes: query
