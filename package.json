@@ -10,7 +10,7 @@
     "generate-openapi:v1": "openapi-generator-cli generate -i ../TileDB-Cloud-API-Spec/openapi-v1.yaml -o ./src/v1 -g typescript-axios -t ./openapi-templates --reserved-words-mappings default=default --type-mappings=Array=any",
     "generate-openapi:v2": "./scripts/update_yaml_values.sh && openapi-generator-cli generate -i ../TileDB-Cloud-API-Spec/openapi-v2.yaml -o ./src/v2 -g typescript-axios -t ./openapi-templates --reserved-words-mappings default=default --type-mappings=Array=any",
     "build": "npm run generate-openapi:v1 && npm run generate-openapi:v2 && tsc",
-    "build-ts": "tsc",
+    "build-ts": "tsc --project tsconfig.build.json",
     "test": "jest",
     "lint": "eslint './src/**/*.{ts,tsx}'",
     "lint:fix": "eslint './src/**/*.{ts,tsx}' --fix",
