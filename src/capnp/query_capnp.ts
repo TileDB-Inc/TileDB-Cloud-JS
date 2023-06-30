@@ -11,7 +11,7 @@ export class Query extends __S {
   static readonly _capnp = {
     displayName: 'Query',
     id: '96ba49d0f8b23ccc',
-    size: new __O(32, 10)
+    size: new __O(32, 12)
   };
   static _AttributeBufferHeaders: capnp.ListCtor<AttributeBufferHeader>;
   adoptAttributeBufferHeaders(
@@ -182,8 +182,242 @@ export class Query extends __S {
   setStats(value: Stats): void {
     __S.copyFrom(value, __S.getPointer(9, this));
   }
+  adoptReaderIndex(value: capnp.Orphan<ReaderIndex>): void {
+    __S.adopt(value, __S.getPointer(10, this));
+  }
+  disownReaderIndex(): capnp.Orphan<ReaderIndex> {
+    return __S.disown(this.getReaderIndex());
+  }
+  getReaderIndex(): ReaderIndex {
+    return __S.getStruct(10, ReaderIndex, this);
+  }
+  hasReaderIndex(): boolean {
+    return !__S.isNull(__S.getPointer(10, this));
+  }
+  initReaderIndex(): ReaderIndex {
+    return __S.initStructAt(10, ReaderIndex, this);
+  }
+  setReaderIndex(value: ReaderIndex): void {
+    __S.copyFrom(value, __S.getPointer(10, this));
+  }
+  adoptDenseReader(value: capnp.Orphan<QueryReader>): void {
+    __S.adopt(value, __S.getPointer(11, this));
+  }
+  disownDenseReader(): capnp.Orphan<QueryReader> {
+    return __S.disown(this.getDenseReader());
+  }
+  getDenseReader(): QueryReader {
+    return __S.getStruct(11, QueryReader, this);
+  }
+  hasDenseReader(): boolean {
+    return !__S.isNull(__S.getPointer(11, this));
+  }
+  initDenseReader(): QueryReader {
+    return __S.initStructAt(11, QueryReader, this);
+  }
+  setDenseReader(value: QueryReader): void {
+    __S.copyFrom(value, __S.getPointer(11, this));
+  }
   toString(): string {
     return 'Query_' + super.toString();
+  }
+}
+export class ReaderIndex extends __S {
+  static readonly _capnp = {
+    displayName: 'ReaderIndex',
+    id: '9b9a5fc7713a8692',
+    size: new __O(0, 5)
+  };
+  getLayout(): string {
+    return __S.getText(0, this);
+  }
+  setLayout(value: string): void {
+    __S.setText(0, value, this);
+  }
+  adoptSubarray(value: capnp.Orphan<Subarray>): void {
+    __S.adopt(value, __S.getPointer(1, this));
+  }
+  disownSubarray(): capnp.Orphan<Subarray> {
+    return __S.disown(this.getSubarray());
+  }
+  getSubarray(): Subarray {
+    return __S.getStruct(1, Subarray, this);
+  }
+  hasSubarray(): boolean {
+    return !__S.isNull(__S.getPointer(1, this));
+  }
+  initSubarray(): Subarray {
+    return __S.initStructAt(1, Subarray, this);
+  }
+  setSubarray(value: Subarray): void {
+    __S.copyFrom(value, __S.getPointer(1, this));
+  }
+  adoptReadState(value: capnp.Orphan<ReadStateIndex>): void {
+    __S.adopt(value, __S.getPointer(2, this));
+  }
+  disownReadState(): capnp.Orphan<ReadStateIndex> {
+    return __S.disown(this.getReadState());
+  }
+  getReadState(): ReadStateIndex {
+    return __S.getStruct(2, ReadStateIndex, this);
+  }
+  hasReadState(): boolean {
+    return !__S.isNull(__S.getPointer(2, this));
+  }
+  initReadState(): ReadStateIndex {
+    return __S.initStructAt(2, ReadStateIndex, this);
+  }
+  setReadState(value: ReadStateIndex): void {
+    __S.copyFrom(value, __S.getPointer(2, this));
+  }
+  adoptCondition(value: capnp.Orphan<Condition>): void {
+    __S.adopt(value, __S.getPointer(3, this));
+  }
+  disownCondition(): capnp.Orphan<Condition> {
+    return __S.disown(this.getCondition());
+  }
+  getCondition(): Condition {
+    return __S.getStruct(3, Condition, this);
+  }
+  hasCondition(): boolean {
+    return !__S.isNull(__S.getPointer(3, this));
+  }
+  initCondition(): Condition {
+    return __S.initStructAt(3, Condition, this);
+  }
+  setCondition(value: Condition): void {
+    __S.copyFrom(value, __S.getPointer(3, this));
+  }
+  adoptStats(value: capnp.Orphan<Stats>): void {
+    __S.adopt(value, __S.getPointer(4, this));
+  }
+  disownStats(): capnp.Orphan<Stats> {
+    return __S.disown(this.getStats());
+  }
+  getStats(): Stats {
+    return __S.getStruct(4, Stats, this);
+  }
+  hasStats(): boolean {
+    return !__S.isNull(__S.getPointer(4, this));
+  }
+  initStats(): Stats {
+    return __S.initStructAt(4, Stats, this);
+  }
+  setStats(value: Stats): void {
+    __S.copyFrom(value, __S.getPointer(4, this));
+  }
+  toString(): string {
+    return 'ReaderIndex_' + super.toString();
+  }
+}
+export class ReadStateIndex extends __S {
+  static readonly _capnp = {
+    displayName: 'ReadStateIndex',
+    id: 'c86c77b5f6a2bf0f',
+    size: new __O(8, 2)
+  };
+  static _ResultCellSlab: capnp.ListCtor<ResultCellSlab>;
+  static _FragTileIdx: capnp.ListCtor<FragmentIndex>;
+  adoptResultCellSlab(value: capnp.Orphan<capnp.List<ResultCellSlab>>): void {
+    __S.adopt(value, __S.getPointer(0, this));
+  }
+  disownResultCellSlab(): capnp.Orphan<capnp.List<ResultCellSlab>> {
+    return __S.disown(this.getResultCellSlab());
+  }
+  getResultCellSlab(): capnp.List<ResultCellSlab> {
+    return __S.getList(0, ReadStateIndex._ResultCellSlab, this);
+  }
+  hasResultCellSlab(): boolean {
+    return !__S.isNull(__S.getPointer(0, this));
+  }
+  initResultCellSlab(length: number): capnp.List<ResultCellSlab> {
+    return __S.initList(0, ReadStateIndex._ResultCellSlab, length, this);
+  }
+  setResultCellSlab(value: capnp.List<ResultCellSlab>): void {
+    __S.copyFrom(value, __S.getPointer(0, this));
+  }
+  adoptFragTileIdx(value: capnp.Orphan<capnp.List<FragmentIndex>>): void {
+    __S.adopt(value, __S.getPointer(1, this));
+  }
+  disownFragTileIdx(): capnp.Orphan<capnp.List<FragmentIndex>> {
+    return __S.disown(this.getFragTileIdx());
+  }
+  getFragTileIdx(): capnp.List<FragmentIndex> {
+    return __S.getList(1, ReadStateIndex._FragTileIdx, this);
+  }
+  hasFragTileIdx(): boolean {
+    return !__S.isNull(__S.getPointer(1, this));
+  }
+  initFragTileIdx(length: number): capnp.List<FragmentIndex> {
+    return __S.initList(1, ReadStateIndex._FragTileIdx, length, this);
+  }
+  setFragTileIdx(value: capnp.List<FragmentIndex>): void {
+    __S.copyFrom(value, __S.getPointer(1, this));
+  }
+  getDoneAddingResultTiles(): boolean {
+    return __S.getBit(0, this);
+  }
+  setDoneAddingResultTiles(value: boolean): void {
+    __S.setBit(0, value, this);
+  }
+  toString(): string {
+    return 'ReadStateIndex_' + super.toString();
+  }
+}
+export class ResultCellSlab extends __S {
+  static readonly _capnp = {
+    displayName: 'ResultCellSlab',
+    id: 'def87cead82188e7',
+    size: new __O(32, 0)
+  };
+  getFragIdx(): number {
+    return __S.getUint32(0, this);
+  }
+  setFragIdx(value: number): void {
+    __S.setUint32(0, value, this);
+  }
+  getTileIdx(): capnp.Uint64 {
+    return __S.getUint64(8, this);
+  }
+  setTileIdx(value: capnp.Uint64): void {
+    __S.setUint64(8, value, this);
+  }
+  getStart(): capnp.Uint64 {
+    return __S.getUint64(16, this);
+  }
+  setStart(value: capnp.Uint64): void {
+    __S.setUint64(16, value, this);
+  }
+  getLength(): capnp.Uint64 {
+    return __S.getUint64(24, this);
+  }
+  setLength(value: capnp.Uint64): void {
+    __S.setUint64(24, value, this);
+  }
+  toString(): string {
+    return 'ResultCellSlab_' + super.toString();
+  }
+}
+export class FragmentIndex extends __S {
+  static readonly _capnp = {
+    displayName: 'FragmentIndex',
+    id: 'c1a2d010de779de5',
+    size: new __O(16, 0)
+  };
+  getTileIdx(): capnp.Uint64 {
+    return __S.getUint64(0, this);
+  }
+  setTileIdx(value: capnp.Uint64): void {
+    __S.setUint64(0, value, this);
+  }
+  getCellIdx(): capnp.Uint64 {
+    return __S.getUint64(8, this);
+  }
+  setCellIdx(value: capnp.Uint64): void {
+    __S.setUint64(8, value, this);
+  }
+  toString(): string {
+    return 'FragmentIndex_' + super.toString();
   }
 }
 export class NonEmptyDomain extends __S {
@@ -2739,7 +2973,7 @@ export class Subarray extends __S {
   static readonly _capnp = {
     displayName: 'Subarray',
     id: 'dba20dec138adac9',
-    size: new __O(0, 3)
+    size: new __O(8, 4)
   };
   static _Ranges: capnp.ListCtor<SubarrayRanges>;
   getLayout(): string {
@@ -2783,6 +3017,30 @@ export class Subarray extends __S {
   }
   setStats(value: Stats): void {
     __S.copyFrom(value, __S.getPointer(2, this));
+  }
+  adoptRelevantFragments(value: capnp.Orphan<capnp.List<number>>): void {
+    __S.adopt(value, __S.getPointer(3, this));
+  }
+  disownRelevantFragments(): capnp.Orphan<capnp.List<number>> {
+    return __S.disown(this.getRelevantFragments());
+  }
+  getRelevantFragments(): capnp.List<number> {
+    return __S.getList(3, capnp.Uint32List, this);
+  }
+  hasRelevantFragments(): boolean {
+    return !__S.isNull(__S.getPointer(3, this));
+  }
+  initRelevantFragments(length: number): capnp.List<number> {
+    return __S.initList(3, capnp.Uint32List, length, this);
+  }
+  setRelevantFragments(value: capnp.List<number>): void {
+    __S.copyFrom(value, __S.getPointer(3, this));
+  }
+  getCoalesceRanges(): boolean {
+    return __S.getBit(0, this);
+  }
+  setCoalesceRanges(value: boolean): void {
+    __S.setBit(0, value, this);
   }
   toString(): string {
     return 'Subarray_' + super.toString();
@@ -3566,6 +3824,8 @@ export class ArrayMetadata extends __S {
   }
 }
 Query._AttributeBufferHeaders = capnp.CompositeList(AttributeBufferHeader);
+ReadStateIndex._ResultCellSlab = capnp.CompositeList(ResultCellSlab);
+ReadStateIndex._FragTileIdx = capnp.CompositeList(FragmentIndex);
 NonEmptyDomainList._NonEmptyDomains = capnp.CompositeList(NonEmptyDomain);
 Domain._Dimensions = capnp.CompositeList(Dimension);
 Array._FragmentMetadataAll = capnp.CompositeList(FragmentMetadata);

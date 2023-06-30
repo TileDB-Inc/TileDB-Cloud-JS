@@ -203,6 +203,8 @@ export class TileDBQuery {
         arraySchema = arrayFromCapnp.arraySchemaLatest as ArraySchema;
       }
 
+      arraySchema.arrayType;
+
       const options = {
         ignoreNullables: body.ignoreNullables,
         ignoreOffsets: body.ignoreOffsets,
@@ -218,12 +220,7 @@ export class TileDBQuery {
         arrayName,
         Querytype.Read,
         'application/capnp',
-        dataToQuery(
-          body,
-          arraySchema.attributes,
-          arraySchema.domain.dimensions,
-          options
-        ),
+        dataToQuery(body, arraySchema, options),
         undefined,
         undefined,
         undefined,

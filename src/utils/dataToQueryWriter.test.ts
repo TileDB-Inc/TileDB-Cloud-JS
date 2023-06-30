@@ -1,6 +1,6 @@
 import dataToQueryWriter from './dataToQueryWriter';
 import attributeValuesToArrayBuffers from './attributeValuesToArrayBuffers';
-import { Layout } from '../../lib/v2';
+import { Layout } from '../v2';
 
 describe("dataToQueryWriter()", () => {
   it("Should return query object", () => {

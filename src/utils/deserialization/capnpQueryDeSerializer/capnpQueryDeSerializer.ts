@@ -14,12 +14,12 @@ import {
   Filter,
   FilterPipeline,
   MapFloat64,
-  MapUInt64,
+  MapUInt64 as MapUInt64Capnp,
   Query,
   QueryReader,
   ReadState,
-  Stats,
-  Subarray,
+  Stats as StatsCapnp,
+  Subarray as SubarrayCapnp,
   SubarrayPartitioner,
   SubarrayPartitioner_PartitionInfo,
   SubarrayPartitioner_State,
@@ -32,7 +32,11 @@ import {
   ArrayDirectory_TimestampedURI,
   ArrayDirectory_DeleteAndUpdateTileLocation,
   FragmentMetadata as FragmentMetadataCapnp,
-  FragmentMetadata_GenericTileOffsets
+  FragmentMetadata_GenericTileOffsets,
+  ReaderIndex as ReaderIndexCapnp,
+  ReadStateIndex,
+  ResultCellSlab,
+  FragmentIndex
 } from '../../../capnp/query_capnp';
 import * as capnp from 'capnp-ts';
 import {
@@ -48,6 +52,7 @@ import {
   Querytype,
   ArrayType,
   Layout,
+  MapUInt64,
   FilterPipeline as FilterPipelineV2,
   Filter as FilterV2,
   FilterType,
@@ -59,8 +64,11 @@ import {
   FragmentMetadata,
   ArraySchemaEntry,
   FilterData,
+  Stats,
   ArrayDirectory,
-  GenericTileOffsets
+  GenericTileOffsets,
+  ReaderIndex,
+  Subarray
 } from '../../../v2';
 
 /**
@@ -79,6 +87,12 @@ const capnpQueryDeSerializer = (buffer: ArrayBuffer | ArrayBufferLike) => {
     type: query.getType(),
     writer: deserializeWrite(query),
     reader: deserializeQueryReader(query.getReader()),
+    denseReader: query.hasDenseReader()
+      ? deserializeQueryReader(query.getDenseReader())
+      : undefined,
+    readerIndex: query.hasReaderIndex()
+      ? deserializeReaderIndex(query.getReaderIndex())
+      : undefined,
     array: deserializeArray(query.getArray()),
     totalFixedLengthBufferBytes: query
       .getTotalFixedLengthBufferBytes()
@@ -94,6 +108,54 @@ const capnpQueryDeSerializer = (buffer: ArrayBuffer | ArrayBufferLike) => {
 };
 
 export default capnpQueryDeSerializer;
+
+export const deserializeReaderIndex = (
+  readerIndex: ReaderIndexCapnp
+): ReaderIndex => {
+  return {
+    layout: readerIndex.getLayout() as Layout,
+    condition: readerIndex.hasCondition()
+      ? deserializeCondition(readerIndex.getCondition())
+      : undefined,
+    stats: readerIndex.hasStats()
+      ? deserializeStats(readerIndex.getStats())
+      : undefined,
+    subarray: readerIndex.hasSubarray()
+      ? deserializeSubarray(readerIndex.getSubarray())
+      : undefined,
+    readState: readerIndex.hasReadState()
+      ? deserializeReadStateIndex(readerIndex.getReadState())
+      : undefined
+  };
+};
+
+export const deserializeReadStateIndex = (readerStateIndex: ReadStateIndex) => {
+  return {
+    doneAddingResultTiles: readerStateIndex.getDoneAddingResultTiles(),
+    fragTileIdx: readerStateIndex
+      .getFragTileIdx()
+      .map(deserializeFragmentIndex),
+    resultCellSlab: readerStateIndex
+      .getResultCellSlab()
+      .map(deserializeResultCellSlab)
+  };
+};
+
+const deserializeFragmentIndex = (fragmentIndex: FragmentIndex) => {
+  return {
+    tileIdx: fragmentIndex.getTileIdx().toNumber(),
+    cellIdx: fragmentIndex.getCellIdx().toNumber()
+  };
+};
+
+const deserializeResultCellSlab = (resultCellSlab: ResultCellSlab) => {
+  return {
+    fragIdx: resultCellSlab.getFragIdx(),
+    tileIdx: resultCellSlab.getTileIdx().toNumber(),
+    start: resultCellSlab.getStart().toNumber(),
+    length: resultCellSlab.getLength().toNumber()
+  };
+};
 
 export const deserializeArray = (arr: ArrayCapnp): ArrayData => {
   return {
@@ -537,10 +599,16 @@ export const deserializeConfig = (config: Config) => {
 export const deserializeQueryReader = (reader: QueryReader) => {
   return {
     layout: reader.getLayout(),
-    subarray: deserializeSubarray(reader.getSubarray()),
-    readState: deserializeReadState(reader.getReadState()),
-    condition: deserializeCondition(reader.getCondition()),
-    stats: deserializeStats(reader.getStats())
+    subarray: reader.hasSubarray()
+      ? deserializeSubarray(reader.getSubarray())
+      : undefined,
+    readState: reader.hasReadState()
+      ? deserializeReadState(reader.getReadState())
+      : undefined,
+    condition: reader.hasCondition()
+      ? deserializeCondition(reader.getCondition())
+      : undefined,
+    stats: reader.hasStats() ? deserializeStats(reader.getStats()) : undefined
   };
 };
 
@@ -713,30 +781,33 @@ export const deserializeDomainArray = (domainArray: DomainArray) => {
   return domain;
 };
 
-export const deserializeSubarray = (subArray: Subarray) => {
-  return {
-    layout: subArray.getLayout(),
-    stats: deserializeStats(subArray.getStats()),
-    ranges: subArray.getRanges().map(range => {
-      const type = range.getType();
-      const bufferSizes = range
-        .getBufferSizes()
-        .map(uint64 => uint64.toNumber());
+export const deserializeSubarray = (subArray: SubarrayCapnp): Subarray => {
+  const ranges: any = subArray.getRanges().map(range => {
+    const type = range.getType();
+    const bufferSizes = range.getBufferSizes().map(uint64 => uint64.toNumber());
 
-      return {
-        type,
-        hasDefaultRange: range.getHasDefaultRange(),
-        buffer: range.getBuffer().toArray(),
-        bufferSizes: bufferSizes,
-        bufferStartSizes: range
-          .getBufferStartSizes()
-          .map(uint64 => uint64.toNumber())
-      };
-    })
+    return {
+      type,
+      hasDefaultRange: range.getHasDefaultRange(),
+      buffer: range.getBuffer().toArray(),
+      bufferSizes: bufferSizes,
+      bufferStartSizes: range
+        .getBufferStartSizes()
+        .map(uint64 => uint64.toNumber())
+    };
+  });
+  return {
+    layout: subArray.getLayout() as Layout,
+    stats: subArray.hasStats()
+      ? deserializeStats(subArray.getStats())
+      : undefined,
+    coalesceRanges: subArray.getCoalesceRanges(),
+    relevantFragments: subArray.getRelevantFragments().toArray(),
+    ranges: subArray.hasRanges() ? ranges : undefined
   };
 };
 
-export const deserializeStats = (stats: Stats) => {
+export const deserializeStats = (stats: StatsCapnp): Stats => {
   return {
     timers: deserializeMapFloat64(stats.getTimers()),
     counters: deserializeMapUInt64(stats.getCounters())
@@ -744,19 +815,23 @@ export const deserializeStats = (stats: Stats) => {
 };
 
 export const deserializeMapFloat64 = (mapFloat64: MapFloat64) => {
-  return mapFloat64.getEntries().map(entry => {
+  const entries = mapFloat64.getEntries().map(entry => {
     return {
       key: entry.getKey(),
       value: entry.getValue()
     };
   });
+
+  return { entries };
 };
 
-export const deserializeMapUInt64 = (mapUint64: MapUInt64) => {
-  return mapUint64.getEntries().map(entry => {
+export const deserializeMapUInt64 = (mapUint64: MapUInt64Capnp): MapUInt64 => {
+  const entries = mapUint64.getEntries().map(entry => {
     return {
       key: entry.getKey(),
       value: entry.getValue().toNumber()
     };
   });
+
+  return { entries };
 };

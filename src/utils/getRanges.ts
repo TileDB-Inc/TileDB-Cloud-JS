@@ -1,10 +1,9 @@
 import rangesToBuffer from './rangesToBuffer';
 import flatten from './flatten';
 import { QueryData } from '../TileDBQuery/TileDBQuery';
-import { Dimension } from '../v1';
 import getByteLengthOfdata from './getByteLengthOfData';
 import checkRangeOutOfBounds from './checkRangeOutOfBounds';
-import { DomainArray } from '../v2';
+import { DomainArray, Dimension } from '../v2';
 
 /**
  * Checks if data is an array of numbers

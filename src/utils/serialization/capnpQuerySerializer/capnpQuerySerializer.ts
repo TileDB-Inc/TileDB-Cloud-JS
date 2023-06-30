@@ -1,8 +1,4 @@
 import {
-  ArrayDirectory_DeleteAndUpdateTileLocation,
-  ArrayDirectory_TimestampedURI
-} from './../../../capnp/query_capnp';
-import {
   Query as QueryType,
   Subarray as SubarrayType,
   DomainArray,
@@ -21,7 +17,15 @@ import {
   TimestampedURI,
   DeleteAndUpdateTileLocation,
   FragmentMetadata,
-  GenericTileOffsets
+  QueryReader,
+  GenericTileOffsets,
+  ReaderIndex,
+  ReadStateIndex,
+  FragmentIndex,
+  ResultCellSlab,
+  Condition,
+  SubarrayRanges,
+  ConditionClause
 } from '../../../v2';
 import {
   Query,
@@ -40,7 +44,17 @@ import {
   FloatScaleConfig as FloatScaleConfigCapnp,
   ArrayDirectory as ArrayDirectoryCapnp,
   FragmentMetadata as FragmentMetadataCapnp,
-  FragmentMetadata_GenericTileOffsets
+  QueryReader as QueryReaderCapnp,
+  ArrayDirectory_DeleteAndUpdateTileLocation,
+  ArrayDirectory_TimestampedURI,
+  ReaderIndex as ReaderIndexCapnp,
+  FragmentMetadata_GenericTileOffsets,
+  ReadStateIndex as ReadStateIndexCapnp,
+  FragmentIndex as FragmentIndexCapnp,
+  ResultCellSlab as ResultCellSlabCapnp,
+  Condition as ConditionCapnp,
+  ConditionClause as ConditionClauseCapnp,
+  SubarrayRanges as SubarrayRangesCapnp
 } from '../../../capnp/query_capnp';
 import * as capnp from 'capnp-ts';
 
@@ -53,13 +67,15 @@ const capnpQuerySerializer = (data: Partial<QueryType>) => {
   const message = new capnp.Message();
   const queryData = message.initRoot(Query);
   const {
-    reader = {},
+    reader,
+    denseReader,
     writer = {},
     array,
     attributeBufferHeaders = [],
     layout = '',
     status = '',
-    type = ''
+    type = '',
+    readerIndex
   } = data;
 
   queryData.setLayout(layout);
@@ -125,71 +141,18 @@ const capnpQuerySerializer = (data: Partial<QueryType>) => {
 
   if (reader) {
     const queryReader = queryData.initReader();
-    const subArrayCap = queryReader.initSubarray();
-    const { subarray: subarrayData = {}, readState = {}, layout = '' } = reader;
-    serializeSubArray(subArrayCap, subarrayData);
 
-    queryReader.setLayout(layout);
+    serializeQueryReader(reader, queryReader);
+  }
 
-    const readStateData = queryReader.initReadState();
+  if (denseReader) {
+    const queryDenseReader = queryData.initDenseReader();
 
-    readStateData.setOverflowed(readState.overflowed);
-    readStateData.setUnsplittable(readState.unsplittable);
-    readStateData.setInitialized(readState.initialized);
+    serializeQueryReader(denseReader, queryDenseReader);
+  }
 
-    // subarrayPartitioner
-    const { subarrayPartitioner = {} } = readState;
-    const {
-      budget = [],
-      subarray = {},
-      current = {},
-      state = {},
-      memoryBudget = 0,
-      memoryBudgetVar = 0
-    } = subarrayPartitioner;
-    const subPartitioner = readStateData.initSubarrayPartitioner();
-    subPartitioner.setMemoryBudget(capnp.Uint64.fromNumber(memoryBudget));
-    subPartitioner.setMemoryBudgetVar(capnp.Uint64.fromNumber(memoryBudgetVar));
-    // TODO: fix type
-    // subPartitioner.setMemoryBudgetValidity(capnp.Uint64.fromNumber(0));
-    const budgetData = subPartitioner.initBudget(budget.length);
-    // subarrayPartitioner.Buget
-    budget.forEach((b, i) => {
-      const singleBudget = budgetData.get(i);
-      singleBudget.setAttribute(b.attribute);
-    });
-    // subarrayPartitioner.Subarray
-    const subArrayData = subPartitioner.initSubarray();
-    serializeSubArray(subArrayData, subarray);
-
-    // subarrayPartitioner.Current
-    const currentData = subPartitioner.initCurrent();
-    currentData.setSplitMultiRange(current.splitMultiRange);
-    currentData.setStart(capnp.Uint64.fromNumber(current.start || 0));
-    currentData.setEnd(capnp.Uint64.fromNumber(current.end || 0));
-    const currentSubarray = currentData.initSubarray();
-    serializeSubArray(currentSubarray, current.subarray || {});
-
-    // subarrayPartitioner.State
-    const capSubPartitionerState = subPartitioner.initState();
-    capSubPartitionerState.setStart(capnp.Uint64.fromNumber(state.start || 0));
-    capSubPartitionerState.setEnd(capnp.Uint64.fromNumber(state.end || 0));
-    const multiRange = state.multiRange || [];
-    const singleRange = state.singleRange || [];
-    const capSubPartitionerStateMultiRange =
-      capSubPartitionerState.initMultiRange(multiRange.length);
-    const capSubPartitionerStateSingleRange =
-      capSubPartitionerState.initSingleRange(singleRange.length);
-
-    multiRange.forEach((mRange, i) => {
-      const capMultiRange = capSubPartitionerStateMultiRange.get(i);
-      serializeSubArray(capMultiRange, mRange);
-    });
-
-    singleRange.forEach((sRange, i) => {
-      const capSingleRange = capSubPartitionerStateSingleRange.get(i);
-      serializeSubArray(capSingleRange, sRange);
-    });
+  if (readerIndex) {
+    serializeReaderIndex(queryData.initReaderIndex(), readerIndex);
   }
 
   if (array) {
@@ -199,9 +162,204 @@ const capnpQuerySerializer = (data: Partial<QueryType>) => {
   return message.toArrayBuffer();
 };
 
+const serializeReaderIndex = (
+  readerIndexCapnp: ReaderIndexCapnp,
+  readerIndex: ReaderIndex
+) => {
+  const { layout, subarray, readState, condition } = readerIndex;
+  if (layout) {
+    readerIndexCapnp.setLayout(layout);
+  }
+
+  if (subarray) {
+    serializeSubArray(readerIndexCapnp.initSubarray(), subarray);
+  }
+
+  if (readState) {
+    serializeReadStateIndex(readerIndexCapnp.initReadState(), readState);
+  }
+
+  if (condition) {
+    serializeCondition(readerIndexCapnp.initCondition(), condition);
+  }
+};
+
+const serializeCondition = (
+  conditionCapnp: ConditionCapnp,
+  condition: Condition
+) => {
+  const { clauseCombinationOps, clauses } = condition;
+
+  if (clauseCombinationOps?.length) {
+    const clausesCapnp = conditionCapnp.initClauseCombinationOps(
+      clauseCombinationOps.length
+    );
+
+    clauseCombinationOps.forEach((clause, i) => {
+      clausesCapnp.set(i, clause);
+    });
+  }
+
+  if (clauses?.length) {
+    const clausesCapnp = conditionCapnp.initClauses(clauses.length);
+    clausesCapnp.map((clauseCapnp, i) => {
+      serializeClause(clauseCapnp, clauses[i]);
+    });
+  }
+};
+
+const serializeClause = (
+  clauseCapnp: ConditionClauseCapnp,
+  clause: ConditionClause
+) => {
+  clauseCapnp.setFieldName(clause.fieldName);
+  clauseCapnp.setOp(clause.op);
+
+  if (clause.value) {
+    const valueUint8Array = Uint8Array.from(clause.value);
+    const valCapnp = clauseCapnp.initValue(valueUint8Array.byteLength);
+
+    valCapnp.copyBuffer(valueUint8Array.buffer);
+  }
+};
+
+const serializeReadStateIndex = (
+  readStateIndexCapnp: ReadStateIndexCapnp,
+  readState: ReadStateIndex
+) => {
+  const {
+    doneAddingResultTiles = false,
+    fragTileIdx,
+    resultCellSlab
+  } = readState;
+
+  readStateIndexCapnp.setDoneAddingResultTiles(doneAddingResultTiles);
+
+  if (fragTileIdx?.length) {
+    const fragTiles = readStateIndexCapnp.initFragTileIdx(fragTileIdx.length);
+    fragTileIdx.forEach((fragTile, i) => {
+      const fragTileCapnp = fragTiles.get(i);
+
+      serializeFragmentIndex(fragTileCapnp, fragTile);
+    });
+  }
+
+  if (resultCellSlab?.length) {
+    const resultCellSlabCapnp = readStateIndexCapnp.initResultCellSlab(
+      resultCellSlab.length
+    );
+
+    resultCellSlab.forEach((res, i) => {
+      const resultSlabCapnp = resultCellSlabCapnp.get(i);
+
+      serializeResultCellSlab(resultSlabCapnp, res);
+    });
+  }
+};
+
+const serializeResultCellSlab = (
+  resultCellSlabCapnp: ResultCellSlabCapnp,
+  resultCellSlab: ResultCellSlab
+) => {
+  resultCellSlabCapnp.setFragIdx(resultCellSlab.fragIdx);
+  resultCellSlabCapnp.setTileIdx(
+    capnp.Uint64.fromNumber(resultCellSlab.tileIdx)
+  );
+  resultCellSlabCapnp.setLength(capnp.Uint64.fromNumber(resultCellSlab.length));
+  resultCellSlabCapnp.setStart(capnp.Uint64.fromNumber(resultCellSlab.start));
+};
+
+const serializeFragmentIndex = (
+  fragmentIndexCapnp: FragmentIndexCapnp,
+  fragmentIndex: FragmentIndex
+) => {
+  if (fragmentIndex.cellIdx) {
+    fragmentIndexCapnp.setCellIdx(
+      capnp.Uint64.fromNumber(fragmentIndex.cellIdx)
+    );
+  }
+
+  if (fragmentIndex.tileIdx) {
+    fragmentIndexCapnp.setTileIdx(
+      capnp.Uint64.fromNumber(fragmentIndex.tileIdx)
+    );
+  }
+};
+
 const add = (a: number, b: number) => a + b;
 
 export default capnpQuerySerializer;
+
+export const serializeQueryReader = (
+  reader: QueryReader,
+  queryReader: QueryReaderCapnp
+) => {
+  const subArrayCap = queryReader.initSubarray();
+  const { subarray: subarrayData = {}, readState = {}, layout = '' } = reader;
+  serializeSubArray(subArrayCap, subarrayData);
+
+  queryReader.setLayout(layout);
+
+  const readStateData = queryReader.initReadState();
+
+  readStateData.setOverflowed(readState.overflowed);
+  readStateData.setUnsplittable(readState.unsplittable);
+  readStateData.setInitialized(readState.initialized);
+
+  // subarrayPartitioner
+  const { subarrayPartitioner = {} } = readState;
+  const {
+    budget = [],
+    subarray = {},
+    current = {},
+    state = {},
+    memoryBudget = 0,
+    memoryBudgetVar = 0
+  } = subarrayPartitioner;
+  const subPartitioner = readStateData.initSubarrayPartitioner();
+  subPartitioner.setMemoryBudget(capnp.Uint64.fromNumber(memoryBudget));
+  subPartitioner.setMemoryBudgetVar(capnp.Uint64.fromNumber(memoryBudgetVar));
+  // TODO: fix type
+  // subPartitioner.setMemoryBudgetValidity(capnp.Uint64.fromNumber(0));
+  const budgetData = subPartitioner.initBudget(budget.length);
+  // subarrayPartitioner.Buget
+  budget.forEach((b, i) => {
+    const singleBudget = budgetData.get(i);
+    singleBudget.setAttribute(b.attribute);
+  });
+  // subarrayPartitioner.Subarray
+  const subArrayData = subPartitioner.initSubarray();
+  serializeSubArray(subArrayData, subarray);
+
+  // subarrayPartitioner.Current
+  const currentData = subPartitioner.initCurrent();
+  currentData.setSplitMultiRange(current.splitMultiRange);
+  currentData.setStart(capnp.Uint64.fromNumber(current.start || 0));
+  currentData.setEnd(capnp.Uint64.fromNumber(current.end || 0));
+  const currentSubarray = currentData.initSubarray();
+  serializeSubArray(currentSubarray, current.subarray || {});
+
+  // subarrayPartitioner.State
+  const capSubPartitionerState = subPartitioner.initState();
+  capSubPartitionerState.setStart(capnp.Uint64.fromNumber(state.start || 0));
+  capSubPartitionerState.setEnd(capnp.Uint64.fromNumber(state.end || 0));
+  const multiRange = state.multiRange || [];
+  const singleRange = state.singleRange || [];
+  const capSubPartitionerStateMultiRange =
+    capSubPartitionerState.initMultiRange(multiRange.length);
+  const capSubPartitionerStateSingleRange =
+    capSubPartitionerState.initSingleRange(singleRange.length);
+
+  multiRange.forEach((mRange, i) => {
+    const capMultiRange = capSubPartitionerStateMultiRange.get(i);
+    serializeSubArray(capMultiRange, mRange);
+  });
+
+  singleRange.forEach((sRange, i) => {
+    const capSingleRange = capSubPartitionerStateSingleRange.get(i);
+    serializeSubArray(capSingleRange, sRange);
+  });
+};
 
 export const serializeArrayData = (array: ArrayData) => {
   const message = new capnp.Message();
@@ -1163,40 +1321,69 @@ const serializeDomainArray = (
 };
 
 const serializeSubArray = (capSubArray: Subarray, subArray: SubarrayType) => {
-  const { ranges = [], layout = '' } = subArray;
-  capSubArray.setLayout(layout);
-  const capRanges = capSubArray.initRanges(ranges.length);
+  const {
+    ranges = [],
+    layout = '',
+    coalesceRanges,
+    relevantFragments = []
+  } = subArray;
+  if (layout) {
+    capSubArray.setLayout(layout);
+  }
+  capSubArray.setCoalesceRanges(coalesceRanges);
 
-  ranges.forEach((range, i) => {
-    const r = capRanges.get(i);
-    const bufferSizesArray = range.bufferSizes || [];
-    r.setType(range.type);
-    r.setHasDefaultRange(range.hasDefaultRange);
-
-    const totalBufferSize = bufferSizesArray.reduce(add);
-    const bufferData = r.initBuffer(totalBufferSize);
-    const view = Uint8Array.from(range.buffer);
-
-    bufferData.copyBuffer(view);
-    r.setBuffer(bufferData);
-
-    const bufferSizes = r.initBufferSizes(bufferSizesArray.length);
-    bufferSizesArray.forEach((bsize, i) => {
-      bufferSizes.set(i, capnp.Uint64.fromNumber(bsize));
-    });
-
-    r.setBufferSizes(bufferSizes);
-
-    const bufferStartSizesArray = range.bufferStartSizes || [];
-    const bufferStartSizes = r.initBufferStartSizes(
-      bufferStartSizesArray.length
+  if (relevantFragments?.length) {
+    const relevantFragmentsCapnp = capSubArray.initRelevantFragments(
+      relevantFragments.length
     );
-    bufferStartSizesArray.forEach((bsize, i) => {
-      bufferStartSizes.set(i, capnp.Uint64.fromNumber(bsize));
+    relevantFragments.forEach((fragm, i) => {
+      relevantFragmentsCapnp.set(i, fragm);
     });
+  }
+  if (ranges?.length) {
+    const capRanges = capSubArray.initRanges(ranges.length);
 
-    r.setBufferStartSizes(bufferStartSizes);
+    ranges.forEach((range, i) => {
+      const subarrayRange = capRanges.get(i);
+
+      serializeSubArrayRange(subarrayRange, range);
+    });
+  }
+};
+
+const serializeSubArrayRange = (
+  subarrayRangeCapnp: SubarrayRangesCapnp,
+  range: SubarrayRanges
+) => {
+  const bufferSizesArray = range.bufferSizes || [];
+  subarrayRangeCapnp.setType(range.type);
+  subarrayRangeCapnp.setHasDefaultRange(range.hasDefaultRange);
+
+  const totalBufferSize = bufferSizesArray.reduce(add);
+  const bufferData = subarrayRangeCapnp.initBuffer(totalBufferSize);
+  const view = Uint8Array.from(range.buffer);
+
+  bufferData.copyBuffer(view);
+  subarrayRangeCapnp.setBuffer(bufferData);
+
+  const bufferSizes = subarrayRangeCapnp.initBufferSizes(
+    bufferSizesArray.length
+  );
+  bufferSizesArray.forEach((bsize, i) => {
+    bufferSizes.set(i, capnp.Uint64.fromNumber(bsize));
   });
+
+  subarrayRangeCapnp.setBufferSizes(bufferSizes);
+
+  const bufferStartSizesArray = range.bufferStartSizes || [];
+  const bufferStartSizes = subarrayRangeCapnp.initBufferStartSizes(
+    bufferStartSizesArray.length
+  );
+  bufferStartSizesArray.forEach((bsize, i) => {
+    bufferStartSizes.set(i, capnp.Uint64.fromNumber(bsize));
+  });
+
+  subarrayRangeCapnp.setBufferStartSizes(bufferStartSizes);
 };
 
 const clamp = (num: number, min: number, max: number) =>

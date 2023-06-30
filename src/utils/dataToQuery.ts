@@ -1,5 +1,14 @@
-import { Attribute, Dimension } from '../v1';
-import { Datatype, Query, Querystatus, Querytype } from '../v2';
+import {
+  ArraySchema,
+  Datatype,
+  Query,
+  Querystatus,
+  Querytype,
+  Attribute,
+  Dimension,
+  ArrayType,
+  Layout
+} from '../v2';
 import { QueryData } from '../TileDBQuery/TileDBQuery';
 import getRanges from './getRanges';
 import getByteLengthOfDatatype from './getByteLengthOfDatatype';
@@ -84,10 +93,11 @@ const getMaxByteSizeOfAttribute = (attribute: Attribute | Dimension) => {
  */
 const dataToQuery = (
   data: QueryData,
-  attributes: Attribute[],
-  dimensions: Dimension[],
+  arraySchema: ArraySchema,
   options: Options
-): Query => {
+): any => {
+  const attributes = arraySchema.attributes;
+  const dimensions = arraySchema.domain.dimensions;
   if (!data.layout) {
     return data as any;
   }
@@ -107,34 +117,51 @@ const dataToQuery = (
     bufferSize
   );
 
-  return {
-    attributeBufferHeaders,
+  const reader = {
     layout: data.layout,
-    status: Querystatus.Uninitialized,
-    type: Querytype.Read,
-    reader: {
+    subarray: {
       layout: data.layout,
-      subarray: {
-        layout: data.layout,
-        ranges
-      },
-      readState: {
-        subarrayPartitioner: {
+      ranges
+    },
+    readState: {
+      subarrayPartitioner: {
+        subarray: {
+          layout: data.layout,
+          ranges: []
+        },
+        budget: [],
+        current: {
           subarray: {
             layout: data.layout,
             ranges: []
-          },
-          budget: [],
-          current: {
-            subarray: {
-              layout: data.layout,
-              ranges: []
-            }
           }
         }
       }
     }
+  };
+
+  const query = {
+    attributeBufferHeaders,
+    layout: data.layout,
+    status: Querystatus.Uninitialized,
+    type: Querytype.Read
   } as Query;
+
+  // Should use denseReader if it's a dense array, or for sparse layout is not row-major or col-major
+  if (
+    arraySchema.arrayType === ArrayType.Dense ||
+    (data.layout !== Layout.ColMajor && data.layout !== Layout.RowMajor)
+  ) {
+    query.denseReader = reader;
+    query.readerIndex = {
+      layout: data.layout,
+      subarray: { layout: data.layout, ranges }
+    };
+  } else {
+    query.reader = reader;
+  }
+
+  return query;
 };
 
 export default dataToQuery;

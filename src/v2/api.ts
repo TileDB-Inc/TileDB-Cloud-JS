@@ -794,6 +794,50 @@ export enum CloudProvider {
 }
 
 /**
+ * The query condition
+ * @export
+ * @interface Condition
+ */
+export interface Condition {
+    /**
+     * The operation that combines each condition
+     * @type {Array<string>}
+     * @memberof Condition
+     */
+    clauseCombinationOps?: Array<string>;
+    /**
+     * All clauses in this condition
+     * @type {Array<ConditionClause>}
+     * @memberof Condition
+     */
+    clauses?: Array<ConditionClause>;
+}
+/**
+ * A clause within a condition
+ * @export
+ * @interface ConditionClause
+ */
+export interface ConditionClause {
+    /**
+     * The name of the field this clause applies to
+     * @type {string}
+     * @memberof ConditionClause
+     */
+    fieldName?: string;
+    /**
+     * The comparison value
+     * @type {Array<number>}
+     * @memberof ConditionClause
+     */
+    value?: Array<number>;
+    /**
+     * The comparison operation
+     * @type {string}
+     * @memberof ConditionClause
+     */
+    op?: string;
+}
+/**
  * TileDB data type
  * @export
  * @enum {string}
@@ -1255,6 +1299,25 @@ export interface FloatScaleConfig {
      * @memberof FloatScaleConfig
      */
     byteWidth?: number;
+}
+/**
+ * Tile/cell index for fragment
+ * @export
+ * @interface FragmentIndex
+ */
+export interface FragmentIndex {
+    /**
+     * Tile index
+     * @type {number}
+     * @memberof FragmentIndex
+     */
+    tileIdx?: number;
+    /**
+     * Cell index
+     * @type {number}
+     * @memberof FragmentIndex
+     */
+    cellIdx?: number;
 }
 /**
  * Metadata of a fragment
@@ -1829,6 +1892,70 @@ export enum Layout {
 }
 
 /**
+ * Stats struct
+ * @export
+ * @interface MapFloat64
+ */
+export interface MapFloat64 {
+    /**
+     * 
+     * @type {Array<MapFloat64Entries>}
+     * @memberof MapFloat64
+     */
+    entries?: Array<MapFloat64Entries>;
+}
+/**
+ * 
+ * @export
+ * @interface MapFloat64Entries
+ */
+export interface MapFloat64Entries {
+    /**
+     * 
+     * @type {string}
+     * @memberof MapFloat64Entries
+     */
+    key?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof MapFloat64Entries
+     */
+    value?: number;
+}
+/**
+ * Stats struct
+ * @export
+ * @interface MapUInt64
+ */
+export interface MapUInt64 {
+    /**
+     * 
+     * @type {Array<MapUInt64Entries>}
+     * @memberof MapUInt64
+     */
+    entries?: Array<MapUInt64Entries>;
+}
+/**
+ * 
+ * @export
+ * @interface MapUInt64Entries
+ */
+export interface MapUInt64Entries {
+    /**
+     * 
+     * @type {string}
+     * @memberof MapUInt64Entries
+     */
+    key?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof MapUInt64Entries
+     */
+    value?: number;
+}
+/**
  * user\'s TileDB metadata
  * @export
  * @interface Metadata
@@ -2010,6 +2137,18 @@ export interface Query {
     reader?: QueryReader;
     /**
      * 
+     * @type {QueryReader}
+     * @memberof Query
+     */
+    denseReader?: QueryReader;
+    /**
+     * 
+     * @type {ReaderIndex}
+     * @memberof Query
+     */
+    readerIndex?: ReaderIndex;
+    /**
+     * 
      * @type {ArrayData}
      * @memberof Query
      */
@@ -2113,6 +2252,118 @@ export interface ReadState {
     subarrayPartitioner?: SubarrayPartitioner;
 }
 /**
+ * State of reader
+ * @export
+ * @interface ReadStateIndex
+ */
+export interface ReadStateIndex {
+    /**
+     * Is the reader done adding result tiles.
+     * @type {boolean}
+     * @memberof ReadStateIndex
+     */
+    doneAddingResultTiles?: boolean;
+    /**
+     * Tile/cell index for each fragments.
+     * @type {Array<FragmentIndex>}
+     * @memberof ReadStateIndex
+     */
+    fragTileIdx?: Array<FragmentIndex>;
+    /**
+     * Result cell slab.
+     * @type {Array<ResultCellSlab>}
+     * @memberof ReadStateIndex
+     */
+    resultCellSlab?: Array<ResultCellSlab>;
+}
+/**
+ * Contains data needed for continuation of incomplete sparse reads with index readers
+ * @export
+ * @interface ReaderIndex
+ */
+export interface ReaderIndex {
+    /**
+     * 
+     * @type {Layout}
+     * @memberof ReaderIndex
+     */
+    layout?: Layout;
+    /**
+     * 
+     * @type {Subarray}
+     * @memberof ReaderIndex
+     */
+    subarray?: Subarray;
+    /**
+     * 
+     * @type {ReadStateIndex}
+     * @memberof ReaderIndex
+     */
+    readState?: ReadStateIndex;
+    /**
+     * 
+     * @type {Stats}
+     * @memberof ReaderIndex
+     */
+    stats?: Stats;
+    /**
+     * 
+     * @type {Condition}
+     * @memberof ReaderIndex
+     */
+    condition?: Condition;
+}
+/**
+ * Result cell slab
+ * @export
+ * @interface ResultCellSlab
+ */
+export interface ResultCellSlab {
+    /**
+     * Fragment index
+     * @type {number}
+     * @memberof ResultCellSlab
+     */
+    fragIdx?: number;
+    /**
+     * Tile index
+     * @type {number}
+     * @memberof ResultCellSlab
+     */
+    tileIdx?: number;
+    /**
+     * Start of the cell slab
+     * @type {number}
+     * @memberof ResultCellSlab
+     */
+    start?: number;
+    /**
+     * length of the cell slab
+     * @type {number}
+     * @memberof ResultCellSlab
+     */
+    length?: number;
+}
+/**
+ * Stats struct
+ * @export
+ * @interface Stats
+ */
+export interface Stats {
+    /**
+     * 
+     * @type {MapFloat64}
+     * @memberof Stats
+     */
+    timers?: MapFloat64;
+    /**
+     * 
+     * @type {MapUInt64}
+     * @memberof Stats
+     */
+    counters?: MapUInt64;
+}
+/**
  * A Subarray
  * @export
  * @interface Subarray
@@ -2125,11 +2376,29 @@ export interface Subarray {
      */
     layout?: Layout;
     /**
+     * 
+     * @type {Stats}
+     * @memberof Subarray
+     */
+    stats?: Stats;
+    /**
      * List of 1D ranges, one per dimension
      * @type {Array<SubarrayRanges>}
      * @memberof Subarray
      */
     ranges?: Array<SubarrayRanges>;
+    /**
+     * 
+     * @type {Array<number>}
+     * @memberof Subarray
+     */
+    relevantFragments?: Array<number>;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof Subarray
+     */
+    coalesceRanges?: boolean;
 }
 /**
  * The subarray partitioner

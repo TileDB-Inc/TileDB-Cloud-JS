@@ -7,3 +7,5 @@ coverage
 src/v1
 src/v2
 tests
+jest.config.js
+babel.config.js
