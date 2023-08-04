@@ -87,6 +87,7 @@ export enum ActivityEventType {
     NonEmptyDomain = 'non_empty_domain',
     QueryRead = 'query_read',
     QueryWrite = 'query_write',
+    QueryDelete = 'query_delete',
     Create = 'create',
     Delete = 'delete',
     Register = 'register',
@@ -94,7 +95,8 @@ export enum ActivityEventType {
     Udf = 'udf',
     ArrayMetadataGet = 'array_metadata_get',
     ArrayMetadataUpdate = 'array_metadata_update',
-    EstimatedResultSizes = 'estimated_result_sizes'
+    EstimatedResultSizes = 'estimated_result_sizes',
+    ReadFragmentInfo = 'read_fragment_info'
 }
 
 /**
@@ -215,6 +217,19 @@ export interface ArrayBrowserSidebar {
      * @memberof ArrayBrowserSidebar
      */
     result_count_by_namespace?: object;
+}
+/**
+ * Request to consolidate an array
+ * @export
+ * @interface ArrayConsolidationRequest
+ */
+export interface ArrayConsolidationRequest {
+    /**
+     * 
+     * @type {TileDBConfig}
+     * @memberof ArrayConsolidationRequest
+     */
+    config?: TileDBConfig;
 }
 /**
  * Object including array end_timestamps (list of Unix epoch timestamps in milliseconds) and pagination metadata
@@ -683,6 +698,12 @@ export interface ArrayTask {
      */
     name?: string;
     /**
+     * username that executed this task
+     * @type {string}
+     * @memberof ArrayTask
+     */
+    username?: string;
+    /**
      * Optional task description (Tasks purpose)
      * @type {string}
      * @memberof ArrayTask
@@ -935,6 +956,19 @@ export enum ArrayType {
     Sparse = 'sparse'
 }
 
+/**
+ * Request to consolidate an array
+ * @export
+ * @interface ArrayVacuumRequest
+ */
+export interface ArrayVacuumRequest {
+    /**
+     * 
+     * @type {TileDBConfig}
+     * @memberof ArrayVacuumRequest
+     */
+    config?: TileDBConfig;
+}
 /**
  * Custom storage locations on a per–asset type basis. If any is unset, a suffix of the owning (user/organization) `default_s3_path` is used. 
  * @export
@@ -1458,7 +1492,9 @@ export enum FilePropertyName {
     Size = 'size',
     CodeBlock = 'code_block',
     UdfLanguage = 'udf_language',
-    IsDashboard = 'is_dashboard'
+    IsDashboard = 'is_dashboard',
+    VersionPruningLimit = 'version_pruning_limit',
+    VersionPruningEnabled = 'version_pruning_enabled'
 }
 
 /**
@@ -1628,6 +1664,201 @@ export enum FilterType {
     PositiveDelta = 'FILTER_POSITIVE_DELTA'
 }
 
+/**
+ * Fragment info of an array
+ * @export
+ * @interface FragmentInfo
+ */
+export interface FragmentInfo {
+    /**
+     * map of all array schemas
+     * @type {{ [key: string]: ArraySchema; }}
+     * @memberof FragmentInfo
+     */
+    arraySchemaAll?: { [key: string]: ArraySchema; };
+    /**
+     * information about fragments in the array
+     * @type {Array<SingleFragmentInfo>}
+     * @memberof FragmentInfo
+     */
+    fragmentInfo?: Array<SingleFragmentInfo>;
+    /**
+     * the URIs of the fragments to vacuum
+     * @type {Array<string>}
+     * @memberof FragmentInfo
+     */
+    toVacuum?: Array<string>;
+}
+/**
+ * Fragment info request
+ * @export
+ * @interface FragmentInfoRequest
+ */
+export interface FragmentInfoRequest {
+    /**
+     * 
+     * @type {TileDBConfig}
+     * @memberof FragmentInfoRequest
+     */
+    config?: TileDBConfig;
+}
+/**
+ * Fragment Metadata
+ * @export
+ * @interface FragmentMetadata
+ */
+export interface FragmentMetadata {
+    /**
+     * fixed sizes
+     * @type {Array<number>}
+     * @memberof FragmentMetadata
+     */
+    fileSizes?: Array<number>;
+    /**
+     * var length sizes
+     * @type {Array<number>}
+     * @memberof FragmentMetadata
+     */
+    fileVarSizes?: Array<number>;
+    /**
+     * validity sizes
+     * @type {Array<number>}
+     * @memberof FragmentMetadata
+     */
+    fileValiditySizes?: Array<number>;
+    /**
+     * 
+     * @type {string}
+     * @memberof FragmentMetadata
+     */
+    fragmentUri?: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof FragmentMetadata
+     */
+    hasTimestamps?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof FragmentMetadata
+     */
+    hasDeleteMeta?: boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof FragmentMetadata
+     */
+    sparseTileNum?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof FragmentMetadata
+     */
+    tileIndexBase?: number;
+    /**
+     * 
+     * @type {Array<Array<number>>}
+     * @memberof FragmentMetadata
+     */
+    tileOffsets?: Array<Array<number>>;
+    /**
+     * 
+     * @type {Array<Array<number>>}
+     * @memberof FragmentMetadata
+     */
+    tileVarOffsets?: Array<Array<number>>;
+    /**
+     * 
+     * @type {Array<Array<number>>}
+     * @memberof FragmentMetadata
+     */
+    tileVarSizes?: Array<Array<number>>;
+    /**
+     * 
+     * @type {Array<Array<number>>}
+     * @memberof FragmentMetadata
+     */
+    tileValidityOffsets?: Array<Array<number>>;
+    /**
+     * 
+     * @type {Array<Array<number>>}
+     * @memberof FragmentMetadata
+     */
+    tileMinBuffer?: Array<Array<number>>;
+    /**
+     * 
+     * @type {Array<Array<number>>}
+     * @memberof FragmentMetadata
+     */
+    tileMinVarBuffer?: Array<Array<number>>;
+    /**
+     * 
+     * @type {Array<Array<number>>}
+     * @memberof FragmentMetadata
+     */
+    tileMaxBuffer?: Array<Array<number>>;
+    /**
+     * 
+     * @type {Array<Array<number>>}
+     * @memberof FragmentMetadata
+     */
+    tileMaxVarBuffer?: Array<Array<number>>;
+    /**
+     * 
+     * @type {Array<Array<number>>}
+     * @memberof FragmentMetadata
+     */
+    tileSums?: Array<Array<number>>;
+    /**
+     * 
+     * @type {Array<Array<number>>}
+     * @memberof FragmentMetadata
+     */
+    tileNullCounts?: Array<Array<number>>;
+    /**
+     * 
+     * @type {Array<Array<number>>}
+     * @memberof FragmentMetadata
+     */
+    fragmentMins?: Array<Array<number>>;
+    /**
+     * 
+     * @type {Array<Array<number>>}
+     * @memberof FragmentMetadata
+     */
+    fragmentMaxs?: Array<Array<number>>;
+    /**
+     * 
+     * @type {Array<number>}
+     * @memberof FragmentMetadata
+     */
+    fragmentSums?: Array<number>;
+    /**
+     * 
+     * @type {Array<number>}
+     * @memberof FragmentMetadata
+     */
+    fragmentNullCounts?: Array<number>;
+    /**
+     * 
+     * @type {number}
+     * @memberof FragmentMetadata
+     */
+    version?: number;
+    /**
+     * 
+     * @type {Array<number>}
+     * @memberof FragmentMetadata
+     */
+    timestampRange?: Array<number>;
+    /**
+     * 
+     * @type {number}
+     * @memberof FragmentMetadata
+     */
+    lastTileCellNum?: number;
+}
 /**
  * User-defined function
  * @export
@@ -2293,6 +2524,12 @@ export interface Invitation {
      */
     owner_namespace_uuid?: string;
     /**
+     * Unique ID of the user that sent the invitation
+     * @type {string}
+     * @memberof Invitation
+     */
+    inviter_uuid?: string;
+    /**
      * Unique ID of the user accepted the invitation
      * @type {string}
      * @memberof Invitation
@@ -2317,11 +2554,23 @@ export interface Invitation {
      */
     organization_role?: OrganizationRoles;
     /**
+     * Unique ID of the organization whose user(s) accepted the invitation
+     * @type {string}
+     * @memberof Invitation
+     */
+    organization_uuid?: string;
+    /**
      * Unique ID of the array
      * @type {string}
      * @memberof Invitation
      */
     array_uuid?: string;
+    /**
+     * Unique ID of the group
+     * @type {string}
+     * @memberof Invitation
+     */
+    group_uuid?: string;
     /**
      * Name of the array, does not persist in database
      * @type {string}
@@ -2340,6 +2589,12 @@ export interface Invitation {
      * @memberof Invitation
      */
     actions?: string;
+    /**
+     * A comma separated list of GroupActions
+     * @type {string}
+     * @memberof Invitation
+     */
+    group_actions?: string;
     /**
      * 
      * @type {InvitationStatus}
@@ -2404,6 +2659,31 @@ export interface InvitationData {
     pagination_metadata?: PaginationMetadata;
 }
 /**
+ * Encapsulates information regarding inviting people using email to share group, same permissions for all invitees
+ * @export
+ * @interface InvitationGroupShareEmail
+ */
+export interface InvitationGroupShareEmail {
+    /**
+     * List of permitted array actions
+     * @type {Array<ArrayActions>}
+     * @memberof InvitationGroupShareEmail
+     */
+    array_actions: Array<ArrayActions>;
+    /**
+     * List of permitted group actions
+     * @type {Array<GroupActions>}
+     * @memberof InvitationGroupShareEmail
+     */
+    group_actions: Array<GroupActions>;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof InvitationGroupShareEmail
+     */
+    invitee_email_or_name: Array<string>;
+}
+/**
  * Encapsulates information regarding inviting people using email to join organization, same permissions for all invitees
  * @export
  * @interface InvitationOrganizationJoinEmail
@@ -2445,6 +2725,7 @@ export enum InvitationStatus {
  */
 export enum InvitationType {
     ArrayShare = 'ARRAY_SHARE',
+    GroupShare = 'GROUP_SHARE',
     JoinOrganization = 'JOIN_ORGANIZATION'
 }
 
@@ -3306,10 +3587,10 @@ export interface Query {
     reader?: QueryReader;
     /**
      * 
-     * @type {any}
+     * @type {ModelArray}
      * @memberof Query
      */
-    array: any;
+    array: ModelArray;
     /**
      * Total number of bytes in fixed size attribute buffers.
      * @type {number}
@@ -3424,7 +3705,8 @@ export enum Querystatus {
  */
 export enum Querytype {
     Read = 'READ',
-    Write = 'WRITE'
+    Write = 'WRITE',
+    Delete = 'DELETE'
 }
 
 /**
@@ -3663,6 +3945,25 @@ export enum SSOProvider {
 }
 
 /**
+ * Single Fragment info of an array
+ * @export
+ * @interface SingleFragmentInfo
+ */
+export interface SingleFragmentInfo {
+    /**
+     * array schema name
+     * @type {string}
+     * @memberof SingleFragmentInfo
+     */
+    ArraySchemaName?: string;
+    /**
+     * 
+     * @type {FragmentMetadata}
+     * @memberof SingleFragmentInfo
+     */
+    meta?: FragmentMetadata;
+}
+/**
  * The path at which a given asset will be stored, and the credentials used to access that asset. 
  * @export
  * @interface StorageLocation
@@ -3862,6 +4163,19 @@ export interface Subscription {
     pricing?: Array<Pricing>;
 }
 /**
+ * The details of an array that should be queried and provided as the input to a UDF Node. This is essentially a `UDFArrayDetails`, but you’re allowed to provide most of the values as Nodes if you want. 
+ * @export
+ * @interface TGArrayNodeData
+ */
+export interface TGArrayNodeData {
+    /**
+     * 
+     * @type {TGQueryRanges}
+     * @memberof TGArrayNodeData
+     */
+    ranges?: TGQueryRanges;
+}
+/**
  * Specifies that a node is an “input value”, allowing for parameterized task graphs. An input node may not depend upon any other nodes. 
  * @export
  * @interface TGInputNodeData
@@ -3879,6 +4193,19 @@ export interface TGInputNodeData {
      * @memberof TGInputNodeData
      */
     datatype?: string | null;
+}
+/**
+ * Parameterizable version of `QueryRanges`.
+ * @export
+ * @interface TGQueryRanges
+ */
+export interface TGQueryRanges {
+    /**
+     * 
+     * @type {Layout}
+     * @memberof TGQueryRanges
+     */
+    layout?: Layout;
 }
 /**
  * A node specifying an SQL query to execute in TileDB Cloud. 
@@ -3978,6 +4305,12 @@ export interface TGUDFEnvironment {
      * @memberof TGUDFEnvironment
      */
     run_client_side?: boolean;
+    /**
+     * The maximum length of time this UDF is allowed to execute for before it is killed and fails. If not present (or zero), the function is allowed to run indefinitely (subject to the server’s global limits). 
+     * @type {number}
+     * @memberof TGUDFEnvironment
+     */
+    timeout?: number | null;
 }
 /**
  * A node specifying the execution of a user-defined function.
@@ -4256,17 +4589,36 @@ export interface TaskGraphSharing {
     namespace_type?: string;
 }
 /**
- * user\'s TileDB config
+ * TileDB config used for interaction with the embedded library
  * @export
  * @interface TileDBConfig
  */
 export interface TileDBConfig {
     /**
      * 
-     * @type {{ [key: string]: string; }}
+     * @type {Array<TileDBConfigEntries>}
      * @memberof TileDBConfig
      */
-    configs?: { [key: string]: string; };
+    entries?: Array<TileDBConfigEntries>;
+}
+/**
+ * 
+ * @export
+ * @interface TileDBConfigEntries
+ */
+export interface TileDBConfigEntries {
+    /**
+     * 
+     * @type {string}
+     * @memberof TileDBConfigEntries
+     */
+    key?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof TileDBConfigEntries
+     */
+    value?: string;
 }
 /**
  * A api token and its metadata
@@ -4300,10 +4652,10 @@ export interface Token {
     expires_at?: string;
     /**
      * Optional scope to limit token, defaults to all permissions, current supported values are password_reset or *
-     * @type {string}
+     * @type {Array<TokenScope>}
      * @memberof Token
      */
-    scope?: string;
+    scope?: Array<TokenScope>;
 }
 /**
  * A request from a user for an api token
@@ -4325,10 +4677,10 @@ export interface TokenRequest {
     name?: string;
     /**
      * Optional scope to limit token, defaults to all permissions, current supported values are password_reset or *
-     * @type {string}
+     * @type {Array<TokenScope>}
      * @memberof TokenRequest
      */
-    scope?: string;
+    scope?: Array<TokenScope>;
 }
 /**
  * An api token scope available for creation
@@ -4847,12 +5199,6 @@ export interface User {
      */
     logo?: string | null;
     /**
-     * when the user last logged in (set by the server)
-     * @type {string}
-     * @memberof User
-     */
-    last_activity_date?: string;
-    /**
      * 
      * @type {string}
      * @memberof User
@@ -4951,7 +5297,7 @@ export const ArrayApiAxiosParamCreator = function (configuration?: Configuration
          * @param {string} array name/uri of array that is url-encoded
          * @param {number} [start] Start time of window of fetch logs, unix epoch in seconds (default: seven days ago)
          * @param {number} [end] End time of window of fetch logs, unix epoch in seconds (default: current utc timestamp)
-         * @param {string} [eventTypes] Event values can be one or more of the following read, write, create, delete, register, deregister, comma separated
+         * @param {string} [eventTypes] Refer to ActivityEventType for possible values
          * @param {string} [taskId] Array task ID To filter activity to
          * @param {boolean} [hasTaskId] Excludes activity log results that do not contain an array task UUID
          * @param {*} [options] Override http request option.
@@ -5115,10 +5461,13 @@ export const ArrayApiAxiosParamCreator = function (configuration?: Configuration
         },
         /**
          * Fetch a sidebar for arrays that are owned directly by user or user\'s organizations
+         * @param {Array<string>} [fileType] file_type to search for, more than one can be included
+         * @param {Array<string>} [excludeFileType] file_type to exclude matching array in results, more than one can be included
+         * @param {Array<string>} [fileProperty] file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        arraysBrowserOwnedSidebarGet: async (options: any = {}): Promise<RequestArgs> => {
+        arraysBrowserOwnedSidebarGet: async (fileType?: Array<string>, excludeFileType?: Array<string>, fileProperty?: Array<string>, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/arrays/browser/owned/sidebar`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -5137,6 +5486,18 @@ export const ArrayApiAxiosParamCreator = function (configuration?: Configuration
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            if (fileType) {
+                localVarQueryParameter['file_type'] = fileType;
+            }
+
+            if (excludeFileType) {
+                localVarQueryParameter['exclude_file_type'] = excludeFileType;
+            }
+
+            if (fileProperty) {
+                localVarQueryParameter['file_property'] = fileProperty;
+            }
 
 
     
@@ -5250,10 +5611,13 @@ export const ArrayApiAxiosParamCreator = function (configuration?: Configuration
         },
         /**
          * Fetch a sidebar of all arrays that have been shared publically
+         * @param {Array<string>} [fileType] file_type to search for, more than one can be included
+         * @param {Array<string>} [excludeFileType] file_type to exclude matching array in results, more than one can be included
+         * @param {Array<string>} [fileProperty] file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        arraysBrowserPublicSidebarGet: async (options: any = {}): Promise<RequestArgs> => {
+        arraysBrowserPublicSidebarGet: async (fileType?: Array<string>, excludeFileType?: Array<string>, fileProperty?: Array<string>, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/arrays/browser/public/sidebar`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -5272,6 +5636,18 @@ export const ArrayApiAxiosParamCreator = function (configuration?: Configuration
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            if (fileType) {
+                localVarQueryParameter['file_type'] = fileType;
+            }
+
+            if (excludeFileType) {
+                localVarQueryParameter['exclude_file_type'] = excludeFileType;
+            }
+
+            if (fileProperty) {
+                localVarQueryParameter['file_property'] = fileProperty;
+            }
 
 
     
@@ -5390,10 +5766,14 @@ export const ArrayApiAxiosParamCreator = function (configuration?: Configuration
         },
         /**
          * Fetch a list of all arrays that have been shared with the user
+         * @param {Array<string>} [fileType] file_type to search for, more than one can be included
+         * @param {Array<string>} [excludeFileType] file_type to exclude matching array in results, more than one can be included
+         * @param {Array<string>} [fileProperty] file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included
+         * @param {Array<string>} [sharedTo] namespaces to filter results of where there groups were shared to
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        arraysBrowserSharedSidebarGet: async (options: any = {}): Promise<RequestArgs> => {
+        arraysBrowserSharedSidebarGet: async (fileType?: Array<string>, excludeFileType?: Array<string>, fileProperty?: Array<string>, sharedTo?: Array<string>, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/arrays/browser/shared/sidebar`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -5412,6 +5792,22 @@ export const ArrayApiAxiosParamCreator = function (configuration?: Configuration
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            if (fileType) {
+                localVarQueryParameter['file_type'] = fileType;
+            }
+
+            if (excludeFileType) {
+                localVarQueryParameter['exclude_file_type'] = excludeFileType;
+            }
+
+            if (fileProperty) {
+                localVarQueryParameter['file_property'] = fileProperty;
+            }
+
+            if (sharedTo) {
+                localVarQueryParameter['shared_to'] = sharedTo;
+            }
 
 
     
@@ -5490,17 +5886,17 @@ export const ArrayApiAxiosParamCreator = function (configuration?: Configuration
          * consolidate an array at a specified URI
          * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
          * @param {string} array name/uri of array that is url-encoded
-         * @param {TileDBConfig} tiledbConfig tiledb configuration
+         * @param {ArrayConsolidationRequest} consolidateRequest Consolidate Request
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        consolidateArray: async (namespace: string, array: string, tiledbConfig: TileDBConfig, options: any = {}): Promise<RequestArgs> => {
+        consolidateArray: async (namespace: string, array: string, consolidateRequest: ArrayConsolidationRequest, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'namespace' is not null or undefined
             assertParamExists('consolidateArray', 'namespace', namespace)
             // verify required parameter 'array' is not null or undefined
             assertParamExists('consolidateArray', 'array', array)
-            // verify required parameter 'tiledbConfig' is not null or undefined
-            assertParamExists('consolidateArray', 'tiledbConfig', tiledbConfig)
+            // verify required parameter 'consolidateRequest' is not null or undefined
+            assertParamExists('consolidateArray', 'consolidateRequest', consolidateRequest)
             const localVarPath = `/arrays/{namespace}/{array}/consolidate`
                 .replace(`{${"namespace"}}`, encodeURIComponent(String(namespace)))
                 .replace(`{${"array"}}`, encodeURIComponent(String(array)));
@@ -5533,7 +5929,7 @@ export const ArrayApiAxiosParamCreator = function (configuration?: Configuration
                 // for application/capnp mime type requests default responseType to 'arraybuffer'
                 localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
             }
-            localVarRequestOptions.data = serializeDataIfNeeded(tiledbConfig, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(consolidateRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -5703,6 +6099,67 @@ export const ArrayApiAxiosParamCreator = function (configuration?: Configuration
                 // for application/capnp mime type requests default responseType to 'arraybuffer'
                 localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
             }
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * fetch an array\'s fragment info
+         * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
+         * @param {string} array name/uri of array that is url-encoded
+         * @param {string} contentType Content Type of input and return mime
+         * @param {FragmentInfoRequest} fragmentInfoRequest ArraySchema being created
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        fragmentInfo: async (namespace: string, array: string, contentType: string, fragmentInfoRequest: FragmentInfoRequest, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'namespace' is not null or undefined
+            assertParamExists('fragmentInfo', 'namespace', namespace)
+            // verify required parameter 'array' is not null or undefined
+            assertParamExists('fragmentInfo', 'array', array)
+            // verify required parameter 'contentType' is not null or undefined
+            assertParamExists('fragmentInfo', 'contentType', contentType)
+            // verify required parameter 'fragmentInfoRequest' is not null or undefined
+            assertParamExists('fragmentInfo', 'fragmentInfoRequest', fragmentInfoRequest)
+            const localVarPath = `/arrays/{namespace}/{array}/fragment_info`
+                .replace(`{${"namespace"}}`, encodeURIComponent(String(namespace)))
+                .replace(`{${"array"}}`, encodeURIComponent(String(array)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+
+            // authentication BasicAuth required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            if (contentType !== undefined && contentType !== null) {
+                localVarHeaderParameter['Content-Type'] = String(contentType);
+            }
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
+            localVarRequestOptions.data = serializeDataIfNeeded(fragmentInfoRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -6648,17 +7105,17 @@ export const ArrayApiAxiosParamCreator = function (configuration?: Configuration
          * vacuum an array at a specified URI
          * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
          * @param {string} array name/uri of array that is url-encoded
-         * @param {TileDBConfig} tiledbConfig tiledb configuration
+         * @param {ArrayVacuumRequest} vaccumRequest Vaccum Request
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        vacuumArray: async (namespace: string, array: string, tiledbConfig: TileDBConfig, options: any = {}): Promise<RequestArgs> => {
+        vacuumArray: async (namespace: string, array: string, vaccumRequest: ArrayVacuumRequest, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'namespace' is not null or undefined
             assertParamExists('vacuumArray', 'namespace', namespace)
             // verify required parameter 'array' is not null or undefined
             assertParamExists('vacuumArray', 'array', array)
-            // verify required parameter 'tiledbConfig' is not null or undefined
-            assertParamExists('vacuumArray', 'tiledbConfig', tiledbConfig)
+            // verify required parameter 'vaccumRequest' is not null or undefined
+            assertParamExists('vacuumArray', 'vaccumRequest', vaccumRequest)
             const localVarPath = `/arrays/{namespace}/{array}/vacuum`
                 .replace(`{${"namespace"}}`, encodeURIComponent(String(namespace)))
                 .replace(`{${"array"}}`, encodeURIComponent(String(array)));
@@ -6691,7 +7148,7 @@ export const ArrayApiAxiosParamCreator = function (configuration?: Configuration
                 // for application/capnp mime type requests default responseType to 'arraybuffer'
                 localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
             }
-            localVarRequestOptions.data = serializeDataIfNeeded(tiledbConfig, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(vaccumRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -6714,7 +7171,7 @@ export const ArrayApiFp = function(configuration?: Configuration) {
          * @param {string} array name/uri of array that is url-encoded
          * @param {number} [start] Start time of window of fetch logs, unix epoch in seconds (default: seven days ago)
          * @param {number} [end] End time of window of fetch logs, unix epoch in seconds (default: current utc timestamp)
-         * @param {string} [eventTypes] Event values can be one or more of the following read, write, create, delete, register, deregister, comma separated
+         * @param {string} [eventTypes] Refer to ActivityEventType for possible values
          * @param {string} [taskId] Array task ID To filter activity to
          * @param {boolean} [hasTaskId] Excludes activity log results that do not contain an array task UUID
          * @param {*} [options] Override http request option.
@@ -6746,11 +7203,14 @@ export const ArrayApiFp = function(configuration?: Configuration) {
         },
         /**
          * Fetch a sidebar for arrays that are owned directly by user or user\'s organizations
+         * @param {Array<string>} [fileType] file_type to search for, more than one can be included
+         * @param {Array<string>} [excludeFileType] file_type to exclude matching array in results, more than one can be included
+         * @param {Array<string>} [fileProperty] file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async arraysBrowserOwnedSidebarGet(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArrayBrowserSidebar>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.arraysBrowserOwnedSidebarGet(options);
+        async arraysBrowserOwnedSidebarGet(fileType?: Array<string>, excludeFileType?: Array<string>, fileProperty?: Array<string>, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArrayBrowserSidebar>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.arraysBrowserOwnedSidebarGet(fileType, excludeFileType, fileProperty, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -6775,11 +7235,14 @@ export const ArrayApiFp = function(configuration?: Configuration) {
         },
         /**
          * Fetch a sidebar of all arrays that have been shared publically
+         * @param {Array<string>} [fileType] file_type to search for, more than one can be included
+         * @param {Array<string>} [excludeFileType] file_type to exclude matching array in results, more than one can be included
+         * @param {Array<string>} [fileProperty] file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async arraysBrowserPublicSidebarGet(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArrayBrowserSidebar>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.arraysBrowserPublicSidebarGet(options);
+        async arraysBrowserPublicSidebarGet(fileType?: Array<string>, excludeFileType?: Array<string>, fileProperty?: Array<string>, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArrayBrowserSidebar>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.arraysBrowserPublicSidebarGet(fileType, excludeFileType, fileProperty, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -6805,11 +7268,15 @@ export const ArrayApiFp = function(configuration?: Configuration) {
         },
         /**
          * Fetch a list of all arrays that have been shared with the user
+         * @param {Array<string>} [fileType] file_type to search for, more than one can be included
+         * @param {Array<string>} [excludeFileType] file_type to exclude matching array in results, more than one can be included
+         * @param {Array<string>} [fileProperty] file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included
+         * @param {Array<string>} [sharedTo] namespaces to filter results of where there groups were shared to
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async arraysBrowserSharedSidebarGet(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArrayBrowserSidebar>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.arraysBrowserSharedSidebarGet(options);
+        async arraysBrowserSharedSidebarGet(fileType?: Array<string>, excludeFileType?: Array<string>, fileProperty?: Array<string>, sharedTo?: Array<string>, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArrayBrowserSidebar>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.arraysBrowserSharedSidebarGet(fileType, excludeFileType, fileProperty, sharedTo, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -6829,12 +7296,12 @@ export const ArrayApiFp = function(configuration?: Configuration) {
          * consolidate an array at a specified URI
          * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
          * @param {string} array name/uri of array that is url-encoded
-         * @param {TileDBConfig} tiledbConfig tiledb configuration
+         * @param {ArrayConsolidationRequest} consolidateRequest Consolidate Request
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async consolidateArray(namespace: string, array: string, tiledbConfig: TileDBConfig, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.consolidateArray(namespace, array, tiledbConfig, options);
+        async consolidateArray(namespace: string, array: string, consolidateRequest: ArrayConsolidationRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.consolidateArray(namespace, array, consolidateRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -6872,6 +7339,19 @@ export const ArrayApiFp = function(configuration?: Configuration) {
          */
         async deregisterArray(namespace: string, array: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.deregisterArray(namespace, array, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * fetch an array\'s fragment info
+         * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
+         * @param {string} array name/uri of array that is url-encoded
+         * @param {string} contentType Content Type of input and return mime
+         * @param {FragmentInfoRequest} fragmentInfoRequest ArraySchema being created
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async fragmentInfo(namespace: string, array: string, contentType: string, fragmentInfoRequest: FragmentInfoRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<FragmentInfo>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.fragmentInfo(namespace, array, contentType, fragmentInfoRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -7087,12 +7567,12 @@ export const ArrayApiFp = function(configuration?: Configuration) {
          * vacuum an array at a specified URI
          * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
          * @param {string} array name/uri of array that is url-encoded
-         * @param {TileDBConfig} tiledbConfig tiledb configuration
+         * @param {ArrayVacuumRequest} vaccumRequest Vaccum Request
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async vacuumArray(namespace: string, array: string, tiledbConfig: TileDBConfig, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.vacuumArray(namespace, array, tiledbConfig, options);
+        async vacuumArray(namespace: string, array: string, vaccumRequest: ArrayVacuumRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.vacuumArray(namespace, array, vaccumRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
     }
@@ -7111,7 +7591,7 @@ export const ArrayApiFactory = function (configuration?: Configuration, basePath
          * @param {string} array name/uri of array that is url-encoded
          * @param {number} [start] Start time of window of fetch logs, unix epoch in seconds (default: seven days ago)
          * @param {number} [end] End time of window of fetch logs, unix epoch in seconds (default: current utc timestamp)
-         * @param {string} [eventTypes] Event values can be one or more of the following read, write, create, delete, register, deregister, comma separated
+         * @param {string} [eventTypes] Refer to ActivityEventType for possible values
          * @param {string} [taskId] Array task ID To filter activity to
          * @param {boolean} [hasTaskId] Excludes activity log results that do not contain an array task UUID
          * @param {*} [options] Override http request option.
@@ -7141,11 +7621,14 @@ export const ArrayApiFactory = function (configuration?: Configuration, basePath
         },
         /**
          * Fetch a sidebar for arrays that are owned directly by user or user\'s organizations
+         * @param {Array<string>} [fileType] file_type to search for, more than one can be included
+         * @param {Array<string>} [excludeFileType] file_type to exclude matching array in results, more than one can be included
+         * @param {Array<string>} [fileProperty] file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        arraysBrowserOwnedSidebarGet(options?: any): AxiosPromise<ArrayBrowserSidebar> {
-            return localVarFp.arraysBrowserOwnedSidebarGet(options).then((request) => request(axios, basePath));
+        arraysBrowserOwnedSidebarGet(fileType?: Array<string>, excludeFileType?: Array<string>, fileProperty?: Array<string>, options?: any): AxiosPromise<ArrayBrowserSidebar> {
+            return localVarFp.arraysBrowserOwnedSidebarGet(fileType, excludeFileType, fileProperty, options).then((request) => request(axios, basePath));
         },
         /**
          * Fetch a list of all arrays that have been shared publically
@@ -7168,11 +7651,14 @@ export const ArrayApiFactory = function (configuration?: Configuration, basePath
         },
         /**
          * Fetch a sidebar of all arrays that have been shared publically
+         * @param {Array<string>} [fileType] file_type to search for, more than one can be included
+         * @param {Array<string>} [excludeFileType] file_type to exclude matching array in results, more than one can be included
+         * @param {Array<string>} [fileProperty] file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        arraysBrowserPublicSidebarGet(options?: any): AxiosPromise<ArrayBrowserSidebar> {
-            return localVarFp.arraysBrowserPublicSidebarGet(options).then((request) => request(axios, basePath));
+        arraysBrowserPublicSidebarGet(fileType?: Array<string>, excludeFileType?: Array<string>, fileProperty?: Array<string>, options?: any): AxiosPromise<ArrayBrowserSidebar> {
+            return localVarFp.arraysBrowserPublicSidebarGet(fileType, excludeFileType, fileProperty, options).then((request) => request(axios, basePath));
         },
         /**
          * Fetch a list of all arrays that have been shared with the user
@@ -7196,11 +7682,15 @@ export const ArrayApiFactory = function (configuration?: Configuration, basePath
         },
         /**
          * Fetch a list of all arrays that have been shared with the user
+         * @param {Array<string>} [fileType] file_type to search for, more than one can be included
+         * @param {Array<string>} [excludeFileType] file_type to exclude matching array in results, more than one can be included
+         * @param {Array<string>} [fileProperty] file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included
+         * @param {Array<string>} [sharedTo] namespaces to filter results of where there groups were shared to
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        arraysBrowserSharedSidebarGet(options?: any): AxiosPromise<ArrayBrowserSidebar> {
-            return localVarFp.arraysBrowserSharedSidebarGet(options).then((request) => request(axios, basePath));
+        arraysBrowserSharedSidebarGet(fileType?: Array<string>, excludeFileType?: Array<string>, fileProperty?: Array<string>, sharedTo?: Array<string>, options?: any): AxiosPromise<ArrayBrowserSidebar> {
+            return localVarFp.arraysBrowserSharedSidebarGet(fileType, excludeFileType, fileProperty, sharedTo, options).then((request) => request(axios, basePath));
         },
         /**
          * retrieve a list of timestamps from the array fragment info listing in milliseconds, paginated
@@ -7218,12 +7708,12 @@ export const ArrayApiFactory = function (configuration?: Configuration, basePath
          * consolidate an array at a specified URI
          * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
          * @param {string} array name/uri of array that is url-encoded
-         * @param {TileDBConfig} tiledbConfig tiledb configuration
+         * @param {ArrayConsolidationRequest} consolidateRequest Consolidate Request
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        consolidateArray(namespace: string, array: string, tiledbConfig: TileDBConfig, options?: any): AxiosPromise<void> {
-            return localVarFp.consolidateArray(namespace, array, tiledbConfig, options).then((request) => request(axios, basePath));
+        consolidateArray(namespace: string, array: string, consolidateRequest: ArrayConsolidationRequest, options?: any): AxiosPromise<void> {
+            return localVarFp.consolidateArray(namespace, array, consolidateRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * create a array schema at a specified URI registered to a group/project
@@ -7258,6 +7748,18 @@ export const ArrayApiFactory = function (configuration?: Configuration, basePath
          */
         deregisterArray(namespace: string, array: string, options?: any): AxiosPromise<void> {
             return localVarFp.deregisterArray(namespace, array, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * fetch an array\'s fragment info
+         * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
+         * @param {string} array name/uri of array that is url-encoded
+         * @param {string} contentType Content Type of input and return mime
+         * @param {FragmentInfoRequest} fragmentInfoRequest ArraySchema being created
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        fragmentInfo(namespace: string, array: string, contentType: string, fragmentInfoRequest: FragmentInfoRequest, options?: any): AxiosPromise<FragmentInfo> {
+            return localVarFp.fragmentInfo(namespace, array, contentType, fragmentInfoRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * get activity log by ID
@@ -7454,12 +7956,12 @@ export const ArrayApiFactory = function (configuration?: Configuration, basePath
          * vacuum an array at a specified URI
          * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
          * @param {string} array name/uri of array that is url-encoded
-         * @param {TileDBConfig} tiledbConfig tiledb configuration
+         * @param {ArrayVacuumRequest} vaccumRequest Vaccum Request
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        vacuumArray(namespace: string, array: string, tiledbConfig: TileDBConfig, options?: any): AxiosPromise<void> {
-            return localVarFp.vacuumArray(namespace, array, tiledbConfig, options).then((request) => request(axios, basePath));
+        vacuumArray(namespace: string, array: string, vaccumRequest: ArrayVacuumRequest, options?: any): AxiosPromise<void> {
+            return localVarFp.vacuumArray(namespace, array, vaccumRequest, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -7477,7 +7979,7 @@ export class ArrayApi extends BaseAPI {
      * @param {string} array name/uri of array that is url-encoded
      * @param {number} [start] Start time of window of fetch logs, unix epoch in seconds (default: seven days ago)
      * @param {number} [end] End time of window of fetch logs, unix epoch in seconds (default: current utc timestamp)
-     * @param {string} [eventTypes] Event values can be one or more of the following read, write, create, delete, register, deregister, comma separated
+     * @param {string} [eventTypes] Refer to ActivityEventType for possible values
      * @param {string} [taskId] Array task ID To filter activity to
      * @param {boolean} [hasTaskId] Excludes activity log results that do not contain an array task UUID
      * @param {*} [options] Override http request option.
@@ -7511,12 +8013,15 @@ export class ArrayApi extends BaseAPI {
 
     /**
      * Fetch a sidebar for arrays that are owned directly by user or user\'s organizations
+     * @param {Array<string>} [fileType] file_type to search for, more than one can be included
+     * @param {Array<string>} [excludeFileType] file_type to exclude matching array in results, more than one can be included
+     * @param {Array<string>} [fileProperty] file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ArrayApi
      */
-    public arraysBrowserOwnedSidebarGet(options?: any) {
-        return ArrayApiFp(this.configuration).arraysBrowserOwnedSidebarGet(options).then((request) => request(this.axios, this.basePath));
+    public arraysBrowserOwnedSidebarGet(fileType?: Array<string>, excludeFileType?: Array<string>, fileProperty?: Array<string>, options?: any) {
+        return ArrayApiFp(this.configuration).arraysBrowserOwnedSidebarGet(fileType, excludeFileType, fileProperty, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -7542,12 +8047,15 @@ export class ArrayApi extends BaseAPI {
 
     /**
      * Fetch a sidebar of all arrays that have been shared publically
+     * @param {Array<string>} [fileType] file_type to search for, more than one can be included
+     * @param {Array<string>} [excludeFileType] file_type to exclude matching array in results, more than one can be included
+     * @param {Array<string>} [fileProperty] file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ArrayApi
      */
-    public arraysBrowserPublicSidebarGet(options?: any) {
-        return ArrayApiFp(this.configuration).arraysBrowserPublicSidebarGet(options).then((request) => request(this.axios, this.basePath));
+    public arraysBrowserPublicSidebarGet(fileType?: Array<string>, excludeFileType?: Array<string>, fileProperty?: Array<string>, options?: any) {
+        return ArrayApiFp(this.configuration).arraysBrowserPublicSidebarGet(fileType, excludeFileType, fileProperty, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -7574,12 +8082,16 @@ export class ArrayApi extends BaseAPI {
 
     /**
      * Fetch a list of all arrays that have been shared with the user
+     * @param {Array<string>} [fileType] file_type to search for, more than one can be included
+     * @param {Array<string>} [excludeFileType] file_type to exclude matching array in results, more than one can be included
+     * @param {Array<string>} [fileProperty] file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included
+     * @param {Array<string>} [sharedTo] namespaces to filter results of where there groups were shared to
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ArrayApi
      */
-    public arraysBrowserSharedSidebarGet(options?: any) {
-        return ArrayApiFp(this.configuration).arraysBrowserSharedSidebarGet(options).then((request) => request(this.axios, this.basePath));
+    public arraysBrowserSharedSidebarGet(fileType?: Array<string>, excludeFileType?: Array<string>, fileProperty?: Array<string>, sharedTo?: Array<string>, options?: any) {
+        return ArrayApiFp(this.configuration).arraysBrowserSharedSidebarGet(fileType, excludeFileType, fileProperty, sharedTo, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -7600,13 +8112,13 @@ export class ArrayApi extends BaseAPI {
      * consolidate an array at a specified URI
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
      * @param {string} array name/uri of array that is url-encoded
-     * @param {TileDBConfig} tiledbConfig tiledb configuration
+     * @param {ArrayConsolidationRequest} consolidateRequest Consolidate Request
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ArrayApi
      */
-    public consolidateArray(namespace: string, array: string, tiledbConfig: TileDBConfig, options?: any) {
-        return ArrayApiFp(this.configuration).consolidateArray(namespace, array, tiledbConfig, options).then((request) => request(this.axios, this.basePath));
+    public consolidateArray(namespace: string, array: string, consolidateRequest: ArrayConsolidationRequest, options?: any) {
+        return ArrayApiFp(this.configuration).consolidateArray(namespace, array, consolidateRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -7647,6 +8159,20 @@ export class ArrayApi extends BaseAPI {
      */
     public deregisterArray(namespace: string, array: string, options?: any) {
         return ArrayApiFp(this.configuration).deregisterArray(namespace, array, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * fetch an array\'s fragment info
+     * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
+     * @param {string} array name/uri of array that is url-encoded
+     * @param {string} contentType Content Type of input and return mime
+     * @param {FragmentInfoRequest} fragmentInfoRequest ArraySchema being created
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ArrayApi
+     */
+    public fragmentInfo(namespace: string, array: string, contentType: string, fragmentInfoRequest: FragmentInfoRequest, options?: any) {
+        return ArrayApiFp(this.configuration).fragmentInfo(namespace, array, contentType, fragmentInfoRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -7880,13 +8406,13 @@ export class ArrayApi extends BaseAPI {
      * vacuum an array at a specified URI
      * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
      * @param {string} array name/uri of array that is url-encoded
-     * @param {TileDBConfig} tiledbConfig tiledb configuration
+     * @param {ArrayVacuumRequest} vaccumRequest Vaccum Request
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ArrayApi
      */
-    public vacuumArray(namespace: string, array: string, tiledbConfig: TileDBConfig, options?: any) {
-        return ArrayApiFp(this.configuration).vacuumArray(namespace, array, tiledbConfig, options).then((request) => request(this.axios, this.basePath));
+    public vacuumArray(namespace: string, array: string, vaccumRequest: ArrayVacuumRequest, options?: any) {
+        return ArrayApiFp(this.configuration).vacuumArray(namespace, array, vaccumRequest, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -11712,9 +12238,62 @@ export const InvitationApiAxiosParamCreator = function (configuration?: Configur
             };
         },
         /**
+         * Cancels group sharing invitation
+         * @param {string} namespace namespace group is in (an organization name or user\&#39;s username)
+         * @param {string} invitation the ID of invitation about to be cancelled
+         * @param {string} groupName name/uuid of group that is url-encoded
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        cancelShareGroupByInvite: async (namespace: string, invitation: string, groupName: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'namespace' is not null or undefined
+            assertParamExists('cancelShareGroupByInvite', 'namespace', namespace)
+            // verify required parameter 'invitation' is not null or undefined
+            assertParamExists('cancelShareGroupByInvite', 'invitation', invitation)
+            // verify required parameter 'groupName' is not null or undefined
+            assertParamExists('cancelShareGroupByInvite', 'groupName', groupName)
+            const localVarPath = `/invitations/group/{invitation}/{namespace}/{group_name}/share`
+                .replace(`{${"namespace"}}`, encodeURIComponent(String(namespace)))
+                .replace(`{${"invitation"}}`, encodeURIComponent(String(invitation)))
+                .replace(`{${"group_name"}}`, encodeURIComponent(String(groupName)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+
+            // authentication BasicAuth required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * Fetch a list of invitations
          * @param {string} [organization] name or ID of organization to filter
          * @param {string} [array] name/uri of array that is url-encoded to filter
+         * @param {string} [group] name or ID of group to filter
          * @param {number} [start] start time for tasks to filter by
          * @param {number} [end] end time for tasks to filter by
          * @param {number} [page] pagination offset
@@ -11725,7 +12304,7 @@ export const InvitationApiAxiosParamCreator = function (configuration?: Configur
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        fetchInvitations: async (organization?: string, array?: string, start?: number, end?: number, page?: number, perPage?: number, type?: string, status?: string, orderby?: string, options: any = {}): Promise<RequestArgs> => {
+        fetchInvitations: async (organization?: string, array?: string, group?: string, start?: number, end?: number, page?: number, perPage?: number, type?: string, status?: string, orderby?: string, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/invitations`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -11751,6 +12330,10 @@ export const InvitationApiAxiosParamCreator = function (configuration?: Configur
 
             if (array !== undefined) {
                 localVarQueryParameter['array'] = array;
+            }
+
+            if (group !== undefined) {
+                localVarQueryParameter['group'] = group;
             }
 
             if (start !== undefined) {
@@ -11900,6 +12483,60 @@ export const InvitationApiAxiosParamCreator = function (configuration?: Configur
                 options: localVarRequestOptions,
             };
         },
+        /**
+         * Sends email to multiple recipients with sharing information regarding a group
+         * @param {string} namespace namespace group is in (an organization name or user\&#39;s username)
+         * @param {string} group name/uri of group that is url-encoded
+         * @param {InvitationGroupShareEmail} emailInvite list of email/namespace recipients
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        shareGroupByInvite: async (namespace: string, group: string, emailInvite: InvitationGroupShareEmail, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'namespace' is not null or undefined
+            assertParamExists('shareGroupByInvite', 'namespace', namespace)
+            // verify required parameter 'group' is not null or undefined
+            assertParamExists('shareGroupByInvite', 'group', group)
+            // verify required parameter 'emailInvite' is not null or undefined
+            assertParamExists('shareGroupByInvite', 'emailInvite', emailInvite)
+            const localVarPath = `/invitations/group/{namespace}/{group}/share`
+                .replace(`{${"namespace"}}`, encodeURIComponent(String(namespace)))
+                .replace(`{${"group"}}`, encodeURIComponent(String(group)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+
+            // authentication BasicAuth required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
+            localVarRequestOptions.data = serializeDataIfNeeded(emailInvite, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
     }
 };
 
@@ -11944,9 +12581,22 @@ export const InvitationApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
+         * Cancels group sharing invitation
+         * @param {string} namespace namespace group is in (an organization name or user\&#39;s username)
+         * @param {string} invitation the ID of invitation about to be cancelled
+         * @param {string} groupName name/uuid of group that is url-encoded
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async cancelShareGroupByInvite(namespace: string, invitation: string, groupName: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.cancelShareGroupByInvite(namespace, invitation, groupName, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
          * Fetch a list of invitations
          * @param {string} [organization] name or ID of organization to filter
          * @param {string} [array] name/uri of array that is url-encoded to filter
+         * @param {string} [group] name or ID of group to filter
          * @param {number} [start] start time for tasks to filter by
          * @param {number} [end] end time for tasks to filter by
          * @param {number} [page] pagination offset
@@ -11957,8 +12607,8 @@ export const InvitationApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async fetchInvitations(organization?: string, array?: string, start?: number, end?: number, page?: number, perPage?: number, type?: string, status?: string, orderby?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InvitationData>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.fetchInvitations(organization, array, start, end, page, perPage, type, status, orderby, options);
+        async fetchInvitations(organization?: string, array?: string, group?: string, start?: number, end?: number, page?: number, perPage?: number, type?: string, status?: string, orderby?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InvitationData>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.fetchInvitations(organization, array, group, start, end, page, perPage, type, status, orderby, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -11982,6 +12632,18 @@ export const InvitationApiFp = function(configuration?: Configuration) {
          */
         async shareArrayByInvite(namespace: string, array: string, emailInvite: InvitationArrayShareEmail, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.shareArrayByInvite(namespace, array, emailInvite, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Sends email to multiple recipients with sharing information regarding a group
+         * @param {string} namespace namespace group is in (an organization name or user\&#39;s username)
+         * @param {string} group name/uri of group that is url-encoded
+         * @param {InvitationGroupShareEmail} emailInvite list of email/namespace recipients
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async shareGroupByInvite(namespace: string, group: string, emailInvite: InvitationGroupShareEmail, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.shareGroupByInvite(namespace, group, emailInvite, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
     }
@@ -12025,9 +12687,21 @@ export const InvitationApiFactory = function (configuration?: Configuration, bas
             return localVarFp.cancelShareArrayByInvite(namespace, invitation, array, options).then((request) => request(axios, basePath));
         },
         /**
+         * Cancels group sharing invitation
+         * @param {string} namespace namespace group is in (an organization name or user\&#39;s username)
+         * @param {string} invitation the ID of invitation about to be cancelled
+         * @param {string} groupName name/uuid of group that is url-encoded
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        cancelShareGroupByInvite(namespace: string, invitation: string, groupName: string, options?: any): AxiosPromise<void> {
+            return localVarFp.cancelShareGroupByInvite(namespace, invitation, groupName, options).then((request) => request(axios, basePath));
+        },
+        /**
          * Fetch a list of invitations
          * @param {string} [organization] name or ID of organization to filter
          * @param {string} [array] name/uri of array that is url-encoded to filter
+         * @param {string} [group] name or ID of group to filter
          * @param {number} [start] start time for tasks to filter by
          * @param {number} [end] end time for tasks to filter by
          * @param {number} [page] pagination offset
@@ -12038,8 +12712,8 @@ export const InvitationApiFactory = function (configuration?: Configuration, bas
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        fetchInvitations(organization?: string, array?: string, start?: number, end?: number, page?: number, perPage?: number, type?: string, status?: string, orderby?: string, options?: any): AxiosPromise<InvitationData> {
-            return localVarFp.fetchInvitations(organization, array, start, end, page, perPage, type, status, orderby, options).then((request) => request(axios, basePath));
+        fetchInvitations(organization?: string, array?: string, group?: string, start?: number, end?: number, page?: number, perPage?: number, type?: string, status?: string, orderby?: string, options?: any): AxiosPromise<InvitationData> {
+            return localVarFp.fetchInvitations(organization, array, group, start, end, page, perPage, type, status, orderby, options).then((request) => request(axios, basePath));
         },
         /**
          * Sends email to multiple recipients with joining information regarding an organization
@@ -12061,6 +12735,17 @@ export const InvitationApiFactory = function (configuration?: Configuration, bas
          */
         shareArrayByInvite(namespace: string, array: string, emailInvite: InvitationArrayShareEmail, options?: any): AxiosPromise<void> {
             return localVarFp.shareArrayByInvite(namespace, array, emailInvite, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Sends email to multiple recipients with sharing information regarding a group
+         * @param {string} namespace namespace group is in (an organization name or user\&#39;s username)
+         * @param {string} group name/uri of group that is url-encoded
+         * @param {InvitationGroupShareEmail} emailInvite list of email/namespace recipients
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        shareGroupByInvite(namespace: string, group: string, emailInvite: InvitationGroupShareEmail, options?: any): AxiosPromise<void> {
+            return localVarFp.shareGroupByInvite(namespace, group, emailInvite, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -12109,9 +12794,23 @@ export class InvitationApi extends BaseAPI {
     }
 
     /**
+     * Cancels group sharing invitation
+     * @param {string} namespace namespace group is in (an organization name or user\&#39;s username)
+     * @param {string} invitation the ID of invitation about to be cancelled
+     * @param {string} groupName name/uuid of group that is url-encoded
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof InvitationApi
+     */
+    public cancelShareGroupByInvite(namespace: string, invitation: string, groupName: string, options?: any) {
+        return InvitationApiFp(this.configuration).cancelShareGroupByInvite(namespace, invitation, groupName, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
      * Fetch a list of invitations
      * @param {string} [organization] name or ID of organization to filter
      * @param {string} [array] name/uri of array that is url-encoded to filter
+     * @param {string} [group] name or ID of group to filter
      * @param {number} [start] start time for tasks to filter by
      * @param {number} [end] end time for tasks to filter by
      * @param {number} [page] pagination offset
@@ -12123,8 +12822,8 @@ export class InvitationApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof InvitationApi
      */
-    public fetchInvitations(organization?: string, array?: string, start?: number, end?: number, page?: number, perPage?: number, type?: string, status?: string, orderby?: string, options?: any) {
-        return InvitationApiFp(this.configuration).fetchInvitations(organization, array, start, end, page, perPage, type, status, orderby, options).then((request) => request(this.axios, this.basePath));
+    public fetchInvitations(organization?: string, array?: string, group?: string, start?: number, end?: number, page?: number, perPage?: number, type?: string, status?: string, orderby?: string, options?: any) {
+        return InvitationApiFp(this.configuration).fetchInvitations(organization, array, group, start, end, page, perPage, type, status, orderby, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -12150,6 +12849,19 @@ export class InvitationApi extends BaseAPI {
      */
     public shareArrayByInvite(namespace: string, array: string, emailInvite: InvitationArrayShareEmail, options?: any) {
         return InvitationApiFp(this.configuration).shareArrayByInvite(namespace, array, emailInvite, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Sends email to multiple recipients with sharing information regarding a group
+     * @param {string} namespace namespace group is in (an organization name or user\&#39;s username)
+     * @param {string} group name/uri of group that is url-encoded
+     * @param {InvitationGroupShareEmail} emailInvite list of email/namespace recipients
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof InvitationApi
+     */
+    public shareGroupByInvite(namespace: string, group: string, emailInvite: InvitationGroupShareEmail, options?: any) {
+        return InvitationApiFp(this.configuration).shareGroupByInvite(namespace, group, emailInvite, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -12712,6 +13424,59 @@ export const NotebooksApiAxiosParamCreator = function (configuration?: Configura
                 options: localVarRequestOptions,
             };
         },
+        /**
+         * prune fragments of the notebook
+         * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
+         * @param {string} array name/uri of array that is url-encoded
+         * @param {number} [keepVersions] The number of most recents fragment to preserve
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        notebooksNamespaceArrayPrunePost: async (namespace: string, array: string, keepVersions?: number, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'namespace' is not null or undefined
+            assertParamExists('notebooksNamespaceArrayPrunePost', 'namespace', namespace)
+            // verify required parameter 'array' is not null or undefined
+            assertParamExists('notebooksNamespaceArrayPrunePost', 'array', array)
+            const localVarPath = `/notebooks/{namespace}/{array}/prune`
+                .replace(`{${"namespace"}}`, encodeURIComponent(String(namespace)))
+                .replace(`{${"array"}}`, encodeURIComponent(String(array)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+
+            // authentication BasicAuth required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            if (keepVersions !== undefined) {
+                localVarQueryParameter['keep_versions'] = keepVersions;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
     }
 };
 
@@ -12733,6 +13498,18 @@ export const NotebooksApiFp = function(configuration?: Configuration) {
          */
         async notebooksNamespaceArrayEndTimestampsGet(namespace: string, array: string, page?: number, perPage?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArrayEndTimestampData>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.notebooksNamespaceArrayEndTimestampsGet(namespace, array, page, perPage, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * prune fragments of the notebook
+         * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
+         * @param {string} array name/uri of array that is url-encoded
+         * @param {number} [keepVersions] The number of most recents fragment to preserve
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async notebooksNamespaceArrayPrunePost(namespace: string, array: string, keepVersions?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.notebooksNamespaceArrayPrunePost(namespace, array, keepVersions, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
     }
@@ -12757,6 +13534,17 @@ export const NotebooksApiFactory = function (configuration?: Configuration, base
         notebooksNamespaceArrayEndTimestampsGet(namespace: string, array: string, page?: number, perPage?: number, options?: any): AxiosPromise<ArrayEndTimestampData> {
             return localVarFp.notebooksNamespaceArrayEndTimestampsGet(namespace, array, page, perPage, options).then((request) => request(axios, basePath));
         },
+        /**
+         * prune fragments of the notebook
+         * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
+         * @param {string} array name/uri of array that is url-encoded
+         * @param {number} [keepVersions] The number of most recents fragment to preserve
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        notebooksNamespaceArrayPrunePost(namespace: string, array: string, keepVersions?: number, options?: any): AxiosPromise<void> {
+            return localVarFp.notebooksNamespaceArrayPrunePost(namespace, array, keepVersions, options).then((request) => request(axios, basePath));
+        },
     };
 };
 
@@ -12779,6 +13567,19 @@ export class NotebooksApi extends BaseAPI {
      */
     public notebooksNamespaceArrayEndTimestampsGet(namespace: string, array: string, page?: number, perPage?: number, options?: any) {
         return NotebooksApiFp(this.configuration).notebooksNamespaceArrayEndTimestampsGet(namespace, array, page, perPage, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * prune fragments of the notebook
+     * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
+     * @param {string} array name/uri of array that is url-encoded
+     * @param {number} [keepVersions] The number of most recents fragment to preserve
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof NotebooksApi
+     */
+    public notebooksNamespaceArrayPrunePost(namespace: string, array: string, keepVersions?: number, options?: any) {
+        return NotebooksApiFp(this.configuration).notebooksNamespaceArrayPrunePost(namespace, array, keepVersions, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
