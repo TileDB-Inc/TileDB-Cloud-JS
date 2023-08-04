@@ -2,7 +2,7 @@ import {
   Query as QueryType,
   Subarray as SubarrayType,
   DomainArray,
-  ArrayData,
+  ModelArray,
   ArraySchema,
   FilterPipeline,
   Attribute,
@@ -361,7 +361,7 @@ export const serializeQueryReader = (
   });
 };
 
-export const serializeArrayData = (array: ArrayData) => {
+export const serializeArrayData = (array: ModelArray) => {
   const message = new capnp.Message();
   const arrayData = message.initRoot(ArrayCapnp);
   serializeArray(arrayData, array);
@@ -369,7 +369,7 @@ export const serializeArrayData = (array: ArrayData) => {
   return message.toArrayBuffer();
 };
 
-export const serializeArray = (arrayCapNp: ArrayCapnp, array: ArrayData) => {
+export const serializeArray = (arrayCapNp: ArrayCapnp, array: ModelArray) => {
   const startTimeStamp = clamp(array.startTimestamp || 0, 0, Date.now());
   arrayCapNp.setStartTimestamp(capnp.Uint64.fromNumber(startTimeStamp));
   const endTimeStamp = clamp(array.endTimestamp || Date.now(), 0, Date.now());

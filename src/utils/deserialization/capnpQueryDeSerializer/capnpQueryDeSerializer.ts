@@ -46,7 +46,7 @@ import {
 import {
   DomainArray as DomainArrayV2,
   DimensionTileExtent,
-  ArrayData,
+  ModelArray,
   FloatScaleConfig,
   ArraySchema as ArraySchemaV2,
   Querytype,
@@ -157,7 +157,7 @@ const deserializeResultCellSlab = (resultCellSlab: ResultCellSlab) => {
   };
 };
 
-export const deserializeArray = (arr: ArrayCapnp): ArrayData => {
+export const deserializeArray = (arr: ArrayCapnp): ModelArray => {
   return {
     endTimestamp: arr.getEndTimestamp().toNumber(),
     queryType: arr.getQueryType() as Querytype,
