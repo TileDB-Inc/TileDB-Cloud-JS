@@ -276,79 +276,6 @@ export interface ArrayActivityLogData {
     pagination_metadata?: PaginationMetadata;
 }
 /**
- * Represents an open array
- * @export
- * @interface ArrayData
- */
-export interface ArrayData {
-    /**
-     * 
-     * @type {Querytype}
-     * @memberof ArrayData
-     */
-    queryType: Querytype;
-    /**
-     * Array uri
-     * @type {string}
-     * @memberof ArrayData
-     */
-    uri: string;
-    /**
-     * Ending timestamp (epoch milliseconds) array is opened at
-     * @type {number}
-     * @memberof ArrayData
-     */
-    endTimestamp?: number;
-    /**
-     * Starting timestamp (epoch milliseconds) array is opened at
-     * @type {number}
-     * @memberof ArrayData
-     */
-    startTimestamp?: number;
-    /**
-     * 
-     * @type {ArraySchema}
-     * @memberof ArrayData
-     */
-    arraySchemaLatest?: ArraySchema;
-    /**
-     * 
-     * @type {ArraySchemaMap}
-     * @memberof ArrayData
-     */
-    arraySchemasAll?: ArraySchemaMap;
-    /**
-     * 
-     * @type {ArrayMetadata}
-     * @memberof ArrayData
-     */
-    arrayMetadata?: ArrayMetadata;
-    /**
-     * 
-     * @type {NonEmptyDomainList}
-     * @memberof ArrayData
-     */
-    nonEmptyDomain?: NonEmptyDomainList;
-    /**
-     * 
-     * @type {ArrayDirectory}
-     * @memberof ArrayData
-     */
-    arrayDirectory?: ArrayDirectory;
-    /**
-     * metadata for all fragments (for reads)
-     * @type {Array<FragmentMetadata>}
-     * @memberof ArrayData
-     */
-    fragmentMetadataAll?: Array<FragmentMetadata>;
-    /**
-     * The ending timestamp that the array was last opened at
-     * @type {number}
-     * @memberof ArrayData
-     */
-    openedAtEndTimestamp?: number;
-}
-/**
  * Array directory (for reads)
  * @export
  * @interface ArrayDirectory
@@ -2006,6 +1933,79 @@ export interface MetadataEntry {
     del?: boolean;
 }
 /**
+ * Represents an open array
+ * @export
+ * @interface ModelArray
+ */
+export interface ModelArray {
+    /**
+     * 
+     * @type {Querytype}
+     * @memberof ModelArray
+     */
+    queryType: Querytype;
+    /**
+     * Array uri
+     * @type {string}
+     * @memberof ModelArray
+     */
+    uri: string;
+    /**
+     * Ending timestamp (epoch milliseconds) array is opened at
+     * @type {number}
+     * @memberof ModelArray
+     */
+    endTimestamp?: number;
+    /**
+     * Starting timestamp (epoch milliseconds) array is opened at
+     * @type {number}
+     * @memberof ModelArray
+     */
+    startTimestamp?: number;
+    /**
+     * 
+     * @type {ArraySchema}
+     * @memberof ModelArray
+     */
+    arraySchemaLatest?: ArraySchema;
+    /**
+     * 
+     * @type {ArraySchemaMap}
+     * @memberof ModelArray
+     */
+    arraySchemasAll?: ArraySchemaMap;
+    /**
+     * 
+     * @type {ArrayMetadata}
+     * @memberof ModelArray
+     */
+    arrayMetadata?: ArrayMetadata;
+    /**
+     * 
+     * @type {NonEmptyDomainList}
+     * @memberof ModelArray
+     */
+    nonEmptyDomain?: NonEmptyDomainList;
+    /**
+     * 
+     * @type {ArrayDirectory}
+     * @memberof ModelArray
+     */
+    arrayDirectory?: ArrayDirectory;
+    /**
+     * metadata for all fragments (for reads)
+     * @type {Array<FragmentMetadata>}
+     * @memberof ModelArray
+     */
+    fragmentMetadataAll?: Array<FragmentMetadata>;
+    /**
+     * The ending timestamp that the array was last opened at
+     * @type {number}
+     * @memberof ModelArray
+     */
+    openedAtEndTimestamp?: number;
+}
+/**
  * 
  * @export
  * @interface ModelError
@@ -2149,10 +2149,10 @@ export interface Query {
     readerIndex?: ReaderIndex;
     /**
      * 
-     * @type {ArrayData}
+     * @type {ModelArray}
      * @memberof Query
      */
-    array: ArrayData;
+    array: ModelArray;
     /**
      * Total number of bytes in fixed size attribute buffers.
      * @type {number}
@@ -2824,7 +2824,7 @@ export const ArrayApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getArray(namespace: string, array: string, contentType: string, arrayFetch: ArrayFetch, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArrayData>> {
+        async getArray(namespace: string, array: string, contentType: string, arrayFetch: ArrayFetch, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ModelArray>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getArray(namespace, array, contentType, arrayFetch, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -2864,7 +2864,7 @@ export const ArrayApiFactory = function (configuration?: Configuration, basePath
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getArray(namespace: string, array: string, contentType: string, arrayFetch: ArrayFetch, options?: any): AxiosPromise<ArrayData> {
+        getArray(namespace: string, array: string, contentType: string, arrayFetch: ArrayFetch, options?: any): AxiosPromise<ModelArray> {
             return localVarFp.getArray(namespace, array, contentType, arrayFetch, options).then((request) => request(axios, basePath));
         },
     };

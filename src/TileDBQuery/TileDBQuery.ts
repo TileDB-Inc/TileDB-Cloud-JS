@@ -10,7 +10,7 @@ import {
   ArrayApi as ArrayApiV2,
   Querystatus,
   Querytype,
-  ArrayData
+  ModelArray
 } from '../v2';
 import getWriterBody from '../utils/getWriterBody';
 import convertToArrayBufferIfNodeBuffer from '../utils/convertToArrayBufferIfNodeBuffer';
@@ -352,7 +352,7 @@ export class TileDBQuery {
     array: string,
     queryType: Querytype,
     contentType: string | undefined = 'application/json'
-  ): Promise<ArrayData> {
+  ): Promise<ModelArray> {
     const arrayFetch = arrayFetchFromConfig(this.config, queryType);
     const isJSONEncoded = contentType === 'application/json';
     /**
