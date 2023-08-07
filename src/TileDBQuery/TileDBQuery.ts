@@ -215,6 +215,7 @@ export class TileDBQuery {
        * Get the query response in capnp, we set responseType to arraybuffer instead of JSON
        * in order to deserialize the query capnp object.
        */
+
       const queryResponse = await this.queryAPI.submitQuery(
         namespace,
         arrayName,
@@ -247,8 +248,9 @@ export class TileDBQuery {
        * Deserialize buffer to a Query object
        */
       const queryObject = capnpQueryDeSerializer(bufferWithoutFirstEightBytes);
-
       const attributeHeaders = queryObject.attributeBufferHeaders;
+      console.log(JSON.stringify(attributeHeaders));
+      console.log('=================================');
 
       // Case it's incomplete query
       if (queryObject.status === Querystatus.Incomplete) {

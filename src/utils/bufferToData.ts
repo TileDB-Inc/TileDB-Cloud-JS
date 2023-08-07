@@ -86,6 +86,8 @@ const bufferToData = (arrayBuffer: ArrayBuffer, type: Datatype) => {
     return bufferToUTF32(arrayBuffer);
   } else if (int64Types.includes(type)) {
     return typedArrayToArray(bufferToInt64(arrayBuffer));
+  } else if (type === Datatype.Blob) {
+    return arrayBuffer;
   }
 
   return arrayBuffer;

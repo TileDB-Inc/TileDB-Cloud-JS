@@ -20,6 +20,7 @@ const groupValuesByOffsetBytes = <T>(
     off,
     offsetIndex[i]
   ]);
+
   const offsetsP = new Parallel(offsetIndexTuple, {
     env: {
       values,

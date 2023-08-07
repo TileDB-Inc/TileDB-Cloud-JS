@@ -1,5 +1,4 @@
-import { Attribute, Dimension } from '../v1';
-import { AttributeBufferHeader } from '../v2';
+import { AttributeBufferHeader, Attribute, Dimension, Datatype } from '../v2';
 import getAttributeSizeInBytes from './getAttributeSizeInBytes';
 import getAttributeSchema from './getAttributeSchema';
 import getAttributeResult, { bufferToInt8 } from './bufferToData';
@@ -128,10 +127,19 @@ export const getResultsFromArrayBuffer = async (
           convertToArray(result),
           offsets
         );
+
         // If it's a string we concat all the characters to create array of strings
         result = isString
           ? concatChars(groupedValues as string[][])
           : (groupedValues as number[][] | bigint[][]);
+
+        // Fix: Type
+        if (selectedAttributeSchema.type === Datatype.Blob) {
+          const arrayBuffers: any = groupedValues.map(
+            ints => Uint8Array.from(ints).buffer
+          );
+          result = arrayBuffers;
+        }
       }
 
       if (isNullable && !options.ignoreNullables) {
