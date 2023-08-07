@@ -14,6 +14,5 @@
 
 
 export * from "./api";
-export * from "./configuration";
-export * from "./configuration";
+export * from "../commons/configuration";
 

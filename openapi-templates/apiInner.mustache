@@ -4,12 +4,12 @@
 {{>licenseInfo}}
 
 import globalAxios, { AxiosPromise, AxiosInstance } from 'axios';
-import { Configuration } from '{{apiRelativeToRoot}}configuration';
+import { Configuration } from '../commons/configuration';
 // Some imports not used depending on template conditions
 // @ts-ignore
-import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObject, setBearerAuthToObject, setOAuthToObject, setSearchParams, serializeDataIfNeeded, toPathString, createRequestFunction } from '{{apiRelativeToRoot}}common';
+import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObject, setBearerAuthToObject, setOAuthToObject, setSearchParams, serializeDataIfNeeded, toPathString, createRequestFunction } from '../commons/common';
 // @ts-ignore
-import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } from '{{apiRelativeToRoot}}base';
+import { COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } from '../commons/base';
 {{#imports}}
 // @ts-ignore
 import { {{classname}} } from '{{apiRelativeToRoot}}{{tsModelPackage}}';
@@ -17,6 +17,7 @@ import { {{classname}} } from '{{apiRelativeToRoot}}{{tsModelPackage}}';
 {{/withSeparateModelsAndApi}}
 {{^withSeparateModelsAndApi}}
 {{/withSeparateModelsAndApi}}
+
 {{#operations}}
 /**
  * {{classname}} - axios parameter creator{{#description}}

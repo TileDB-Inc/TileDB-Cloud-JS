@@ -1,0 +1,53 @@
+/* tslint:disable */
+/* eslint-disable */
+{{>licenseInfo}}
+
+{{^withSeparateModelsAndApi}}
+import type { Configuration } from '../commons/configuration';
+import type { AxiosPromise, AxiosInstance } from 'axios';
+import globalAxios from 'axios';
+{{#withNodeImports}}
+// URLSearchParams not necessarily used
+// @ts-ignore
+import { URL, URLSearchParams } from 'url';
+{{#multipartFormData}}
+import FormData from 'form-data'
+{{/multipartFormData}}
+{{/withNodeImports}}
+// Some imports not used depending on template conditions
+// @ts-ignore
+import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObject, setBearerAuthToObject, setOAuthToObject, setSearchParams, serializeDataIfNeeded, toPathString, createRequestFunction } from '../commons/common';
+import type { RequestArgs } from '../commons/base';
+// @ts-ignore
+import { COLLECTION_FORMATS, RequiredError } from '../commons/base';
+import updateBasePathAfterRedirect from '../utils/updateBasePathAfterRedirect';
+
+{{>basePath}}
+
+/**
+ *
+ * @export
+ * @class BaseAPI
+ */
+export class BaseAPI {
+    protected configuration: Configuration | undefined;
+
+    constructor(configuration?: Configuration, protected basePath: string = BASE_PATH, protected axios: AxiosInstance = globalAxios) {
+        if (configuration) {
+            this.configuration = configuration;
+            this.basePath = configuration.basePath || this.basePath;
+        }
+        updateBasePathAfterRedirect(axios, BASE_PATH, this);
+    }
+};
+
+{{#models}}
+{{#model}}{{#isEnum}}{{>modelEnum}}{{/isEnum}}{{#oneOf}}{{#-first}}{{>modelOneOf}}{{/-first}}{{/oneOf}}{{^isEnum}}{{^oneOf}}{{>modelGeneric}}{{/oneOf}}{{/isEnum}}{{/model}}
+{{/models}}
+{{#apiInfo}}{{#apis}}
+{{>apiInner}}
+{{/apis}}{{/apiInfo}}
+{{/withSeparateModelsAndApi}}{{#withSeparateModelsAndApi}}
+{{#apiInfo}}{{#apis}}{{#operations}}export * from './{{tsApiPackage}}/{{classFilename}}';
+{{/operations}}{{/apis}}{{/apiInfo}}
+{{/withSeparateModelsAndApi}}

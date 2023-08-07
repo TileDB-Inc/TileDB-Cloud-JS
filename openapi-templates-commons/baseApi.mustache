@@ -1,0 +1,41 @@
+/* tslint:disable */
+/* eslint-disable */
+{{>licenseInfo}}
+
+// Some imports not used depending on template conditions
+// @ts-ignore
+import globalAxios, { AxiosPromise, AxiosInstance, AxiosRequestConfig } from 'axios';
+
+/**
+ *
+ * @export
+ */
+export const COLLECTION_FORMATS = {
+    csv: ",",
+    ssv: " ",
+    tsv: "\t",
+    pipes: "|",
+};
+
+/**
+ *
+ * @export
+ * @interface RequestArgs
+ */
+export interface RequestArgs {
+    url: string;
+    options: AxiosRequestConfig;
+}
+
+/**
+ *
+ * @export
+ * @class RequiredError
+ * @extends {Error}
+ */
+export class RequiredError extends Error {
+    name: "RequiredError" = "RequiredError";
+    constructor(public field: string, msg?: string) {
+        super(msg);
+    }
+}
