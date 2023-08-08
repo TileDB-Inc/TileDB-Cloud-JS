@@ -29,7 +29,14 @@ export interface Options {
   returnRawBuffers?: boolean;
 }
 
-type Result = string[] | string | number[] | bigint[] | number[][] | bigint[][];
+type Result =
+  | string[]
+  | string
+  | number[]
+  | bigint[]
+  | number[][]
+  | bigint[][]
+  | ArrayBufferLike[];
 
 /**
  * Convert an ArrayBuffer to a map of attributes with their results
@@ -133,9 +140,13 @@ export const getResultsFromArrayBuffer = async (
           ? concatChars(groupedValues as string[][])
           : (groupedValues as number[][] | bigint[][]);
 
-        // Fix: Type
+        /**
+         * ParallelJS accepts data that are JSON serializable
+         * thus we have to convert buffer to array of uint8
+         * and after grouping convert the data back to ArrayBuffer.
+         */
         if (selectedAttributeSchema.type === Datatype.Blob) {
-          const arrayBuffers: any = groupedValues.map(
+          const arrayBuffers = groupedValues.map(
             ints => Uint8Array.from(ints).buffer
           );
           result = arrayBuffers;
