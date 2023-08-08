@@ -249,8 +249,6 @@ export class TileDBQuery {
        */
       const queryObject = capnpQueryDeSerializer(bufferWithoutFirstEightBytes);
       const attributeHeaders = queryObject.attributeBufferHeaders;
-      console.log(JSON.stringify(attributeHeaders));
-      console.log('=================================');
 
       // Case it's incomplete query
       if (queryObject.status === Querystatus.Incomplete) {

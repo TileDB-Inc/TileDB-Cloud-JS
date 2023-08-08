@@ -30,10 +30,9 @@ const groupValuesByOffsetBytes = <T>(
   return new Promise(resolve => {
     offsetsP
       .map(([offset, i]: [number, number]) => {
-        const vals = global.env.values as T[];
-        const globalOffsets = global.env.offsets;
+        const vals = globalThis.env.values as T[];
+        const globalOffsets = globalThis.env.offsets;
         const nextOffset = globalOffsets[i + 1];
-
         // Note: Array.prototype.slice doesn't accept BigInt
         const grpoupedValues = vals.slice(offset, nextOffset);
         return grpoupedValues;
