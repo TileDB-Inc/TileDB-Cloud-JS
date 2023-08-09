@@ -13,13 +13,35 @@
  */
 
 
-import { Configuration } from './configuration';
-import globalAxios, { AxiosPromise, AxiosInstance } from 'axios';
+import type { Configuration } from '../commons/configuration';
+import type { AxiosPromise, AxiosInstance } from 'axios';
+import globalAxios from 'axios';
 // Some imports not used depending on template conditions
 // @ts-ignore
-import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObject, setBearerAuthToObject, setOAuthToObject, setSearchParams, serializeDataIfNeeded, toPathString, createRequestFunction } from './common';
+import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObject, setBearerAuthToObject, setOAuthToObject, setSearchParams, serializeDataIfNeeded, toPathString, createRequestFunction } from '../commons/common';
+import type { RequestArgs } from '../commons/base';
 // @ts-ignore
-import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } from './base';
+import { COLLECTION_FORMATS, RequiredError } from '../commons/base';
+import updateBasePathAfterRedirect from '../utils/updateBasePathAfterRedirect';
+
+export const BASE_PATH = "https://api.tiledb.com/v1".replace(/\/+$/, "");
+
+/**
+ *
+ * @export
+ * @class BaseAPI
+ */
+export class BaseAPI {
+    protected configuration: Configuration | undefined;
+
+    constructor(configuration?: Configuration, protected basePath: string = BASE_PATH, protected axios: AxiosInstance = globalAxios) {
+        if (configuration) {
+            this.configuration = configuration;
+            this.basePath = configuration.basePath || this.basePath;
+        }
+        updateBasePathAfterRedirect(axios, BASE_PATH, this);
+    }
+};
 
 /**
  * Model representing aws keys or service role, service roles are currently ignored, but will be preferred option in the future
@@ -5285,6 +5307,7 @@ export interface Writer {
     subarray?: DomainArray;
 }
 
+
 /**
  * ArrayApi - axios parameter creator
  * @export
@@ -8417,6 +8440,7 @@ export class ArrayApi extends BaseAPI {
 }
 
 
+
 /**
  * ArrayTasksApi - axios parameter creator
  * @export
@@ -8536,6 +8560,7 @@ export class ArrayTasksApi extends BaseAPI {
         return ArrayTasksApiFp(this.configuration).getArrayTasksSidebar(start, end, options).then((request) => request(this.axios, this.basePath));
     }
 }
+
 
 
 /**
@@ -10156,6 +10181,7 @@ export class FavoritesApi extends BaseAPI {
 }
 
 
+
 /**
  * FilesApi - axios parameter creator
  * @export
@@ -10485,6 +10511,7 @@ export class FilesApi extends BaseAPI {
         return FilesApiFp(this.configuration).handleUploadFile(namespace, inputFile, xTILEDBCLOUDACCESSCREDENTIALSNAME, outputUri, name, options).then((request) => request(this.axios, this.basePath));
     }
 }
+
 
 
 /**
@@ -12087,6 +12114,7 @@ export class GroupsApi extends BaseAPI {
 }
 
 
+
 /**
  * InvitationApi - axios parameter creator
  * @export
@@ -12866,6 +12894,7 @@ export class InvitationApi extends BaseAPI {
 }
 
 
+
 /**
  * NotebookApi - axios parameter creator
  * @export
@@ -13360,6 +13389,7 @@ export class NotebookApi extends BaseAPI {
 }
 
 
+
 /**
  * NotebooksApi - axios parameter creator
  * @export
@@ -13582,6 +13612,7 @@ export class NotebooksApi extends BaseAPI {
         return NotebooksApiFp(this.configuration).notebooksNamespaceArrayPrunePost(namespace, array, keepVersions, options).then((request) => request(this.axios, this.basePath));
     }
 }
+
 
 
 /**
@@ -14740,6 +14771,7 @@ export class OrganizationApi extends BaseAPI {
 }
 
 
+
 /**
  * QueryApi - axios parameter creator
  * @export
@@ -15363,6 +15395,7 @@ export class QueryApi extends BaseAPI {
 }
 
 
+
 /**
  * RegisteredTaskGraphsApi - axios parameter creator
  * @export
@@ -15910,6 +15943,7 @@ export class RegisteredTaskGraphsApi extends BaseAPI {
 }
 
 
+
 /**
  * SqlApi - axios parameter creator
  * @export
@@ -16039,6 +16073,7 @@ export class SqlApi extends BaseAPI {
 }
 
 
+
 /**
  * StatsApi - axios parameter creator
  * @export
@@ -16142,6 +16177,7 @@ export class StatsApi extends BaseAPI {
         return StatsApiFp(this.configuration).getTiledbStats(options).then((request) => request(this.axios, this.basePath));
     }
 }
+
 
 
 /**
@@ -16653,6 +16689,7 @@ export class TaskGraphLogsApi extends BaseAPI {
 }
 
 
+
 /**
  * TasksApi - axios parameter creator
  * @export
@@ -17115,6 +17152,7 @@ export class TasksApi extends BaseAPI {
         return TasksApiFp(this.configuration).tasksGet(namespace, createdBy, array, start, end, page, perPage, type, excludeType, fileType, excludeFileType, status, search, orderby, options).then((request) => request(this.axios, this.basePath));
     }
 }
+
 
 
 /**
@@ -18165,6 +18203,7 @@ export class UdfApi extends BaseAPI {
         return UdfApiFp(this.configuration).updateUDFInfo(namespace, name, udf, options).then((request) => request(this.axios, this.basePath));
     }
 }
+
 
 
 /**

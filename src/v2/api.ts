@@ -13,13 +13,35 @@
  */
 
 
-import { Configuration } from './configuration';
-import globalAxios, { AxiosPromise, AxiosInstance } from 'axios';
+import type { Configuration } from '../commons/configuration';
+import type { AxiosPromise, AxiosInstance } from 'axios';
+import globalAxios from 'axios';
 // Some imports not used depending on template conditions
 // @ts-ignore
-import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObject, setBearerAuthToObject, setOAuthToObject, setSearchParams, serializeDataIfNeeded, toPathString, createRequestFunction } from './common';
+import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObject, setBearerAuthToObject, setOAuthToObject, setSearchParams, serializeDataIfNeeded, toPathString, createRequestFunction } from '../commons/common';
+import type { RequestArgs } from '../commons/base';
 // @ts-ignore
-import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } from './base';
+import { COLLECTION_FORMATS, RequiredError } from '../commons/base';
+import updateBasePathAfterRedirect from '../utils/updateBasePathAfterRedirect';
+
+export const BASE_PATH = "https://api.tiledb.com/v2".replace(/\/+$/, "");
+
+/**
+ *
+ * @export
+ * @class BaseAPI
+ */
+export class BaseAPI {
+    protected configuration: Configuration | undefined;
+
+    constructor(configuration?: Configuration, protected basePath: string = BASE_PATH, protected axios: AxiosInstance = globalAxios) {
+        if (configuration) {
+            this.configuration = configuration;
+            this.basePath = configuration.basePath || this.basePath;
+        }
+        updateBasePathAfterRedirect(axios, BASE_PATH, this);
+    }
+};
 
 /**
  * Credential information to access Amazon Web Services
@@ -2638,6 +2660,7 @@ export interface Writer {
     subarray?: DomainArray;
 }
 
+
 /**
  * ArrayApi - axios parameter creator
  * @export
@@ -2913,6 +2936,7 @@ export class ArrayApi extends BaseAPI {
 }
 
 
+
 /**
  * FilesApi - axios parameter creator
  * @export
@@ -3091,6 +3115,7 @@ export class FilesApi extends BaseAPI {
         return FilesApiFp(this.configuration).handleUploadFile(namespace, array, contentType, filesize, file, xTILEDBCLOUDACCESSCREDENTIALSNAME, name, filename, mimetype, options).then((request) => request(this.axios, this.basePath));
     }
 }
+
 
 
 /**
@@ -3855,6 +3880,7 @@ export class GroupsApi extends BaseAPI {
 }
 
 
+
 /**
  * OrganizationApi - axios parameter creator
  * @export
@@ -4350,6 +4376,7 @@ export class OrganizationApi extends BaseAPI {
 }
 
 
+
 /**
  * QueryApi - axios parameter creator
  * @export
@@ -4520,6 +4547,7 @@ export class QueryApi extends BaseAPI {
         return QueryApiFp(this.configuration).submitQuery(namespace, array, type, contentType, query, xPayer, openAt, readAll, options).then((request) => request(this.axios, this.basePath));
     }
 }
+
 
 
 /**
