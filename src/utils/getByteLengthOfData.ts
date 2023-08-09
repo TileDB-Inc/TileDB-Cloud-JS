@@ -43,6 +43,10 @@ const getByteLengthOfData = (data: number[] | string[], type: Datatype) => {
       return accum + encodedString.byteLength;
     }, 0);
   }
+
+  if (type === Datatype.Blob) {
+    return (data as any).byteLength;
+  }
 };
 
 export default getByteLengthOfData;

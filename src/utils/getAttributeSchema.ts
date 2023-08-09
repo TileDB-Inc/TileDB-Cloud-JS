@@ -1,4 +1,4 @@
-import { Attribute, Dimension } from '../v1';
+import { Attribute, Dimension } from '../v2';
 
 /**
  * Get attribute data from attribute name, attribute data contains the type of the attribute (e.g. INT32, StringUTF8 etc)

@@ -782,6 +782,7 @@ export enum Datatype {
     Uint32 = 'UINT32',
     Uint64 = 'UINT64',
     StringAscii = 'STRING_ASCII',
+    Blob = 'BLOB',
     StringUtf8 = 'STRING_UTF8',
     StringUtf16 = 'STRING_UTF16',
     StringUtf32 = 'STRING_UTF32',

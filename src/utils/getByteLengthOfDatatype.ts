@@ -12,6 +12,7 @@ const getByteLengthOfDatatype = (type: Datatype) => {
   } else if (
     type === Datatype.StringAscii ||
     type === Datatype.Char ||
+    type === Datatype.Blob ||
     type === Datatype.StringUtf8
   ) {
     return 1;

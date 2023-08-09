@@ -36,6 +36,8 @@ const dataToArrayBuffer = (data: any = [], type: Datatype): ArrayBuffer => {
     // If it's an array of CHARs join them together to a single string
     const str = Array.isArray(data) ? data.join('') : data;
     return utf32StrToArrayBuffer(str);
+  } else if (type === Datatype.Blob) {
+    return data;
   }
 };
 
