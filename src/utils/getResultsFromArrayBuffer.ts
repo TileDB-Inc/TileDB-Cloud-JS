@@ -27,6 +27,10 @@ export interface Options {
    * Return raw buffers instead of convert to javascript primitives
    */
   returnRawBuffers?: boolean;
+  /**
+   * Return offsets for every var-length attribute
+   */
+  returnOffsets?: boolean;
 }
 
 type Result =
@@ -36,7 +40,11 @@ type Result =
   | bigint[]
   | number[][]
   | bigint[][]
+  | ArrayBuffer
   | ArrayBufferLike[];
+
+type Results = Record<string, Result>;
+type DataMap = { __offsets?: Record<string, bigint[]> };
 
 /**
  * Convert an ArrayBuffer to a map of attributes with their results
@@ -51,7 +59,11 @@ export const getResultsFromArrayBuffer = async (
   attributesSchema: Array<Dimension | Attribute>,
   options: Options = {}
 ) => {
-  const data = {};
+  const data: Results & DataMap = {};
+
+  if (options.returnOffsets) {
+    data.__offsets = {};
+  }
 
   /**
    * We start from the last attribute which is at the end of the buffer
@@ -110,9 +122,8 @@ export const getResultsFromArrayBuffer = async (
         arrayBuffer.slice(start, end),
         selectedAttributeSchema.type
       ) as string | number[] | bigint[];
-
       let offsets: number[] = [];
-      if (isVarLengthSized && !options.ignoreOffsets) {
+      if (isVarLengthSized) {
         const BYTE_PER_ELEMENT = getByteLengthOfDatatype(
           selectedAttributeSchema.type
         );
@@ -127,29 +138,36 @@ export const getResultsFromArrayBuffer = async (
          * the buffer contains the offsets * bytes of the element instead of just the offsets [0, 3 * 4, 4 * 4] = [0, 12, 16]
          */
         const byteOffsets = Array.from(new BigUint64Array(offsetsBuffer));
-        // Convert byte offsets to offsets
-        offsets = byteOffsets.map(o => Number(o / BigInt(BYTE_PER_ELEMENT)));
-        const isString = typeof result === 'string';
-        const groupedValues = await groupValuesByOffsetBytes(
-          convertToArray(result),
-          offsets
-        );
 
-        // If it's a string we concat all the characters to create array of strings
-        result = isString
-          ? concatChars(groupedValues as string[][])
-          : (groupedValues as number[][] | bigint[][]);
+        if (options.returnOffsets) {
+          data.__offsets[attribute.name] = byteOffsets;
+        }
 
-        /**
-         * ParallelJS accepts data that are JSON serializable
-         * thus we have to convert buffer to array of uint8
-         * and after grouping convert the data back to ArrayBuffer.
-         */
-        if (selectedAttributeSchema.type === Datatype.Blob) {
-          const arrayBuffers = groupedValues.map(
-            ints => Uint8Array.from(ints).buffer
+        if (!options.ignoreOffsets) {
+          // Convert byte offsets to offsets
+          offsets = byteOffsets.map(o => Number(o / BigInt(BYTE_PER_ELEMENT)));
+          const isString = typeof result === 'string';
+          const groupedValues = await groupValuesByOffsetBytes(
+            convertToArray(result),
+            offsets
           );
-          result = arrayBuffers;
+
+          // If it's a string we concat all the characters to create array of strings
+          result = isString
+            ? concatChars(groupedValues as string[][])
+            : (groupedValues as number[][] | bigint[][]);
+
+          /**
+           * ParallelJS accepts data that are JSON serializable
+           * thus we have to convert buffer to array of uint8
+           * and after grouping convert the data back to ArrayBuffer.
+           */
+          if (selectedAttributeSchema.type === Datatype.Blob) {
+            const arrayBuffers = groupedValues.map(
+              ints => Uint8Array.from(ints).buffer
+            );
+            result = arrayBuffers;
+          }
         }
       }
 

@@ -209,6 +209,7 @@ export class TileDBQuery {
         ignoreNullables: body.ignoreNullables,
         ignoreOffsets: body.ignoreOffsets,
         attributes: body.attributes,
+        returnOffsets: body.returnOffsets,
         returnRawBuffers: body.returnRawBuffers
       };
       /**
