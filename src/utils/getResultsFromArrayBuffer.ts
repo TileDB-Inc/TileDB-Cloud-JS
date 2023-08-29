@@ -111,6 +111,26 @@ export const getResultsFromArrayBuffer = async (
         negativeOffset -
         (isNullable ? attribute.validityLenBufferSizeInBytes : 0);
       const end = ending ? ending : undefined;
+      /**
+       * Offsets are Uint64 numbers, buffer contains byte offsets though,
+       * e.g. if type of the attribute is an INT32 (4 bytes per number) and the offsets are [0, 3, 4]
+       * the buffer contains the offsets * bytes of the element instead of just the offsets [0, 3 * 4, 4 * 4] = [0, 12, 16]
+       */
+      let byteOffsets: bigint[] = [];
+
+      if (isVarLengthSized) {
+        const startOfBuffer = negativeOffset - totalNumberOfBytesOfAttribute;
+        const offsetsBuffer = arrayBuffer.slice(
+          startOfBuffer,
+          startOfBuffer + attribute.fixedLenBufferSizeInBytes
+        );
+
+        byteOffsets = Array.from(new BigUint64Array(offsetsBuffer));
+      }
+
+      if (isVarLengthSized && options.returnOffsets) {
+        data.__offsets[attribute.name] = byteOffsets;
+      }
 
       if (options.returnRawBuffers) {
         data[attribute.name] = arrayBuffer.slice(start, end);
@@ -123,51 +143,34 @@ export const getResultsFromArrayBuffer = async (
         selectedAttributeSchema.type
       ) as string | number[] | bigint[];
       let offsets: number[] = [];
-      if (isVarLengthSized) {
+      if (isVarLengthSized && !options.ignoreOffsets) {
         const BYTE_PER_ELEMENT = getByteLengthOfDatatype(
           selectedAttributeSchema.type
         );
-        const startOfBuffer = negativeOffset - totalNumberOfBytesOfAttribute;
-        const offsetsBuffer = arrayBuffer.slice(
-          startOfBuffer,
-          startOfBuffer + attribute.fixedLenBufferSizeInBytes
+
+        // Convert byte offsets to offsets
+        offsets = byteOffsets.map(o => Number(o / BigInt(BYTE_PER_ELEMENT)));
+        const isString = typeof result === 'string';
+        const groupedValues = await groupValuesByOffsetBytes(
+          convertToArray(result),
+          offsets
         );
+
+        // If it's a string we concat all the characters to create array of strings
+        result = isString
+          ? concatChars(groupedValues as string[][])
+          : (groupedValues as number[][] | bigint[][]);
+
         /**
-         * Offsets are Uint64 numbers, buffer contains byte offsets though,
-         * e.g. if type of the attribute is an INT32 (4 bytes per number) and the offsets are [0, 3, 4]
-         * the buffer contains the offsets * bytes of the element instead of just the offsets [0, 3 * 4, 4 * 4] = [0, 12, 16]
+         * ParallelJS accepts data that are JSON serializable
+         * thus we have to convert buffer to array of uint8
+         * and after grouping convert the data back to ArrayBuffer.
          */
-        const byteOffsets = Array.from(new BigUint64Array(offsetsBuffer));
-
-        if (options.returnOffsets) {
-          data.__offsets[attribute.name] = byteOffsets;
-        }
-
-        if (!options.ignoreOffsets) {
-          // Convert byte offsets to offsets
-          offsets = byteOffsets.map(o => Number(o / BigInt(BYTE_PER_ELEMENT)));
-          const isString = typeof result === 'string';
-          const groupedValues = await groupValuesByOffsetBytes(
-            convertToArray(result),
-            offsets
+        if (selectedAttributeSchema.type === Datatype.Blob) {
+          const arrayBuffers = groupedValues.map(
+            ints => Uint8Array.from(ints).buffer
           );
-
-          // If it's a string we concat all the characters to create array of strings
-          result = isString
-            ? concatChars(groupedValues as string[][])
-            : (groupedValues as number[][] | bigint[][]);
-
-          /**
-           * ParallelJS accepts data that are JSON serializable
-           * thus we have to convert buffer to array of uint8
-           * and after grouping convert the data back to ArrayBuffer.
-           */
-          if (selectedAttributeSchema.type === Datatype.Blob) {
-            const arrayBuffers = groupedValues.map(
-              ints => Uint8Array.from(ints).buffer
-            );
-            result = arrayBuffers;
-          }
+          result = arrayBuffers;
         }
       }
 

@@ -32,7 +32,7 @@ describe("getResultsFromArrayBuffer()", () => {
     });
   });
 
-  it("Should convert a raw ArrayBuffer to a results object with var length & nullable attributes", async () => {
+  it("Should convert a raw ArrayBuffer to a results object with var length & nullable attributes and returnOffsets", async () => {
     const file = path.join(__dirname, "../fixtures/nullable_buffer.raw");
     const rawBuffer = readFileSync(file);
     const arrayBufferOfFixedLengthAttributes =
@@ -41,7 +41,10 @@ describe("getResultsFromArrayBuffer()", () => {
     const results = await getResultsFromArrayBuffer(
       arrayBufferOfFixedLengthAttributes,
       nullableVarLengthAttrBufferHeaders,
-      varLenNullableAttributesSchema
+      varLenNullableAttributesSchema,
+      {
+        returnOffsets: true,
+      }
     );
 
     expect(results).toEqual({
@@ -50,6 +53,10 @@ describe("getResultsFromArrayBuffer()", () => {
       a3: ["abc", null, null, "dddddewxyz"],
       cols: [1, 2, 1, 2],
       rows: [1, 1, 2, 2],
+      __offsets: {
+        a2: [BigInt(0), BigInt(8), BigInt(12), BigInt(24)],
+        a3: [BigInt(0), BigInt(3), BigInt(5), BigInt(6)]
+      }
     });
   });
 
