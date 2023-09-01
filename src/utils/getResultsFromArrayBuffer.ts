@@ -27,6 +27,10 @@ export interface Options {
    * Return raw buffers instead of convert to javascript primitives
    */
   returnRawBuffers?: boolean;
+  /**
+   * Return offsets for every var-length attribute
+   */
+  returnOffsets?: boolean;
 }
 
 type Result =
@@ -36,7 +40,11 @@ type Result =
   | bigint[]
   | number[][]
   | bigint[][]
+  | ArrayBuffer
   | ArrayBufferLike[];
+
+type Results = Record<string, Result>;
+type DataMap = { __offsets?: Record<string, bigint[]> };
 
 /**
  * Convert an ArrayBuffer to a map of attributes with their results
@@ -51,7 +59,11 @@ export const getResultsFromArrayBuffer = async (
   attributesSchema: Array<Dimension | Attribute>,
   options: Options = {}
 ) => {
-  const data = {};
+  const data: Results & DataMap = {};
+
+  if (options.returnOffsets) {
+    data.__offsets = {};
+  }
 
   /**
    * We start from the last attribute which is at the end of the buffer
@@ -99,6 +111,26 @@ export const getResultsFromArrayBuffer = async (
         negativeOffset -
         (isNullable ? attribute.validityLenBufferSizeInBytes : 0);
       const end = ending ? ending : undefined;
+      /**
+       * Offsets are Uint64 numbers, buffer contains byte offsets though,
+       * e.g. if type of the attribute is an INT32 (4 bytes per number) and the offsets are [0, 3, 4]
+       * the buffer contains the offsets * bytes of the element instead of just the offsets [0, 3 * 4, 4 * 4] = [0, 12, 16]
+       */
+      let byteOffsets: bigint[] = [];
+
+      if (isVarLengthSized) {
+        const startOfBuffer = negativeOffset - totalNumberOfBytesOfAttribute;
+        const offsetsBuffer = arrayBuffer.slice(
+          startOfBuffer,
+          startOfBuffer + attribute.fixedLenBufferSizeInBytes
+        );
+
+        byteOffsets = Array.from(new BigUint64Array(offsetsBuffer));
+      }
+
+      if (isVarLengthSized && options.returnOffsets) {
+        data.__offsets[attribute.name] = byteOffsets;
+      }
 
       if (options.returnRawBuffers) {
         data[attribute.name] = arrayBuffer.slice(start, end);
@@ -110,23 +142,12 @@ export const getResultsFromArrayBuffer = async (
         arrayBuffer.slice(start, end),
         selectedAttributeSchema.type
       ) as string | number[] | bigint[];
-
       let offsets: number[] = [];
       if (isVarLengthSized && !options.ignoreOffsets) {
         const BYTE_PER_ELEMENT = getByteLengthOfDatatype(
           selectedAttributeSchema.type
         );
-        const startOfBuffer = negativeOffset - totalNumberOfBytesOfAttribute;
-        const offsetsBuffer = arrayBuffer.slice(
-          startOfBuffer,
-          startOfBuffer + attribute.fixedLenBufferSizeInBytes
-        );
-        /**
-         * Offsets are Uint64 numbers, buffer contains byte offsets though,
-         * e.g. if type of the attribute is an INT32 (4 bytes per number) and the offsets are [0, 3, 4]
-         * the buffer contains the offsets * bytes of the element instead of just the offsets [0, 3 * 4, 4 * 4] = [0, 12, 16]
-         */
-        const byteOffsets = Array.from(new BigUint64Array(offsetsBuffer));
+
         // Convert byte offsets to offsets
         offsets = byteOffsets.map(o => Number(o / BigInt(BYTE_PER_ELEMENT)));
         const isString = typeof result === 'string';
