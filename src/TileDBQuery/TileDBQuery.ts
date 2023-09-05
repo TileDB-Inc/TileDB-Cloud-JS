@@ -147,6 +147,7 @@ export class TileDBQuery {
       undefined,
       undefined,
       {
+        cancelToken: options.cancelToken,
         headers: {
           'Content-Type': 'application/capnp'
         },
@@ -210,7 +211,8 @@ export class TileDBQuery {
         ignoreOffsets: body.ignoreOffsets,
         attributes: body.attributes,
         returnOffsets: body.returnOffsets,
-        returnRawBuffers: body.returnRawBuffers
+        returnRawBuffers: body.returnRawBuffers,
+        cancelToken: body.cancelToken
       };
       /**
        * Get the query response in capnp, we set responseType to arraybuffer instead of JSON
@@ -227,6 +229,7 @@ export class TileDBQuery {
         undefined,
         undefined,
         {
+          cancelToken: body.cancelToken,
           headers: {
             'Content-Type': 'application/capnp'
           },
