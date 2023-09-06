@@ -7,6 +7,7 @@ import setNullables from './setNullables';
 import groupValuesByOffsetBytes from './groupValuesByOffsetBytes';
 import concatChars from './concatChars';
 import convertToArray from './convertToArray';
+import { CancelToken } from 'axios';
 
 export interface Options {
   /**
@@ -31,6 +32,10 @@ export interface Options {
    * Return offsets for every var-length attribute
    */
   returnOffsets?: boolean;
+  /**
+   * CancelToken
+   */
+  cancelToken?: CancelToken;
 }
 
 type Result =
