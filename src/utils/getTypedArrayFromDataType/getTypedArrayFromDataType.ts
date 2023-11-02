@@ -1,5 +1,5 @@
 import { Datatype } from '../../v2';
-import { int64Types } from '../mapToBigIntIfNeeded/mapToBigIntIfNeeded';
+import { int64Types } from '../mapToBigIntIfNeeded';
 
 /**
  * Get the TypedArray of every type

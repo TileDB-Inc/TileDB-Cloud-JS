@@ -9,13 +9,13 @@ import {
   ArrayType,
   Layout
 } from '../../v2';
-import { QueryData } from '../../TileDBQuery/TileDBQuery';
+import { QueryData } from '../../TileDBQuery';
 import getRanges from '../getRanges/getRanges';
-import getByteLengthOfDatatype from '../getByteLengthOfDatatype/getByteLengthOfDatatype';
-import emptyRangesToDomain from '../emptyRangesToDomain/emptyRangesToDomain';
-import isAttributeVarLength from '../isAttributeVarLength/isAttributeVarLength';
-import isAttributeNullable from '../isAttributeNullable/isAttributeNullable';
-import { Options } from '../getResultsFromArrayBuffer/getResultsFromArrayBuffer';
+import getByteLengthOfDatatype from '../getByteLengthOfDatatype';
+import emptyRangesToDomain from '../emptyRangesToDomain';
+import isAttributeVarLength from '../isAttributeVarLength';
+import isAttributeNullable from '../isAttributeNullable';
+import { Options } from '../getResultsFromArrayBuffer';
 
 const createAttributeBufferHeaders = (
   attributes: Array<Attribute | Dimension>,

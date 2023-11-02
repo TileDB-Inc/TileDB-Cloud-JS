@@ -1,5 +1,5 @@
 import { Datatype } from '../../v2';
-import getTypedArrayFromDataType from '../getTypedArrayFromDataType/getTypedArrayFromDataType';
+import getTypedArrayFromDataType from '../getTypedArrayFromDataType';
 
 /**
  * Get the byte length of an individual element of every Datatype

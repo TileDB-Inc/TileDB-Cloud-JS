@@ -1,5 +1,5 @@
 import { Attribute, Dimension, Datatype } from '../../v2';
-import isDimension from '../isDimension/isDimension';
+import isDimension from '../isDimension';
 
 const isAttributeVarLength = (attribute: Attribute | Dimension) => {
   if (isDimension(attribute)) {

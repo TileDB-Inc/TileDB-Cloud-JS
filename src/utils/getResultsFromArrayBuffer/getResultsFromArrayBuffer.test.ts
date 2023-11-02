@@ -1,7 +1,7 @@
 import { getResultsFromArrayBuffer } from "./getResultsFromArrayBuffer";
 import { readFileSync } from "fs";
 import path from "path";
-import convertToArrayBufferIfNodeBuffer from "../convertToArrayBufferIfNodeBuffer/convertToArrayBufferIfNodeBuffer";
+import convertToArrayBufferIfNodeBuffer from "../convertToArrayBufferIfNodeBuffer";
 import {
   fixedAttrBufferHeaders,
   nullableVarLengthAttrBufferHeaders,

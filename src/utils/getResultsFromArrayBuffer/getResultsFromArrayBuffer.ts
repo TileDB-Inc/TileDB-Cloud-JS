@@ -4,15 +4,15 @@ import {
   Dimension,
   Datatype
 } from '../../v2';
-import getAttributeSizeInBytes from '../getAttributeSizeInBytes/getAttributeSizeInBytes';
-import getAttributeSchema from '../getAttributeSchema/getAttributeSchema';
-import getAttributeResult, { bufferToInt8 } from '../bufferToData/bufferToData';
-import getByteLengthOfDatatype from '../getByteLengthOfDatatype/getByteLengthOfDatatype';
-import setNullables from '../setNullables/setNullables';
-import groupValuesByOffsetBytes from '../groupValuesByOffsetBytes/groupValuesByOffsetBytes';
-import concatChars from '../concatChars/concatChars';
-import convertToArray from '../convertToArray/convertToArray';
 import { CancelToken } from 'axios';
+import getAttributeSizeInBytes from '../getAttributeSizeInBytes';
+import getAttributeSchema from '../getAttributeSchema';
+import getAttributeResult, { bufferToInt8 } from '../bufferToData';
+import getByteLengthOfDatatype from '../getByteLengthOfDatatype';
+import setNullables from '../setNullables';
+import groupValuesByOffsetBytes from '../groupValuesByOffsetBytes';
+import concatChars from '../concatChars';
+import convertToArray from '../convertToArray';
 
 export interface Options {
   /**

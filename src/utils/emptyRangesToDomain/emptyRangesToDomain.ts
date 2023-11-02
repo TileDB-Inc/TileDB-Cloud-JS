@@ -1,4 +1,4 @@
-import { QueryData } from '../../TileDBQuery/TileDBQuery';
+import { QueryData } from '../../TileDBQuery';
 import { Dimension } from '../../v2';
 
 const emptyRangesToDomain = (

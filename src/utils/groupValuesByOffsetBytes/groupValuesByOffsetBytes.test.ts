@@ -1,5 +1,5 @@
 import groupValuesByOffsetBytes from "./groupValuesByOffsetBytes";
-import convertToArray from "../convertToArray/convertToArray";
+import convertToArray from "../convertToArray";
 
 describe("groupValuesByOffsets()", () => {
   it("Should group numbers by offsets", async () => {

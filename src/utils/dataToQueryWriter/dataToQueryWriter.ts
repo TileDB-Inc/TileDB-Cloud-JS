@@ -1,9 +1,9 @@
 import { Dimension } from '../../v1';
-import { ValueBuffers } from '../attributeValuesToArrayBuffers/attributeValuesToArrayBuffers';
+import { ValueBuffers } from '../attributeValuesToArrayBuffers';
 import { Querystatus, Querytype } from '../../v2';
-import getRanges from '../getRanges/getRanges';
-import { QueryWrite } from '../../TileDBQuery/TileDBQuery';
-import flatten from '../flatten/flatten';
+import getRanges from '../getRanges';
+import { QueryWrite } from '../../TileDBQuery';
+import flatten from '../flatten';
 
 const dataToQueryWriter = (
   data: QueryWrite,

@@ -1,6 +1,6 @@
 import { Datatype } from '../../v2';
-import { int64Types } from '../mapToBigIntIfNeeded/mapToBigIntIfNeeded';
-import typedArrayToArray from '../typedArrayToArray/typedArrayToArray';
+import { int64Types } from '../mapToBigIntIfNeeded';
+import typedArrayToArray from '../typedArrayToArray';
 
 export const bufferToInt8 = (arrayBuffer: ArrayBuffer) =>
   new Int8Array(arrayBuffer);

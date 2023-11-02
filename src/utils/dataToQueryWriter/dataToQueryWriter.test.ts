@@ -1,5 +1,5 @@
 import dataToQueryWriter from './dataToQueryWriter';
-import attributeValuesToArrayBuffers from '../attributeValuesToArrayBuffers/attributeValuesToArrayBuffers';
+import attributeValuesToArrayBuffers from '../attributeValuesToArrayBuffers';
 import { Layout } from '../../v2';
 
 describe("dataToQueryWriter()", () => {

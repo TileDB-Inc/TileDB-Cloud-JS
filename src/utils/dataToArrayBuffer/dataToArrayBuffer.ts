@@ -1,5 +1,5 @@
 import { Datatype } from '../../v2';
-import getTypedArrayFromDataType from '../getTypedArrayFromDataType/getTypedArrayFromDataType';
+import getTypedArrayFromDataType from '../getTypedArrayFromDataType';
 
 const dataToArrayBuffer = (data: any = [], type: Datatype): ArrayBuffer => {
   if (!data.length) {

@@ -1,5 +1,5 @@
 import Parallel from 'paralleljs';
-import range from '../range/range';
+import range from '../range';
 
 /**
  * Group values together according to offsets

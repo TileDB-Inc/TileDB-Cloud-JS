@@ -1,8 +1,8 @@
-import { AttributeValues } from '../../TileDBQuery/TileDBQuery';
+import { AttributeValues } from '../../TileDBQuery';
 import { Attribute, Dimension } from '../../v1';
-import dataToArrayBuffer from '../dataToArrayBuffer/dataToArrayBuffer';
+import dataToArrayBuffer from '../dataToArrayBuffer';
 import { Datatype } from '../../v2';
-import mapToBigIntIfNeeded from '../mapToBigIntIfNeeded/mapToBigIntIfNeeded';
+import mapToBigIntIfNeeded from '../mapToBigIntIfNeeded';
 
 interface ValueBuffer {
   validityBuffer: ArrayBuffer;

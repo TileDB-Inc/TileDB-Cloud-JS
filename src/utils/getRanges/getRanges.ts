@@ -1,8 +1,8 @@
-import rangesToBuffer from '../rangesToBuffer/rangesToBuffer';
-import flatten from '../flatten/flatten';
-import { QueryData } from '../../TileDBQuery/TileDBQuery';
-import getByteLengthOfdata from '../getByteLengthOfData/getByteLengthOfData';
-import checkRangeOutOfBounds from '../checkRangeOutOfBounds/checkRangeOutOfBounds';
+import rangesToBuffer from '../rangesToBuffer';
+import flatten from '../flatten';
+import { QueryData } from '../../TileDBQuery';
+import getByteLengthOfdata from '../getByteLengthOfData';
+import checkRangeOutOfBounds from '../checkRangeOutOfBounds';
 import { DomainArray, Dimension } from '../../v2';
 
 /**

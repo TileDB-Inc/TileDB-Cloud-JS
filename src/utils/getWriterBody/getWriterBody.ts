@@ -1,9 +1,9 @@
 import { ArraySchema } from '../../v1';
-import dataToQueryWriter from '../dataToQueryWriter/dataToQueryWriter';
-import attributeValuesToArrayBuffers from '../attributeValuesToArrayBuffers/attributeValuesToArrayBuffers';
+import dataToQueryWriter from '../dataToQueryWriter';
+import attributeValuesToArrayBuffers from '../attributeValuesToArrayBuffers';
 import capnpQuerySerializer from '../serialization/capnpQuerySerializer';
-import concatArrayBuffers from '../concatArrayBuffers/concatArrayBuffers';
-import { QueryWrite } from '../../TileDBQuery/TileDBQuery';
+import concatArrayBuffers from '../concatArrayBuffers';
+import { QueryWrite } from '../../TileDBQuery';
 
 const emptyArrayBuffer = new ArrayBuffer(0);
 

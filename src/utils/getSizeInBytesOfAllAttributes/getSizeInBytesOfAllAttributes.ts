@@ -1,4 +1,4 @@
-import getAttributeSizeInBytes from '../getAttributeSizeInBytes/getAttributeSizeInBytes';
+import getAttributeSizeInBytes from '../getAttributeSizeInBytes';
 import { AttributeBufferHeader } from '../../v2';
 
 /**

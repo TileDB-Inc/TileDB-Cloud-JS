@@ -1,7 +1,7 @@
 import { Datatype } from '../../v2';
-import flatten from '../flatten/flatten';
-import getTypedArrayFromDataType from '../getTypedArrayFromDataType/getTypedArrayFromDataType';
-import mapToBigIntIfNeeded from '../mapToBigIntIfNeeded/mapToBigIntIfNeeded';
+import flatten from '../flatten';
+import getTypedArrayFromDataType from '../getTypedArrayFromDataType';
+import mapToBigIntIfNeeded from '../mapToBigIntIfNeeded';
 
 /**
  * Convert user defined ranges to a Uint8Array

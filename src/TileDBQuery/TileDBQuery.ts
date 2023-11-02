@@ -1,4 +1,4 @@
-import dataToQuery from '../utils/dataToQuery/dataToQuery';
+import dataToQuery from '../utils/dataToQuery';
 import capnpQueryDeSerializer from '../utils/deserialization/capnpQueryDeSerializer';
 import { ArrayApi, ArraySchema } from '../v1';
 import {

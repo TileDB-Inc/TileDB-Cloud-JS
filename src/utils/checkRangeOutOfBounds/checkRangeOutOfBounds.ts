@@ -1,4 +1,4 @@
-import { Range } from '../../TileDBQuery/TileDBQuery';
+import { Range } from '../../TileDBQuery';
 
 const checkRangeOutOfBounds = (
   range: Range | Range[],
