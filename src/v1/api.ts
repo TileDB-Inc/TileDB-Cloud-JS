@@ -118,7 +118,8 @@ export enum ActivityEventType {
     ArrayMetadataGet = 'array_metadata_get',
     ArrayMetadataUpdate = 'array_metadata_update',
     EstimatedResultSizes = 'estimated_result_sizes',
-    ReadFragmentInfo = 'read_fragment_info'
+    ReadFragmentInfo = 'read_fragment_info',
+    ReadEnumerations = 'read_enumerations'
 }
 
 /**
@@ -407,11 +408,11 @@ export interface ArrayInfo {
      */
     access_credentials_name?: string;
     /**
-     * Array type (dense, key-value, sparse)
-     * @type {string}
+     * 
+     * @type {ArrayType}
      * @memberof ArrayInfo
      */
-    type?: string;
+    type?: ArrayType;
     /**
      * number of unique namespaces this array is shared with
      * @type {number}
@@ -768,6 +769,12 @@ export interface ArrayTask {
      */
     status?: ArrayTaskStatus;
     /**
+     * The reason the array task status is in the state
+     * @type {string}
+     * @memberof ArrayTask
+     */
+    status_message?: string | null;
+    /**
      * Start time RFC3339 for job
      * @type {string}
      * @memberof ArrayTask
@@ -965,6 +972,7 @@ export enum ArrayTaskType {
     Udf = 'UDF',
     Query = 'QUERY',
     GenericUdf = 'GENERIC_UDF',
+    BatchUdf = 'BATCH_UDF',
     ClientComputation = 'CLIENT_COMPUTATION'
 }
 
@@ -1040,6 +1048,29 @@ export interface AssetLocations {
      */
     udfs?: StorageLocation;
 }
+/**
+ * Asset types represented as TileDB arrays
+ * @export
+ * @enum {string}
+ */
+export enum AssetType {
+    Array = 'array',
+    Notebook = 'notebook',
+    Dashboard = 'dashboard',
+    UserDefinedFunction = 'user_defined_function',
+    MlModel = 'ml_model',
+    File = 'file',
+    RegisteredTaskGraph = 'registered_task_graph',
+    Group = 'group',
+    Vcf = 'vcf',
+    Soma = 'soma',
+    Pointcloud = 'pointcloud',
+    Bioimg = 'bioimg',
+    Geometry = 'geometry',
+    Raster = 'raster',
+    VectorSearch = 'vector_search'
+}
+
 /**
  * Attribute of array
  * @export
@@ -1134,6 +1165,31 @@ export interface AttributeBufferSize {
     dataBytes: number;
 }
 /**
+ * Backoff is a backoff strategy to use within retryStrategy
+ * @export
+ * @interface Backoff
+ */
+export interface Backoff {
+    /**
+     * Duration is the amount to back off. Default unit is seconds, but could also be a duration (e.g. \"2m\", \"1h\")
+     * @type {string}
+     * @memberof Backoff
+     */
+    duration?: string;
+    /**
+     * Factor is a factor to multiply the base duration after each failed retry
+     * @type {number}
+     * @memberof Backoff
+     */
+    factor?: number;
+    /**
+     * MaxDuration is the maximum amount of time allowed for the backoff strategy
+     * @type {string}
+     * @memberof Backoff
+     */
+    maxDuration?: string;
+}
+/**
  * TileDB data type
  * @export
  * @enum {string}
@@ -1156,7 +1212,31 @@ export enum Datatype {
     StringUtf32 = 'STRING_UTF32',
     StringUcs2 = 'STRING_UCS2',
     StringUcs4 = 'STRING_UCS4',
-    Any = 'ANY'
+    Any = 'ANY',
+    DatetimeYear = 'DATETIME_YEAR',
+    DatetimeMonth = 'DATETIME_MONTH',
+    DatetimeWeek = 'DATETIME_WEEK',
+    DatetimeDay = 'DATETIME_DAY',
+    DatetimeHr = 'DATETIME_HR',
+    DatetimeMin = 'DATETIME_MIN',
+    DatetimeSec = 'DATETIME_SEC',
+    DatetimeMs = 'DATETIME_MS',
+    DatetimeUs = 'DATETIME_US',
+    DatetimeNs = 'DATETIME_NS',
+    DatetimePs = 'DATETIME_PS',
+    DatetimeFs = 'DATETIME_FS',
+    DatetimeAs = 'DATETIME_AS',
+    TimeHr = 'TIME_HR',
+    TimeMin = 'TIME_MIN',
+    TimeSec = 'TIME_SEC',
+    TimeMs = 'TIME_MS',
+    TimeUs = 'TIME_US',
+    TimeNs = 'TIME_NS',
+    TimePs = 'TIME_PS',
+    TimeFs = 'TIME_FS',
+    TimeAs = 'TIME_AS',
+    Blob = 'BLOB',
+    Bool = 'BOOL'
 }
 
 /**
@@ -1433,6 +1513,97 @@ export interface DomainArray {
      * @memberof DomainArray
      */
     float64?: Array<number>;
+}
+/**
+ * The record of a check of a single domain\'s status.
+ * @export
+ * @interface DomainCheckResult
+ */
+export interface DomainCheckResult {
+    /**
+     * The timestamp when the check was performed.
+     * @type {string}
+     * @memberof DomainCheckResult
+     */
+    time?: string;
+    /**
+     * 
+     * @type {DomainCheckStatus}
+     * @memberof DomainCheckResult
+     */
+    status?: DomainCheckStatus;
+}
+/**
+ * The status of a single check on a domain\'s status.
+ * @export
+ * @enum {string}
+ */
+export enum DomainCheckStatus {
+    Verified = 'verified',
+    Failed = 'failed',
+    Error = 'error'
+}
+
+/**
+ * The current status of the claim on the domain.
+ * @export
+ * @enum {string}
+ */
+export enum DomainVerificationStatus {
+    Unverified = 'unverified',
+    Verified = 'verified',
+    GracePeriod = 'grace_period',
+    Failed = 'failed'
+}
+
+/**
+ * The enumerations of a single attribute
+ * @export
+ * @interface Enumeration
+ */
+export interface Enumeration {
+    /**
+     * 
+     * @type {string}
+     * @memberof Enumeration
+     */
+    name?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Enumeration
+     */
+    path_name?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Enumeration
+     */
+    type?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof Enumeration
+     */
+    cell_val_num?: number;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof Enumeration
+     */
+    ordered?: boolean;
+    /**
+     * 
+     * @type {Array<number>}
+     * @memberof Enumeration
+     */
+    data?: Array<number>;
+    /**
+     * 
+     * @type {Array<number>}
+     * @memberof Enumeration
+     */
+    offsets?: Array<number>;
 }
 /**
  * Input/Output information required to create a new file
@@ -1912,6 +2083,12 @@ export interface GenericUDF {
      */
     image_name?: string;
     /**
+     * The name of the access credentials to use. if unset, no credentials will be configured in the environment.
+     * @type {string}
+     * @memberof GenericUDF
+     */
+    access_credentials_name?: string;
+    /**
      * The resource class to use for the UDF execution. Resource classes define resource limits for memory and CPUs. If this is empty, then the UDF will execute in the standard resource class of the TileDB Cloud provider. 
      * @type {string}
      * @memberof GenericUDF
@@ -1996,6 +2173,75 @@ export enum GroupActions {
 }
 
 /**
+ * Object containing activity of an asset of a group
+ * @export
+ * @interface GroupActivity
+ */
+export interface GroupActivity {
+    /**
+     * 
+     * @type {GroupActivityAsset}
+     * @memberof GroupActivity
+     */
+    asset?: GroupActivityAsset;
+    /**
+     * 
+     * @type {ArrayActivityLog}
+     * @memberof GroupActivity
+     */
+    activity_log?: ArrayActivityLog;
+}
+/**
+ * The asset details
+ * @export
+ * @interface GroupActivityAsset
+ */
+export interface GroupActivityAsset {
+    /**
+     * The asset ID
+     * @type {string}
+     * @memberof GroupActivityAsset
+     */
+    id?: string;
+    /**
+     * The asset name
+     * @type {string}
+     * @memberof GroupActivityAsset
+     */
+    name?: string;
+    /**
+     * The namespace that the asset belongs to
+     * @type {string}
+     * @memberof GroupActivityAsset
+     */
+    namespace?: string;
+    /**
+     * 
+     * @type {AssetType}
+     * @memberof GroupActivityAsset
+     */
+    asset_type?: AssetType;
+}
+/**
+ * Object containing activity logs of group content along with the pagination metadata
+ * @export
+ * @interface GroupActivityResponse
+ */
+export interface GroupActivityResponse {
+    /**
+     * Activity of a group\'s content
+     * @type {Array<GroupActivity>}
+     * @memberof GroupActivityResponse
+     */
+    activity?: Array<GroupActivity>;
+    /**
+     * 
+     * @type {PaginationMetadata}
+     * @memberof GroupActivityResponse
+     */
+    pagination_metadata?: PaginationMetadata;
+}
+/**
  * Object including group info and pagination metadata
  * @export
  * @interface GroupBrowserData
@@ -2026,6 +2272,12 @@ export interface GroupBrowserFilterData {
      * @memberof GroupBrowserFilterData
      */
     namespaces?: Array<string>;
+    /**
+     * list of all available group types to display
+     * @type {Array<GroupType>}
+     * @memberof GroupBrowserFilterData
+     */
+    group_types?: Array<GroupType>;
 }
 /**
  * A request to change the members of a group. Contains assets to add or remove.
@@ -2237,6 +2489,12 @@ export interface GroupInfo {
      */
     allowed_actions?: Array<GroupActions>;
     /**
+     * 
+     * @type {GroupType}
+     * @memberof GroupInfo
+     */
+    group_type?: GroupType;
+    /**
      * logo (base64 encoded) for the gruop. Optional
      * @type {string}
      * @memberof GroupInfo
@@ -2316,7 +2574,14 @@ export enum GroupMemberAssetType {
     Dashboard = 'dashboard',
     UserDefinedFunction = 'user_defined_function',
     MlModel = 'ml_model',
-    File = 'file'
+    File = 'file',
+    Bioimg = 'bioimg',
+    Soma = 'soma',
+    Vcf = 'vcf',
+    Pointcloud = 'pointcloud',
+    Raster = 'raster',
+    Geometry = 'geometry',
+    VectorSearch = 'vector_search'
 }
 
 /**
@@ -2446,6 +2711,31 @@ export interface GroupSharingRequest {
      */
     namespace?: string;
 }
+/**
+ * Group type is a hint for the groups contents and TileDB Cloud may use a specialized viewer for each type
+ * @export
+ * @enum {string}
+ */
+export enum GroupType {
+    Generic = 'generic',
+    Vcf = 'vcf',
+    Soma = 'soma',
+    Bioimg = 'bioimg',
+    Pointcloud = 'pointcloud',
+    Raster = 'raster',
+    Geometry = 'geometry',
+    VectorSearch = 'vector_search'
+}
+
+/**
+ * A group type is stored in the group metadata using this key
+ * @export
+ * @enum {string}
+ */
+export enum GroupTypeMetadataKey {
+    DatasetType = 'dataset_type'
+}
+
 /**
  * Updates for a group. New values for the attributes.
  * @export
@@ -2641,6 +2931,12 @@ export interface Invitation {
      * @memberof Invitation
      */
     accepted_at?: string;
+    /**
+     * The namespace invited (user or organization, if it exists in the DB)
+     * @type {string}
+     * @memberof Invitation
+     */
+    namespace_invited?: string;
 }
 /**
  * Encapsulates information regarding inviting people using email to share array, same permissions for all invitees
@@ -2679,6 +2975,19 @@ export interface InvitationData {
      * @memberof InvitationData
      */
     pagination_metadata?: PaginationMetadata;
+}
+/**
+ * Encapsulates information regarding the failed invitation recipients
+ * @export
+ * @interface InvitationFailedRecipients
+ */
+export interface InvitationFailedRecipients {
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof InvitationFailedRecipients
+     */
+    failed_recipients: Array<string>;
 }
 /**
  * Encapsulates information regarding inviting people using email to share group, same permissions for all invitees
@@ -2800,6 +3109,38 @@ export enum Layout {
     Unordered = 'unordered'
 }
 
+/**
+ * Request to return enumerations for attributes
+ * @export
+ * @interface LoadEnumerationsRequest
+ */
+export interface LoadEnumerationsRequest {
+    /**
+     * 
+     * @type {TileDBConfig}
+     * @memberof LoadEnumerationsRequest
+     */
+    config?: TileDBConfig;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof LoadEnumerationsRequest
+     */
+    enumerations?: Array<string>;
+}
+/**
+ * Contains the enumerations of the array\'s attributes
+ * @export
+ * @interface LoadEnumerationsResponse
+ */
+export interface LoadEnumerationsResponse {
+    /**
+     * 
+     * @type {Array<Enumeration>}
+     * @memberof LoadEnumerationsResponse
+     */
+    enumerations?: Array<Enumeration>;
+}
 /**
  * A user-favorite MLModel item
  * @export
@@ -2937,6 +3278,12 @@ export interface MultiArrayUDF {
      * @memberof MultiArrayUDF
      */
     image_name?: string;
+    /**
+     * The name of the access credentials to use. if unset, no credentials will be configured in the environment.
+     * @type {string}
+     * @memberof MultiArrayUDF
+     */
+    access_credentials_name?: string;
     /**
      * The resource class to use for the UDF execution. Resource classes define resource limits for memory and CPUs. If this is empty, then the UDF will execute in the standard resource class of the TileDB Cloud provider. 
      * @type {string}
@@ -3204,11 +3551,23 @@ export interface NotebookStatus {
      */
     cpu_usage?: number;
     /**
+     * gpu usage in milligpu
+     * @type {number}
+     * @memberof NotebookStatus
+     */
+    gpu_usage?: number;
+    /**
      * memory usage in bytes
      * @type {number}
      * @memberof NotebookStatus
      */
     memory_usage?: number;
+    /**
+     * gpu limit in milligpu
+     * @type {number}
+     * @memberof NotebookStatus
+     */
+    gpu_limit?: number;
     /**
      * memory allocated to notebook server in bytes
      * @type {number}
@@ -3233,6 +3592,12 @@ export interface NotebookStatus {
      * @memberof NotebookStatus
      */
     cpu_count?: number;
+    /**
+     * cost in USD for the current notebook session
+     * @type {number}
+     * @memberof NotebookStatus
+     */
+    cost?: number | null;
 }
 /**
  * Organization
@@ -3812,59 +4177,10 @@ export interface RegisteredTaskGraph {
     tags?: Array<string>;
     /**
      * The structure of the graph, in the form of the nodes that make it up. As with `TaskGraphLog`, nodes must topologically sorted, so that any node appears after all the nodes it depends on. 
-     * @type {Array<RegisteredTaskGraphNode>}
+     * @type {Array<TaskGraphNode>}
      * @memberof RegisteredTaskGraph
      */
-    nodes?: Array<RegisteredTaskGraphNode>;
-}
-/**
- * Information about a single node within a registered task graph. A single node represents one piece of data or a computational step; either as an input value, a data source, or a computation that acts upon earlier nodes. The structure parallels the existing `TaskGraphNodeMetadata`. 
- * @export
- * @interface RegisteredTaskGraphNode
- */
-export interface RegisteredTaskGraphNode {
-    /**
-     * The client-generated UUID of the given graph node.
-     * @type {string}
-     * @memberof RegisteredTaskGraphNode
-     */
-    client_node_id?: string;
-    /**
-     * A client-specified name for the node. If provided, this must be unique. 
-     * @type {string}
-     * @memberof RegisteredTaskGraphNode
-     */
-    name?: string | null;
-    /**
-     * The client_node_uuid of each node that this node depends upon. Used to define the structure of the graph. 
-     * @type {Array<string>}
-     * @memberof RegisteredTaskGraphNode
-     */
-    depends_on?: Array<string>;
-    /**
-     * 
-     * @type {UDFArrayDetails}
-     * @memberof RegisteredTaskGraphNode
-     */
-    array_node?: UDFArrayDetails;
-    /**
-     * 
-     * @type {TGInputNodeData}
-     * @memberof RegisteredTaskGraphNode
-     */
-    input_node?: TGInputNodeData | null;
-    /**
-     * 
-     * @type {TGSQLNodeData}
-     * @memberof RegisteredTaskGraphNode
-     */
-    sql_node?: TGSQLNodeData | null;
-    /**
-     * 
-     * @type {TGUDFNodeData}
-     * @memberof RegisteredTaskGraphNode
-     */
-    udf_node?: TGUDFNodeData | null;
+    nodes?: Array<TaskGraphNode>;
 }
 /**
  * Data format of a result
@@ -3881,6 +4197,49 @@ export enum ResultFormat {
     Native = 'native'
 }
 
+/**
+ * RetryPolicy is a policy of node statuses that will be retried
+ * @export
+ * @enum {string}
+ */
+export enum RetryPolicy {
+    Always = 'Always',
+    OnFailure = 'OnFailure',
+    OnError = 'OnError',
+    OnTransientError = 'OnTransientError'
+}
+
+/**
+ * RetryStrategy provides controls on how to retry a taskgraph node
+ * @export
+ * @interface RetryStrategy
+ */
+export interface RetryStrategy {
+    /**
+     * 
+     * @type {Backoff}
+     * @memberof RetryStrategy
+     */
+    backoff?: Backoff;
+    /**
+     * Expression is a condition expression for when a node will be retried. If it evaluates to false, the node will not be retried and the retry strategy will be ignored
+     * @type {string}
+     * @memberof RetryStrategy
+     */
+    expression?: string;
+    /**
+     * Limit is the maximum number of retry attempts when retrying a container. It does not include the original container; the maximum number of total attempts will be `limit + 1`.
+     * @type {number}
+     * @memberof RetryStrategy
+     */
+    limit?: number;
+    /**
+     * 
+     * @type {RetryPolicy}
+     * @memberof RetryStrategy
+     */
+    retryPolicy?: RetryPolicy;
+}
 /**
  * Parameters for running sql query
  * @export
@@ -3953,6 +4312,99 @@ export interface SQLParameters {
      * @memberof SQLParameters
      */
     client_node_uuid?: string;
+}
+/**
+ * The information used to set up a single-sign on connection to a customer domain. 
+ * @export
+ * @interface SSODomainConfig
+ */
+export interface SSODomainConfig {
+    /**
+     * A server-generated ID for the configuration.
+     * @type {string}
+     * @memberof SSODomainConfig
+     */
+    uuid?: string;
+    /**
+     * The fully-qualified domain (but with no trailing dot) to connect for single sign-on. This may not be changed after creation. 
+     * @type {string}
+     * @memberof SSODomainConfig
+     */
+    domain?: string | null;
+    /**
+     * The URL of the OpenID Connect issuer that can be used to authenticate this domain\'s users. The prefix where the `/.well-known/openid-configuration` file can be found; usually without a trailing slash. 
+     * @type {string}
+     * @memberof SSODomainConfig
+     */
+    oidc_issuer?: string;
+    /**
+     * The OpenID Connect client ID for this SSO instance.
+     * @type {string}
+     * @memberof SSODomainConfig
+     */
+    oidc_client_id?: string;
+    /**
+     * The OpenID Connect client secret for this SSO instance.
+     * @type {string}
+     * @memberof SSODomainConfig
+     */
+    oidc_client_secret?: string;
+    /**
+     * 
+     * @type {SSODomainSetup}
+     * @memberof SSODomainConfig
+     */
+    domain_setup?: SSODomainSetup;
+    /**
+     * 
+     * @type {DomainVerificationStatus}
+     * @memberof SSODomainConfig
+     */
+    verification_status?: DomainVerificationStatus;
+    /**
+     * A list of the results of recent attempts to verify this domain. 
+     * @type {Array<DomainCheckResult>}
+     * @memberof SSODomainConfig
+     */
+    check_results?: Array<DomainCheckResult>;
+}
+/**
+ * The response to a request for the list of domain claims associated with a particular organization. 
+ * @export
+ * @interface SSODomainConfigResponse
+ */
+export interface SSODomainConfigResponse {
+    /**
+     * 
+     * @type {Array<SSODomainConfig>}
+     * @memberof SSODomainConfigResponse
+     */
+    domain_configs?: Array<SSODomainConfig>;
+}
+/**
+ * Configuration settings to verify ownership of a given domain. At least one of these must be completed enable user login from the domain. 
+ * @export
+ * @interface SSODomainSetup
+ */
+export interface SSODomainSetup {
+    /**
+     * a DNS TXT record to set on the domain to claim.
+     * @type {string}
+     * @memberof SSODomainSetup
+     */
+    txt?: string;
+    /**
+     * a DNS name to set a CNAME record on
+     * @type {string}
+     * @memberof SSODomainSetup
+     */
+    cname_src?: string;
+    /**
+     * the CNAME target of `cname_src`.
+     * @type {string}
+     * @memberof SSODomainSetup
+     */
+    cname_dst?: string;
 }
 /**
  * Single sign on provider
@@ -4191,11 +4643,23 @@ export interface Subscription {
  */
 export interface TGArrayNodeData {
     /**
+     * An argument provided to a node. This is one of a direct value (i.e., a raw JSON value) or a `TGSentinel`. For example this Python value:      {\"a\": [1, \"pipe\", range(30), None], \"b\": b\"bytes\"}  is encoded thusly (with included comments):      {  // A dictionary with string keys is JSON-encodable.       \"a\": [  // As is a list.         1,         \"pipe\",         {  // A `range` is replaced with its pickle.           \"__tdbudf__\": \"immediate\",           \"format\": \"python_pickle\",           \"base64_data\": \"gASVIAAAAAAAAACMCGJ1aWx0aW5zlIwFcmFuZ2WUk5RLAEseSwGHlFKULg==\"         },         null       ],       \"b\": {  // Raw binary data is encoded into base64.         \"__tdbudf__\": \"immediate\"         \"format\": \"bytes\",         \"base64_data\": \"Ynl0ZXM=\"       }     } 
+     * @type {object}
+     * @memberof TGArrayNodeData
+     */
+    uri?: object;
+    /**
      * 
      * @type {TGQueryRanges}
      * @memberof TGArrayNodeData
      */
     ranges?: TGQueryRanges;
+    /**
+     * An argument provided to a node. This is one of a direct value (i.e., a raw JSON value) or a `TGSentinel`. For example this Python value:      {\"a\": [1, \"pipe\", range(30), None], \"b\": b\"bytes\"}  is encoded thusly (with included comments):      {  // A dictionary with string keys is JSON-encodable.       \"a\": [  // As is a list.         1,         \"pipe\",         {  // A `range` is replaced with its pickle.           \"__tdbudf__\": \"immediate\",           \"format\": \"python_pickle\",           \"base64_data\": \"gASVIAAAAAAAAACMCGJ1aWx0aW5zlIwFcmFuZ2WUk5RLAEseSwGHlFKULg==\"         },         null       ],       \"b\": {  // Raw binary data is encoded into base64.         \"__tdbudf__\": \"immediate\"         \"format\": \"bytes\",         \"base64_data\": \"Ynl0ZXM=\"       }     } 
+     * @type {object}
+     * @memberof TGArrayNodeData
+     */
+    buffers?: object;
 }
 /**
  * Specifies that a node is an “input value”, allowing for parameterized task graphs. An input node may not depend upon any other nodes. 
@@ -4228,6 +4692,18 @@ export interface TGQueryRanges {
      * @memberof TGQueryRanges
      */
     layout?: Layout;
+    /**
+     * An argument provided to a node. This is one of a direct value (i.e., a raw JSON value) or a `TGSentinel`. For example this Python value:      {\"a\": [1, \"pipe\", range(30), None], \"b\": b\"bytes\"}  is encoded thusly (with included comments):      {  // A dictionary with string keys is JSON-encodable.       \"a\": [  // As is a list.         1,         \"pipe\",         {  // A `range` is replaced with its pickle.           \"__tdbudf__\": \"immediate\",           \"format\": \"python_pickle\",           \"base64_data\": \"gASVIAAAAAAAAACMCGJ1aWx0aW5zlIwFcmFuZ2WUk5RLAEseSwGHlFKULg==\"         },         null       ],       \"b\": {  // Raw binary data is encoded into base64.         \"__tdbudf__\": \"immediate\"         \"format\": \"bytes\",         \"base64_data\": \"Ynl0ZXM=\"       }     } 
+     * @type {object}
+     * @memberof TGQueryRanges
+     */
+    friendly_ranges?: object;
+    /**
+     * An argument provided to a node. This is one of a direct value (i.e., a raw JSON value) or a `TGSentinel`. For example this Python value:      {\"a\": [1, \"pipe\", range(30), None], \"b\": b\"bytes\"}  is encoded thusly (with included comments):      {  // A dictionary with string keys is JSON-encodable.       \"a\": [  // As is a list.         1,         \"pipe\",         {  // A `range` is replaced with its pickle.           \"__tdbudf__\": \"immediate\",           \"format\": \"python_pickle\",           \"base64_data\": \"gASVIAAAAAAAAACMCGJ1aWx0aW5zlIwFcmFuZ2WUk5RLAEseSwGHlFKULg==\"         },         null       ],       \"b\": {  // Raw binary data is encoded into base64.         \"__tdbudf__\": \"immediate\"         \"format\": \"bytes\",         \"base64_data\": \"Ynl0ZXM=\"       }     } 
+     * @type {object}
+     * @memberof TGQueryRanges
+     */
+    ranges?: object;
 }
 /**
  * A node specifying an SQL query to execute in TileDB Cloud. 
@@ -4310,6 +4786,12 @@ export interface TGUDFEnvironment {
      */
     image_name?: string;
     /**
+     * The name of the access credentials to use. if unset, no credentials will be configured in the environment. 
+     * @type {string}
+     * @memberof TGUDFEnvironment
+     */
+    access_credentials_name?: string;
+    /**
      * If set, the non-default namespace to execute this UDF under (and to query any Array Nodes that are used as inputs to this UDF). 
      * @type {string}
      * @memberof TGUDFEnvironment
@@ -4322,6 +4804,12 @@ export interface TGUDFEnvironment {
      */
     resource_class?: string;
     /**
+     * 
+     * @type {TGUDFEnvironmentResources}
+     * @memberof TGUDFEnvironment
+     */
+    resources?: TGUDFEnvironmentResources;
+    /**
      * A hint that, if possible, this function should be executed on the client side rather than on the server. Registered UDFs and functions which take arrays as inputs can never be executed client-side. If the client’s environment is incompatible, or the client does not support client-side execution, the function will be executed on the server. 
      * @type {boolean}
      * @memberof TGUDFEnvironment
@@ -4333,6 +4821,31 @@ export interface TGUDFEnvironment {
      * @memberof TGUDFEnvironment
      */
     timeout?: number | null;
+}
+/**
+ * The resources requested for this particular node. If resources are not  specified resource_class is used, if it is not set the standard resource  // defaults are used 
+ * @export
+ * @interface TGUDFEnvironmentResources
+ */
+export interface TGUDFEnvironmentResources {
+    /**
+     * 
+     * @type {string}
+     * @memberof TGUDFEnvironmentResources
+     */
+    cpu?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof TGUDFEnvironmentResources
+     */
+    memory?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof TGUDFEnvironmentResources
+     */
+    gpu?: number;
 }
 /**
  * A node specifying the execution of a user-defined function.
@@ -4376,6 +4889,73 @@ export interface TGUDFNodeData {
      * @memberof TGUDFNodeData
      */
     result_format?: ResultFormat;
+}
+/**
+ * Information about a task graph.
+ * @export
+ * @interface TaskGraph
+ */
+export interface TaskGraph {
+    /**
+     * The server-generated UUID of the task graph.
+     * @type {string}
+     * @memberof TaskGraph
+     */
+    uuid?: string;
+    /**
+     * The namespace that owns this task graph. When creating a task graph log, this is used as the namespace to create the log in; thereafter it is read-only. 
+     * @type {string}
+     * @memberof TaskGraph
+     */
+    namespace?: string;
+    /**
+     * The name of the user who created this task graph log.
+     * @type {string}
+     * @memberof TaskGraph
+     */
+    created_by?: string;
+    /**
+     * A name for this task graph, displayed in the UI. Does not need to be unique. 
+     * @type {string}
+     * @memberof TaskGraph
+     */
+    name?: string;
+    /**
+     * The date/time when this task graph was originally created. 
+     * @type {string}
+     * @memberof TaskGraph
+     */
+    created_at?: string;
+    /**
+     * The structure of the graph. This is provided by the client when first setting up the task graph.  This must be topographically sorted; that is, each node must appear after all nodes that it depends upon. 
+     * @type {Array<TaskGraphNode>}
+     * @memberof TaskGraph
+     */
+    nodes?: Array<TaskGraphNode>;
+    /**
+     * Parallelism limits the max total parallel pods that can execute at the same time in a workflow. 
+     * @type {number}
+     * @memberof TaskGraph
+     */
+    parallelism?: number | null;
+    /**
+     * 
+     * @type {RetryStrategy}
+     * @memberof TaskGraph
+     */
+    retry_strategy?: RetryStrategy;
+    /**
+     * Duration in seconds relative to the workflow start time which the workflow is allowed to run before it gets terminated. 
+     * @type {number}
+     * @memberof TaskGraph
+     */
+    deadline?: number | null;
+    /**
+     * 
+     * @type {TaskGraphType}
+     * @memberof TaskGraph
+     */
+    task_graph_type?: TaskGraphType;
 }
 /**
  * actions a user can take on a UDF
@@ -4496,6 +5076,18 @@ export interface TaskGraphLog {
      * @memberof TaskGraphLog
      */
     nodes?: Array<TaskGraphNodeMetadata>;
+    /**
+     * 
+     * @type {TaskGraphType}
+     * @memberof TaskGraphLog
+     */
+    task_graph_type?: TaskGraphType;
+    /**
+     * The UUID of the task graph.
+     * @type {string}
+     * @memberof TaskGraphLog
+     */
+    task_graph_id?: string;
 }
 /**
  * The location where an individual node of a task graph is executed. 
@@ -4517,6 +5109,7 @@ export enum TaskGraphLogStatus {
     Submitted = 'submitted',
     Running = 'running',
     Idle = 'idle',
+    Unfinished = 'unfinished',
     Abandoned = 'abandoned',
     Succeeded = 'succeeded',
     Failed = 'failed',
@@ -4541,6 +5134,73 @@ export interface TaskGraphLogsData {
      * @memberof TaskGraphLogsData
      */
     pagination_metadata?: PaginationMetadata;
+}
+/**
+ * Information about a single node within a registered task graph. A single node represents one piece of data or a computational step; either as an input value, a data source, or a computation that acts upon earlier nodes. The structure parallels the existing `TaskGraphNodeMetadata`. 
+ * @export
+ * @interface TaskGraphNode
+ */
+export interface TaskGraphNode {
+    /**
+     * The client-generated UUID of the given graph node.
+     * @type {string}
+     * @memberof TaskGraphNode
+     */
+    client_node_id?: string;
+    /**
+     * A client-specified name for the node. If provided, this must be unique. 
+     * @type {string}
+     * @memberof TaskGraphNode
+     */
+    name?: string | null;
+    /**
+     * The client_node_uuid of each node that this node depends upon. Used to define the structure of the graph. 
+     * @type {Array<string>}
+     * @memberof TaskGraphNode
+     */
+    depends_on?: Array<string>;
+    /**
+     * 
+     * @type {UDFArrayDetails}
+     * @memberof TaskGraphNode
+     */
+    array_node?: UDFArrayDetails;
+    /**
+     * 
+     * @type {TGInputNodeData}
+     * @memberof TaskGraphNode
+     */
+    input_node?: TGInputNodeData | null;
+    /**
+     * 
+     * @type {TGSQLNodeData}
+     * @memberof TaskGraphNode
+     */
+    sql_node?: TGSQLNodeData | null;
+    /**
+     * 
+     * @type {TGUDFNodeData}
+     * @memberof TaskGraphNode
+     */
+    udf_node?: TGUDFNodeData | null;
+    /**
+     * 
+     * @type {RetryStrategy}
+     * @memberof TaskGraphNode
+     */
+    retry_strategy?: RetryStrategy;
+    /**
+     * Used to create dynamic tasks based on the output of another node. The other node\'s output must be a JSON list of values. The expansion process creates one task per item in the output list. The item is also passed as an argument to each task. The value is the client_node_uuid of the node that we want to expand. 
+     * @type {string}
+     * @memberof TaskGraphNode
+     */
+    expand_node_output?: string | null;
+    /**
+     * Duration in seconds relative to the node start time which the node is allowed to run before it gets terminated. 
+     * @type {number}
+     * @memberof TaskGraphNode
+     */
+    deadline?: number | null;
 }
 /**
  * Metadata about an individual node in a task graph.
@@ -4579,6 +5239,12 @@ export interface TaskGraphNodeMetadata {
      */
     status?: ArrayTaskStatus;
     /**
+     * The reason the array task status is in the state
+     * @type {string}
+     * @memberof TaskGraphNodeMetadata
+     */
+    status_message?: string | null;
+    /**
      * ArrayTasks representing each execution attempt for this node. For nodes that have never been submitted, this will be empty. For nodes that have been retried, this may have multiple entries. The last one in the list represents the most recent execution. This is read-only and generated by the server based on the tasks it has actually executed. 
      * @type {Array<ArrayTask>}
      * @memberof TaskGraphNodeMetadata
@@ -4609,6 +5275,29 @@ export interface TaskGraphSharing {
      * @memberof TaskGraphSharing
      */
     namespace_type?: string;
+}
+/**
+ * The type of a task graph. 
+ * @export
+ * @enum {string}
+ */
+export enum TaskGraphType {
+    Batch = 'batch',
+    Realtime = 'realtime'
+}
+
+/**
+ * Information about a series of task graphs.
+ * @export
+ * @interface TaskGraphs
+ */
+export interface TaskGraphs {
+    /**
+     * The series of graphs. 
+     * @type {Array<TaskGraph>}
+     * @memberof TaskGraphs
+     */
+    graphs?: Array<TaskGraph>;
 }
 /**
  * TileDB config used for interaction with the embedded library
@@ -5274,6 +5963,12 @@ export interface User {
      * @memberof User
      */
     default_namespace_charged?: string;
+    /**
+     * The default region to use for notebooks and other operations. It must be a region supported by TileDB, see https://docs.tiledb.com/cloud/concepts/tiledb-cloud-internals/architecture#orchestration 
+     * @type {string}
+     * @memberof User
+     */
+    default_region?: string;
 }
 /**
  * 
@@ -5393,7 +6088,7 @@ export const ArrayApiAxiosParamCreator = function (configuration?: Configuration
          * @param {number} [perPage] pagination limit
          * @param {string} [search] search string that will look at name, namespace or description fields
          * @param {string} [namespace] namespace
-         * @param {string} [orderby] sort by which field valid values include last_accessed, size, name
+         * @param {string} [orderby] sort by which field valid values include size, name
          * @param {string} [permissions] permissions valid values include read, read_write, write, admin
          * @param {Array<string>} [tag] tag to search for, more than one can be included
          * @param {Array<string>} [excludeTag] tags to exclude matching array in results, more than one can be included
@@ -5543,7 +6238,7 @@ export const ArrayApiAxiosParamCreator = function (configuration?: Configuration
          * @param {number} [perPage] pagination limit
          * @param {string} [search] search string that will look at name, namespace or description fields
          * @param {string} [namespace] namespace
-         * @param {string} [orderby] sort by which field valid values include last_accessed, size, name
+         * @param {string} [orderby] sort by which field valid values include size, name
          * @param {string} [permissions] permissions valid values include read, read_write, write, admin
          * @param {Array<string>} [tag] tag to search for, more than one can be included
          * @param {Array<string>} [excludeTag] tags to exclude matching array in results, more than one can be included
@@ -5693,7 +6388,7 @@ export const ArrayApiAxiosParamCreator = function (configuration?: Configuration
          * @param {number} [perPage] pagination limit
          * @param {string} [search] search string that will look at name, namespace or description fields
          * @param {string} [namespace] namespace
-         * @param {string} [orderby] sort by which field valid values include last_accessed, size, name
+         * @param {string} [orderby] sort by which field valid values include size, name
          * @param {string} [permissions] permissions valid values include read, read_write, write, admin
          * @param {Array<string>} [tag] tag to search for, more than one can be included
          * @param {Array<string>} [excludeTag] tags to exclude matching array in results, more than one can be included
@@ -6909,6 +7604,60 @@ export const ArrayApiAxiosParamCreator = function (configuration?: Configuration
             };
         },
         /**
+         * request to get the enumerations of the arrays\' attributes
+         * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
+         * @param {string} array name/uri of array that is url-encoded
+         * @param {LoadEnumerationsRequest} loadEnumerationsRequest Load Enumerations Request
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        loadEnumerations: async (namespace: string, array: string, loadEnumerationsRequest: LoadEnumerationsRequest, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'namespace' is not null or undefined
+            assertParamExists('loadEnumerations', 'namespace', namespace)
+            // verify required parameter 'array' is not null or undefined
+            assertParamExists('loadEnumerations', 'array', array)
+            // verify required parameter 'loadEnumerationsRequest' is not null or undefined
+            assertParamExists('loadEnumerations', 'loadEnumerationsRequest', loadEnumerationsRequest)
+            const localVarPath = `/arrays/{namespace}/{array}/enumerations`
+                .replace(`{${"namespace"}}`, encodeURIComponent(String(namespace)))
+                .replace(`{${"array"}}`, encodeURIComponent(String(array)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+
+            // authentication BasicAuth required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
+            localVarRequestOptions.data = serializeDataIfNeeded(loadEnumerationsRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * register an array at a specified URI registered to the given namespace
          * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
          * @param {string} array name/uri of array that is url-encoded
@@ -7210,7 +7959,7 @@ export const ArrayApiFp = function(configuration?: Configuration) {
          * @param {number} [perPage] pagination limit
          * @param {string} [search] search string that will look at name, namespace or description fields
          * @param {string} [namespace] namespace
-         * @param {string} [orderby] sort by which field valid values include last_accessed, size, name
+         * @param {string} [orderby] sort by which field valid values include size, name
          * @param {string} [permissions] permissions valid values include read, read_write, write, admin
          * @param {Array<string>} [tag] tag to search for, more than one can be included
          * @param {Array<string>} [excludeTag] tags to exclude matching array in results, more than one can be included
@@ -7242,7 +7991,7 @@ export const ArrayApiFp = function(configuration?: Configuration) {
          * @param {number} [perPage] pagination limit
          * @param {string} [search] search string that will look at name, namespace or description fields
          * @param {string} [namespace] namespace
-         * @param {string} [orderby] sort by which field valid values include last_accessed, size, name
+         * @param {string} [orderby] sort by which field valid values include size, name
          * @param {string} [permissions] permissions valid values include read, read_write, write, admin
          * @param {Array<string>} [tag] tag to search for, more than one can be included
          * @param {Array<string>} [excludeTag] tags to exclude matching array in results, more than one can be included
@@ -7274,7 +8023,7 @@ export const ArrayApiFp = function(configuration?: Configuration) {
          * @param {number} [perPage] pagination limit
          * @param {string} [search] search string that will look at name, namespace or description fields
          * @param {string} [namespace] namespace
-         * @param {string} [orderby] sort by which field valid values include last_accessed, size, name
+         * @param {string} [orderby] sort by which field valid values include size, name
          * @param {string} [permissions] permissions valid values include read, read_write, write, admin
          * @param {Array<string>} [tag] tag to search for, more than one can be included
          * @param {Array<string>} [excludeTag] tags to exclude matching array in results, more than one can be included
@@ -7539,6 +8288,18 @@ export const ArrayApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
+         * request to get the enumerations of the arrays\' attributes
+         * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
+         * @param {string} array name/uri of array that is url-encoded
+         * @param {LoadEnumerationsRequest} loadEnumerationsRequest Load Enumerations Request
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async loadEnumerations(namespace: string, array: string, loadEnumerationsRequest: LoadEnumerationsRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<LoadEnumerationsResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.loadEnumerations(namespace, array, loadEnumerationsRequest, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
          * register an array at a specified URI registered to the given namespace
          * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
          * @param {string} array name/uri of array that is url-encoded
@@ -7629,7 +8390,7 @@ export const ArrayApiFactory = function (configuration?: Configuration, basePath
          * @param {number} [perPage] pagination limit
          * @param {string} [search] search string that will look at name, namespace or description fields
          * @param {string} [namespace] namespace
-         * @param {string} [orderby] sort by which field valid values include last_accessed, size, name
+         * @param {string} [orderby] sort by which field valid values include size, name
          * @param {string} [permissions] permissions valid values include read, read_write, write, admin
          * @param {Array<string>} [tag] tag to search for, more than one can be included
          * @param {Array<string>} [excludeTag] tags to exclude matching array in results, more than one can be included
@@ -7659,7 +8420,7 @@ export const ArrayApiFactory = function (configuration?: Configuration, basePath
          * @param {number} [perPage] pagination limit
          * @param {string} [search] search string that will look at name, namespace or description fields
          * @param {string} [namespace] namespace
-         * @param {string} [orderby] sort by which field valid values include last_accessed, size, name
+         * @param {string} [orderby] sort by which field valid values include size, name
          * @param {string} [permissions] permissions valid values include read, read_write, write, admin
          * @param {Array<string>} [tag] tag to search for, more than one can be included
          * @param {Array<string>} [excludeTag] tags to exclude matching array in results, more than one can be included
@@ -7689,7 +8450,7 @@ export const ArrayApiFactory = function (configuration?: Configuration, basePath
          * @param {number} [perPage] pagination limit
          * @param {string} [search] search string that will look at name, namespace or description fields
          * @param {string} [namespace] namespace
-         * @param {string} [orderby] sort by which field valid values include last_accessed, size, name
+         * @param {string} [orderby] sort by which field valid values include size, name
          * @param {string} [permissions] permissions valid values include read, read_write, write, admin
          * @param {Array<string>} [tag] tag to search for, more than one can be included
          * @param {Array<string>} [excludeTag] tags to exclude matching array in results, more than one can be included
@@ -7932,6 +8693,17 @@ export const ArrayApiFactory = function (configuration?: Configuration, basePath
             return localVarFp.getLastAccessedArrays(options).then((request) => request(axios, basePath));
         },
         /**
+         * request to get the enumerations of the arrays\' attributes
+         * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
+         * @param {string} array name/uri of array that is url-encoded
+         * @param {LoadEnumerationsRequest} loadEnumerationsRequest Load Enumerations Request
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        loadEnumerations(namespace: string, array: string, loadEnumerationsRequest: LoadEnumerationsRequest, options?: any): AxiosPromise<LoadEnumerationsResponse> {
+            return localVarFp.loadEnumerations(namespace, array, loadEnumerationsRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
          * register an array at a specified URI registered to the given namespace
          * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
          * @param {string} array name/uri of array that is url-encoded
@@ -8019,7 +8791,7 @@ export class ArrayApi extends BaseAPI {
      * @param {number} [perPage] pagination limit
      * @param {string} [search] search string that will look at name, namespace or description fields
      * @param {string} [namespace] namespace
-     * @param {string} [orderby] sort by which field valid values include last_accessed, size, name
+     * @param {string} [orderby] sort by which field valid values include size, name
      * @param {string} [permissions] permissions valid values include read, read_write, write, admin
      * @param {Array<string>} [tag] tag to search for, more than one can be included
      * @param {Array<string>} [excludeTag] tags to exclude matching array in results, more than one can be included
@@ -8053,7 +8825,7 @@ export class ArrayApi extends BaseAPI {
      * @param {number} [perPage] pagination limit
      * @param {string} [search] search string that will look at name, namespace or description fields
      * @param {string} [namespace] namespace
-     * @param {string} [orderby] sort by which field valid values include last_accessed, size, name
+     * @param {string} [orderby] sort by which field valid values include size, name
      * @param {string} [permissions] permissions valid values include read, read_write, write, admin
      * @param {Array<string>} [tag] tag to search for, more than one can be included
      * @param {Array<string>} [excludeTag] tags to exclude matching array in results, more than one can be included
@@ -8087,7 +8859,7 @@ export class ArrayApi extends BaseAPI {
      * @param {number} [perPage] pagination limit
      * @param {string} [search] search string that will look at name, namespace or description fields
      * @param {string} [namespace] namespace
-     * @param {string} [orderby] sort by which field valid values include last_accessed, size, name
+     * @param {string} [orderby] sort by which field valid values include size, name
      * @param {string} [permissions] permissions valid values include read, read_write, write, admin
      * @param {Array<string>} [tag] tag to search for, more than one can be included
      * @param {Array<string>} [excludeTag] tags to exclude matching array in results, more than one can be included
@@ -8371,6 +9143,19 @@ export class ArrayApi extends BaseAPI {
      */
     public getLastAccessedArrays(options?: any) {
         return ArrayApiFp(this.configuration).getLastAccessedArrays(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * request to get the enumerations of the arrays\' attributes
+     * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
+     * @param {string} array name/uri of array that is url-encoded
+     * @param {LoadEnumerationsRequest} loadEnumerationsRequest Load Enumerations Request
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ArrayApi
+     */
+    public loadEnumerations(namespace: string, array: string, loadEnumerationsRequest: LoadEnumerationsRequest, options?: any) {
+        return ArrayApiFp(this.configuration).loadEnumerations(namespace, array, loadEnumerationsRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -10717,6 +11502,64 @@ export const GroupsApiAxiosParamCreator = function (configuration?: Configuratio
             };
         },
         /**
+         * Returns the activity of group content
+         * @param {string} groupNamespace The namespace of the group
+         * @param {string} groupName The unique name or id of the group
+         * @param {number} [page] pagination offset
+         * @param {number} [perPage] pagination limit
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getGroupActivity: async (groupNamespace: string, groupName: string, page?: number, perPage?: number, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'groupNamespace' is not null or undefined
+            assertParamExists('getGroupActivity', 'groupNamespace', groupNamespace)
+            // verify required parameter 'groupName' is not null or undefined
+            assertParamExists('getGroupActivity', 'groupName', groupName)
+            const localVarPath = `/groups/{group_namespace}/{group_name}/content_activity`
+                .replace(`{${"group_namespace"}}`, encodeURIComponent(String(groupNamespace)))
+                .replace(`{${"group_name"}}`, encodeURIComponent(String(groupName)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+
+            // authentication BasicAuth required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (perPage !== undefined) {
+                localVarQueryParameter['per_page'] = perPage;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * Returns the contents of the group
          * @param {string} groupNamespace The namespace of the group
          * @param {string} groupName The unique name or id of the group
@@ -10859,10 +11702,11 @@ export const GroupsApiAxiosParamCreator = function (configuration?: Configuratio
         },
         /**
          * Fetch data to initialize filters for the groups browser
+         * @param {string} [namespace] namespace
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        groupsBrowserOwnedFiltersGet: async (options: any = {}): Promise<RequestArgs> => {
+        groupsBrowserOwnedFiltersGet: async (namespace?: string, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/groups/browser/owned/filters`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -10881,6 +11725,10 @@ export const GroupsApiAxiosParamCreator = function (configuration?: Configuratio
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            if (namespace !== undefined) {
+                localVarQueryParameter['namespace'] = namespace;
+            }
 
 
     
@@ -10939,10 +11787,11 @@ export const GroupsApiAxiosParamCreator = function (configuration?: Configuratio
         },
         /**
          * Fetch data to initialize filters for the groups browser
+         * @param {string} [namespace] namespace
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        groupsBrowserSharedFiltersGet: async (options: any = {}): Promise<RequestArgs> => {
+        groupsBrowserSharedFiltersGet: async (namespace?: string, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/groups/browser/shared/filters`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -10961,6 +11810,10 @@ export const GroupsApiAxiosParamCreator = function (configuration?: Configuratio
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            if (namespace !== undefined) {
+                localVarQueryParameter['namespace'] = namespace;
+            }
 
 
     
@@ -11029,6 +11882,7 @@ export const GroupsApiAxiosParamCreator = function (configuration?: Configuratio
          * Returns one page of owned groups.
          * @param {number} [page] pagination offset
          * @param {number} [perPage] pagination limit
+         * @param {string} [groupType] filter by a specific group type
          * @param {string} [search] search string that will look at name, namespace or description fields
          * @param {string} [namespace] namespace
          * @param {string} [orderby] sort by which field valid values include last_accessed, size, name
@@ -11040,7 +11894,7 @@ export const GroupsApiAxiosParamCreator = function (configuration?: Configuratio
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listOwnedGroups: async (page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, flat?: boolean, parent?: string, options: any = {}): Promise<RequestArgs> => {
+        listOwnedGroups: async (page?: number, perPage?: number, groupType?: string, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, flat?: boolean, parent?: string, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/groups/browser/owned`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -11066,6 +11920,10 @@ export const GroupsApiAxiosParamCreator = function (configuration?: Configuratio
 
             if (perPage !== undefined) {
                 localVarQueryParameter['per_page'] = perPage;
+            }
+
+            if (groupType !== undefined) {
+                localVarQueryParameter['group_type'] = groupType;
             }
 
             if (search !== undefined) {
@@ -11119,6 +11977,7 @@ export const GroupsApiAxiosParamCreator = function (configuration?: Configuratio
          * Returns one page of public groups.
          * @param {number} [page] pagination offset
          * @param {number} [perPage] pagination limit
+         * @param {string} [groupType] filter by a specific group type
          * @param {string} [search] search string that will look at name, namespace or description fields
          * @param {string} [namespace] namespace
          * @param {string} [orderby] sort by which field valid values include last_accessed, size, name
@@ -11130,7 +11989,7 @@ export const GroupsApiAxiosParamCreator = function (configuration?: Configuratio
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listPublicGroups: async (page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, flat?: boolean, parent?: string, options: any = {}): Promise<RequestArgs> => {
+        listPublicGroups: async (page?: number, perPage?: number, groupType?: string, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, flat?: boolean, parent?: string, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/groups/browser/public`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -11156,6 +12015,10 @@ export const GroupsApiAxiosParamCreator = function (configuration?: Configuratio
 
             if (perPage !== undefined) {
                 localVarQueryParameter['per_page'] = perPage;
+            }
+
+            if (groupType !== undefined) {
+                localVarQueryParameter['group_type'] = groupType;
             }
 
             if (search !== undefined) {
@@ -11209,6 +12072,7 @@ export const GroupsApiAxiosParamCreator = function (configuration?: Configuratio
          * Returns one page of shared groups.
          * @param {number} [page] pagination offset
          * @param {number} [perPage] pagination limit
+         * @param {string} [groupType] filter by a specific group type
          * @param {string} [search] search string that will look at name, namespace or description fields
          * @param {string} [namespace] namespace
          * @param {string} [orderby] sort by which field valid values include last_accessed, size, name
@@ -11221,7 +12085,7 @@ export const GroupsApiAxiosParamCreator = function (configuration?: Configuratio
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listSharedGroups: async (page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, flat?: boolean, parent?: string, sharedTo?: Array<string>, options: any = {}): Promise<RequestArgs> => {
+        listSharedGroups: async (page?: number, perPage?: number, groupType?: string, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, flat?: boolean, parent?: string, sharedTo?: Array<string>, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/groups/browser/shared`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -11247,6 +12111,10 @@ export const GroupsApiAxiosParamCreator = function (configuration?: Configuratio
 
             if (perPage !== undefined) {
                 localVarQueryParameter['per_page'] = perPage;
+            }
+
+            if (groupType !== undefined) {
+                localVarQueryParameter['group_type'] = groupType;
             }
 
             if (search !== undefined) {
@@ -11514,6 +12382,19 @@ export const GroupsApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
+         * Returns the activity of group content
+         * @param {string} groupNamespace The namespace of the group
+         * @param {string} groupName The unique name or id of the group
+         * @param {number} [page] pagination offset
+         * @param {number} [perPage] pagination limit
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getGroupActivity(groupNamespace: string, groupName: string, page?: number, perPage?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GroupActivityResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getGroupActivity(groupNamespace, groupName, page, perPage, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
          * Returns the contents of the group
          * @param {string} groupNamespace The namespace of the group
          * @param {string} groupName The unique name or id of the group
@@ -11546,11 +12427,12 @@ export const GroupsApiFp = function(configuration?: Configuration) {
         },
         /**
          * Fetch data to initialize filters for the groups browser
+         * @param {string} [namespace] namespace
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async groupsBrowserOwnedFiltersGet(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GroupBrowserFilterData>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.groupsBrowserOwnedFiltersGet(options);
+        async groupsBrowserOwnedFiltersGet(namespace?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GroupBrowserFilterData>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.groupsBrowserOwnedFiltersGet(namespace, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -11564,11 +12446,12 @@ export const GroupsApiFp = function(configuration?: Configuration) {
         },
         /**
          * Fetch data to initialize filters for the groups browser
+         * @param {string} [namespace] namespace
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async groupsBrowserSharedFiltersGet(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GroupBrowserFilterData>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.groupsBrowserSharedFiltersGet(options);
+        async groupsBrowserSharedFiltersGet(namespace?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GroupBrowserFilterData>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.groupsBrowserSharedFiltersGet(namespace, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -11586,6 +12469,7 @@ export const GroupsApiFp = function(configuration?: Configuration) {
          * Returns one page of owned groups.
          * @param {number} [page] pagination offset
          * @param {number} [perPage] pagination limit
+         * @param {string} [groupType] filter by a specific group type
          * @param {string} [search] search string that will look at name, namespace or description fields
          * @param {string} [namespace] namespace
          * @param {string} [orderby] sort by which field valid values include last_accessed, size, name
@@ -11597,14 +12481,15 @@ export const GroupsApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listOwnedGroups(page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, flat?: boolean, parent?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GroupBrowserData>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.listOwnedGroups(page, perPage, search, namespace, orderby, permissions, tag, excludeTag, flat, parent, options);
+        async listOwnedGroups(page?: number, perPage?: number, groupType?: string, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, flat?: boolean, parent?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GroupBrowserData>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listOwnedGroups(page, perPage, groupType, search, namespace, orderby, permissions, tag, excludeTag, flat, parent, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * Returns one page of public groups.
          * @param {number} [page] pagination offset
          * @param {number} [perPage] pagination limit
+         * @param {string} [groupType] filter by a specific group type
          * @param {string} [search] search string that will look at name, namespace or description fields
          * @param {string} [namespace] namespace
          * @param {string} [orderby] sort by which field valid values include last_accessed, size, name
@@ -11616,14 +12501,15 @@ export const GroupsApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listPublicGroups(page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, flat?: boolean, parent?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GroupBrowserData>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.listPublicGroups(page, perPage, search, namespace, orderby, permissions, tag, excludeTag, flat, parent, options);
+        async listPublicGroups(page?: number, perPage?: number, groupType?: string, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, flat?: boolean, parent?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GroupBrowserData>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listPublicGroups(page, perPage, groupType, search, namespace, orderby, permissions, tag, excludeTag, flat, parent, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * Returns one page of shared groups.
          * @param {number} [page] pagination offset
          * @param {number} [perPage] pagination limit
+         * @param {string} [groupType] filter by a specific group type
          * @param {string} [search] search string that will look at name, namespace or description fields
          * @param {string} [namespace] namespace
          * @param {string} [orderby] sort by which field valid values include last_accessed, size, name
@@ -11636,8 +12522,8 @@ export const GroupsApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listSharedGroups(page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, flat?: boolean, parent?: string, sharedTo?: Array<string>, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GroupBrowserData>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.listSharedGroups(page, perPage, search, namespace, orderby, permissions, tag, excludeTag, flat, parent, sharedTo, options);
+        async listSharedGroups(page?: number, perPage?: number, groupType?: string, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, flat?: boolean, parent?: string, sharedTo?: Array<string>, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GroupBrowserData>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listSharedGroups(page, perPage, groupType, search, namespace, orderby, permissions, tag, excludeTag, flat, parent, sharedTo, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -11728,6 +12614,18 @@ export const GroupsApiFactory = function (configuration?: Configuration, basePat
             return localVarFp.getGroup(groupNamespace, groupName, options).then((request) => request(axios, basePath));
         },
         /**
+         * Returns the activity of group content
+         * @param {string} groupNamespace The namespace of the group
+         * @param {string} groupName The unique name or id of the group
+         * @param {number} [page] pagination offset
+         * @param {number} [perPage] pagination limit
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getGroupActivity(groupNamespace: string, groupName: string, page?: number, perPage?: number, options?: any): AxiosPromise<GroupActivityResponse> {
+            return localVarFp.getGroupActivity(groupNamespace, groupName, page, perPage, options).then((request) => request(axios, basePath));
+        },
+        /**
          * Returns the contents of the group
          * @param {string} groupNamespace The namespace of the group
          * @param {string} groupName The unique name or id of the group
@@ -11758,11 +12656,12 @@ export const GroupsApiFactory = function (configuration?: Configuration, basePat
         },
         /**
          * Fetch data to initialize filters for the groups browser
+         * @param {string} [namespace] namespace
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        groupsBrowserOwnedFiltersGet(options?: any): AxiosPromise<GroupBrowserFilterData> {
-            return localVarFp.groupsBrowserOwnedFiltersGet(options).then((request) => request(axios, basePath));
+        groupsBrowserOwnedFiltersGet(namespace?: string, options?: any): AxiosPromise<GroupBrowserFilterData> {
+            return localVarFp.groupsBrowserOwnedFiltersGet(namespace, options).then((request) => request(axios, basePath));
         },
         /**
          * Fetch data to initialize filters for the groups browser
@@ -11774,11 +12673,12 @@ export const GroupsApiFactory = function (configuration?: Configuration, basePat
         },
         /**
          * Fetch data to initialize filters for the groups browser
+         * @param {string} [namespace] namespace
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        groupsBrowserSharedFiltersGet(options?: any): AxiosPromise<GroupBrowserFilterData> {
-            return localVarFp.groupsBrowserSharedFiltersGet(options).then((request) => request(axios, basePath));
+        groupsBrowserSharedFiltersGet(namespace?: string, options?: any): AxiosPromise<GroupBrowserFilterData> {
+            return localVarFp.groupsBrowserSharedFiltersGet(namespace, options).then((request) => request(axios, basePath));
         },
         /**
          * Fetch data to initialize filters for the group contents
@@ -11794,6 +12694,7 @@ export const GroupsApiFactory = function (configuration?: Configuration, basePat
          * Returns one page of owned groups.
          * @param {number} [page] pagination offset
          * @param {number} [perPage] pagination limit
+         * @param {string} [groupType] filter by a specific group type
          * @param {string} [search] search string that will look at name, namespace or description fields
          * @param {string} [namespace] namespace
          * @param {string} [orderby] sort by which field valid values include last_accessed, size, name
@@ -11805,13 +12706,14 @@ export const GroupsApiFactory = function (configuration?: Configuration, basePat
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listOwnedGroups(page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, flat?: boolean, parent?: string, options?: any): AxiosPromise<GroupBrowserData> {
-            return localVarFp.listOwnedGroups(page, perPage, search, namespace, orderby, permissions, tag, excludeTag, flat, parent, options).then((request) => request(axios, basePath));
+        listOwnedGroups(page?: number, perPage?: number, groupType?: string, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, flat?: boolean, parent?: string, options?: any): AxiosPromise<GroupBrowserData> {
+            return localVarFp.listOwnedGroups(page, perPage, groupType, search, namespace, orderby, permissions, tag, excludeTag, flat, parent, options).then((request) => request(axios, basePath));
         },
         /**
          * Returns one page of public groups.
          * @param {number} [page] pagination offset
          * @param {number} [perPage] pagination limit
+         * @param {string} [groupType] filter by a specific group type
          * @param {string} [search] search string that will look at name, namespace or description fields
          * @param {string} [namespace] namespace
          * @param {string} [orderby] sort by which field valid values include last_accessed, size, name
@@ -11823,13 +12725,14 @@ export const GroupsApiFactory = function (configuration?: Configuration, basePat
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listPublicGroups(page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, flat?: boolean, parent?: string, options?: any): AxiosPromise<GroupBrowserData> {
-            return localVarFp.listPublicGroups(page, perPage, search, namespace, orderby, permissions, tag, excludeTag, flat, parent, options).then((request) => request(axios, basePath));
+        listPublicGroups(page?: number, perPage?: number, groupType?: string, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, flat?: boolean, parent?: string, options?: any): AxiosPromise<GroupBrowserData> {
+            return localVarFp.listPublicGroups(page, perPage, groupType, search, namespace, orderby, permissions, tag, excludeTag, flat, parent, options).then((request) => request(axios, basePath));
         },
         /**
          * Returns one page of shared groups.
          * @param {number} [page] pagination offset
          * @param {number} [perPage] pagination limit
+         * @param {string} [groupType] filter by a specific group type
          * @param {string} [search] search string that will look at name, namespace or description fields
          * @param {string} [namespace] namespace
          * @param {string} [orderby] sort by which field valid values include last_accessed, size, name
@@ -11842,8 +12745,8 @@ export const GroupsApiFactory = function (configuration?: Configuration, basePat
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listSharedGroups(page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, flat?: boolean, parent?: string, sharedTo?: Array<string>, options?: any): AxiosPromise<GroupBrowserData> {
-            return localVarFp.listSharedGroups(page, perPage, search, namespace, orderby, permissions, tag, excludeTag, flat, parent, sharedTo, options).then((request) => request(axios, basePath));
+        listSharedGroups(page?: number, perPage?: number, groupType?: string, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, flat?: boolean, parent?: string, sharedTo?: Array<string>, options?: any): AxiosPromise<GroupBrowserData> {
+            return localVarFp.listSharedGroups(page, perPage, groupType, search, namespace, orderby, permissions, tag, excludeTag, flat, parent, sharedTo, options).then((request) => request(axios, basePath));
         },
         /**
          * Registers an existing group in the namespace.
@@ -11938,6 +12841,20 @@ export class GroupsApi extends BaseAPI {
     }
 
     /**
+     * Returns the activity of group content
+     * @param {string} groupNamespace The namespace of the group
+     * @param {string} groupName The unique name or id of the group
+     * @param {number} [page] pagination offset
+     * @param {number} [perPage] pagination limit
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof GroupsApi
+     */
+    public getGroupActivity(groupNamespace: string, groupName: string, page?: number, perPage?: number, options?: any) {
+        return GroupsApiFp(this.configuration).getGroupActivity(groupNamespace, groupName, page, perPage, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
      * Returns the contents of the group
      * @param {string} groupNamespace The namespace of the group
      * @param {string} groupName The unique name or id of the group
@@ -11972,12 +12889,13 @@ export class GroupsApi extends BaseAPI {
 
     /**
      * Fetch data to initialize filters for the groups browser
+     * @param {string} [namespace] namespace
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof GroupsApi
      */
-    public groupsBrowserOwnedFiltersGet(options?: any) {
-        return GroupsApiFp(this.configuration).groupsBrowserOwnedFiltersGet(options).then((request) => request(this.axios, this.basePath));
+    public groupsBrowserOwnedFiltersGet(namespace?: string, options?: any) {
+        return GroupsApiFp(this.configuration).groupsBrowserOwnedFiltersGet(namespace, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -11992,12 +12910,13 @@ export class GroupsApi extends BaseAPI {
 
     /**
      * Fetch data to initialize filters for the groups browser
+     * @param {string} [namespace] namespace
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof GroupsApi
      */
-    public groupsBrowserSharedFiltersGet(options?: any) {
-        return GroupsApiFp(this.configuration).groupsBrowserSharedFiltersGet(options).then((request) => request(this.axios, this.basePath));
+    public groupsBrowserSharedFiltersGet(namespace?: string, options?: any) {
+        return GroupsApiFp(this.configuration).groupsBrowserSharedFiltersGet(namespace, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -12016,6 +12935,7 @@ export class GroupsApi extends BaseAPI {
      * Returns one page of owned groups.
      * @param {number} [page] pagination offset
      * @param {number} [perPage] pagination limit
+     * @param {string} [groupType] filter by a specific group type
      * @param {string} [search] search string that will look at name, namespace or description fields
      * @param {string} [namespace] namespace
      * @param {string} [orderby] sort by which field valid values include last_accessed, size, name
@@ -12028,14 +12948,15 @@ export class GroupsApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof GroupsApi
      */
-    public listOwnedGroups(page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, flat?: boolean, parent?: string, options?: any) {
-        return GroupsApiFp(this.configuration).listOwnedGroups(page, perPage, search, namespace, orderby, permissions, tag, excludeTag, flat, parent, options).then((request) => request(this.axios, this.basePath));
+    public listOwnedGroups(page?: number, perPage?: number, groupType?: string, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, flat?: boolean, parent?: string, options?: any) {
+        return GroupsApiFp(this.configuration).listOwnedGroups(page, perPage, groupType, search, namespace, orderby, permissions, tag, excludeTag, flat, parent, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * Returns one page of public groups.
      * @param {number} [page] pagination offset
      * @param {number} [perPage] pagination limit
+     * @param {string} [groupType] filter by a specific group type
      * @param {string} [search] search string that will look at name, namespace or description fields
      * @param {string} [namespace] namespace
      * @param {string} [orderby] sort by which field valid values include last_accessed, size, name
@@ -12048,14 +12969,15 @@ export class GroupsApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof GroupsApi
      */
-    public listPublicGroups(page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, flat?: boolean, parent?: string, options?: any) {
-        return GroupsApiFp(this.configuration).listPublicGroups(page, perPage, search, namespace, orderby, permissions, tag, excludeTag, flat, parent, options).then((request) => request(this.axios, this.basePath));
+    public listPublicGroups(page?: number, perPage?: number, groupType?: string, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, flat?: boolean, parent?: string, options?: any) {
+        return GroupsApiFp(this.configuration).listPublicGroups(page, perPage, groupType, search, namespace, orderby, permissions, tag, excludeTag, flat, parent, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * Returns one page of shared groups.
      * @param {number} [page] pagination offset
      * @param {number} [perPage] pagination limit
+     * @param {string} [groupType] filter by a specific group type
      * @param {string} [search] search string that will look at name, namespace or description fields
      * @param {string} [namespace] namespace
      * @param {string} [orderby] sort by which field valid values include last_accessed, size, name
@@ -12069,8 +12991,8 @@ export class GroupsApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof GroupsApi
      */
-    public listSharedGroups(page?: number, perPage?: number, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, flat?: boolean, parent?: string, sharedTo?: Array<string>, options?: any) {
-        return GroupsApiFp(this.configuration).listSharedGroups(page, perPage, search, namespace, orderby, permissions, tag, excludeTag, flat, parent, sharedTo, options).then((request) => request(this.axios, this.basePath));
+    public listSharedGroups(page?: number, perPage?: number, groupType?: string, search?: string, namespace?: string, orderby?: string, permissions?: string, tag?: Array<string>, excludeTag?: Array<string>, flat?: boolean, parent?: string, sharedTo?: Array<string>, options?: any) {
+        return GroupsApiFp(this.configuration).listSharedGroups(page, perPage, groupType, search, namespace, orderby, permissions, tag, excludeTag, flat, parent, sharedTo, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -13814,6 +14736,54 @@ export const OrganizationApiAxiosParamCreator = function (configuration?: Config
             };
         },
         /**
+         * Immediately verify ownership of the specified SSO domain ownership claim. 
+         * @param {string} organization organization name
+         * @param {string} uuid configuration ID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        checkSSODomain: async (organization: string, uuid: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'organization' is not null or undefined
+            assertParamExists('checkSSODomain', 'organization', organization)
+            // verify required parameter 'uuid' is not null or undefined
+            assertParamExists('checkSSODomain', 'uuid', uuid)
+            const localVarPath = `/organizations/{organization}/sso_domains/{uuid}/run_check`
+                .replace(`{${"organization"}}`, encodeURIComponent(String(organization)))
+                .replace(`{${"uuid"}}`, encodeURIComponent(String(uuid)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+
+            // authentication BasicAuth required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * create a organization, the user creating will be listed as owner
          * @param {Organization} organization organization to create
          * @param {*} [options] Override http request option.
@@ -13853,6 +14823,56 @@ export const OrganizationApiAxiosParamCreator = function (configuration?: Config
                 localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
             }
             localVarRequestOptions.data = serializeDataIfNeeded(organization, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Create a new SSO connection that connects this organization to this domain. 
+         * @param {string} organization organization name
+         * @param {SSODomainConfig} config The SSO connection to create.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createSSODomain: async (organization: string, config: SSODomainConfig, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'organization' is not null or undefined
+            assertParamExists('createSSODomain', 'organization', organization)
+            // verify required parameter 'config' is not null or undefined
+            assertParamExists('createSSODomain', 'config', config)
+            const localVarPath = `/organizations/{organization}/sso_domain`
+                .replace(`{${"organization"}}`, encodeURIComponent(String(organization)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+
+            // authentication BasicAuth required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
+            localVarRequestOptions.data = serializeDataIfNeeded(config, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -13918,6 +14938,54 @@ export const OrganizationApiAxiosParamCreator = function (configuration?: Config
             assertParamExists('deleteOrganization', 'organization', organization)
             const localVarPath = `/organizations/{organization}`
                 .replace(`{${"organization"}}`, encodeURIComponent(String(organization)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+
+            // authentication BasicAuth required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Deletes the configuration for the given SSO connection.
+         * @param {string} organization organization name
+         * @param {string} uuid configuration ID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteSSODomain: async (organization: string, uuid: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'organization' is not null or undefined
+            assertParamExists('deleteSSODomain', 'organization', organization)
+            // verify required parameter 'uuid' is not null or undefined
+            assertParamExists('deleteSSODomain', 'uuid', uuid)
+            const localVarPath = `/organizations/{organization}/sso_domains/{uuid}`
+                .replace(`{${"organization"}}`, encodeURIComponent(String(organization)))
+                .replace(`{${"uuid"}}`, encodeURIComponent(String(uuid)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -14132,6 +15200,98 @@ export const OrganizationApiAxiosParamCreator = function (configuration?: Config
             };
         },
         /**
+         * Gets details about the given SSO domain connection.
+         * @param {string} organization organization name
+         * @param {string} uuid configuration ID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getSSODomain: async (organization: string, uuid: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'organization' is not null or undefined
+            assertParamExists('getSSODomain', 'organization', organization)
+            // verify required parameter 'uuid' is not null or undefined
+            assertParamExists('getSSODomain', 'uuid', uuid)
+            const localVarPath = `/organizations/{organization}/sso_domains/{uuid}`
+                .replace(`{${"organization"}}`, encodeURIComponent(String(organization)))
+                .replace(`{${"uuid"}}`, encodeURIComponent(String(uuid)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+
+            // authentication BasicAuth required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Lists all the SSO connections associated with the given organization. 
+         * @param {string} organization organization name
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getSSODomains: async (organization: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'organization' is not null or undefined
+            assertParamExists('getSSODomains', 'organization', organization)
+            const localVarPath = `/organizations/{organization}/sso_domains`
+                .replace(`{${"organization"}}`, encodeURIComponent(String(organization)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+
+            // authentication BasicAuth required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * Update aws keys or associated buckets. This will update the key associations for each array in the namespace
          * @param {string} namespace namespace
          * @param {string} name name
@@ -14229,6 +15389,60 @@ export const OrganizationApiAxiosParamCreator = function (configuration?: Config
                 localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
             }
             localVarRequestOptions.data = serializeDataIfNeeded(organizationDetails, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Updates the configuration for the given SSO connection.
+         * @param {string} organization organization name
+         * @param {string} uuid configuration ID
+         * @param {SSODomainConfig} config The changes to make to the configuration.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateSSODomain: async (organization: string, uuid: string, config: SSODomainConfig, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'organization' is not null or undefined
+            assertParamExists('updateSSODomain', 'organization', organization)
+            // verify required parameter 'uuid' is not null or undefined
+            assertParamExists('updateSSODomain', 'uuid', uuid)
+            // verify required parameter 'config' is not null or undefined
+            assertParamExists('updateSSODomain', 'config', config)
+            const localVarPath = `/organizations/{organization}/sso_domains/{uuid}`
+                .replace(`{${"organization"}}`, encodeURIComponent(String(organization)))
+                .replace(`{${"uuid"}}`, encodeURIComponent(String(uuid)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+
+            // authentication BasicAuth required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
+            localVarRequestOptions.data = serializeDataIfNeeded(config, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -14343,6 +15557,17 @@ export const OrganizationApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
+         * Immediately verify ownership of the specified SSO domain ownership claim. 
+         * @param {string} organization organization name
+         * @param {string} uuid configuration ID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async checkSSODomain(organization: string, uuid: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<DomainCheckResult>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.checkSSODomain(organization, uuid, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
          * create a organization, the user creating will be listed as owner
          * @param {Organization} organization organization to create
          * @param {*} [options] Override http request option.
@@ -14350,6 +15575,17 @@ export const OrganizationApiFp = function(configuration?: Configuration) {
          */
         async createOrganization(organization: Organization, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.createOrganization(organization, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Create a new SSO connection that connects this organization to this domain. 
+         * @param {string} organization organization name
+         * @param {SSODomainConfig} config The SSO connection to create.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async createSSODomain(organization: string, config: SSODomainConfig, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SSODomainConfig>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createSSODomain(organization, config, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -14371,6 +15607,17 @@ export const OrganizationApiFp = function(configuration?: Configuration) {
          */
         async deleteOrganization(organization: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.deleteOrganization(organization, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Deletes the configuration for the given SSO connection.
+         * @param {string} organization organization name
+         * @param {string} uuid configuration ID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async deleteSSODomain(organization: string, uuid: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteSSODomain(organization, uuid, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -14415,6 +15662,27 @@ export const OrganizationApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
+         * Gets details about the given SSO domain connection.
+         * @param {string} organization organization name
+         * @param {string} uuid configuration ID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getSSODomain(organization: string, uuid: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SSODomainConfig>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getSSODomain(organization, uuid, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Lists all the SSO connections associated with the given organization. 
+         * @param {string} organization organization name
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getSSODomains(organization: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SSODomainConfigResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getSSODomains(organization, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
          * Update aws keys or associated buckets. This will update the key associations for each array in the namespace
          * @param {string} namespace namespace
          * @param {string} name name
@@ -14435,6 +15703,18 @@ export const OrganizationApiFp = function(configuration?: Configuration) {
          */
         async updateOrganization(organization: string, organizationDetails: Organization, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.updateOrganization(organization, organizationDetails, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Updates the configuration for the given SSO connection.
+         * @param {string} organization organization name
+         * @param {string} uuid configuration ID
+         * @param {SSODomainConfig} config The changes to make to the configuration.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async updateSSODomain(organization: string, uuid: string, config: SSODomainConfig, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SSODomainConfig>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateSSODomain(organization, uuid, config, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -14499,6 +15779,16 @@ export const OrganizationApiFactory = function (configuration?: Configuration, b
             return localVarFp.checkAWSAccessCredentialsByName(namespace, name, options).then((request) => request(axios, basePath));
         },
         /**
+         * Immediately verify ownership of the specified SSO domain ownership claim. 
+         * @param {string} organization organization name
+         * @param {string} uuid configuration ID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        checkSSODomain(organization: string, uuid: string, options?: any): AxiosPromise<DomainCheckResult> {
+            return localVarFp.checkSSODomain(organization, uuid, options).then((request) => request(axios, basePath));
+        },
+        /**
          * create a organization, the user creating will be listed as owner
          * @param {Organization} organization organization to create
          * @param {*} [options] Override http request option.
@@ -14506,6 +15796,16 @@ export const OrganizationApiFactory = function (configuration?: Configuration, b
          */
         createOrganization(organization: Organization, options?: any): AxiosPromise<void> {
             return localVarFp.createOrganization(organization, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Create a new SSO connection that connects this organization to this domain. 
+         * @param {string} organization organization name
+         * @param {SSODomainConfig} config The SSO connection to create.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createSSODomain(organization: string, config: SSODomainConfig, options?: any): AxiosPromise<SSODomainConfig> {
+            return localVarFp.createSSODomain(organization, config, options).then((request) => request(axios, basePath));
         },
         /**
          * delete a AWS Access credentials in a namespace. This will likely cause arrays to become unreachable
@@ -14525,6 +15825,16 @@ export const OrganizationApiFactory = function (configuration?: Configuration, b
          */
         deleteOrganization(organization: string, options?: any): AxiosPromise<void> {
             return localVarFp.deleteOrganization(organization, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Deletes the configuration for the given SSO connection.
+         * @param {string} organization organization name
+         * @param {string} uuid configuration ID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteSSODomain(organization: string, uuid: string, options?: any): AxiosPromise<void> {
+            return localVarFp.deleteSSODomain(organization, uuid, options).then((request) => request(axios, basePath));
         },
         /**
          * delete a user from an organization
@@ -14564,6 +15874,25 @@ export const OrganizationApiFactory = function (configuration?: Configuration, b
             return localVarFp.getOrganizationUser(organization, username, options).then((request) => request(axios, basePath));
         },
         /**
+         * Gets details about the given SSO domain connection.
+         * @param {string} organization organization name
+         * @param {string} uuid configuration ID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getSSODomain(organization: string, uuid: string, options?: any): AxiosPromise<SSODomainConfig> {
+            return localVarFp.getSSODomain(organization, uuid, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Lists all the SSO connections associated with the given organization. 
+         * @param {string} organization organization name
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getSSODomains(organization: string, options?: any): AxiosPromise<SSODomainConfigResponse> {
+            return localVarFp.getSSODomains(organization, options).then((request) => request(axios, basePath));
+        },
+        /**
          * Update aws keys or associated buckets. This will update the key associations for each array in the namespace
          * @param {string} namespace namespace
          * @param {string} name name
@@ -14583,6 +15912,17 @@ export const OrganizationApiFactory = function (configuration?: Configuration, b
          */
         updateOrganization(organization: string, organizationDetails: Organization, options?: any): AxiosPromise<void> {
             return localVarFp.updateOrganization(organization, organizationDetails, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Updates the configuration for the given SSO connection.
+         * @param {string} organization organization name
+         * @param {string} uuid configuration ID
+         * @param {SSODomainConfig} config The changes to make to the configuration.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateSSODomain(organization: string, uuid: string, config: SSODomainConfig, options?: any): AxiosPromise<SSODomainConfig> {
+            return localVarFp.updateSSODomain(organization, uuid, config, options).then((request) => request(axios, basePath));
         },
         /**
          * update a user in an organization
@@ -14653,6 +15993,18 @@ export class OrganizationApi extends BaseAPI {
     }
 
     /**
+     * Immediately verify ownership of the specified SSO domain ownership claim. 
+     * @param {string} organization organization name
+     * @param {string} uuid configuration ID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof OrganizationApi
+     */
+    public checkSSODomain(organization: string, uuid: string, options?: any) {
+        return OrganizationApiFp(this.configuration).checkSSODomain(organization, uuid, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
      * create a organization, the user creating will be listed as owner
      * @param {Organization} organization organization to create
      * @param {*} [options] Override http request option.
@@ -14661,6 +16013,18 @@ export class OrganizationApi extends BaseAPI {
      */
     public createOrganization(organization: Organization, options?: any) {
         return OrganizationApiFp(this.configuration).createOrganization(organization, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Create a new SSO connection that connects this organization to this domain. 
+     * @param {string} organization organization name
+     * @param {SSODomainConfig} config The SSO connection to create.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof OrganizationApi
+     */
+    public createSSODomain(organization: string, config: SSODomainConfig, options?: any) {
+        return OrganizationApiFp(this.configuration).createSSODomain(organization, config, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -14684,6 +16048,18 @@ export class OrganizationApi extends BaseAPI {
      */
     public deleteOrganization(organization: string, options?: any) {
         return OrganizationApiFp(this.configuration).deleteOrganization(organization, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Deletes the configuration for the given SSO connection.
+     * @param {string} organization organization name
+     * @param {string} uuid configuration ID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof OrganizationApi
+     */
+    public deleteSSODomain(organization: string, uuid: string, options?: any) {
+        return OrganizationApiFp(this.configuration).deleteSSODomain(organization, uuid, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -14732,6 +16108,29 @@ export class OrganizationApi extends BaseAPI {
     }
 
     /**
+     * Gets details about the given SSO domain connection.
+     * @param {string} organization organization name
+     * @param {string} uuid configuration ID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof OrganizationApi
+     */
+    public getSSODomain(organization: string, uuid: string, options?: any) {
+        return OrganizationApiFp(this.configuration).getSSODomain(organization, uuid, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Lists all the SSO connections associated with the given organization. 
+     * @param {string} organization organization name
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof OrganizationApi
+     */
+    public getSSODomains(organization: string, options?: any) {
+        return OrganizationApiFp(this.configuration).getSSODomains(organization, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
      * Update aws keys or associated buckets. This will update the key associations for each array in the namespace
      * @param {string} namespace namespace
      * @param {string} name name
@@ -14754,6 +16153,19 @@ export class OrganizationApi extends BaseAPI {
      */
     public updateOrganization(organization: string, organizationDetails: Organization, options?: any) {
         return OrganizationApiFp(this.configuration).updateOrganization(organization, organizationDetails, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Updates the configuration for the given SSO connection.
+     * @param {string} organization organization name
+     * @param {string} uuid configuration ID
+     * @param {SSODomainConfig} config The changes to make to the configuration.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof OrganizationApi
+     */
+    public updateSSODomain(organization: string, uuid: string, config: SSODomainConfig, options?: any) {
+        return OrganizationApiFp(this.configuration).updateSSODomain(organization, uuid, config, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -16288,6 +17700,7 @@ export const TaskGraphLogsApiAxiosParamCreator = function (configuration?: Confi
          * Fetch the task graph logs of a namespace the user has access to. The returned entries will include only summary data, and will not include information about the individual tasks that were executed. (This information is available when requesting an individual task graph log.) Entries in the response are ordered from newest to oldest. Pagination parameters work as in other API methods; see PaginationMetadata. 
          * @param {string} [namespace] Include logs for this namespace.
          * @param {string} [createdBy] Include logs from only this user.
+         * @param {string} [status] Filter to only return these statuses
          * @param {string} [search] search string that will look at name.
          * @param {string} [startTime] Include logs created after this time.
          * @param {string} [endTime] Include logs created before this time.
@@ -16296,7 +17709,7 @@ export const TaskGraphLogsApiAxiosParamCreator = function (configuration?: Confi
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listTaskGraphLogs: async (namespace?: string, createdBy?: string, search?: string, startTime?: string, endTime?: string, page?: number, perPage?: number, options: any = {}): Promise<RequestArgs> => {
+        listTaskGraphLogs: async (namespace?: string, createdBy?: string, status?: string, search?: string, startTime?: string, endTime?: string, page?: number, perPage?: number, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/taskgraphs/logs`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -16322,6 +17735,10 @@ export const TaskGraphLogsApiAxiosParamCreator = function (configuration?: Confi
 
             if (createdBy !== undefined) {
                 localVarQueryParameter['created_by'] = createdBy;
+            }
+
+            if (status !== undefined) {
+                localVarQueryParameter['status'] = status;
             }
 
             if (search !== undefined) {
@@ -16418,6 +17835,198 @@ export const TaskGraphLogsApiAxiosParamCreator = function (configuration?: Confi
             };
         },
         /**
+         * Resubmits a task graph in the given namespace using the associated execution id.
+         * @param {string} namespace The namespace that owns this task graph execution.
+         * @param {string} id The UUID of the task graph execution (TaskGraphLog).
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        resubmitTaskGraphExecution: async (namespace: string, id: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'namespace' is not null or undefined
+            assertParamExists('resubmitTaskGraphExecution', 'namespace', namespace)
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('resubmitTaskGraphExecution', 'id', id)
+            const localVarPath = `/taskgraphs/{namespace}/executions/{id}/resubmit`
+                .replace(`{${"namespace"}}`, encodeURIComponent(String(namespace)))
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+
+            // authentication BasicAuth required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Retries failed tasks of a task graph in the given namespace using the associated execution id.
+         * @param {string} namespace The namespace that owns this task graph execution.
+         * @param {string} id The UUID of the task graph execution (TaskGraphLog).
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        retryTaskGraphExecution: async (namespace: string, id: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'namespace' is not null or undefined
+            assertParamExists('retryTaskGraphExecution', 'namespace', namespace)
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('retryTaskGraphExecution', 'id', id)
+            const localVarPath = `/taskgraphs/{namespace}/executions/{id}/retry`
+                .replace(`{${"namespace"}}`, encodeURIComponent(String(namespace)))
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+
+            // authentication BasicAuth required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Stops a task graph execution in the given namespace using the associated associated execution id.
+         * @param {string} namespace The namespace that owns this task graph execution.
+         * @param {string} id The UUID of the task graph execution (TaskGraphLog).
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        stopTaskGraphExecution: async (namespace: string, id: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'namespace' is not null or undefined
+            assertParamExists('stopTaskGraphExecution', 'namespace', namespace)
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('stopTaskGraphExecution', 'id', id)
+            const localVarPath = `/taskgraphs/{namespace}/executions/{id}/stop`
+                .replace(`{${"namespace"}}`, encodeURIComponent(String(namespace)))
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+
+            // authentication BasicAuth required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Submit a single task graph for execution. 
+         * @param {string} namespace The namespace that owns this task graph.
+         * @param {string} id The UUID of the task graph entry.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        submitTaskGraph: async (namespace: string, id: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'namespace' is not null or undefined
+            assertParamExists('submitTaskGraph', 'namespace', namespace)
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('submitTaskGraph', 'id', id)
+            const localVarPath = `/taskgraphs/{namespace}/graphs/{id}/submit`
+                .replace(`{${"namespace"}}`, encodeURIComponent(String(namespace)))
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+
+            // authentication BasicAuth required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * Update information about a single task graph execution. 
          * @param {string} namespace The namespace that owns this task graph log.
          * @param {string} id The UUID of the task graph log entry.
@@ -16507,6 +18116,7 @@ export const TaskGraphLogsApiFp = function(configuration?: Configuration) {
          * Fetch the task graph logs of a namespace the user has access to. The returned entries will include only summary data, and will not include information about the individual tasks that were executed. (This information is available when requesting an individual task graph log.) Entries in the response are ordered from newest to oldest. Pagination parameters work as in other API methods; see PaginationMetadata. 
          * @param {string} [namespace] Include logs for this namespace.
          * @param {string} [createdBy] Include logs from only this user.
+         * @param {string} [status] Filter to only return these statuses
          * @param {string} [search] search string that will look at name.
          * @param {string} [startTime] Include logs created after this time.
          * @param {string} [endTime] Include logs created before this time.
@@ -16515,8 +18125,8 @@ export const TaskGraphLogsApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listTaskGraphLogs(namespace?: string, createdBy?: string, search?: string, startTime?: string, endTime?: string, page?: number, perPage?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TaskGraphLogsData>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.listTaskGraphLogs(namespace, createdBy, search, startTime, endTime, page, perPage, options);
+        async listTaskGraphLogs(namespace?: string, createdBy?: string, status?: string, search?: string, startTime?: string, endTime?: string, page?: number, perPage?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TaskGraphLogsData>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listTaskGraphLogs(namespace, createdBy, status, search, startTime, endTime, page, perPage, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -16529,6 +18139,50 @@ export const TaskGraphLogsApiFp = function(configuration?: Configuration) {
          */
         async reportClientNode(namespace: string, id: string, report: TaskGraphClientNodeStatus, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.reportClientNode(namespace, id, report, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Resubmits a task graph in the given namespace using the associated execution id.
+         * @param {string} namespace The namespace that owns this task graph execution.
+         * @param {string} id The UUID of the task graph execution (TaskGraphLog).
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async resubmitTaskGraphExecution(namespace: string, id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TaskGraphLog>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.resubmitTaskGraphExecution(namespace, id, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Retries failed tasks of a task graph in the given namespace using the associated execution id.
+         * @param {string} namespace The namespace that owns this task graph execution.
+         * @param {string} id The UUID of the task graph execution (TaskGraphLog).
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async retryTaskGraphExecution(namespace: string, id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TaskGraphLog>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.retryTaskGraphExecution(namespace, id, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Stops a task graph execution in the given namespace using the associated associated execution id.
+         * @param {string} namespace The namespace that owns this task graph execution.
+         * @param {string} id The UUID of the task graph execution (TaskGraphLog).
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async stopTaskGraphExecution(namespace: string, id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TaskGraphLog>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.stopTaskGraphExecution(namespace, id, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Submit a single task graph for execution. 
+         * @param {string} namespace The namespace that owns this task graph.
+         * @param {string} id The UUID of the task graph entry.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async submitTaskGraph(namespace: string, id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TaskGraphLog>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.submitTaskGraph(namespace, id, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -16577,6 +18231,7 @@ export const TaskGraphLogsApiFactory = function (configuration?: Configuration, 
          * Fetch the task graph logs of a namespace the user has access to. The returned entries will include only summary data, and will not include information about the individual tasks that were executed. (This information is available when requesting an individual task graph log.) Entries in the response are ordered from newest to oldest. Pagination parameters work as in other API methods; see PaginationMetadata. 
          * @param {string} [namespace] Include logs for this namespace.
          * @param {string} [createdBy] Include logs from only this user.
+         * @param {string} [status] Filter to only return these statuses
          * @param {string} [search] search string that will look at name.
          * @param {string} [startTime] Include logs created after this time.
          * @param {string} [endTime] Include logs created before this time.
@@ -16585,8 +18240,8 @@ export const TaskGraphLogsApiFactory = function (configuration?: Configuration, 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listTaskGraphLogs(namespace?: string, createdBy?: string, search?: string, startTime?: string, endTime?: string, page?: number, perPage?: number, options?: any): AxiosPromise<TaskGraphLogsData> {
-            return localVarFp.listTaskGraphLogs(namespace, createdBy, search, startTime, endTime, page, perPage, options).then((request) => request(axios, basePath));
+        listTaskGraphLogs(namespace?: string, createdBy?: string, status?: string, search?: string, startTime?: string, endTime?: string, page?: number, perPage?: number, options?: any): AxiosPromise<TaskGraphLogsData> {
+            return localVarFp.listTaskGraphLogs(namespace, createdBy, status, search, startTime, endTime, page, perPage, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -16598,6 +18253,46 @@ export const TaskGraphLogsApiFactory = function (configuration?: Configuration, 
          */
         reportClientNode(namespace: string, id: string, report: TaskGraphClientNodeStatus, options?: any): AxiosPromise<void> {
             return localVarFp.reportClientNode(namespace, id, report, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Resubmits a task graph in the given namespace using the associated execution id.
+         * @param {string} namespace The namespace that owns this task graph execution.
+         * @param {string} id The UUID of the task graph execution (TaskGraphLog).
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        resubmitTaskGraphExecution(namespace: string, id: string, options?: any): AxiosPromise<TaskGraphLog> {
+            return localVarFp.resubmitTaskGraphExecution(namespace, id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Retries failed tasks of a task graph in the given namespace using the associated execution id.
+         * @param {string} namespace The namespace that owns this task graph execution.
+         * @param {string} id The UUID of the task graph execution (TaskGraphLog).
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        retryTaskGraphExecution(namespace: string, id: string, options?: any): AxiosPromise<TaskGraphLog> {
+            return localVarFp.retryTaskGraphExecution(namespace, id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Stops a task graph execution in the given namespace using the associated associated execution id.
+         * @param {string} namespace The namespace that owns this task graph execution.
+         * @param {string} id The UUID of the task graph execution (TaskGraphLog).
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        stopTaskGraphExecution(namespace: string, id: string, options?: any): AxiosPromise<TaskGraphLog> {
+            return localVarFp.stopTaskGraphExecution(namespace, id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Submit a single task graph for execution. 
+         * @param {string} namespace The namespace that owns this task graph.
+         * @param {string} id The UUID of the task graph entry.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        submitTaskGraph(namespace: string, id: string, options?: any): AxiosPromise<TaskGraphLog> {
+            return localVarFp.submitTaskGraph(namespace, id, options).then((request) => request(axios, basePath));
         },
         /**
          * Update information about a single task graph execution. 
@@ -16648,6 +18343,7 @@ export class TaskGraphLogsApi extends BaseAPI {
      * Fetch the task graph logs of a namespace the user has access to. The returned entries will include only summary data, and will not include information about the individual tasks that were executed. (This information is available when requesting an individual task graph log.) Entries in the response are ordered from newest to oldest. Pagination parameters work as in other API methods; see PaginationMetadata. 
      * @param {string} [namespace] Include logs for this namespace.
      * @param {string} [createdBy] Include logs from only this user.
+     * @param {string} [status] Filter to only return these statuses
      * @param {string} [search] search string that will look at name.
      * @param {string} [startTime] Include logs created after this time.
      * @param {string} [endTime] Include logs created before this time.
@@ -16657,8 +18353,8 @@ export class TaskGraphLogsApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof TaskGraphLogsApi
      */
-    public listTaskGraphLogs(namespace?: string, createdBy?: string, search?: string, startTime?: string, endTime?: string, page?: number, perPage?: number, options?: any) {
-        return TaskGraphLogsApiFp(this.configuration).listTaskGraphLogs(namespace, createdBy, search, startTime, endTime, page, perPage, options).then((request) => request(this.axios, this.basePath));
+    public listTaskGraphLogs(namespace?: string, createdBy?: string, status?: string, search?: string, startTime?: string, endTime?: string, page?: number, perPage?: number, options?: any) {
+        return TaskGraphLogsApiFp(this.configuration).listTaskGraphLogs(namespace, createdBy, status, search, startTime, endTime, page, perPage, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -16675,6 +18371,54 @@ export class TaskGraphLogsApi extends BaseAPI {
     }
 
     /**
+     * Resubmits a task graph in the given namespace using the associated execution id.
+     * @param {string} namespace The namespace that owns this task graph execution.
+     * @param {string} id The UUID of the task graph execution (TaskGraphLog).
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof TaskGraphLogsApi
+     */
+    public resubmitTaskGraphExecution(namespace: string, id: string, options?: any) {
+        return TaskGraphLogsApiFp(this.configuration).resubmitTaskGraphExecution(namespace, id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Retries failed tasks of a task graph in the given namespace using the associated execution id.
+     * @param {string} namespace The namespace that owns this task graph execution.
+     * @param {string} id The UUID of the task graph execution (TaskGraphLog).
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof TaskGraphLogsApi
+     */
+    public retryTaskGraphExecution(namespace: string, id: string, options?: any) {
+        return TaskGraphLogsApiFp(this.configuration).retryTaskGraphExecution(namespace, id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Stops a task graph execution in the given namespace using the associated associated execution id.
+     * @param {string} namespace The namespace that owns this task graph execution.
+     * @param {string} id The UUID of the task graph execution (TaskGraphLog).
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof TaskGraphLogsApi
+     */
+    public stopTaskGraphExecution(namespace: string, id: string, options?: any) {
+        return TaskGraphLogsApiFp(this.configuration).stopTaskGraphExecution(namespace, id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Submit a single task graph for execution. 
+     * @param {string} namespace The namespace that owns this task graph.
+     * @param {string} id The UUID of the task graph entry.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof TaskGraphLogsApi
+     */
+    public submitTaskGraph(namespace: string, id: string, options?: any) {
+        return TaskGraphLogsApiFp(this.configuration).submitTaskGraph(namespace, id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
      * Update information about a single task graph execution. 
      * @param {string} namespace The namespace that owns this task graph log.
      * @param {string} id The UUID of the task graph log entry.
@@ -16685,6 +18429,454 @@ export class TaskGraphLogsApi extends BaseAPI {
      */
     public updateTaskGraphLog(namespace: string, id: string, log: TaskGraphLog, options?: any) {
         return TaskGraphLogsApiFp(this.configuration).updateTaskGraphLog(namespace, id, log, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+
+/**
+ * TaskGraphsApi - axios parameter creator
+ * @export
+ */
+export const TaskGraphsApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * Create a single task graph for execution. 
+         * @param {string} namespace Include graphs for this namespace.
+         * @param {TaskGraph} graph Create the task graph.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createTaskGraph: async (namespace: string, graph: TaskGraph, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'namespace' is not null or undefined
+            assertParamExists('createTaskGraph', 'namespace', namespace)
+            // verify required parameter 'graph' is not null or undefined
+            assertParamExists('createTaskGraph', 'graph', graph)
+            const localVarPath = `/taskgraphs/{namespace}/graphs`
+                .replace(`{${"namespace"}}`, encodeURIComponent(String(namespace)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+
+            // authentication BasicAuth required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
+            localVarRequestOptions.data = serializeDataIfNeeded(graph, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Fetch information about a single task graph. 
+         * @param {string} namespace The namespace that owns this task graph.
+         * @param {string} id The UUID of the task graph entry.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getTaskGraph: async (namespace: string, id: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'namespace' is not null or undefined
+            assertParamExists('getTaskGraph', 'namespace', namespace)
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('getTaskGraph', 'id', id)
+            const localVarPath = `/taskgraphs/{namespace}/graphs/{id}`
+                .replace(`{${"namespace"}}`, encodeURIComponent(String(namespace)))
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+
+            // authentication BasicAuth required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Fetch the task graphs of a namespace the user has access to. The returned entries will include only summary data, and will not include information about the individual tasks that were executed. (This information is available when requesting an individual task graph log.) Entries in the response are ordered from newest to oldest. Pagination parameters work as in other API methods; see PaginationMetadata. 
+         * @param {string} namespace Namespace for graphs
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listTaskGraphs: async (namespace: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'namespace' is not null or undefined
+            assertParamExists('listTaskGraphs', 'namespace', namespace)
+            const localVarPath = `/taskgraphs/{namespace}/graphs`
+                .replace(`{${"namespace"}}`, encodeURIComponent(String(namespace)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+
+            // authentication BasicAuth required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Submit a single task graph for execution. 
+         * @param {string} namespace The namespace that owns this task graph.
+         * @param {string} id The UUID of the task graph entry.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        submitTaskGraph: async (namespace: string, id: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'namespace' is not null or undefined
+            assertParamExists('submitTaskGraph', 'namespace', namespace)
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('submitTaskGraph', 'id', id)
+            const localVarPath = `/taskgraphs/{namespace}/graphs/{id}/submit`
+                .replace(`{${"namespace"}}`, encodeURIComponent(String(namespace)))
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+
+            // authentication BasicAuth required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Update information about a single task graph execution. 
+         * @param {string} namespace The namespace that owns this task graph.
+         * @param {string} id The UUID of the task graph entry.
+         * @param {TaskGraph} graph Updates to make to the task graph.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateTaskGraph: async (namespace: string, id: string, graph: TaskGraph, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'namespace' is not null or undefined
+            assertParamExists('updateTaskGraph', 'namespace', namespace)
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('updateTaskGraph', 'id', id)
+            // verify required parameter 'graph' is not null or undefined
+            assertParamExists('updateTaskGraph', 'graph', graph)
+            const localVarPath = `/taskgraphs/{namespace}/graphs/{id}`
+                .replace(`{${"namespace"}}`, encodeURIComponent(String(namespace)))
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+
+            // authentication BasicAuth required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
+            localVarRequestOptions.data = serializeDataIfNeeded(graph, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * TaskGraphsApi - functional programming interface
+ * @export
+ */
+export const TaskGraphsApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = TaskGraphsApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * Create a single task graph for execution. 
+         * @param {string} namespace Include graphs for this namespace.
+         * @param {TaskGraph} graph Create the task graph.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async createTaskGraph(namespace: string, graph: TaskGraph, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TaskGraph>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createTaskGraph(namespace, graph, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Fetch information about a single task graph. 
+         * @param {string} namespace The namespace that owns this task graph.
+         * @param {string} id The UUID of the task graph entry.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getTaskGraph(namespace: string, id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TaskGraph>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getTaskGraph(namespace, id, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Fetch the task graphs of a namespace the user has access to. The returned entries will include only summary data, and will not include information about the individual tasks that were executed. (This information is available when requesting an individual task graph log.) Entries in the response are ordered from newest to oldest. Pagination parameters work as in other API methods; see PaginationMetadata. 
+         * @param {string} namespace Namespace for graphs
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async listTaskGraphs(namespace: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TaskGraphs>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listTaskGraphs(namespace, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Submit a single task graph for execution. 
+         * @param {string} namespace The namespace that owns this task graph.
+         * @param {string} id The UUID of the task graph entry.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async submitTaskGraph(namespace: string, id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TaskGraphLog>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.submitTaskGraph(namespace, id, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Update information about a single task graph execution. 
+         * @param {string} namespace The namespace that owns this task graph.
+         * @param {string} id The UUID of the task graph entry.
+         * @param {TaskGraph} graph Updates to make to the task graph.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async updateTaskGraph(namespace: string, id: string, graph: TaskGraph, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateTaskGraph(namespace, id, graph, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+    }
+};
+
+/**
+ * TaskGraphsApi - factory interface
+ * @export
+ */
+export const TaskGraphsApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = TaskGraphsApiFp(configuration)
+    return {
+        /**
+         * Create a single task graph for execution. 
+         * @param {string} namespace Include graphs for this namespace.
+         * @param {TaskGraph} graph Create the task graph.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createTaskGraph(namespace: string, graph: TaskGraph, options?: any): AxiosPromise<TaskGraph> {
+            return localVarFp.createTaskGraph(namespace, graph, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Fetch information about a single task graph. 
+         * @param {string} namespace The namespace that owns this task graph.
+         * @param {string} id The UUID of the task graph entry.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getTaskGraph(namespace: string, id: string, options?: any): AxiosPromise<TaskGraph> {
+            return localVarFp.getTaskGraph(namespace, id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Fetch the task graphs of a namespace the user has access to. The returned entries will include only summary data, and will not include information about the individual tasks that were executed. (This information is available when requesting an individual task graph log.) Entries in the response are ordered from newest to oldest. Pagination parameters work as in other API methods; see PaginationMetadata. 
+         * @param {string} namespace Namespace for graphs
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listTaskGraphs(namespace: string, options?: any): AxiosPromise<TaskGraphs> {
+            return localVarFp.listTaskGraphs(namespace, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Submit a single task graph for execution. 
+         * @param {string} namespace The namespace that owns this task graph.
+         * @param {string} id The UUID of the task graph entry.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        submitTaskGraph(namespace: string, id: string, options?: any): AxiosPromise<TaskGraphLog> {
+            return localVarFp.submitTaskGraph(namespace, id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Update information about a single task graph execution. 
+         * @param {string} namespace The namespace that owns this task graph.
+         * @param {string} id The UUID of the task graph entry.
+         * @param {TaskGraph} graph Updates to make to the task graph.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateTaskGraph(namespace: string, id: string, graph: TaskGraph, options?: any): AxiosPromise<void> {
+            return localVarFp.updateTaskGraph(namespace, id, graph, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * TaskGraphsApi - object-oriented interface
+ * @export
+ * @class TaskGraphsApi
+ * @extends {BaseAPI}
+ */
+export class TaskGraphsApi extends BaseAPI {
+    /**
+     * Create a single task graph for execution. 
+     * @param {string} namespace Include graphs for this namespace.
+     * @param {TaskGraph} graph Create the task graph.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof TaskGraphsApi
+     */
+    public createTaskGraph(namespace: string, graph: TaskGraph, options?: any) {
+        return TaskGraphsApiFp(this.configuration).createTaskGraph(namespace, graph, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Fetch information about a single task graph. 
+     * @param {string} namespace The namespace that owns this task graph.
+     * @param {string} id The UUID of the task graph entry.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof TaskGraphsApi
+     */
+    public getTaskGraph(namespace: string, id: string, options?: any) {
+        return TaskGraphsApiFp(this.configuration).getTaskGraph(namespace, id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Fetch the task graphs of a namespace the user has access to. The returned entries will include only summary data, and will not include information about the individual tasks that were executed. (This information is available when requesting an individual task graph log.) Entries in the response are ordered from newest to oldest. Pagination parameters work as in other API methods; see PaginationMetadata. 
+     * @param {string} namespace Namespace for graphs
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof TaskGraphsApi
+     */
+    public listTaskGraphs(namespace: string, options?: any) {
+        return TaskGraphsApiFp(this.configuration).listTaskGraphs(namespace, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Submit a single task graph for execution. 
+     * @param {string} namespace The namespace that owns this task graph.
+     * @param {string} id The UUID of the task graph entry.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof TaskGraphsApi
+     */
+    public submitTaskGraph(namespace: string, id: string, options?: any) {
+        return TaskGraphsApiFp(this.configuration).submitTaskGraph(namespace, id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Update information about a single task graph execution. 
+     * @param {string} namespace The namespace that owns this task graph.
+     * @param {string} id The UUID of the task graph entry.
+     * @param {TaskGraph} graph Updates to make to the task graph.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof TaskGraphsApi
+     */
+    public updateTaskGraph(namespace: string, id: string, graph: TaskGraph, options?: any) {
+        return TaskGraphsApiFp(this.configuration).updateTaskGraph(namespace, id, graph, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

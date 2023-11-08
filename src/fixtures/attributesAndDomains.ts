@@ -1,4 +1,4 @@
-import { Attribute, Dimension, Datatype } from '../v1';
+import { Attribute, Dimension, Datatype } from '../v2';
 
 const attributesAndDomains: Array<Dimension | Attribute> = [
   {
