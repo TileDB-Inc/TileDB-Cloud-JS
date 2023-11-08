@@ -7,13 +7,24 @@ import {
   OrganizationApi,
   NotebookApi,
   TasksApi,
-  UserApi
+  UserApi,
+  LoadEnumerationsRequest
 } from '../v1';
 import UDF from '../UDF';
 import Sql from '../Sql';
 import Groups from '../Groups';
-import { ConfigurationParameters, Configuration, Layout } from '../v2';
+import {
+  ConfigurationParameters,
+  Configuration,
+  Layout,
+  Datatype
+} from '../v2';
 import TileDBQuery from '../TileDBQuery';
+import bufferToData from '../utils/bufferToData';
+import groupValuesByOffsetBytes from '../utils/groupValuesByOffsetBytes';
+import convertToArray from '../utils/convertToArray';
+import getByteLengthOfDatatype from '../utils/getByteLengthOfDatatype';
+import concatChars from '../utils/concatChars';
 
 interface NotebookOrFileDimensions {
   contents: number[];
@@ -92,6 +103,87 @@ class TileDBClient {
 
   public info(namespace: string, array: string, options?: any) {
     return this.ArrayApi.getArrayMetadata(namespace, array, options);
+  }
+
+  public async loadEnumerationsRequest(
+    namespace: string,
+    array: string,
+    config: {
+      enumerations: string[];
+      enumerationsMaxSize?: string;
+      enumerationsTotalSize?: string;
+    }
+  ) {
+    const {
+      enumerations,
+      enumerationsMaxSize = '10485760',
+      enumerationsTotalSize = '52428800'
+    } = config;
+    const loadEnumerationsOptions: LoadEnumerationsRequest = {
+      config: {
+        entries: [
+          {
+            key: 'sm.enumerations_max_size',
+            value: enumerationsMaxSize
+          },
+          {
+            key: 'sm.enumerations_max_total_size',
+            value: enumerationsTotalSize
+          }
+        ]
+      },
+      enumerations: enumerations
+    };
+    const response = await this.ArrayApi.loadEnumerations(
+      namespace,
+      array,
+      loadEnumerationsOptions
+    );
+
+    const resultPromises = response.data.enumerations.map(async enumeration => {
+      const { type, data, name, offsets } = enumeration;
+      // Data is returned as array of numbers, convert it to buffer
+      const dataBuffer = Uint8Array.from(data).buffer;
+      let values: any = bufferToData(dataBuffer, type as Datatype);
+
+      // In case of var-length data, use offsets to get results
+      if (enumeration.cell_val_num === 4294967295) {
+        /**
+         * Convert offsets from uint8 array to uint64
+         * Uint8 array: 0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,8,0,0,0,0,0,0,0
+         * Uint64 array: 0, 3, 8
+         */
+        const offsetsBuffer = Uint8Array.from(offsets).buffer;
+        const byteOffsets = Array.from(new BigUint64Array(offsetsBuffer));
+        // Get how many bytes this type is
+        const BYTE_PER_ELEMENT = getByteLengthOfDatatype(type as Datatype);
+        /**
+         * Convert offsets by bytes to offsets by element,
+         * since some primitives are more than 1 byte long.
+         */
+        const offsetsAsNumbers = byteOffsets.map(o =>
+          Number(o / BigInt(BYTE_PER_ELEMENT))
+        );
+
+        const groupedValues = await groupValuesByOffsetBytes(
+          convertToArray(values),
+          offsetsAsNumbers
+        );
+
+        const valueIsString = typeof values === 'string';
+        values = valueIsString
+          ? concatChars(groupedValues as string[][])
+          : (groupedValues as number[][] | bigint[][]);
+      }
+
+      return {
+        name: name,
+        type: type,
+        values
+      };
+    });
+
+    return await Promise.all(resultPromises);
   }
 
   public arrayActivity(

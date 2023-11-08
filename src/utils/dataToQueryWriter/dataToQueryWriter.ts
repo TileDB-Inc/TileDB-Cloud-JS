@@ -1,6 +1,5 @@
-import { Dimension } from '../../v1';
 import { ValueBuffers } from '../attributeValuesToArrayBuffers';
-import { Querystatus, Querytype } from '../../v2';
+import { Querystatus, Querytype, Dimension } from '../../v2';
 import getRanges from '../getRanges';
 import { QueryWrite } from '../../TileDBQuery';
 import flatten from '../flatten';

@@ -1,4 +1,5 @@
 import { ArraySchema } from '../../v1';
+import { Dimension, Attribute } from '../../v2';
 import dataToQueryWriter from '../dataToQueryWriter';
 import attributeValuesToArrayBuffers from '../attributeValuesToArrayBuffers';
 import capnpQuerySerializer from '../serialization/capnpQuerySerializer';
@@ -8,8 +9,8 @@ import { QueryWrite } from '../../TileDBQuery';
 const emptyArrayBuffer = new ArrayBuffer(0);
 
 const getWriterBody = (data: QueryWrite, arraySchema: ArraySchema) => {
-  const dimensions = arraySchema.domain.dimensions;
-  const attributes = arraySchema.attributes;
+  const dimensions = arraySchema.domain.dimensions as Dimension[];
+  const attributes = arraySchema.attributes as Attribute[];
   const valueBuffers = attributeValuesToArrayBuffers(
     data.values,
     dimensions,
