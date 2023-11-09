@@ -1,7 +1,10 @@
+import { Enumeration } from '../../v1';
 import { Attribute, Dimension, Datatype } from '../../v2';
 import isDimension from '../isDimension';
 
-const isAttributeVarLength = (attribute: Attribute | Dimension) => {
+const isAttributeVarLength = (
+  attribute: Attribute | Dimension | Enumeration
+) => {
   if (isDimension(attribute)) {
     // Only StringAscii is var-length dimension
     return attribute.type === Datatype.StringAscii;
