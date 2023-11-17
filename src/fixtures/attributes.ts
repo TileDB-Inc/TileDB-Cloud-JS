@@ -1,4 +1,4 @@
-import { Datatype } from '../v1';
+import { Datatype } from '../v2';
 
 export const fixedLenAttributesSchema = [
   {

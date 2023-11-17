@@ -7,13 +7,15 @@ import {
   OrganizationApi,
   NotebookApi,
   TasksApi,
-  UserApi
+  UserApi,
+  LoadEnumerationsRequest
 } from '../v1';
 import UDF from '../UDF';
 import Sql from '../Sql';
 import Groups from '../Groups';
 import { ConfigurationParameters, Configuration, Layout } from '../v2';
 import TileDBQuery from '../TileDBQuery';
+import enumerationToHumanReadable from '../utils/enumerationToHumanReadable';
 
 interface NotebookOrFileDimensions {
   contents: number[];
@@ -92,6 +94,48 @@ class TileDBClient {
 
   public info(namespace: string, array: string, options?: any) {
     return this.ArrayApi.getArrayMetadata(namespace, array, options);
+  }
+
+  public async loadEnumerationsRequest(
+    namespace: string,
+    array: string,
+    config: {
+      enumerations: string[];
+      enumerationsMaxSize?: string;
+      enumerationsTotalSize?: string;
+    }
+  ) {
+    const {
+      enumerations,
+      enumerationsMaxSize = '10485760',
+      enumerationsTotalSize = '52428800'
+    } = config;
+    const loadEnumerationsOptions: LoadEnumerationsRequest = {
+      config: {
+        entries: [
+          {
+            key: 'sm.enumerations_max_size',
+            value: enumerationsMaxSize
+          },
+          {
+            key: 'sm.enumerations_max_total_size',
+            value: enumerationsTotalSize
+          }
+        ]
+      },
+      enumerations: enumerations
+    };
+    const response = await this.ArrayApi.loadEnumerations(
+      namespace,
+      array,
+      loadEnumerationsOptions
+    );
+
+    const resultPromises = response.data.enumerations.map(
+      enumerationToHumanReadable
+    );
+
+    return await Promise.all(resultPromises);
   }
 
   public arrayActivity(

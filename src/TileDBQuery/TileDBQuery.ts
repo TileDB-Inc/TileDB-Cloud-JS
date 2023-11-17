@@ -1,7 +1,8 @@
 import dataToQuery from '../utils/dataToQuery';
 import capnpQueryDeSerializer from '../utils/deserialization/capnpQueryDeSerializer';
-import { ArrayApi, ArraySchema } from '../v1';
+import { ArrayApi } from '../v1';
 import {
+  ArraySchema,
   AttributeBufferHeader,
   Configuration,
   ConfigurationParameters,
