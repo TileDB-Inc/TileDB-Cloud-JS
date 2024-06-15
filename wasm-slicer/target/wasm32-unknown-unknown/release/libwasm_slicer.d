@@ -1,0 +1,1 @@
+/home/shiro/Development/Go/src/github.com/TileDB-Cloud-JS/wasm-slicer/target/wasm32-unknown-unknown/release/libwasm_slicer.rlib: /home/shiro/Development/Go/src/github.com/TileDB-Cloud-JS/wasm-slicer/src/lib.rs

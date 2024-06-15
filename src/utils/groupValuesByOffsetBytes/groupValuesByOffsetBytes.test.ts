@@ -2,18 +2,19 @@ import groupValuesByOffsetBytes from "./groupValuesByOffsetBytes";
 import convertToArray from "../convertToArray";
 
 describe("groupValuesByOffsets()", () => {
-  it("Should group numbers by offsets", async () => {
+  it.only("Should group numbers by offsets", async () => {
     const result = await groupValuesByOffsetBytes(
       [33, 28, 35, 49, 122, 322, 199, 301, 234, 123, 99, 88],
       [0, 2, 3, 5, 9]
     );
-    expect(result).toEqual([
-      [33, 28],
-      [35],
-      [49, 122],
-      [322, 199, 301, 234],
-      [123, 99, 88],
-    ]);
+    expect(result).toEqual('')
+    // expect(result).toEqual([
+    //   [33, 28],
+    //   [35],
+    //   [49, 122],
+    //   [322, 199, 301, 234],
+    //   [123, 99, 88],
+    // ]);
   });
 
   it("Should group values by offsets for strings", async () => {

@@ -1,0 +1,10 @@
+/home/shiro/Development/Go/src/github.com/TileDB-Cloud-JS/wasm-slicer/target/wasm32-unknown-unknown/release/deps/libweb_sys-bb4f9db4e09b41bb.rmeta: /home/shiro/.cargo/registry/src/index.crates.io-6f17d22bba15001f/web-sys-0.3.69/src/lib.rs /home/shiro/.cargo/registry/src/index.crates.io-6f17d22bba15001f/web-sys-0.3.69/src/features/mod.rs /home/shiro/.cargo/registry/src/index.crates.io-6f17d22bba15001f/web-sys-0.3.69/src/features/gen_EventTarget.rs /home/shiro/.cargo/registry/src/index.crates.io-6f17d22bba15001f/web-sys-0.3.69/src/features/gen_Window.rs
+
+/home/shiro/Development/Go/src/github.com/TileDB-Cloud-JS/wasm-slicer/target/wasm32-unknown-unknown/release/deps/libweb_sys-bb4f9db4e09b41bb.rlib: /home/shiro/.cargo/registry/src/index.crates.io-6f17d22bba15001f/web-sys-0.3.69/src/lib.rs /home/shiro/.cargo/registry/src/index.crates.io-6f17d22bba15001f/web-sys-0.3.69/src/features/mod.rs /home/shiro/.cargo/registry/src/index.crates.io-6f17d22bba15001f/web-sys-0.3.69/src/features/gen_EventTarget.rs /home/shiro/.cargo/registry/src/index.crates.io-6f17d22bba15001f/web-sys-0.3.69/src/features/gen_Window.rs
+
+/home/shiro/Development/Go/src/github.com/TileDB-Cloud-JS/wasm-slicer/target/wasm32-unknown-unknown/release/deps/web_sys-bb4f9db4e09b41bb.d: /home/shiro/.cargo/registry/src/index.crates.io-6f17d22bba15001f/web-sys-0.3.69/src/lib.rs /home/shiro/.cargo/registry/src/index.crates.io-6f17d22bba15001f/web-sys-0.3.69/src/features/mod.rs /home/shiro/.cargo/registry/src/index.crates.io-6f17d22bba15001f/web-sys-0.3.69/src/features/gen_EventTarget.rs /home/shiro/.cargo/registry/src/index.crates.io-6f17d22bba15001f/web-sys-0.3.69/src/features/gen_Window.rs
+
+/home/shiro/.cargo/registry/src/index.crates.io-6f17d22bba15001f/web-sys-0.3.69/src/lib.rs:
+/home/shiro/.cargo/registry/src/index.crates.io-6f17d22bba15001f/web-sys-0.3.69/src/features/mod.rs:
+/home/shiro/.cargo/registry/src/index.crates.io-6f17d22bba15001f/web-sys-0.3.69/src/features/gen_EventTarget.rs:
+/home/shiro/.cargo/registry/src/index.crates.io-6f17d22bba15001f/web-sys-0.3.69/src/features/gen_Window.rs:
