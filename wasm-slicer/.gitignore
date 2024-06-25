@@ -1,0 +1,2 @@
+target/debug
+target/wasm32-unknown-unknown/debug/
