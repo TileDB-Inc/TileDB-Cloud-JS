@@ -1,46 +1,50 @@
 // import Parallel from 'paralleljs';
 // import range from '../range';
-
+import init, {
+  initThreadPool,
+  slice_data
+} from '../../../wasm-slicer/pkg/wasm_slicer.js';
 /**
  * Group values together according to offsets
  * @param vals [1, 2, 3, 4]
  * @param offsets e.g. [0, 3, 4]
  * @returns [[1,2,3], 4]
  */
-const groupValuesByOffsetBytes = <T>(
+const groupValuesByOffsetBytes = async <T>(
   values: T[],
   offsets: number[]
 ): Promise<any> => {
+  await init();
+  // Thread pool initialization with the given number of threads
+  // (pass `navigator.hardwareConcurrency` if you want to use all cores).
+  await initThreadPool(navigator.hardwareConcurrency);
   const offsetsBigInt = offsets.map(n => BigInt(n));
   // import init, { slice_data } from '../../../wasm-slicer/pkg/wasm_slicer.js';
-  return import('../../../wasm-slicer/pkg/wasm_slicer.js').then(module => {
-    module.slice_data;
-    const data = new Uint8Array(values as any);
+  // return import('../../../wasm-slicer/pkg/wasm_slicer.js').then(module => {
 
-    // const offsets = new BigUint64Array([2n, 4n]);
+  const data = new Uint8Array(values as any);
 
-    const slicedData = module.slice_data(
-      data,
-      new BigUint64Array(offsetsBigInt)
-    );
-    // const slices = slicedData.slices;
+  // const offsets = new BigUint64Array([2n, 4n]);
 
-    return slicedData;
-    // const sizes = slicedData.sizes;
+  const slicedData = slice_data(data, new BigUint64Array(offsetsBigInt));
+  // const slices = slicedData.slices;
 
-    // // return [slices, sizes];
+  return slicedData;
+  // const sizes = slicedData.sizes;
 
-    // const result = [];
-    // let start = 0;
+  // // return [slices, sizes];
 
-    // for (const size of sizes) {
-    //   // console.log(slices);
-    //   const end = start + Number(size);
-    //   result.push(slices.slice(start, end));
-    //   start = end;
-    // }
-    // return result;
-  });
+  // const result = [];
+  // let start = 0;
+
+  // for (const size of sizes) {
+  //   // console.log(slices);
+  //   const end = start + Number(size);
+  //   result.push(slices.slice(start, end));
+  //   start = end;
+  // }
+  // return result;
+  // });
 
   // async function run() {
   //   await init();

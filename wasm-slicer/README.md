@@ -11,3 +11,5 @@
 
 ## Build
 `cd wasm-slicer && cargo +nightly build`
+### using wasm-pack (above not working)
+`wasm-pack build --dev --target web`

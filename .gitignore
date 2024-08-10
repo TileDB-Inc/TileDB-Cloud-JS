@@ -118,3 +118,6 @@ tmp/
 
 # Build files
 lib
+
+# Wasm-slicer
+wasm-slicer/target
