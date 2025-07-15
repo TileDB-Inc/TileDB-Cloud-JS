@@ -9,8 +9,12 @@ const isAttributeVarLength = (
     // Only StringAscii is var-length dimension
     return attribute.type === Datatype.StringAscii;
   }
-  // eslint-disable-next-line eqeqeq
-  return attribute.cellValNum == 4294967295;
+
+  // Attribute has a different name for cell_val_num
+  if ('cellValNum' in attribute) {
+    return attribute.cellValNum === 4294967295;
+  }
+  return attribute.cell_val_num === 4294967295;
 };
 
 export default isAttributeVarLength;

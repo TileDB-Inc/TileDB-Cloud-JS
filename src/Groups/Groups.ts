@@ -15,8 +15,12 @@ class Groups {
     this.V2API = new GroupsV2Api(paramsV2, undefined, axios);
   }
 
-  public async getGroupContents(namespace: string, name: string) {
-    const result = await this.API.getGroupContents(namespace, name);
+  public async getGroupContents(
+    workspace: string,
+    teamspace: string,
+    name: string
+  ) {
+    const result = await this.API.getGroupContents(workspace, teamspace, name);
 
     return result.data;
   }
