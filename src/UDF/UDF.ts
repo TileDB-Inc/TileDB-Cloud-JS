@@ -23,12 +23,12 @@ class UDF {
   }
 
   //NOTE: TDB: We could use `btoa` to encode64 the `exec` field.
-  public registerUdf(namespace: string, name: string, udf: UDFInfoUpdate) {
-    return this.API.registerUDFInfo(namespace, name, udf);
+  public registerUdf(workspace: string, name: string, udf: UDFInfoUpdate) {
+    return this.API.registerUDFInfo(workspace, name, udf);
   }
 
   public registerGenericUdf(
-    namespace: string,
+    workspace: string,
     name: string,
     udf: Omit<UDFInfoUpdate, 'type'>
   ) {
@@ -36,11 +36,11 @@ class UDF {
       ...udf,
       type: UDFType.Generic
     };
-    return this.API.registerUDFInfo(namespace, name, udfObject);
+    return this.API.registerUDFInfo(workspace, name, udfObject);
   }
 
   public registerSingleArrayUdf(
-    namespace: string,
+    workspace: string,
     name: string,
     udf: Omit<UDFInfoUpdate, 'type'>
   ) {
@@ -48,15 +48,15 @@ class UDF {
       ...udf,
       type: UDFType.SingleArray
     };
-    return this.API.registerUDFInfo(namespace, name, udfObject);
+    return this.API.registerUDFInfo(workspace, name, udfObject);
   }
 
-  public updateUdf(namespace: string, name: string, udf: UDFInfoUpdate) {
-    return this.API.updateUDFInfo(namespace, name, udf);
+  public updateUdf(workspace: string, name: string, udf: UDFInfoUpdate) {
+    return this.API.updateUDFInfo(workspace, name, udf);
   }
 
   public updateGenericUdf(
-    namespace: string,
+    workspace: string,
     name: string,
     udf: Omit<UDFInfoUpdate, 'type'>
   ) {
@@ -64,11 +64,11 @@ class UDF {
       ...udf,
       type: UDFType.Generic
     };
-    return this.API.updateUDFInfo(namespace, name, udfObject);
+    return this.API.updateUDFInfo(workspace, name, udfObject);
   }
 
   public updateSingleArrayUdf(
-    namespace: string,
+    workspace: string,
     name: string,
     udf: Omit<UDFInfoUpdate, 'type'>
   ) {
@@ -76,30 +76,26 @@ class UDF {
       ...udf,
       type: UDFType.SingleArray
     };
-    return this.API.updateUDFInfo(namespace, name, udfObject);
+    return this.API.updateUDFInfo(workspace, name, udfObject);
   }
 
   public async exec(
-    namespaceAndUdf: string,
+    workspace: string,
+    teamspace: string,
+    name: string,
     args?: Array<any>,
     options?: Omit<GenericUDF, 'argument' | 'udf_info_name'>
   ) {
-    if (!namespaceAndUdf.includes('/')) {
-      throw new Error(
-        "First argument should include namespace and the udf name separated by a '/' e.g. TileDB/myUDF"
-      );
-    }
-
     if (args && !Array.isArray(args)) {
       throw new Error('Arguments should be contained in an array');
     }
-    const [namespace] = namespaceAndUdf.split('/');
+
     const udf: GenericUDF = {
-      udf_info_name: namespaceAndUdf,
+      udf_info_name: workspace + '/' + name,
       ...(args ? { argument: JSON.stringify(args) } : {}),
       ...options
     };
-    const result = await this.API.submitGenericUDF(namespace, udf);
+    const result = await this.API.submitGenericUDF(workspace, teamspace, udf);
     return result.data;
   }
 

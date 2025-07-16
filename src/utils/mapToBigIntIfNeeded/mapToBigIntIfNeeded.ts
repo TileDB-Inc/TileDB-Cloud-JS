@@ -1,7 +1,7 @@
 import { Datatype } from '../../v2';
 
 // DateTime types are Int64 numbers
-export const int64Types = [
+export const int64Types: Array<Datatype> = [
   Datatype.Int64,
   Datatype.Uint64,
   Datatype.DatetimeAs,

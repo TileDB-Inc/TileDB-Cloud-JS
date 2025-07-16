@@ -97,7 +97,8 @@ class TileDBClient {
   }
 
   public async loadEnumerationsRequest(
-    namespace: string,
+    workspace: string,
+    teamspace: string,
     array: string,
     config: {
       enumerations: string[];
@@ -126,7 +127,8 @@ class TileDBClient {
       enumerations: enumerations
     };
     const response = await this.ArrayApi.loadEnumerations(
-      namespace,
+      workspace,
+      teamspace,
       array,
       loadEnumerationsOptions
     );
@@ -139,7 +141,8 @@ class TileDBClient {
   }
 
   public arrayActivity(
-    namespace: string,
+    workspace: string,
+    teamspace: string,
     array: string,
     start?: number,
     end?: number,
@@ -149,7 +152,8 @@ class TileDBClient {
     options?: any
   ) {
     return this.ArrayApi.arrayActivityLog(
-      namespace,
+      workspace,
+      teamspace,
       array,
       start,
       end,
@@ -165,12 +169,14 @@ class TileDBClient {
   }
 
   public registerArray(
+    workspace: string,
     namespace: string,
     array: string,
     arrayMetadata: ArrayInfoUpdate,
     options?: any
   ) {
     return this.ArrayApi.registerArray(
+      workspace,
       namespace,
       array,
       arrayMetadata,
@@ -183,15 +189,23 @@ class TileDBClient {
   }
 
   public shareArray(
+    workspace: string,
     namespace: string,
     array: string,
     arraySharing: ArraySharing,
     options?: any
   ) {
-    return this.ArrayApi.shareArray(namespace, array, arraySharing, options);
+    return this.ArrayApi.shareArray(
+      workspace,
+      namespace,
+      array,
+      arraySharing,
+      options
+    );
   }
 
   public unshareArray(
+    workspace: string,
     namespace: string,
     array: string,
     namespaceToUnshare: string,
@@ -201,7 +215,13 @@ class TileDBClient {
       actions: [],
       namespace: namespaceToUnshare
     };
-    return this.ArrayApi.shareArray(namespace, array, noActions, options);
+    return this.ArrayApi.shareArray(
+      workspace,
+      namespace,
+      array,
+      noActions,
+      options
+    );
   }
 
   /**
@@ -376,7 +396,8 @@ class TileDBClient {
    * Rename a notebook's name
    */
   public renameNotebook(
-    namespace: string,
+    workspace: string,
+    teamspace: string,
     array: string,
     notebookName: string,
     options?: any
@@ -385,26 +406,35 @@ class TileDBClient {
       name: notebookName
     };
     return this.NotebookApi.updateNotebookName(
-      namespace,
+      workspace,
+      teamspace,
       array,
       notebookMetadata,
       options
     );
   }
 
-  public task(id: string, options?: any) {
-    return this.TasksApi.taskIdGet(id, options);
+  public task(workspace: string, id: string, options?: any) {
+    return this.TasksApi.taskWorkspaceIdGet(workspace, id, options);
   }
 
-  public async downloadNotebookContents(namespace: string, notebook: string) {
+  public async downloadNotebookContents(
+    workspace: string,
+    teamspace: string,
+    notebook: string
+  ) {
     interface NotebookMetadata {
       file_size: number;
     }
-    const res = await this.ArrayApi.getArrayMetaDataJson(namespace, notebook);
+    const res = await this.ArrayApi.getArrayMetaDataJson(
+      workspace,
+      teamspace,
+      notebook
+    );
     const notebookSize = (res.data as NotebookMetadata).file_size;
     if (!notebookSize) {
       throw new Error(
-        `file_size was not found inside the array's metadata, are you sure that "${namespace}/${notebook}" is a TileDB notebook?`
+        `file_size was not found inside the array's metadata, are you sure that "${workspace}/${teamspace}/${notebook}" is a TileDB notebook?`
       );
     }
     const query = {
@@ -417,7 +447,8 @@ class TileDBClient {
     let notebookContents: number[] = [];
 
     for await (const results of this.query.ReadQuery(
-      namespace,
+      workspace,
+      teamspace,
       notebook,
       query
     )) {
@@ -434,25 +465,41 @@ class TileDBClient {
     return json.replace(/[^\x20-\x7E]/g, '');
   }
 
-  public async downloadNotebookToFile(namespace: string, notebook: string) {
-    const contents = await this.downloadNotebookContents(namespace, notebook);
+  public async downloadNotebookToFile(
+    workspace: string,
+    teamspace: string,
+    notebook: string
+  ) {
+    const contents = await this.downloadNotebookContents(
+      workspace,
+      teamspace,
+      notebook
+    );
     await save(contents, `${notebook}.ipynb`);
   }
 
-  public async getFileContents(namespace: string, file: string) {
+  public async getFileContents(
+    workspace: string,
+    teamspace: string,
+    file: string
+  ) {
     interface FileMetadata {
       original_file_name: string;
       file_size: number;
       file_extension: string;
       mime_type: string;
     }
-    const res = await this.ArrayApi.getArrayMetaDataJson(namespace, file);
+    const res = await this.ArrayApi.getArrayMetaDataJson(
+      workspace,
+      teamspace,
+      file
+    );
     const { original_file_name, file_size, mime_type } =
       res.data as FileMetadata;
 
     if (!original_file_name || !file_size) {
       throw new Error(
-        `file_size or original_file_name were not found inside the array's metadata, are you sure that "${namespace}/${file}" is a TileDB file?`
+        `file_size or original_file_name were not found inside the array's metadata, are you sure that "${workspace}/${teamspace}/${file}" is a TileDB file?`
       );
     }
 
@@ -466,7 +513,12 @@ class TileDBClient {
       attributes: ['contents']
     };
 
-    for await (const results of this.query.ReadQuery(namespace, file, query)) {
+    for await (const results of this.query.ReadQuery(
+      workspace,
+      teamspace,
+      file,
+      query
+    )) {
       fileContents = fileContents.concat(
         (results as NotebookOrFileDimensions).contents
       );
@@ -481,9 +533,14 @@ class TileDBClient {
     };
   }
 
-  public async downloadFile(namespace: string, file: string) {
+  public async downloadFile(
+    workspace: string,
+    teamspace: string,
+    file: string
+  ) {
     const { buffer, originalFileName } = await this.getFileContents(
-      namespace,
+      workspace,
+      teamspace,
       file
     );
 

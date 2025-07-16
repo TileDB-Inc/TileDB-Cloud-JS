@@ -7,9 +7,10 @@
     "/lib"
   ],
   "scripts": {
-    "generate-openapi:v1": "openapi-generator-cli generate -i ../TileDB-Cloud-API-Spec/openapi-v1.yaml -o ./src/v1 -g typescript-axios -t ./openapi-templates --reserved-words-mappings default=default --type-mappings=Array=ModelArray",
-    "generate-openapi:v2": "openapi-generator-cli generate -i ../TileDB-Cloud-API-Spec/openapi-v2.yaml -o ./src/v2 -g typescript-axios -t ./openapi-templates --reserved-words-mappings default=default --type-mappings=Array=ModelArray",
-    "generate-openapi:commons": "openapi-generator-cli generate -i ../TileDB-Cloud-API-Spec/openapi-v1.yaml -o ./src/commons -g typescript-axios -t ./openapi-templates-commons --reserved-words-mappings default=default --type-mappings=Array=ModelArray",
+    "generate-openapi:v1": "openapi-generator-cli generate -i ../TileDB-Server/openapi/v1to3/src/openapi-v1.yaml -o ./src/v1 -g typescript-axios -t ./openapi-templates --reserved-words-mappings default=default --type-mappings=Array=ModelArray",
+    "generate-openapi:v2": "openapi-generator-cli generate -i ../TileDB-Server/openapi/v1to3/src/openapi-v2.yaml -o ./src/v2 -g typescript-axios -t ./openapi-templates --reserved-words-mappings default=default --type-mappings=Array=ModelArray",
+    "generate-openapi:v4": "openapi-generator-cli generate -i ../TileDB-Server/openapi/v4/src/main.yaml -o ./src/v4 -g typescript-axios -t ./openapi-templates --reserved-words-mappings default=default --type-mappings=Array=ModelArray",
+    "generate-openapi:commons": "openapi-generator-cli generate -i ../TileDB-Server/openapi/v1to3/src/openapi-v1.yaml -o ./src/commons -g typescript-axios -t ./openapi-templates-commons --reserved-words-mappings default=default --type-mappings=Array=ModelArray",
     "build": "npm run generate-openapi:commons && npm run generate-openapi:v1 && npm run generate-openapi:v2 && tsc",
     "build-ts": "tsc --project tsconfig.build.json",
     "test": "jest",
@@ -38,7 +39,7 @@
     "eslint-plugin-storybook": "^0.6.11",
     "jest": "^27.2.0",
     "ts-jest": "^27.0.5",
-    "typescript": "^4.2.3"
+    "typescript": "^4.9.5"
   },
   "overrides": {
     "capnp-ts": {

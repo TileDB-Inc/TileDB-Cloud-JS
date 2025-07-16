@@ -20,7 +20,8 @@ class Sql {
   }
 
   exec(
-    namespace: string,
+    workspace: string,
+    teamspace: string,
     query: string,
     options?: Omit<SQLParameters, 'query'>
   ) {
@@ -28,7 +29,7 @@ class Sql {
       query,
       ...options
     };
-    return this.API.runSQL(namespace, sql);
+    return this.API.runSQL(workspace, teamspace, sql);
   }
 }
 

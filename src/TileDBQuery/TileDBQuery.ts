@@ -73,10 +73,16 @@ export class TileDBQuery {
     this.arrayAPIV2 = new ArrayApiV2(config, undefined, this.axios);
   }
 
-  async WriteQuery(namespace: string, arrayName: string, data: QueryWrite) {
+  async WriteQuery(
+    workspace: string,
+    teamspace: string,
+    arrayName: string,
+    data: QueryWrite
+  ) {
     try {
       const arraySchemaResponse = await this.arrayAPI.getArray(
-        namespace,
+        workspace,
+        teamspace,
         arrayName,
         'application/json'
       );
@@ -84,7 +90,8 @@ export class TileDBQuery {
       const body = getWriterBody(data, arraySchema);
 
       const queryResponse = await this.queryAPI.submitQuery(
-        namespace,
+        workspace,
+        teamspace,
         arrayName,
         Querytype.Write,
         'application/capnp',
@@ -130,7 +137,8 @@ export class TileDBQuery {
   async ReadIncompleteQuery(
     arraySchema: ArraySchema,
     queryAsArrayBuffer: ArrayBuffer,
-    namespace: string,
+    workspace: string,
+    teamspace: string,
     arrayName: string,
     options: Options
   ): Promise<{
@@ -139,7 +147,8 @@ export class TileDBQuery {
     queryAsArrayBuffer: ArrayBuffer;
   }> {
     const queryResponse = await this.queryAPI.submitQuery(
-      namespace,
+      workspace,
+      teamspace,
       arrayName,
       Querytype.Read,
       'application/capnp',
@@ -189,7 +198,8 @@ export class TileDBQuery {
   }
 
   async *ReadQuery(
-    namespace: string,
+    workspace: string,
+    teamspace: string,
     arrayName: string,
     body: QueryData,
     arraySchema?: ArraySchema
@@ -198,7 +208,8 @@ export class TileDBQuery {
       // Get ArraySchema of arrray, to get type information of the dimensions and the attributes
       if (typeof arraySchema === 'undefined') {
         const arrayFromCapnp = await this.ArrayOpen(
-          namespace,
+          workspace,
+          teamspace,
           arrayName,
           Querytype.Read
         );
@@ -221,7 +232,8 @@ export class TileDBQuery {
        */
 
       const queryResponse = await this.queryAPI.submitQuery(
-        namespace,
+        workspace,
+        teamspace,
         arrayName,
         Querytype.Read,
         'application/capnp',
@@ -270,7 +282,8 @@ export class TileDBQuery {
               await this.ReadIncompleteQuery(
                 arraySchema,
                 bufferWithoutFirstEightBytes,
-                namespace,
+                workspace,
+                teamspace,
                 arrayName,
                 options
               );
@@ -353,7 +366,8 @@ export class TileDBQuery {
   }
 
   async ArrayOpen(
-    namespace: string,
+    workspace: string,
+    teamspace: string,
     array: string,
     queryType: Querytype,
     contentType: string | undefined = 'application/json'
@@ -371,7 +385,8 @@ export class TileDBQuery {
     return new Promise(async (resolve, reject) => {
       try {
         const response = await this.arrayAPIV2.getArray(
-          namespace,
+          workspace,
+          teamspace,
           array,
           contentType,
           arrayFetchData,

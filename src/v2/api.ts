@@ -24,7 +24,7 @@ import type { RequestArgs } from '../commons/base';
 import { COLLECTION_FORMATS, RequiredError } from '../commons/base';
 import updateBasePathAfterRedirect from '../utils/updateBasePathAfterRedirect';
 
-export const BASE_PATH = "https://api.tiledb.com/v2".replace(/\/+$/, "");
+export const BASE_PATH = "http://localhost/v2".replace(/\/+$/, "");
 
 /**
  *
@@ -100,6 +100,12 @@ export interface AWSRole {
  */
 export interface AccessCredential {
     /**
+     * The UUID of the credential
+     * @type {string}
+     * @memberof AccessCredential
+     */
+    uuid?: string;
+    /**
      * A user-specified name for the key
      * @type {string}
      * @memberof AccessCredential
@@ -130,6 +136,12 @@ export interface AccessCredential {
      */
     updated_at?: string;
     /**
+     * Is this credential allowed to be used in tasks
+     * @type {boolean}
+     * @memberof AccessCredential
+     */
+    allowed_in_tasks?: boolean | null;
+    /**
      * 
      * @type {AccessCredentialCredential}
      * @memberof AccessCredential
@@ -141,6 +153,12 @@ export interface AccessCredential {
      * @memberof AccessCredential
      */
     role?: AccessCredentialRole;
+    /**
+     * 
+     * @type {AccessCredentialToken}
+     * @memberof AccessCredential
+     */
+    token?: AccessCredentialToken;
 }
 /**
  * The credential information itself. Exactly one sub-field may be set. The names match those in the CloudProvider enum.
@@ -160,6 +178,12 @@ export interface AccessCredentialCredential {
      * @memberof AccessCredentialCredential
      */
     azure?: AzureCredential | null;
+    /**
+     * 
+     * @type {GCPInteroperabilityCredential}
+     * @memberof AccessCredentialCredential
+     */
+    gcp?: GCPInteroperabilityCredential | null;
 }
 /**
  * The role information itself. Exactly one sub-field may be set. The names match those in the CloudProvider enum.
@@ -174,6 +198,37 @@ export interface AccessCredentialRole {
      */
     aws?: AWSRole | null;
 }
+/**
+ * The token information itself. Exactly one sub-field may be set. The names match those in the CloudProvider enum.
+ * @export
+ * @interface AccessCredentialToken
+ */
+export interface AccessCredentialToken {
+    /**
+     * 
+     * @type {AzureToken}
+     * @memberof AccessCredentialToken
+     */
+    azure?: AzureToken | null;
+    /**
+     * 
+     * @type {GCPServiceAccountKey}
+     * @memberof AccessCredentialToken
+     */
+    gcp?: GCPServiceAccountKey | null;
+}
+/**
+ * The types of an access credential
+ * @export
+ * @enum {string}
+ */
+export enum AccessCredentialType {
+    Key = 'key',
+    Arn = 'arn',
+    Token = 'token',
+    AzureToken = 'azure_token'
+}
+
 /**
  * Object including credentials and pagination metadata
  * @export
@@ -218,7 +273,7 @@ export enum ActivityEventType {
 }
 
 /**
- * Actvity of an Array
+ * Activity of an Array
  * @export
  * @interface ArrayActivityLog
  */
@@ -591,6 +646,103 @@ export enum ArrayType {
 }
 
 /**
+ * 
+ * @export
+ * @interface AssetActivityLog
+ */
+export interface AssetActivityLog {
+    /**
+     * The ID of the activity
+     * @type {string}
+     * @memberof AssetActivityLog
+     */
+    id: string;
+    /**
+     * time event took place (RFC3339)
+     * @type {string}
+     * @memberof AssetActivityLog
+     */
+    event_at: string;
+    /**
+     * type of the event
+     * @type {string}
+     * @memberof AssetActivityLog
+     */
+    action: string;
+    /**
+     * User who performed action
+     * @type {string}
+     * @memberof AssetActivityLog
+     */
+    username: string;
+    /**
+     * uuid of associated array task
+     * @type {string}
+     * @memberof AssetActivityLog
+     */
+    array_task_id?: string;
+    /**
+     * 
+     * @type {AssetActivityLogAsset}
+     * @memberof AssetActivityLog
+     */
+    asset: AssetActivityLogAsset;
+}
+/**
+ * The asset details
+ * @export
+ * @interface AssetActivityLogAsset
+ */
+export interface AssetActivityLogAsset {
+    /**
+     * The asset ID
+     * @type {string}
+     * @memberof AssetActivityLogAsset
+     */
+    id?: string;
+    /**
+     * The asset name
+     * @type {string}
+     * @memberof AssetActivityLogAsset
+     */
+    name?: string;
+    /**
+     * The namespace that the asset belongs to
+     * @type {string}
+     * @memberof AssetActivityLogAsset
+     */
+    namespace?: string;
+    /**
+     * 
+     * @type {AssetType}
+     * @memberof AssetActivityLogAsset
+     */
+    asset_type?: AssetType;
+}
+/**
+ * Asset types represented as TileDB arrays
+ * @export
+ * @enum {string}
+ */
+export enum AssetType {
+    Array = 'array',
+    Notebook = 'notebook',
+    Dashboard = 'dashboard',
+    UserDefinedFunction = 'user_defined_function',
+    MlModel = 'ml_model',
+    File = 'file',
+    RegisteredTaskGraph = 'registered_task_graph',
+    Group = 'group',
+    Vcf = 'vcf',
+    Soma = 'soma',
+    Pointcloud = 'pointcloud',
+    Bioimg = 'bioimg',
+    Geometry = 'geometry',
+    Raster = 'raster',
+    VectorSearch = 'vector_search'
+}
+
+/**
  * Attribute of array
  * @export
  * @interface Attribute
@@ -733,13 +885,33 @@ export interface AzureCredential {
     account_key?: string;
 }
 /**
+ * Token information to access Azure services
+ * @export
+ * @interface AzureToken
+ */
+export interface AzureToken {
+    /**
+     * The account name of the configuration
+     * @type {string}
+     * @memberof AzureToken
+     */
+    account_name?: string;
+    /**
+     * The token to use for this account
+     * @type {string}
+     * @memberof AzureToken
+     */
+    sas_token?: string;
+}
+/**
  * A service where data is stored or computations take place.
  * @export
  * @enum {string}
  */
 export enum CloudProvider {
     Aws = 'AWS',
-    Azure = 'AZURE'
+    Azure = 'AZURE',
+    Gcp = 'GCP'
 }
 
 /**
@@ -804,12 +976,12 @@ export enum Datatype {
     Uint32 = 'UINT32',
     Uint64 = 'UINT64',
     StringAscii = 'STRING_ASCII',
-    Blob = 'BLOB',
     StringUtf8 = 'STRING_UTF8',
     StringUtf16 = 'STRING_UTF16',
     StringUtf32 = 'STRING_UTF32',
     StringUcs2 = 'STRING_UCS2',
     StringUcs4 = 'STRING_UCS4',
+    Any = 'ANY',
     DatetimeYear = 'DATETIME_YEAR',
     DatetimeMonth = 'DATETIME_MONTH',
     DatetimeWeek = 'DATETIME_WEEK',
@@ -823,7 +995,17 @@ export enum Datatype {
     DatetimePs = 'DATETIME_PS',
     DatetimeFs = 'DATETIME_FS',
     DatetimeAs = 'DATETIME_AS',
-    Any = 'ANY'
+    TimeHr = 'TIME_HR',
+    TimeMin = 'TIME_MIN',
+    TimeSec = 'TIME_SEC',
+    TimeMs = 'TIME_MS',
+    TimeUs = 'TIME_US',
+    TimeNs = 'TIME_NS',
+    TimePs = 'TIME_PS',
+    TimeFs = 'TIME_FS',
+    TimeAs = 'TIME_AS',
+    Blob = 'BLOB',
+    Bool = 'BOOL'
 }
 
 /**
@@ -1077,6 +1259,12 @@ export interface FileUploaded {
      * @memberof FileUploaded
      */
     file_name?: string;
+    /**
+     * The asset id of the created Group
+     * @type {string}
+     * @memberof FileUploaded
+     */
+    asset_id: string;
     /**
      * unique ID of the uploaded file
      * @type {string}
@@ -1451,6 +1639,50 @@ export interface FragmentMetadata {
     gtOffsets?: GenericTileOffsets;
 }
 /**
+ * Credential information to access Google Cloud. using well knows key/secret pair to access storage.
+ * @export
+ * @interface GCPInteroperabilityCredential
+ */
+export interface GCPInteroperabilityCredential {
+    /**
+     * The ID of the access key
+     * @type {string}
+     * @memberof GCPInteroperabilityCredential
+     */
+    access_key_id?: string;
+    /**
+     * The access key\'s secret. Never returned in responses.
+     * @type {string}
+     * @memberof GCPInteroperabilityCredential
+     */
+    secret_access_key?: string;
+}
+/**
+ * The key to a Google Cloud Platform service account.
+ * @export
+ * @interface GCPServiceAccountKey
+ */
+export interface GCPServiceAccountKey {
+    /**
+     * The ID of the service account (i.e., its email address).  This is ignored when uploading key information, and is only provided by the server when downloading metadata about an existing key. 
+     * @type {string}
+     * @memberof GCPServiceAccountKey
+     */
+    account_id?: string;
+    /**
+     * The ID of the particular key. This identifies it among other keys issued for this service account.  This is ignored when uploading key information, and is only provided by the server when downloading metadata about an existing key. 
+     * @type {string}
+     * @memberof GCPServiceAccountKey
+     */
+    key_id?: string;
+    /**
+     * The full file provided by Google Cloud. This is usually in the form of a JSON document, but TileDB Cloud treats it as opaque (except to attempt to extract the service account ID and the key ID). 
+     * @type {string}
+     * @memberof GCPServiceAccountKey
+     */
+    key_text?: string;
+}
+/**
  * Array directory (for reads)
  * @export
  * @interface GenericTileOffsets
@@ -1522,6 +1754,88 @@ export interface GenericTileOffsets {
      * @memberof GenericTileOffsets
      */
     processedConditionsOffsets?: number;
+}
+/**
+ * Event type of Group activity
+ * @export
+ * @enum {string}
+ */
+export enum GroupActivityEventType {
+    Create = 'create',
+    Update = 'update',
+    Delete = 'delete',
+    Register = 'register',
+    Deregister = 'deregister',
+    GroupMemberAdd = 'group_member_add',
+    GroupMemberGet = 'group_member_get',
+    GroupMemberRemove = 'group_member_remove',
+    GroupMetadataGet = 'group_metadata_get',
+    GroupMetadataUpdate = 'group_metadata_update',
+    GroupMetadataDelete = 'group_metadata_delete',
+    GroupMetadataSerialize = 'group_metadata_serialize',
+    GroupMetadataDeserialize = 'group_metadata_deserialize',
+    GroupMetadataConsolidate = 'group_metadata_consolidate',
+    GroupMetadataVacuum = 'group_metadata_vacuum',
+    ConfigSet = 'config_set',
+    ConfigGet = 'config_get'
+}
+
+/**
+ * Object containing activity logs of a group and its content (arrays and subgroups) along with pagination metadata
+ * @export
+ * @interface GroupActivityResponse
+ */
+export interface GroupActivityResponse {
+    /**
+     * Array of activity logs, including both group and array activities
+     * @type {Array<AssetActivityLog>}
+     * @memberof GroupActivityResponse
+     */
+    activity_logs?: Array<AssetActivityLog>;
+    /**
+     * 
+     * @type {PaginationMetadata}
+     * @memberof GroupActivityResponse
+     */
+    pagination_metadata?: PaginationMetadata;
+}
+/**
+ * Object containing activity of an asset of a group
+ * @export
+ * @interface GroupContentActivity
+ */
+export interface GroupContentActivity {
+    /**
+     * 
+     * @type {AssetActivityLogAsset}
+     * @memberof GroupContentActivity
+     */
+    asset?: AssetActivityLogAsset;
+    /**
+     * 
+     * @type {ArrayActivityLog}
+     * @memberof GroupContentActivity
+     */
+    activity_log?: ArrayActivityLog;
+}
+/**
+ * Object containing activity logs of group content along with the pagination metadata
+ * @export
+ * @interface GroupContentActivityResponse
+ */
+export interface GroupContentActivityResponse {
+    /**
+     * Activity of a group\'s content
+     * @type {Array<GroupContentActivity>}
+     * @memberof GroupContentActivityResponse
+     */
+    activity?: Array<GroupContentActivity>;
+    /**
+     * 
+     * @type {PaginationMetadata}
+     * @memberof GroupContentActivityResponse
+     */
+    pagination_metadata?: PaginationMetadata;
 }
 /**
  * Updates the contents group
@@ -1662,6 +1976,37 @@ export interface GroupCreationRequestGroupDetails {
     license_text?: string;
 }
 /**
+ * Information of the created group
+ * @export
+ * @interface GroupCreationResponse
+ */
+export interface GroupCreationResponse {
+    /**
+     * The UUID of the created Group
+     * @type {string}
+     * @memberof GroupCreationResponse
+     */
+    id?: string;
+    /**
+     * The asset id of the created Group
+     * @type {string}
+     * @memberof GroupCreationResponse
+     */
+    asset_id?: string;
+    /**
+     * The name of the created Group
+     * @type {string}
+     * @memberof GroupCreationResponse
+     */
+    name?: string;
+    /**
+     * TileDB URI for access
+     * @type {string}
+     * @memberof GroupCreationResponse
+     */
+    tiledb_uri?: string;
+}
+/**
  * A groups member, array or another groups, to add or remove from an existing group.
  * @export
  * @interface GroupMember
@@ -1698,7 +2043,14 @@ export enum GroupMemberAssetType {
     Dashboard = 'dashboard',
     UserDefinedFunction = 'user_defined_function',
     MlModel = 'ml_model',
-    File = 'file'
+    File = 'file',
+    Bioimg = 'bioimg',
+    Soma = 'soma',
+    Vcf = 'vcf',
+    Pointcloud = 'pointcloud',
+    Raster = 'raster',
+    Geometry = 'geometry',
+    VectorSearch = 'vector_search'
 }
 
 /**
@@ -1828,6 +2180,37 @@ export interface GroupRegistrationRequestGroupDetails {
      * @memberof GroupRegistrationRequestGroupDetails
      */
     access_credentials_name?: string;
+}
+/**
+ * Information of the created group
+ * @export
+ * @interface GroupRegistrationResponse
+ */
+export interface GroupRegistrationResponse {
+    /**
+     * The UUID of the created Group
+     * @type {string}
+     * @memberof GroupRegistrationResponse
+     */
+    id?: string;
+    /**
+     * The asset id of the created Group
+     * @type {string}
+     * @memberof GroupRegistrationResponse
+     */
+    asset_id?: string;
+    /**
+     * The name of the created Group
+     * @type {string}
+     * @memberof GroupRegistrationResponse
+     */
+    name?: string;
+    /**
+     * TileDB URI for access
+     * @type {string}
+     * @memberof GroupRegistrationResponse
+     */
+    tiledb_uri?: string;
 }
 /**
  * Layout of array
@@ -2046,6 +2429,12 @@ export interface ModelError {
      * @memberof ModelError
      */
     message?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ModelError
+     */
+    request_id?: string;
 }
 /**
  * object representing a non-empty domain
@@ -2084,6 +2473,37 @@ export interface NonEmptyDomainList {
      * @memberof NonEmptyDomainList
      */
     nonEmptyDomains?: Array<NonEmptyDomain>;
+}
+/**
+ * Uploaded notebook name and information
+ * @export
+ * @interface NotebookUploaded
+ */
+export interface NotebookUploaded {
+    /**
+     * output location of the TileDB Notebook
+     * @type {string}
+     * @memberof NotebookUploaded
+     */
+    output_uri?: string;
+    /**
+     * name of the notebook uploaded
+     * @type {string}
+     * @memberof NotebookUploaded
+     */
+    name?: string;
+    /**
+     * The asset id of the created Group
+     * @type {string}
+     * @memberof NotebookUploaded
+     */
+    asset_id: string;
+    /**
+     * unique ID of the uploaded notebook
+     * @type {string}
+     * @memberof NotebookUploaded
+     */
+    id: string;
 }
 /**
  * 
@@ -2669,8 +3089,9 @@ export const ArrayApiAxiosParamCreator = function (configuration?: Configuration
     return {
         /**
          * get array activity logs
-         * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
-         * @param {string} array name/uri of array that is url-encoded
+         * @param {string} workspace the workspace containing the teamspace the array belongs to
+         * @param {string} teamspace the teamspace the array belongs to
+         * @param {string} array asset ID or hierarchical path of array that is url-encoded
          * @param {number} [start] Start time of window of fetch logs, unix epoch in seconds (default: seven days ago)
          * @param {number} [end] End time of window of fetch logs, unix epoch in seconds (default: current utc timestamp)
          * @param {Array<string>} [eventTypes] Refer to ActivityEventType for possible values
@@ -2681,13 +3102,16 @@ export const ArrayApiAxiosParamCreator = function (configuration?: Configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        arrayActivityLog: async (namespace: string, array: string, start?: number, end?: number, eventTypes?: Array<string>, taskId?: string, hasTaskId?: boolean, page?: number, perPage?: number, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'namespace' is not null or undefined
-            assertParamExists('arrayActivityLog', 'namespace', namespace)
+        arrayActivityLog: async (workspace: string, teamspace: string, array: string, start?: number, end?: number, eventTypes?: Array<string>, taskId?: string, hasTaskId?: boolean, page?: number, perPage?: number, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'workspace' is not null or undefined
+            assertParamExists('arrayActivityLog', 'workspace', workspace)
+            // verify required parameter 'teamspace' is not null or undefined
+            assertParamExists('arrayActivityLog', 'teamspace', teamspace)
             // verify required parameter 'array' is not null or undefined
             assertParamExists('arrayActivityLog', 'array', array)
-            const localVarPath = `/arrays/{namespace}/{array}/activity`
-                .replace(`{${"namespace"}}`, encodeURIComponent(String(namespace)))
+            const localVarPath = `/arrays/{workspace}/{teamspace}/{array}/activity`
+                .replace(`{${"workspace"}}`, encodeURIComponent(String(workspace)))
+                .replace(`{${"teamspace"}}`, encodeURIComponent(String(teamspace)))
                 .replace(`{${"array"}}`, encodeURIComponent(String(array)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -2752,24 +3176,28 @@ export const ArrayApiAxiosParamCreator = function (configuration?: Configuration
         },
         /**
          * Get a array at a specified URI registered to a group/project
-         * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
-         * @param {string} array name/uri of array that is url-encoded
+         * @param {string} workspace the workspace containing the teamspace the array belongs to
+         * @param {string} teamspace the teamspace the array belongs to
+         * @param {string} array asset ID or hierarchical path of array that is url-encoded
          * @param {string} contentType Content Type of input and return mime
          * @param {ArrayFetch} arrayFetch Details for array being fetched
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getArray: async (namespace: string, array: string, contentType: string, arrayFetch: ArrayFetch, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'namespace' is not null or undefined
-            assertParamExists('getArray', 'namespace', namespace)
+        getArray: async (workspace: string, teamspace: string, array: string, contentType: string, arrayFetch: ArrayFetch, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'workspace' is not null or undefined
+            assertParamExists('getArray', 'workspace', workspace)
+            // verify required parameter 'teamspace' is not null or undefined
+            assertParamExists('getArray', 'teamspace', teamspace)
             // verify required parameter 'array' is not null or undefined
             assertParamExists('getArray', 'array', array)
             // verify required parameter 'contentType' is not null or undefined
             assertParamExists('getArray', 'contentType', contentType)
             // verify required parameter 'arrayFetch' is not null or undefined
             assertParamExists('getArray', 'arrayFetch', arrayFetch)
-            const localVarPath = `/arrays/{namespace}/{array}`
-                .replace(`{${"namespace"}}`, encodeURIComponent(String(namespace)))
+            const localVarPath = `/arrays/{workspace}/{teamspace}/{array}`
+                .replace(`{${"workspace"}}`, encodeURIComponent(String(workspace)))
+                .replace(`{${"teamspace"}}`, encodeURIComponent(String(teamspace)))
                 .replace(`{${"array"}}`, encodeURIComponent(String(array)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -2823,8 +3251,9 @@ export const ArrayApiFp = function(configuration?: Configuration) {
     return {
         /**
          * get array activity logs
-         * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
-         * @param {string} array name/uri of array that is url-encoded
+         * @param {string} workspace the workspace containing the teamspace the array belongs to
+         * @param {string} teamspace the teamspace the array belongs to
+         * @param {string} array asset ID or hierarchical path of array that is url-encoded
          * @param {number} [start] Start time of window of fetch logs, unix epoch in seconds (default: seven days ago)
          * @param {number} [end] End time of window of fetch logs, unix epoch in seconds (default: current utc timestamp)
          * @param {Array<string>} [eventTypes] Refer to ActivityEventType for possible values
@@ -2835,21 +3264,22 @@ export const ArrayApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async arrayActivityLog(namespace: string, array: string, start?: number, end?: number, eventTypes?: Array<string>, taskId?: string, hasTaskId?: boolean, page?: number, perPage?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArrayActivityLogData>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.arrayActivityLog(namespace, array, start, end, eventTypes, taskId, hasTaskId, page, perPage, options);
+        async arrayActivityLog(workspace: string, teamspace: string, array: string, start?: number, end?: number, eventTypes?: Array<string>, taskId?: string, hasTaskId?: boolean, page?: number, perPage?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArrayActivityLogData>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.arrayActivityLog(workspace, teamspace, array, start, end, eventTypes, taskId, hasTaskId, page, perPage, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * Get a array at a specified URI registered to a group/project
-         * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
-         * @param {string} array name/uri of array that is url-encoded
+         * @param {string} workspace the workspace containing the teamspace the array belongs to
+         * @param {string} teamspace the teamspace the array belongs to
+         * @param {string} array asset ID or hierarchical path of array that is url-encoded
          * @param {string} contentType Content Type of input and return mime
          * @param {ArrayFetch} arrayFetch Details for array being fetched
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getArray(namespace: string, array: string, contentType: string, arrayFetch: ArrayFetch, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ModelArray>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getArray(namespace, array, contentType, arrayFetch, options);
+        async getArray(workspace: string, teamspace: string, array: string, contentType: string, arrayFetch: ArrayFetch, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ModelArray>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getArray(workspace, teamspace, array, contentType, arrayFetch, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
     }
@@ -2864,8 +3294,9 @@ export const ArrayApiFactory = function (configuration?: Configuration, basePath
     return {
         /**
          * get array activity logs
-         * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
-         * @param {string} array name/uri of array that is url-encoded
+         * @param {string} workspace the workspace containing the teamspace the array belongs to
+         * @param {string} teamspace the teamspace the array belongs to
+         * @param {string} array asset ID or hierarchical path of array that is url-encoded
          * @param {number} [start] Start time of window of fetch logs, unix epoch in seconds (default: seven days ago)
          * @param {number} [end] End time of window of fetch logs, unix epoch in seconds (default: current utc timestamp)
          * @param {Array<string>} [eventTypes] Refer to ActivityEventType for possible values
@@ -2876,20 +3307,21 @@ export const ArrayApiFactory = function (configuration?: Configuration, basePath
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        arrayActivityLog(namespace: string, array: string, start?: number, end?: number, eventTypes?: Array<string>, taskId?: string, hasTaskId?: boolean, page?: number, perPage?: number, options?: any): AxiosPromise<ArrayActivityLogData> {
-            return localVarFp.arrayActivityLog(namespace, array, start, end, eventTypes, taskId, hasTaskId, page, perPage, options).then((request) => request(axios, basePath));
+        arrayActivityLog(workspace: string, teamspace: string, array: string, start?: number, end?: number, eventTypes?: Array<string>, taskId?: string, hasTaskId?: boolean, page?: number, perPage?: number, options?: any): AxiosPromise<ArrayActivityLogData> {
+            return localVarFp.arrayActivityLog(workspace, teamspace, array, start, end, eventTypes, taskId, hasTaskId, page, perPage, options).then((request) => request(axios, basePath));
         },
         /**
          * Get a array at a specified URI registered to a group/project
-         * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
-         * @param {string} array name/uri of array that is url-encoded
+         * @param {string} workspace the workspace containing the teamspace the array belongs to
+         * @param {string} teamspace the teamspace the array belongs to
+         * @param {string} array asset ID or hierarchical path of array that is url-encoded
          * @param {string} contentType Content Type of input and return mime
          * @param {ArrayFetch} arrayFetch Details for array being fetched
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getArray(namespace: string, array: string, contentType: string, arrayFetch: ArrayFetch, options?: any): AxiosPromise<ModelArray> {
-            return localVarFp.getArray(namespace, array, contentType, arrayFetch, options).then((request) => request(axios, basePath));
+        getArray(workspace: string, teamspace: string, array: string, contentType: string, arrayFetch: ArrayFetch, options?: any): AxiosPromise<ModelArray> {
+            return localVarFp.getArray(workspace, teamspace, array, contentType, arrayFetch, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -2903,8 +3335,9 @@ export const ArrayApiFactory = function (configuration?: Configuration, basePath
 export class ArrayApi extends BaseAPI {
     /**
      * get array activity logs
-     * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
-     * @param {string} array name/uri of array that is url-encoded
+     * @param {string} workspace the workspace containing the teamspace the array belongs to
+     * @param {string} teamspace the teamspace the array belongs to
+     * @param {string} array asset ID or hierarchical path of array that is url-encoded
      * @param {number} [start] Start time of window of fetch logs, unix epoch in seconds (default: seven days ago)
      * @param {number} [end] End time of window of fetch logs, unix epoch in seconds (default: current utc timestamp)
      * @param {Array<string>} [eventTypes] Refer to ActivityEventType for possible values
@@ -2916,22 +3349,23 @@ export class ArrayApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ArrayApi
      */
-    public arrayActivityLog(namespace: string, array: string, start?: number, end?: number, eventTypes?: Array<string>, taskId?: string, hasTaskId?: boolean, page?: number, perPage?: number, options?: any) {
-        return ArrayApiFp(this.configuration).arrayActivityLog(namespace, array, start, end, eventTypes, taskId, hasTaskId, page, perPage, options).then((request) => request(this.axios, this.basePath));
+    public arrayActivityLog(workspace: string, teamspace: string, array: string, start?: number, end?: number, eventTypes?: Array<string>, taskId?: string, hasTaskId?: boolean, page?: number, perPage?: number, options?: any) {
+        return ArrayApiFp(this.configuration).arrayActivityLog(workspace, teamspace, array, start, end, eventTypes, taskId, hasTaskId, page, perPage, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * Get a array at a specified URI registered to a group/project
-     * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
-     * @param {string} array name/uri of array that is url-encoded
+     * @param {string} workspace the workspace containing the teamspace the array belongs to
+     * @param {string} teamspace the teamspace the array belongs to
+     * @param {string} array asset ID or hierarchical path of array that is url-encoded
      * @param {string} contentType Content Type of input and return mime
      * @param {ArrayFetch} arrayFetch Details for array being fetched
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ArrayApi
      */
-    public getArray(namespace: string, array: string, contentType: string, arrayFetch: ArrayFetch, options?: any) {
-        return ArrayApiFp(this.configuration).getArray(namespace, array, contentType, arrayFetch, options).then((request) => request(this.axios, this.basePath));
+    public getArray(workspace: string, teamspace: string, array: string, contentType: string, arrayFetch: ArrayFetch, options?: any) {
+        return ArrayApiFp(this.configuration).getArray(workspace, teamspace, array, contentType, arrayFetch, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -2945,8 +3379,9 @@ export const FilesApiAxiosParamCreator = function (configuration?: Configuration
     return {
         /**
          * Upload a file at the specified location and wrap it in TileDB Array
-         * @param {string} namespace The namespace of the file
-         * @param {string} array name/uri of array that is url-encoded
+         * @param {string} workspace the workspace containing the teamspace the array belongs to
+         * @param {string} teamspace the teamspace the array belongs to
+         * @param {string} array asset ID or hierarchical path of array that is url-encoded
          * @param {string} contentType Content Type of input
          * @param {number} filesize size of the file to upload in bytes
          * @param {any} file file to upload
@@ -2957,9 +3392,11 @@ export const FilesApiAxiosParamCreator = function (configuration?: Configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        handleUploadFile: async (namespace: string, array: string, contentType: string, filesize: number, file: any, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, name?: string, filename?: string, mimetype?: string, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'namespace' is not null or undefined
-            assertParamExists('handleUploadFile', 'namespace', namespace)
+        handleUploadFile: async (workspace: string, teamspace: string, array: string, contentType: string, filesize: number, file: any, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, name?: string, filename?: string, mimetype?: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'workspace' is not null or undefined
+            assertParamExists('handleUploadFile', 'workspace', workspace)
+            // verify required parameter 'teamspace' is not null or undefined
+            assertParamExists('handleUploadFile', 'teamspace', teamspace)
             // verify required parameter 'array' is not null or undefined
             assertParamExists('handleUploadFile', 'array', array)
             // verify required parameter 'contentType' is not null or undefined
@@ -2968,8 +3405,9 @@ export const FilesApiAxiosParamCreator = function (configuration?: Configuration
             assertParamExists('handleUploadFile', 'filesize', filesize)
             // verify required parameter 'file' is not null or undefined
             assertParamExists('handleUploadFile', 'file', file)
-            const localVarPath = `/files/{namespace}/{array}/upload`
-                .replace(`{${"namespace"}}`, encodeURIComponent(String(namespace)))
+            const localVarPath = `/files/{workspace}/{teamspace}/{array}/upload`
+                .replace(`{${"workspace"}}`, encodeURIComponent(String(workspace)))
+                .replace(`{${"teamspace"}}`, encodeURIComponent(String(teamspace)))
                 .replace(`{${"array"}}`, encodeURIComponent(String(array)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -3043,8 +3481,9 @@ export const FilesApiFp = function(configuration?: Configuration) {
     return {
         /**
          * Upload a file at the specified location and wrap it in TileDB Array
-         * @param {string} namespace The namespace of the file
-         * @param {string} array name/uri of array that is url-encoded
+         * @param {string} workspace the workspace containing the teamspace the array belongs to
+         * @param {string} teamspace the teamspace the array belongs to
+         * @param {string} array asset ID or hierarchical path of array that is url-encoded
          * @param {string} contentType Content Type of input
          * @param {number} filesize size of the file to upload in bytes
          * @param {any} file file to upload
@@ -3055,8 +3494,8 @@ export const FilesApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async handleUploadFile(namespace: string, array: string, contentType: string, filesize: number, file: any, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, name?: string, filename?: string, mimetype?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<FileUploaded>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.handleUploadFile(namespace, array, contentType, filesize, file, xTILEDBCLOUDACCESSCREDENTIALSNAME, name, filename, mimetype, options);
+        async handleUploadFile(workspace: string, teamspace: string, array: string, contentType: string, filesize: number, file: any, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, name?: string, filename?: string, mimetype?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<FileUploaded>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.handleUploadFile(workspace, teamspace, array, contentType, filesize, file, xTILEDBCLOUDACCESSCREDENTIALSNAME, name, filename, mimetype, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
     }
@@ -3071,8 +3510,9 @@ export const FilesApiFactory = function (configuration?: Configuration, basePath
     return {
         /**
          * Upload a file at the specified location and wrap it in TileDB Array
-         * @param {string} namespace The namespace of the file
-         * @param {string} array name/uri of array that is url-encoded
+         * @param {string} workspace the workspace containing the teamspace the array belongs to
+         * @param {string} teamspace the teamspace the array belongs to
+         * @param {string} array asset ID or hierarchical path of array that is url-encoded
          * @param {string} contentType Content Type of input
          * @param {number} filesize size of the file to upload in bytes
          * @param {any} file file to upload
@@ -3083,8 +3523,8 @@ export const FilesApiFactory = function (configuration?: Configuration, basePath
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        handleUploadFile(namespace: string, array: string, contentType: string, filesize: number, file: any, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, name?: string, filename?: string, mimetype?: string, options?: any): AxiosPromise<FileUploaded> {
-            return localVarFp.handleUploadFile(namespace, array, contentType, filesize, file, xTILEDBCLOUDACCESSCREDENTIALSNAME, name, filename, mimetype, options).then((request) => request(axios, basePath));
+        handleUploadFile(workspace: string, teamspace: string, array: string, contentType: string, filesize: number, file: any, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, name?: string, filename?: string, mimetype?: string, options?: any): AxiosPromise<FileUploaded> {
+            return localVarFp.handleUploadFile(workspace, teamspace, array, contentType, filesize, file, xTILEDBCLOUDACCESSCREDENTIALSNAME, name, filename, mimetype, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -3098,8 +3538,9 @@ export const FilesApiFactory = function (configuration?: Configuration, basePath
 export class FilesApi extends BaseAPI {
     /**
      * Upload a file at the specified location and wrap it in TileDB Array
-     * @param {string} namespace The namespace of the file
-     * @param {string} array name/uri of array that is url-encoded
+     * @param {string} workspace the workspace containing the teamspace the array belongs to
+     * @param {string} teamspace the teamspace the array belongs to
+     * @param {string} array asset ID or hierarchical path of array that is url-encoded
      * @param {string} contentType Content Type of input
      * @param {number} filesize size of the file to upload in bytes
      * @param {any} file file to upload
@@ -3111,8 +3552,8 @@ export class FilesApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof FilesApi
      */
-    public handleUploadFile(namespace: string, array: string, contentType: string, filesize: number, file: any, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, name?: string, filename?: string, mimetype?: string, options?: any) {
-        return FilesApiFp(this.configuration).handleUploadFile(namespace, array, contentType, filesize, file, xTILEDBCLOUDACCESSCREDENTIALSNAME, name, filename, mimetype, options).then((request) => request(this.axios, this.basePath));
+    public handleUploadFile(workspace: string, teamspace: string, array: string, contentType: string, filesize: number, file: any, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, name?: string, filename?: string, mimetype?: string, options?: any) {
+        return FilesApiFp(this.configuration).handleUploadFile(workspace, teamspace, array, contentType, filesize, file, xTILEDBCLOUDACCESSCREDENTIALSNAME, name, filename, mimetype, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -3126,17 +3567,25 @@ export const GroupsApiAxiosParamCreator = function (configuration?: Configuratio
     return {
         /**
          * Creates an empty group
-         * @param {string} groupNamespace The namespace of the group
+         * @param {string} workspace the workspace containing the teamspace the array belongs to
+         * @param {string} teamspace the teamspace the group belongs to
+         * @param {string} group The unique path or asset id of the group
          * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
          * @param {GroupCreationRequest} [groupCreation] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createGroup: async (groupNamespace: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, groupCreation?: GroupCreationRequest, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'groupNamespace' is not null or undefined
-            assertParamExists('createGroup', 'groupNamespace', groupNamespace)
-            const localVarPath = `/groups/{group_namespace}`
-                .replace(`{${"group_namespace"}}`, encodeURIComponent(String(groupNamespace)));
+        createGroup: async (workspace: string, teamspace: string, group: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, groupCreation?: GroupCreationRequest, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'workspace' is not null or undefined
+            assertParamExists('createGroup', 'workspace', workspace)
+            // verify required parameter 'teamspace' is not null or undefined
+            assertParamExists('createGroup', 'teamspace', teamspace)
+            // verify required parameter 'group' is not null or undefined
+            assertParamExists('createGroup', 'group', group)
+            const localVarPath = `/groups/{workspace}/{teamspace}/{group}`
+                .replace(`{${"workspace"}}`, encodeURIComponent(String(workspace)))
+                .replace(`{${"teamspace"}}`, encodeURIComponent(String(teamspace)))
+                .replace(`{${"group"}}`, encodeURIComponent(String(group)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -3178,21 +3627,25 @@ export const GroupsApiAxiosParamCreator = function (configuration?: Configuratio
             };
         },
         /**
-         * Deregisters a group
-         * @param {string} groupNamespace The namespace of the group
-         * @param {string} groupName The unique name or id of the group
-         * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+         * Deregisters and physically deletes a group
+         * @param {string} workspace the workspace containing the teamspace the array belongs to
+         * @param {string} teamspace the teamspace the group belongs to
+         * @param {string} group The unique path or asset id of the group
+         * @param {string} [recursive] If true, it descends in the group and deletes every subgroup and subarray
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deregisterGroup: async (groupNamespace: string, groupName: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'groupNamespace' is not null or undefined
-            assertParamExists('deregisterGroup', 'groupNamespace', groupNamespace)
-            // verify required parameter 'groupName' is not null or undefined
-            assertParamExists('deregisterGroup', 'groupName', groupName)
-            const localVarPath = `/groups/{group_namespace}/{group_name}`
-                .replace(`{${"group_namespace"}}`, encodeURIComponent(String(groupNamespace)))
-                .replace(`{${"group_name"}}`, encodeURIComponent(String(groupName)));
+        deleteGroup: async (workspace: string, teamspace: string, group: string, recursive?: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'workspace' is not null or undefined
+            assertParamExists('deleteGroup', 'workspace', workspace)
+            // verify required parameter 'teamspace' is not null or undefined
+            assertParamExists('deleteGroup', 'teamspace', teamspace)
+            // verify required parameter 'group' is not null or undefined
+            assertParamExists('deleteGroup', 'group', group)
+            const localVarPath = `/groups/{workspace}/{teamspace}/{group}/delete`
+                .replace(`{${"workspace"}}`, encodeURIComponent(String(workspace)))
+                .replace(`{${"teamspace"}}`, encodeURIComponent(String(teamspace)))
+                .replace(`{${"group"}}`, encodeURIComponent(String(group)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -3210,6 +3663,68 @@ export const GroupsApiAxiosParamCreator = function (configuration?: Configuratio
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            if (recursive !== undefined) {
+                localVarQueryParameter['recursive'] = recursive;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Deregisters a group
+         * @param {string} workspace the workspace containing the teamspace the array belongs to
+         * @param {string} teamspace the teamspace the group belongs to
+         * @param {string} group The unique path or asset id of the group
+         * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+         * @param {string} [recursive] If true, it descends in the group and deregisters every subgroup and subarray
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deregisterGroup: async (workspace: string, teamspace: string, group: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, recursive?: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'workspace' is not null or undefined
+            assertParamExists('deregisterGroup', 'workspace', workspace)
+            // verify required parameter 'teamspace' is not null or undefined
+            assertParamExists('deregisterGroup', 'teamspace', teamspace)
+            // verify required parameter 'group' is not null or undefined
+            assertParamExists('deregisterGroup', 'group', group)
+            const localVarPath = `/groups/{workspace}/{teamspace}/{group}`
+                .replace(`{${"workspace"}}`, encodeURIComponent(String(workspace)))
+                .replace(`{${"teamspace"}}`, encodeURIComponent(String(teamspace)))
+                .replace(`{${"group"}}`, encodeURIComponent(String(group)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+
+            // authentication BasicAuth required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            if (recursive !== undefined) {
+                localVarQueryParameter['recursive'] = recursive;
+            }
 
             if (xTILEDBCLOUDACCESSCREDENTIALSNAME !== undefined && xTILEDBCLOUDACCESSCREDENTIALSNAME !== null) {
                 localVarHeaderParameter['X-TILEDB-CLOUD-ACCESS-CREDENTIALS-NAME'] = String(xTILEDBCLOUDACCESSCREDENTIALSNAME);
@@ -3231,21 +3746,159 @@ export const GroupsApiAxiosParamCreator = function (configuration?: Configuratio
             };
         },
         /**
+         * Retrieves activity logs for all assets contained in a group (arrays and other groups) including the parent group itself.
+         * @param {string} workspace the workspace containing the teamspace the array belongs to
+         * @param {string} teamspace the teamspace the group belongs to
+         * @param {string} group The unique path or asset id of the group
+         * @param {number} [start] Start time of window of fetch logs, unix epoch in seconds (default: seven days ago)
+         * @param {number} [end] End time of window of fetch logs, unix epoch in seconds (default: current utc timestamp)
+         * @param {number} [page] pagination offset
+         * @param {number} [perPage] pagination limit
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getGroupActivity: async (workspace: string, teamspace: string, group: string, start?: number, end?: number, page?: number, perPage?: number, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'workspace' is not null or undefined
+            assertParamExists('getGroupActivity', 'workspace', workspace)
+            // verify required parameter 'teamspace' is not null or undefined
+            assertParamExists('getGroupActivity', 'teamspace', teamspace)
+            // verify required parameter 'group' is not null or undefined
+            assertParamExists('getGroupActivity', 'group', group)
+            const localVarPath = `/groups/{workspace}/{teamspace}/{group}/activity`
+                .replace(`{${"workspace"}}`, encodeURIComponent(String(workspace)))
+                .replace(`{${"teamspace"}}`, encodeURIComponent(String(teamspace)))
+                .replace(`{${"group"}}`, encodeURIComponent(String(group)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+
+            // authentication BasicAuth required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            if (start !== undefined) {
+                localVarQueryParameter['start'] = start;
+            }
+
+            if (end !== undefined) {
+                localVarQueryParameter['end'] = end;
+            }
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (perPage !== undefined) {
+                localVarQueryParameter['per_page'] = perPage;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Retrieves combined activity logs for all assets contained in a group.
+         * @param {string} workspace the workspace containing the teamspace the array belongs to
+         * @param {string} teamspace the teamspace the group belongs to
+         * @param {string} group The unique path or asset id of the group
+         * @param {number} [page] pagination offset
+         * @param {number} [perPage] pagination limit
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getGroupContentActivity: async (workspace: string, teamspace: string, group: string, page?: number, perPage?: number, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'workspace' is not null or undefined
+            assertParamExists('getGroupContentActivity', 'workspace', workspace)
+            // verify required parameter 'teamspace' is not null or undefined
+            assertParamExists('getGroupContentActivity', 'teamspace', teamspace)
+            // verify required parameter 'group' is not null or undefined
+            assertParamExists('getGroupContentActivity', 'group', group)
+            const localVarPath = `/groups/{workspace}/{teamspace}/{group}/content_activity`
+                .replace(`{${"workspace"}}`, encodeURIComponent(String(workspace)))
+                .replace(`{${"teamspace"}}`, encodeURIComponent(String(teamspace)))
+                .replace(`{${"group"}}`, encodeURIComponent(String(group)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+
+            // authentication BasicAuth required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (perPage !== undefined) {
+                localVarQueryParameter['per_page'] = perPage;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * get metadata on a group using the requested config
-         * @param {string} groupNamespace The namespace of the group
-         * @param {string} groupName The unique name or id of the group
+         * @param {string} workspace the workspace containing the teamspace the array belongs to
+         * @param {string} teamspace the teamspace the group belongs to
+         * @param {string} group The unique path or asset id of the group
          * @param {GroupMetadataRetrievalRequest} [metadataRetrieval] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getGroupMetadata: async (groupNamespace: string, groupName: string, metadataRetrieval?: GroupMetadataRetrievalRequest, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'groupNamespace' is not null or undefined
-            assertParamExists('getGroupMetadata', 'groupNamespace', groupNamespace)
-            // verify required parameter 'groupName' is not null or undefined
-            assertParamExists('getGroupMetadata', 'groupName', groupName)
-            const localVarPath = `/groups/{group_namespace}/{group_name}/metadata`
-                .replace(`{${"group_namespace"}}`, encodeURIComponent(String(groupNamespace)))
-                .replace(`{${"group_name"}}`, encodeURIComponent(String(groupName)));
+        getGroupMetadata: async (workspace: string, teamspace: string, group: string, metadataRetrieval?: GroupMetadataRetrievalRequest, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'workspace' is not null or undefined
+            assertParamExists('getGroupMetadata', 'workspace', workspace)
+            // verify required parameter 'teamspace' is not null or undefined
+            assertParamExists('getGroupMetadata', 'teamspace', teamspace)
+            // verify required parameter 'group' is not null or undefined
+            assertParamExists('getGroupMetadata', 'group', group)
+            const localVarPath = `/groups/{workspace}/{teamspace}/{group}/metadata`
+                .replace(`{${"workspace"}}`, encodeURIComponent(String(workspace)))
+                .replace(`{${"teamspace"}}`, encodeURIComponent(String(teamspace)))
+                .replace(`{${"group"}}`, encodeURIComponent(String(group)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -3284,20 +3937,24 @@ export const GroupsApiAxiosParamCreator = function (configuration?: Configuratio
         },
         /**
          * can be used to check if the resource exists
-         * @param {string} groupNamespace The namespace of the group
-         * @param {string} groupName The unique name or id of the group
+         * @param {string} workspace the workspace containing the teamspace the array belongs to
+         * @param {string} teamspace the teamspace the group belongs to
+         * @param {string} group The unique path or asset id of the group
          * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        groupsGroupNamespaceGroupNameOptions: async (groupNamespace: string, groupName: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'groupNamespace' is not null or undefined
-            assertParamExists('groupsGroupNamespaceGroupNameOptions', 'groupNamespace', groupNamespace)
-            // verify required parameter 'groupName' is not null or undefined
-            assertParamExists('groupsGroupNamespaceGroupNameOptions', 'groupName', groupName)
-            const localVarPath = `/groups/{group_namespace}/{group_name}`
-                .replace(`{${"group_namespace"}}`, encodeURIComponent(String(groupNamespace)))
-                .replace(`{${"group_name"}}`, encodeURIComponent(String(groupName)));
+        groupsWorkspaceTeamspaceGroupOptions: async (workspace: string, teamspace: string, group: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'workspace' is not null or undefined
+            assertParamExists('groupsWorkspaceTeamspaceGroupOptions', 'workspace', workspace)
+            // verify required parameter 'teamspace' is not null or undefined
+            assertParamExists('groupsWorkspaceTeamspaceGroupOptions', 'teamspace', teamspace)
+            // verify required parameter 'group' is not null or undefined
+            assertParamExists('groupsWorkspaceTeamspaceGroupOptions', 'group', group)
+            const localVarPath = `/groups/{workspace}/{teamspace}/{group}`
+                .replace(`{${"workspace"}}`, encodeURIComponent(String(workspace)))
+                .replace(`{${"teamspace"}}`, encodeURIComponent(String(teamspace)))
+                .replace(`{${"group"}}`, encodeURIComponent(String(group)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -3337,17 +3994,25 @@ export const GroupsApiAxiosParamCreator = function (configuration?: Configuratio
         },
         /**
          * Registers an already existing group
-         * @param {string} groupNamespace The namespace of the group
+         * @param {string} workspace the workspace containing the teamspace the array belongs to
+         * @param {string} teamspace the teamspace the group belongs to
+         * @param {string} group The unique path or asset id of the group
          * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
          * @param {GroupRegistrationRequest} [groupRegistration] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        registerGroup: async (groupNamespace: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, groupRegistration?: GroupRegistrationRequest, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'groupNamespace' is not null or undefined
-            assertParamExists('registerGroup', 'groupNamespace', groupNamespace)
-            const localVarPath = `/groups/{group_namespace}`
-                .replace(`{${"group_namespace"}}`, encodeURIComponent(String(groupNamespace)));
+        registerGroup: async (workspace: string, teamspace: string, group: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, groupRegistration?: GroupRegistrationRequest, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'workspace' is not null or undefined
+            assertParamExists('registerGroup', 'workspace', workspace)
+            // verify required parameter 'teamspace' is not null or undefined
+            assertParamExists('registerGroup', 'teamspace', teamspace)
+            // verify required parameter 'group' is not null or undefined
+            assertParamExists('registerGroup', 'group', group)
+            const localVarPath = `/groups/{workspace}/{teamspace}/{group}`
+                .replace(`{${"workspace"}}`, encodeURIComponent(String(workspace)))
+                .replace(`{${"teamspace"}}`, encodeURIComponent(String(teamspace)))
+                .replace(`{${"group"}}`, encodeURIComponent(String(group)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -3390,21 +4055,25 @@ export const GroupsApiAxiosParamCreator = function (configuration?: Configuratio
         },
         /**
          * Retrieves the contents of a group
-         * @param {string} groupNamespace The namespace of the group
-         * @param {string} groupName The unique name or id of the group
+         * @param {string} workspace the workspace containing the teamspace the array belongs to
+         * @param {string} teamspace the teamspace the group belongs to
+         * @param {string} group The unique path or asset id of the group
          * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
          * @param {GroupContentsRetrievalRequest} [groupRetrieval] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        retrieveGroup: async (groupNamespace: string, groupName: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, groupRetrieval?: GroupContentsRetrievalRequest, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'groupNamespace' is not null or undefined
-            assertParamExists('retrieveGroup', 'groupNamespace', groupNamespace)
-            // verify required parameter 'groupName' is not null or undefined
-            assertParamExists('retrieveGroup', 'groupName', groupName)
-            const localVarPath = `/groups/{group_namespace}/{group_name}`
-                .replace(`{${"group_namespace"}}`, encodeURIComponent(String(groupNamespace)))
-                .replace(`{${"group_name"}}`, encodeURIComponent(String(groupName)));
+        retrieveGroup: async (workspace: string, teamspace: string, group: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, groupRetrieval?: GroupContentsRetrievalRequest, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'workspace' is not null or undefined
+            assertParamExists('retrieveGroup', 'workspace', workspace)
+            // verify required parameter 'teamspace' is not null or undefined
+            assertParamExists('retrieveGroup', 'teamspace', teamspace)
+            // verify required parameter 'group' is not null or undefined
+            assertParamExists('retrieveGroup', 'group', group)
+            const localVarPath = `/groups/{workspace}/{teamspace}/{group}/contents`
+                .replace(`{${"workspace"}}`, encodeURIComponent(String(workspace)))
+                .replace(`{${"teamspace"}}`, encodeURIComponent(String(teamspace)))
+                .replace(`{${"group"}}`, encodeURIComponent(String(group)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -3447,21 +4116,25 @@ export const GroupsApiAxiosParamCreator = function (configuration?: Configuratio
         },
         /**
          * Change the contents of the group
-         * @param {string} groupNamespace The namespace of the group
-         * @param {string} groupName The unique name or id of the group
+         * @param {string} workspace the workspace containing the teamspace the array belongs to
+         * @param {string} teamspace the teamspace the group belongs to
+         * @param {string} group The unique path or asset id of the group
          * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
          * @param {GroupContentsChangesRequest} [groupUpdateContents] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updateGroupContents: async (groupNamespace: string, groupName: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, groupUpdateContents?: GroupContentsChangesRequest, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'groupNamespace' is not null or undefined
-            assertParamExists('updateGroupContents', 'groupNamespace', groupNamespace)
-            // verify required parameter 'groupName' is not null or undefined
-            assertParamExists('updateGroupContents', 'groupName', groupName)
-            const localVarPath = `/groups/{group_namespace}/{group_name}`
-                .replace(`{${"group_namespace"}}`, encodeURIComponent(String(groupNamespace)))
-                .replace(`{${"group_name"}}`, encodeURIComponent(String(groupName)));
+        updateGroupContents: async (workspace: string, teamspace: string, group: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, groupUpdateContents?: GroupContentsChangesRequest, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'workspace' is not null or undefined
+            assertParamExists('updateGroupContents', 'workspace', workspace)
+            // verify required parameter 'teamspace' is not null or undefined
+            assertParamExists('updateGroupContents', 'teamspace', teamspace)
+            // verify required parameter 'group' is not null or undefined
+            assertParamExists('updateGroupContents', 'group', group)
+            const localVarPath = `/groups/{workspace}/{teamspace}/{group}/contents`
+                .replace(`{${"workspace"}}`, encodeURIComponent(String(workspace)))
+                .replace(`{${"teamspace"}}`, encodeURIComponent(String(teamspace)))
+                .replace(`{${"group"}}`, encodeURIComponent(String(group)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -3504,20 +4177,24 @@ export const GroupsApiAxiosParamCreator = function (configuration?: Configuratio
         },
         /**
          * update metadata on a group
-         * @param {string} groupNamespace The namespace of the group
-         * @param {string} groupName The unique name or id of the group
+         * @param {string} workspace the workspace containing the teamspace the array belongs to
+         * @param {string} teamspace the teamspace the group belongs to
+         * @param {string} group The unique path or asset id of the group
          * @param {GroupMetadataUpdateRequest} [metadataUpdating] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updateGroupMetadata: async (groupNamespace: string, groupName: string, metadataUpdating?: GroupMetadataUpdateRequest, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'groupNamespace' is not null or undefined
-            assertParamExists('updateGroupMetadata', 'groupNamespace', groupNamespace)
-            // verify required parameter 'groupName' is not null or undefined
-            assertParamExists('updateGroupMetadata', 'groupName', groupName)
-            const localVarPath = `/groups/{group_namespace}/{group_name}/metadata`
-                .replace(`{${"group_namespace"}}`, encodeURIComponent(String(groupNamespace)))
-                .replace(`{${"group_name"}}`, encodeURIComponent(String(groupName)));
+        updateGroupMetadata: async (workspace: string, teamspace: string, group: string, metadataUpdating?: GroupMetadataUpdateRequest, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'workspace' is not null or undefined
+            assertParamExists('updateGroupMetadata', 'workspace', workspace)
+            // verify required parameter 'teamspace' is not null or undefined
+            assertParamExists('updateGroupMetadata', 'teamspace', teamspace)
+            // verify required parameter 'group' is not null or undefined
+            assertParamExists('updateGroupMetadata', 'group', group)
+            const localVarPath = `/groups/{workspace}/{teamspace}/{group}/metadata`
+                .replace(`{${"workspace"}}`, encodeURIComponent(String(workspace)))
+                .replace(`{${"teamspace"}}`, encodeURIComponent(String(teamspace)))
+                .replace(`{${"group"}}`, encodeURIComponent(String(group)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -3566,100 +4243,154 @@ export const GroupsApiFp = function(configuration?: Configuration) {
     return {
         /**
          * Creates an empty group
-         * @param {string} groupNamespace The namespace of the group
+         * @param {string} workspace the workspace containing the teamspace the array belongs to
+         * @param {string} teamspace the teamspace the group belongs to
+         * @param {string} group The unique path or asset id of the group
          * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
          * @param {GroupCreationRequest} [groupCreation] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async createGroup(groupNamespace: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, groupCreation?: GroupCreationRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.createGroup(groupNamespace, xTILEDBCLOUDACCESSCREDENTIALSNAME, groupCreation, options);
+        async createGroup(workspace: string, teamspace: string, group: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, groupCreation?: GroupCreationRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GroupCreationResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createGroup(workspace, teamspace, group, xTILEDBCLOUDACCESSCREDENTIALSNAME, groupCreation, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Deregisters and physically deletes a group
+         * @param {string} workspace the workspace containing the teamspace the array belongs to
+         * @param {string} teamspace the teamspace the group belongs to
+         * @param {string} group The unique path or asset id of the group
+         * @param {string} [recursive] If true, it descends in the group and deletes every subgroup and subarray
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async deleteGroup(workspace: string, teamspace: string, group: string, recursive?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteGroup(workspace, teamspace, group, recursive, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * Deregisters a group
-         * @param {string} groupNamespace The namespace of the group
-         * @param {string} groupName The unique name or id of the group
+         * @param {string} workspace the workspace containing the teamspace the array belongs to
+         * @param {string} teamspace the teamspace the group belongs to
+         * @param {string} group The unique path or asset id of the group
          * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+         * @param {string} [recursive] If true, it descends in the group and deregisters every subgroup and subarray
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async deregisterGroup(groupNamespace: string, groupName: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.deregisterGroup(groupNamespace, groupName, xTILEDBCLOUDACCESSCREDENTIALSNAME, options);
+        async deregisterGroup(workspace: string, teamspace: string, group: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, recursive?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deregisterGroup(workspace, teamspace, group, xTILEDBCLOUDACCESSCREDENTIALSNAME, recursive, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Retrieves activity logs for all assets contained in a group (arrays and other groups) including the parent group itself.
+         * @param {string} workspace the workspace containing the teamspace the array belongs to
+         * @param {string} teamspace the teamspace the group belongs to
+         * @param {string} group The unique path or asset id of the group
+         * @param {number} [start] Start time of window of fetch logs, unix epoch in seconds (default: seven days ago)
+         * @param {number} [end] End time of window of fetch logs, unix epoch in seconds (default: current utc timestamp)
+         * @param {number} [page] pagination offset
+         * @param {number} [perPage] pagination limit
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getGroupActivity(workspace: string, teamspace: string, group: string, start?: number, end?: number, page?: number, perPage?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GroupActivityResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getGroupActivity(workspace, teamspace, group, start, end, page, perPage, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Retrieves combined activity logs for all assets contained in a group.
+         * @param {string} workspace the workspace containing the teamspace the array belongs to
+         * @param {string} teamspace the teamspace the group belongs to
+         * @param {string} group The unique path or asset id of the group
+         * @param {number} [page] pagination offset
+         * @param {number} [perPage] pagination limit
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getGroupContentActivity(workspace: string, teamspace: string, group: string, page?: number, perPage?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GroupContentActivityResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getGroupContentActivity(workspace, teamspace, group, page, perPage, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * get metadata on a group using the requested config
-         * @param {string} groupNamespace The namespace of the group
-         * @param {string} groupName The unique name or id of the group
+         * @param {string} workspace the workspace containing the teamspace the array belongs to
+         * @param {string} teamspace the teamspace the group belongs to
+         * @param {string} group The unique path or asset id of the group
          * @param {GroupMetadataRetrievalRequest} [metadataRetrieval] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getGroupMetadata(groupNamespace: string, groupName: string, metadataRetrieval?: GroupMetadataRetrievalRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Metadata>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getGroupMetadata(groupNamespace, groupName, metadataRetrieval, options);
+        async getGroupMetadata(workspace: string, teamspace: string, group: string, metadataRetrieval?: GroupMetadataRetrievalRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Metadata>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getGroupMetadata(workspace, teamspace, group, metadataRetrieval, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * can be used to check if the resource exists
-         * @param {string} groupNamespace The namespace of the group
-         * @param {string} groupName The unique name or id of the group
+         * @param {string} workspace the workspace containing the teamspace the array belongs to
+         * @param {string} teamspace the teamspace the group belongs to
+         * @param {string} group The unique path or asset id of the group
          * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async groupsGroupNamespaceGroupNameOptions(groupNamespace: string, groupName: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.groupsGroupNamespaceGroupNameOptions(groupNamespace, groupName, xTILEDBCLOUDACCESSCREDENTIALSNAME, options);
+        async groupsWorkspaceTeamspaceGroupOptions(workspace: string, teamspace: string, group: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.groupsWorkspaceTeamspaceGroupOptions(workspace, teamspace, group, xTILEDBCLOUDACCESSCREDENTIALSNAME, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * Registers an already existing group
-         * @param {string} groupNamespace The namespace of the group
+         * @param {string} workspace the workspace containing the teamspace the array belongs to
+         * @param {string} teamspace the teamspace the group belongs to
+         * @param {string} group The unique path or asset id of the group
          * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
          * @param {GroupRegistrationRequest} [groupRegistration] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async registerGroup(groupNamespace: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, groupRegistration?: GroupRegistrationRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.registerGroup(groupNamespace, xTILEDBCLOUDACCESSCREDENTIALSNAME, groupRegistration, options);
+        async registerGroup(workspace: string, teamspace: string, group: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, groupRegistration?: GroupRegistrationRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GroupRegistrationResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.registerGroup(workspace, teamspace, group, xTILEDBCLOUDACCESSCREDENTIALSNAME, groupRegistration, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * Retrieves the contents of a group
-         * @param {string} groupNamespace The namespace of the group
-         * @param {string} groupName The unique name or id of the group
+         * @param {string} workspace the workspace containing the teamspace the array belongs to
+         * @param {string} teamspace the teamspace the group belongs to
+         * @param {string} group The unique path or asset id of the group
          * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
          * @param {GroupContentsRetrievalRequest} [groupRetrieval] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async retrieveGroup(groupNamespace: string, groupName: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, groupRetrieval?: GroupContentsRetrievalRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GroupContentsRetrievalResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.retrieveGroup(groupNamespace, groupName, xTILEDBCLOUDACCESSCREDENTIALSNAME, groupRetrieval, options);
+        async retrieveGroup(workspace: string, teamspace: string, group: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, groupRetrieval?: GroupContentsRetrievalRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GroupContentsRetrievalResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.retrieveGroup(workspace, teamspace, group, xTILEDBCLOUDACCESSCREDENTIALSNAME, groupRetrieval, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * Change the contents of the group
-         * @param {string} groupNamespace The namespace of the group
-         * @param {string} groupName The unique name or id of the group
+         * @param {string} workspace the workspace containing the teamspace the array belongs to
+         * @param {string} teamspace the teamspace the group belongs to
+         * @param {string} group The unique path or asset id of the group
          * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
          * @param {GroupContentsChangesRequest} [groupUpdateContents] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async updateGroupContents(groupNamespace: string, groupName: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, groupUpdateContents?: GroupContentsChangesRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.updateGroupContents(groupNamespace, groupName, xTILEDBCLOUDACCESSCREDENTIALSNAME, groupUpdateContents, options);
+        async updateGroupContents(workspace: string, teamspace: string, group: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, groupUpdateContents?: GroupContentsChangesRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateGroupContents(workspace, teamspace, group, xTILEDBCLOUDACCESSCREDENTIALSNAME, groupUpdateContents, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * update metadata on a group
-         * @param {string} groupNamespace The namespace of the group
-         * @param {string} groupName The unique name or id of the group
+         * @param {string} workspace the workspace containing the teamspace the array belongs to
+         * @param {string} teamspace the teamspace the group belongs to
+         * @param {string} group The unique path or asset id of the group
          * @param {GroupMetadataUpdateRequest} [metadataUpdating] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async updateGroupMetadata(groupNamespace: string, groupName: string, metadataUpdating?: GroupMetadataUpdateRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.updateGroupMetadata(groupNamespace, groupName, metadataUpdating, options);
+        async updateGroupMetadata(workspace: string, teamspace: string, group: string, metadataUpdating?: GroupMetadataUpdateRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateGroupMetadata(workspace, teamspace, group, metadataUpdating, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
     }
@@ -3674,93 +4405,144 @@ export const GroupsApiFactory = function (configuration?: Configuration, basePat
     return {
         /**
          * Creates an empty group
-         * @param {string} groupNamespace The namespace of the group
+         * @param {string} workspace the workspace containing the teamspace the array belongs to
+         * @param {string} teamspace the teamspace the group belongs to
+         * @param {string} group The unique path or asset id of the group
          * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
          * @param {GroupCreationRequest} [groupCreation] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createGroup(groupNamespace: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, groupCreation?: GroupCreationRequest, options?: any): AxiosPromise<void> {
-            return localVarFp.createGroup(groupNamespace, xTILEDBCLOUDACCESSCREDENTIALSNAME, groupCreation, options).then((request) => request(axios, basePath));
+        createGroup(workspace: string, teamspace: string, group: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, groupCreation?: GroupCreationRequest, options?: any): AxiosPromise<GroupCreationResponse> {
+            return localVarFp.createGroup(workspace, teamspace, group, xTILEDBCLOUDACCESSCREDENTIALSNAME, groupCreation, options).then((request) => request(axios, basePath));
         },
         /**
-         * Deregisters a group
-         * @param {string} groupNamespace The namespace of the group
-         * @param {string} groupName The unique name or id of the group
-         * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+         * Deregisters and physically deletes a group
+         * @param {string} workspace the workspace containing the teamspace the array belongs to
+         * @param {string} teamspace the teamspace the group belongs to
+         * @param {string} group The unique path or asset id of the group
+         * @param {string} [recursive] If true, it descends in the group and deletes every subgroup and subarray
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deregisterGroup(groupNamespace: string, groupName: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, options?: any): AxiosPromise<void> {
-            return localVarFp.deregisterGroup(groupNamespace, groupName, xTILEDBCLOUDACCESSCREDENTIALSNAME, options).then((request) => request(axios, basePath));
+        deleteGroup(workspace: string, teamspace: string, group: string, recursive?: string, options?: any): AxiosPromise<void> {
+            return localVarFp.deleteGroup(workspace, teamspace, group, recursive, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Deregisters a group
+         * @param {string} workspace the workspace containing the teamspace the array belongs to
+         * @param {string} teamspace the teamspace the group belongs to
+         * @param {string} group The unique path or asset id of the group
+         * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+         * @param {string} [recursive] If true, it descends in the group and deregisters every subgroup and subarray
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deregisterGroup(workspace: string, teamspace: string, group: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, recursive?: string, options?: any): AxiosPromise<void> {
+            return localVarFp.deregisterGroup(workspace, teamspace, group, xTILEDBCLOUDACCESSCREDENTIALSNAME, recursive, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Retrieves activity logs for all assets contained in a group (arrays and other groups) including the parent group itself.
+         * @param {string} workspace the workspace containing the teamspace the array belongs to
+         * @param {string} teamspace the teamspace the group belongs to
+         * @param {string} group The unique path or asset id of the group
+         * @param {number} [start] Start time of window of fetch logs, unix epoch in seconds (default: seven days ago)
+         * @param {number} [end] End time of window of fetch logs, unix epoch in seconds (default: current utc timestamp)
+         * @param {number} [page] pagination offset
+         * @param {number} [perPage] pagination limit
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getGroupActivity(workspace: string, teamspace: string, group: string, start?: number, end?: number, page?: number, perPage?: number, options?: any): AxiosPromise<GroupActivityResponse> {
+            return localVarFp.getGroupActivity(workspace, teamspace, group, start, end, page, perPage, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Retrieves combined activity logs for all assets contained in a group.
+         * @param {string} workspace the workspace containing the teamspace the array belongs to
+         * @param {string} teamspace the teamspace the group belongs to
+         * @param {string} group The unique path or asset id of the group
+         * @param {number} [page] pagination offset
+         * @param {number} [perPage] pagination limit
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getGroupContentActivity(workspace: string, teamspace: string, group: string, page?: number, perPage?: number, options?: any): AxiosPromise<GroupContentActivityResponse> {
+            return localVarFp.getGroupContentActivity(workspace, teamspace, group, page, perPage, options).then((request) => request(axios, basePath));
         },
         /**
          * get metadata on a group using the requested config
-         * @param {string} groupNamespace The namespace of the group
-         * @param {string} groupName The unique name or id of the group
+         * @param {string} workspace the workspace containing the teamspace the array belongs to
+         * @param {string} teamspace the teamspace the group belongs to
+         * @param {string} group The unique path or asset id of the group
          * @param {GroupMetadataRetrievalRequest} [metadataRetrieval] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getGroupMetadata(groupNamespace: string, groupName: string, metadataRetrieval?: GroupMetadataRetrievalRequest, options?: any): AxiosPromise<Metadata> {
-            return localVarFp.getGroupMetadata(groupNamespace, groupName, metadataRetrieval, options).then((request) => request(axios, basePath));
+        getGroupMetadata(workspace: string, teamspace: string, group: string, metadataRetrieval?: GroupMetadataRetrievalRequest, options?: any): AxiosPromise<Metadata> {
+            return localVarFp.getGroupMetadata(workspace, teamspace, group, metadataRetrieval, options).then((request) => request(axios, basePath));
         },
         /**
          * can be used to check if the resource exists
-         * @param {string} groupNamespace The namespace of the group
-         * @param {string} groupName The unique name or id of the group
+         * @param {string} workspace the workspace containing the teamspace the array belongs to
+         * @param {string} teamspace the teamspace the group belongs to
+         * @param {string} group The unique path or asset id of the group
          * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        groupsGroupNamespaceGroupNameOptions(groupNamespace: string, groupName: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, options?: any): AxiosPromise<void> {
-            return localVarFp.groupsGroupNamespaceGroupNameOptions(groupNamespace, groupName, xTILEDBCLOUDACCESSCREDENTIALSNAME, options).then((request) => request(axios, basePath));
+        groupsWorkspaceTeamspaceGroupOptions(workspace: string, teamspace: string, group: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, options?: any): AxiosPromise<void> {
+            return localVarFp.groupsWorkspaceTeamspaceGroupOptions(workspace, teamspace, group, xTILEDBCLOUDACCESSCREDENTIALSNAME, options).then((request) => request(axios, basePath));
         },
         /**
          * Registers an already existing group
-         * @param {string} groupNamespace The namespace of the group
+         * @param {string} workspace the workspace containing the teamspace the array belongs to
+         * @param {string} teamspace the teamspace the group belongs to
+         * @param {string} group The unique path or asset id of the group
          * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
          * @param {GroupRegistrationRequest} [groupRegistration] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        registerGroup(groupNamespace: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, groupRegistration?: GroupRegistrationRequest, options?: any): AxiosPromise<void> {
-            return localVarFp.registerGroup(groupNamespace, xTILEDBCLOUDACCESSCREDENTIALSNAME, groupRegistration, options).then((request) => request(axios, basePath));
+        registerGroup(workspace: string, teamspace: string, group: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, groupRegistration?: GroupRegistrationRequest, options?: any): AxiosPromise<GroupRegistrationResponse> {
+            return localVarFp.registerGroup(workspace, teamspace, group, xTILEDBCLOUDACCESSCREDENTIALSNAME, groupRegistration, options).then((request) => request(axios, basePath));
         },
         /**
          * Retrieves the contents of a group
-         * @param {string} groupNamespace The namespace of the group
-         * @param {string} groupName The unique name or id of the group
+         * @param {string} workspace the workspace containing the teamspace the array belongs to
+         * @param {string} teamspace the teamspace the group belongs to
+         * @param {string} group The unique path or asset id of the group
          * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
          * @param {GroupContentsRetrievalRequest} [groupRetrieval] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        retrieveGroup(groupNamespace: string, groupName: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, groupRetrieval?: GroupContentsRetrievalRequest, options?: any): AxiosPromise<GroupContentsRetrievalResponse> {
-            return localVarFp.retrieveGroup(groupNamespace, groupName, xTILEDBCLOUDACCESSCREDENTIALSNAME, groupRetrieval, options).then((request) => request(axios, basePath));
+        retrieveGroup(workspace: string, teamspace: string, group: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, groupRetrieval?: GroupContentsRetrievalRequest, options?: any): AxiosPromise<GroupContentsRetrievalResponse> {
+            return localVarFp.retrieveGroup(workspace, teamspace, group, xTILEDBCLOUDACCESSCREDENTIALSNAME, groupRetrieval, options).then((request) => request(axios, basePath));
         },
         /**
          * Change the contents of the group
-         * @param {string} groupNamespace The namespace of the group
-         * @param {string} groupName The unique name or id of the group
+         * @param {string} workspace the workspace containing the teamspace the array belongs to
+         * @param {string} teamspace the teamspace the group belongs to
+         * @param {string} group The unique path or asset id of the group
          * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
          * @param {GroupContentsChangesRequest} [groupUpdateContents] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updateGroupContents(groupNamespace: string, groupName: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, groupUpdateContents?: GroupContentsChangesRequest, options?: any): AxiosPromise<void> {
-            return localVarFp.updateGroupContents(groupNamespace, groupName, xTILEDBCLOUDACCESSCREDENTIALSNAME, groupUpdateContents, options).then((request) => request(axios, basePath));
+        updateGroupContents(workspace: string, teamspace: string, group: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, groupUpdateContents?: GroupContentsChangesRequest, options?: any): AxiosPromise<void> {
+            return localVarFp.updateGroupContents(workspace, teamspace, group, xTILEDBCLOUDACCESSCREDENTIALSNAME, groupUpdateContents, options).then((request) => request(axios, basePath));
         },
         /**
          * update metadata on a group
-         * @param {string} groupNamespace The namespace of the group
-         * @param {string} groupName The unique name or id of the group
+         * @param {string} workspace the workspace containing the teamspace the array belongs to
+         * @param {string} teamspace the teamspace the group belongs to
+         * @param {string} group The unique path or asset id of the group
          * @param {GroupMetadataUpdateRequest} [metadataUpdating] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updateGroupMetadata(groupNamespace: string, groupName: string, metadataUpdating?: GroupMetadataUpdateRequest, options?: any): AxiosPromise<void> {
-            return localVarFp.updateGroupMetadata(groupNamespace, groupName, metadataUpdating, options).then((request) => request(axios, basePath));
+        updateGroupMetadata(workspace: string, teamspace: string, group: string, metadataUpdating?: GroupMetadataUpdateRequest, options?: any): AxiosPromise<void> {
+            return localVarFp.updateGroupMetadata(workspace, teamspace, group, metadataUpdating, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -3774,108 +4556,327 @@ export const GroupsApiFactory = function (configuration?: Configuration, basePat
 export class GroupsApi extends BaseAPI {
     /**
      * Creates an empty group
-     * @param {string} groupNamespace The namespace of the group
+     * @param {string} workspace the workspace containing the teamspace the array belongs to
+     * @param {string} teamspace the teamspace the group belongs to
+     * @param {string} group The unique path or asset id of the group
      * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
      * @param {GroupCreationRequest} [groupCreation] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof GroupsApi
      */
-    public createGroup(groupNamespace: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, groupCreation?: GroupCreationRequest, options?: any) {
-        return GroupsApiFp(this.configuration).createGroup(groupNamespace, xTILEDBCLOUDACCESSCREDENTIALSNAME, groupCreation, options).then((request) => request(this.axios, this.basePath));
+    public createGroup(workspace: string, teamspace: string, group: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, groupCreation?: GroupCreationRequest, options?: any) {
+        return GroupsApiFp(this.configuration).createGroup(workspace, teamspace, group, xTILEDBCLOUDACCESSCREDENTIALSNAME, groupCreation, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
-     * Deregisters a group
-     * @param {string} groupNamespace The namespace of the group
-     * @param {string} groupName The unique name or id of the group
-     * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+     * Deregisters and physically deletes a group
+     * @param {string} workspace the workspace containing the teamspace the array belongs to
+     * @param {string} teamspace the teamspace the group belongs to
+     * @param {string} group The unique path or asset id of the group
+     * @param {string} [recursive] If true, it descends in the group and deletes every subgroup and subarray
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof GroupsApi
      */
-    public deregisterGroup(groupNamespace: string, groupName: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, options?: any) {
-        return GroupsApiFp(this.configuration).deregisterGroup(groupNamespace, groupName, xTILEDBCLOUDACCESSCREDENTIALSNAME, options).then((request) => request(this.axios, this.basePath));
+    public deleteGroup(workspace: string, teamspace: string, group: string, recursive?: string, options?: any) {
+        return GroupsApiFp(this.configuration).deleteGroup(workspace, teamspace, group, recursive, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Deregisters a group
+     * @param {string} workspace the workspace containing the teamspace the array belongs to
+     * @param {string} teamspace the teamspace the group belongs to
+     * @param {string} group The unique path or asset id of the group
+     * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+     * @param {string} [recursive] If true, it descends in the group and deregisters every subgroup and subarray
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof GroupsApi
+     */
+    public deregisterGroup(workspace: string, teamspace: string, group: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, recursive?: string, options?: any) {
+        return GroupsApiFp(this.configuration).deregisterGroup(workspace, teamspace, group, xTILEDBCLOUDACCESSCREDENTIALSNAME, recursive, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Retrieves activity logs for all assets contained in a group (arrays and other groups) including the parent group itself.
+     * @param {string} workspace the workspace containing the teamspace the array belongs to
+     * @param {string} teamspace the teamspace the group belongs to
+     * @param {string} group The unique path or asset id of the group
+     * @param {number} [start] Start time of window of fetch logs, unix epoch in seconds (default: seven days ago)
+     * @param {number} [end] End time of window of fetch logs, unix epoch in seconds (default: current utc timestamp)
+     * @param {number} [page] pagination offset
+     * @param {number} [perPage] pagination limit
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof GroupsApi
+     */
+    public getGroupActivity(workspace: string, teamspace: string, group: string, start?: number, end?: number, page?: number, perPage?: number, options?: any) {
+        return GroupsApiFp(this.configuration).getGroupActivity(workspace, teamspace, group, start, end, page, perPage, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Retrieves combined activity logs for all assets contained in a group.
+     * @param {string} workspace the workspace containing the teamspace the array belongs to
+     * @param {string} teamspace the teamspace the group belongs to
+     * @param {string} group The unique path or asset id of the group
+     * @param {number} [page] pagination offset
+     * @param {number} [perPage] pagination limit
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof GroupsApi
+     */
+    public getGroupContentActivity(workspace: string, teamspace: string, group: string, page?: number, perPage?: number, options?: any) {
+        return GroupsApiFp(this.configuration).getGroupContentActivity(workspace, teamspace, group, page, perPage, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * get metadata on a group using the requested config
-     * @param {string} groupNamespace The namespace of the group
-     * @param {string} groupName The unique name or id of the group
+     * @param {string} workspace the workspace containing the teamspace the array belongs to
+     * @param {string} teamspace the teamspace the group belongs to
+     * @param {string} group The unique path or asset id of the group
      * @param {GroupMetadataRetrievalRequest} [metadataRetrieval] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof GroupsApi
      */
-    public getGroupMetadata(groupNamespace: string, groupName: string, metadataRetrieval?: GroupMetadataRetrievalRequest, options?: any) {
-        return GroupsApiFp(this.configuration).getGroupMetadata(groupNamespace, groupName, metadataRetrieval, options).then((request) => request(this.axios, this.basePath));
+    public getGroupMetadata(workspace: string, teamspace: string, group: string, metadataRetrieval?: GroupMetadataRetrievalRequest, options?: any) {
+        return GroupsApiFp(this.configuration).getGroupMetadata(workspace, teamspace, group, metadataRetrieval, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * can be used to check if the resource exists
-     * @param {string} groupNamespace The namespace of the group
-     * @param {string} groupName The unique name or id of the group
+     * @param {string} workspace the workspace containing the teamspace the array belongs to
+     * @param {string} teamspace the teamspace the group belongs to
+     * @param {string} group The unique path or asset id of the group
      * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof GroupsApi
      */
-    public groupsGroupNamespaceGroupNameOptions(groupNamespace: string, groupName: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, options?: any) {
-        return GroupsApiFp(this.configuration).groupsGroupNamespaceGroupNameOptions(groupNamespace, groupName, xTILEDBCLOUDACCESSCREDENTIALSNAME, options).then((request) => request(this.axios, this.basePath));
+    public groupsWorkspaceTeamspaceGroupOptions(workspace: string, teamspace: string, group: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, options?: any) {
+        return GroupsApiFp(this.configuration).groupsWorkspaceTeamspaceGroupOptions(workspace, teamspace, group, xTILEDBCLOUDACCESSCREDENTIALSNAME, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * Registers an already existing group
-     * @param {string} groupNamespace The namespace of the group
+     * @param {string} workspace the workspace containing the teamspace the array belongs to
+     * @param {string} teamspace the teamspace the group belongs to
+     * @param {string} group The unique path or asset id of the group
      * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
      * @param {GroupRegistrationRequest} [groupRegistration] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof GroupsApi
      */
-    public registerGroup(groupNamespace: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, groupRegistration?: GroupRegistrationRequest, options?: any) {
-        return GroupsApiFp(this.configuration).registerGroup(groupNamespace, xTILEDBCLOUDACCESSCREDENTIALSNAME, groupRegistration, options).then((request) => request(this.axios, this.basePath));
+    public registerGroup(workspace: string, teamspace: string, group: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, groupRegistration?: GroupRegistrationRequest, options?: any) {
+        return GroupsApiFp(this.configuration).registerGroup(workspace, teamspace, group, xTILEDBCLOUDACCESSCREDENTIALSNAME, groupRegistration, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * Retrieves the contents of a group
-     * @param {string} groupNamespace The namespace of the group
-     * @param {string} groupName The unique name or id of the group
+     * @param {string} workspace the workspace containing the teamspace the array belongs to
+     * @param {string} teamspace the teamspace the group belongs to
+     * @param {string} group The unique path or asset id of the group
      * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
      * @param {GroupContentsRetrievalRequest} [groupRetrieval] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof GroupsApi
      */
-    public retrieveGroup(groupNamespace: string, groupName: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, groupRetrieval?: GroupContentsRetrievalRequest, options?: any) {
-        return GroupsApiFp(this.configuration).retrieveGroup(groupNamespace, groupName, xTILEDBCLOUDACCESSCREDENTIALSNAME, groupRetrieval, options).then((request) => request(this.axios, this.basePath));
+    public retrieveGroup(workspace: string, teamspace: string, group: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, groupRetrieval?: GroupContentsRetrievalRequest, options?: any) {
+        return GroupsApiFp(this.configuration).retrieveGroup(workspace, teamspace, group, xTILEDBCLOUDACCESSCREDENTIALSNAME, groupRetrieval, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * Change the contents of the group
-     * @param {string} groupNamespace The namespace of the group
-     * @param {string} groupName The unique name or id of the group
+     * @param {string} workspace the workspace containing the teamspace the array belongs to
+     * @param {string} teamspace the teamspace the group belongs to
+     * @param {string} group The unique path or asset id of the group
      * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
      * @param {GroupContentsChangesRequest} [groupUpdateContents] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof GroupsApi
      */
-    public updateGroupContents(groupNamespace: string, groupName: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, groupUpdateContents?: GroupContentsChangesRequest, options?: any) {
-        return GroupsApiFp(this.configuration).updateGroupContents(groupNamespace, groupName, xTILEDBCLOUDACCESSCREDENTIALSNAME, groupUpdateContents, options).then((request) => request(this.axios, this.basePath));
+    public updateGroupContents(workspace: string, teamspace: string, group: string, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, groupUpdateContents?: GroupContentsChangesRequest, options?: any) {
+        return GroupsApiFp(this.configuration).updateGroupContents(workspace, teamspace, group, xTILEDBCLOUDACCESSCREDENTIALSNAME, groupUpdateContents, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * update metadata on a group
-     * @param {string} groupNamespace The namespace of the group
-     * @param {string} groupName The unique name or id of the group
+     * @param {string} workspace the workspace containing the teamspace the array belongs to
+     * @param {string} teamspace the teamspace the group belongs to
+     * @param {string} group The unique path or asset id of the group
      * @param {GroupMetadataUpdateRequest} [metadataUpdating] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof GroupsApi
      */
-    public updateGroupMetadata(groupNamespace: string, groupName: string, metadataUpdating?: GroupMetadataUpdateRequest, options?: any) {
-        return GroupsApiFp(this.configuration).updateGroupMetadata(groupNamespace, groupName, metadataUpdating, options).then((request) => request(this.axios, this.basePath));
+    public updateGroupMetadata(workspace: string, teamspace: string, group: string, metadataUpdating?: GroupMetadataUpdateRequest, options?: any) {
+        return GroupsApiFp(this.configuration).updateGroupMetadata(workspace, teamspace, group, metadataUpdating, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+
+/**
+ * NotebooksApi - axios parameter creator
+ * @export
+ */
+export const NotebooksApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * Upload a notebook at the specified location and wrap it in TileDB Array
+         * @param {string} workspace the workspace containing the teamspace the array belongs to
+         * @param {string} teamspace the teamspace the array belongs to
+         * @param {string} array asset ID or hierarchical path of array that is url-encoded
+         * @param {number} filesize size of the notebook to upload in bytes
+         * @param {any} notebook notebook to upload
+         * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+         * @param {string} [name] name of the TileDB array to create, if missing {array} is used
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        handleUploadNotebook: async (workspace: string, teamspace: string, array: string, filesize: number, notebook: any, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, name?: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'workspace' is not null or undefined
+            assertParamExists('handleUploadNotebook', 'workspace', workspace)
+            // verify required parameter 'teamspace' is not null or undefined
+            assertParamExists('handleUploadNotebook', 'teamspace', teamspace)
+            // verify required parameter 'array' is not null or undefined
+            assertParamExists('handleUploadNotebook', 'array', array)
+            // verify required parameter 'filesize' is not null or undefined
+            assertParamExists('handleUploadNotebook', 'filesize', filesize)
+            // verify required parameter 'notebook' is not null or undefined
+            assertParamExists('handleUploadNotebook', 'notebook', notebook)
+            const localVarPath = `/notebooks/{workspace}/{teamspace}/{array}/upload`
+                .replace(`{${"workspace"}}`, encodeURIComponent(String(workspace)))
+                .replace(`{${"teamspace"}}`, encodeURIComponent(String(teamspace)))
+                .replace(`{${"array"}}`, encodeURIComponent(String(array)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+
+            // authentication BasicAuth required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            if (name !== undefined) {
+                localVarQueryParameter['name'] = name;
+            }
+
+            if (filesize !== undefined) {
+                localVarQueryParameter['filesize'] = filesize;
+            }
+
+            if (xTILEDBCLOUDACCESSCREDENTIALSNAME !== undefined && xTILEDBCLOUDACCESSCREDENTIALSNAME !== null) {
+                localVarHeaderParameter['X-TILEDB-CLOUD-ACCESS-CREDENTIALS-NAME'] = String(xTILEDBCLOUDACCESSCREDENTIALSNAME);
+            }
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/octet-stream';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
+            localVarRequestOptions.data = serializeDataIfNeeded(notebook, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * NotebooksApi - functional programming interface
+ * @export
+ */
+export const NotebooksApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = NotebooksApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * Upload a notebook at the specified location and wrap it in TileDB Array
+         * @param {string} workspace the workspace containing the teamspace the array belongs to
+         * @param {string} teamspace the teamspace the array belongs to
+         * @param {string} array asset ID or hierarchical path of array that is url-encoded
+         * @param {number} filesize size of the notebook to upload in bytes
+         * @param {any} notebook notebook to upload
+         * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+         * @param {string} [name] name of the TileDB array to create, if missing {array} is used
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async handleUploadNotebook(workspace: string, teamspace: string, array: string, filesize: number, notebook: any, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, name?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<NotebookUploaded>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.handleUploadNotebook(workspace, teamspace, array, filesize, notebook, xTILEDBCLOUDACCESSCREDENTIALSNAME, name, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+    }
+};
+
+/**
+ * NotebooksApi - factory interface
+ * @export
+ */
+export const NotebooksApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = NotebooksApiFp(configuration)
+    return {
+        /**
+         * Upload a notebook at the specified location and wrap it in TileDB Array
+         * @param {string} workspace the workspace containing the teamspace the array belongs to
+         * @param {string} teamspace the teamspace the array belongs to
+         * @param {string} array asset ID or hierarchical path of array that is url-encoded
+         * @param {number} filesize size of the notebook to upload in bytes
+         * @param {any} notebook notebook to upload
+         * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+         * @param {string} [name] name of the TileDB array to create, if missing {array} is used
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        handleUploadNotebook(workspace: string, teamspace: string, array: string, filesize: number, notebook: any, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, name?: string, options?: any): AxiosPromise<NotebookUploaded> {
+            return localVarFp.handleUploadNotebook(workspace, teamspace, array, filesize, notebook, xTILEDBCLOUDACCESSCREDENTIALSNAME, name, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * NotebooksApi - object-oriented interface
+ * @export
+ * @class NotebooksApi
+ * @extends {BaseAPI}
+ */
+export class NotebooksApi extends BaseAPI {
+    /**
+     * Upload a notebook at the specified location and wrap it in TileDB Array
+     * @param {string} workspace the workspace containing the teamspace the array belongs to
+     * @param {string} teamspace the teamspace the array belongs to
+     * @param {string} array asset ID or hierarchical path of array that is url-encoded
+     * @param {number} filesize size of the notebook to upload in bytes
+     * @param {any} notebook notebook to upload
+     * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
+     * @param {string} [name] name of the TileDB array to create, if missing {array} is used
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof NotebooksApi
+     */
+    public handleUploadNotebook(workspace: string, teamspace: string, array: string, filesize: number, notebook: any, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, name?: string, options?: any) {
+        return NotebooksApiFp(this.configuration).handleUploadNotebook(workspace, teamspace, array, filesize, notebook, xTILEDBCLOUDACCESSCREDENTIALSNAME, name, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -3889,21 +4890,26 @@ export const OrganizationApiAxiosParamCreator = function (configuration?: Config
     return {
         /**
          * Create a new credential for the namespace
-         * @param {string} namespace namespace
+         * @param {string} workspace the workspace containing the teamspace the array belongs to
+         * @param {string} teamspace the teamspace the array belongs to
          * @param {AccessCredential} accessCredential The new credentials to be created.
          * @param {string} [provider] Show only the credentials from this provider. This should be one of the CloudProvider enum values.
+         * @param {string} [type] Show only the credentials of this type. This should be one of the AccessCredentialType enum values.
          * @param {number} [page] pagination offset
          * @param {number} [perPage] pagination limit
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        addCredential: async (namespace: string, accessCredential: AccessCredential, provider?: string, page?: number, perPage?: number, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'namespace' is not null or undefined
-            assertParamExists('addCredential', 'namespace', namespace)
+        addCredential: async (workspace: string, teamspace: string, accessCredential: AccessCredential, provider?: string, type?: string, page?: number, perPage?: number, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'workspace' is not null or undefined
+            assertParamExists('addCredential', 'workspace', workspace)
+            // verify required parameter 'teamspace' is not null or undefined
+            assertParamExists('addCredential', 'teamspace', teamspace)
             // verify required parameter 'accessCredential' is not null or undefined
             assertParamExists('addCredential', 'accessCredential', accessCredential)
-            const localVarPath = `/credentials/{namespace}`
-                .replace(`{${"namespace"}}`, encodeURIComponent(String(namespace)));
+            const localVarPath = `/credentials/{workspace}/{teamspace}`
+                .replace(`{${"workspace"}}`, encodeURIComponent(String(workspace)))
+                .replace(`{${"teamspace"}}`, encodeURIComponent(String(teamspace)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -3924,6 +4930,10 @@ export const OrganizationApiAxiosParamCreator = function (configuration?: Config
 
             if (provider !== undefined) {
                 localVarQueryParameter['provider'] = provider;
+            }
+
+            if (type !== undefined) {
+                localVarQueryParameter['type'] = type;
             }
 
             if (page !== undefined) {
@@ -3954,18 +4964,22 @@ export const OrganizationApiAxiosParamCreator = function (configuration?: Config
         },
         /**
          * Delete the named access credential. Any arrays still set to use this credential will use the namespace\'s default and may become unreachable.
-         * @param {string} namespace namespace
+         * @param {string} workspace the workspace containing the teamspace the array belongs to
+         * @param {string} teamspace the teamspace the array belongs to
          * @param {string} name A URL-safe version of the credential\&#39;s user-provided name
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteCredential: async (namespace: string, name: string, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'namespace' is not null or undefined
-            assertParamExists('deleteCredential', 'namespace', namespace)
+        deleteCredential: async (workspace: string, teamspace: string, name: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'workspace' is not null or undefined
+            assertParamExists('deleteCredential', 'workspace', workspace)
+            // verify required parameter 'teamspace' is not null or undefined
+            assertParamExists('deleteCredential', 'teamspace', teamspace)
             // verify required parameter 'name' is not null or undefined
             assertParamExists('deleteCredential', 'name', name)
-            const localVarPath = `/credentials/{namespace}/{name}`
-                .replace(`{${"namespace"}}`, encodeURIComponent(String(namespace)))
+            const localVarPath = `/credentials/{workspace}/{teamspace}/{name}`
+                .replace(`{${"workspace"}}`, encodeURIComponent(String(workspace)))
+                .replace(`{${"teamspace"}}`, encodeURIComponent(String(teamspace)))
                 .replace(`{${"name"}}`, encodeURIComponent(String(name)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -4002,18 +5016,22 @@ export const OrganizationApiAxiosParamCreator = function (configuration?: Config
         },
         /**
          * Retrieve an access credential by name
-         * @param {string} namespace namespace
+         * @param {string} workspace the workspace containing the teamspace the array belongs to
+         * @param {string} teamspace the teamspace the array belongs to
          * @param {string} name A URL-safe version of the credential\&#39;s user-provided name
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getCredential: async (namespace: string, name: string, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'namespace' is not null or undefined
-            assertParamExists('getCredential', 'namespace', namespace)
+        getCredential: async (workspace: string, teamspace: string, name: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'workspace' is not null or undefined
+            assertParamExists('getCredential', 'workspace', workspace)
+            // verify required parameter 'teamspace' is not null or undefined
+            assertParamExists('getCredential', 'teamspace', teamspace)
             // verify required parameter 'name' is not null or undefined
             assertParamExists('getCredential', 'name', name)
-            const localVarPath = `/credentials/{namespace}/{name}`
-                .replace(`{${"namespace"}}`, encodeURIComponent(String(namespace)))
+            const localVarPath = `/credentials/{workspace}/{teamspace}/{name}`
+                .replace(`{${"workspace"}}`, encodeURIComponent(String(workspace)))
+                .replace(`{${"teamspace"}}`, encodeURIComponent(String(teamspace)))
                 .replace(`{${"name"}}`, encodeURIComponent(String(name)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -4050,18 +5068,23 @@ export const OrganizationApiAxiosParamCreator = function (configuration?: Config
         },
         /**
          * List the credentials available in the namespace
-         * @param {string} namespace namespace
+         * @param {string} workspace the workspace containing the teamspace the array belongs to
+         * @param {string} teamspace the teamspace the array belongs to
          * @param {string} [provider] Show only the credentials from this provider. This should be one of the CloudProvider enum values.
+         * @param {string} [type] Show only the credentials of this type. This should be one of the AccessCredentialType enum values.
          * @param {number} [page] pagination offset
          * @param {number} [perPage] pagination limit
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listCredentials: async (namespace: string, provider?: string, page?: number, perPage?: number, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'namespace' is not null or undefined
-            assertParamExists('listCredentials', 'namespace', namespace)
-            const localVarPath = `/credentials/{namespace}`
-                .replace(`{${"namespace"}}`, encodeURIComponent(String(namespace)));
+        listCredentials: async (workspace: string, teamspace: string, provider?: string, type?: string, page?: number, perPage?: number, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'workspace' is not null or undefined
+            assertParamExists('listCredentials', 'workspace', workspace)
+            // verify required parameter 'teamspace' is not null or undefined
+            assertParamExists('listCredentials', 'teamspace', teamspace)
+            const localVarPath = `/credentials/{workspace}/{teamspace}`
+                .replace(`{${"workspace"}}`, encodeURIComponent(String(workspace)))
+                .replace(`{${"teamspace"}}`, encodeURIComponent(String(teamspace)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -4082,6 +5105,10 @@ export const OrganizationApiAxiosParamCreator = function (configuration?: Config
 
             if (provider !== undefined) {
                 localVarQueryParameter['provider'] = provider;
+            }
+
+            if (type !== undefined) {
+                localVarQueryParameter['type'] = type;
             }
 
             if (page !== undefined) {
@@ -4109,21 +5136,25 @@ export const OrganizationApiAxiosParamCreator = function (configuration?: Config
         },
         /**
          * Update the named access credential. This will also update the information used to access arrays set to use this credential.
-         * @param {string} namespace namespace
+         * @param {string} workspace the workspace containing the teamspace the array belongs to
+         * @param {string} teamspace the teamspace the array belongs to
          * @param {string} name A URL-safe version of the credential\&#39;s user-provided name
          * @param {AccessCredential} accessCredential Changes to make to this credential
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updateCredential: async (namespace: string, name: string, accessCredential: AccessCredential, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'namespace' is not null or undefined
-            assertParamExists('updateCredential', 'namespace', namespace)
+        updateCredential: async (workspace: string, teamspace: string, name: string, accessCredential: AccessCredential, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'workspace' is not null or undefined
+            assertParamExists('updateCredential', 'workspace', workspace)
+            // verify required parameter 'teamspace' is not null or undefined
+            assertParamExists('updateCredential', 'teamspace', teamspace)
             // verify required parameter 'name' is not null or undefined
             assertParamExists('updateCredential', 'name', name)
             // verify required parameter 'accessCredential' is not null or undefined
             assertParamExists('updateCredential', 'accessCredential', accessCredential)
-            const localVarPath = `/credentials/{namespace}/{name}`
-                .replace(`{${"namespace"}}`, encodeURIComponent(String(namespace)))
+            const localVarPath = `/credentials/{workspace}/{teamspace}/{name}`
+                .replace(`{${"workspace"}}`, encodeURIComponent(String(workspace)))
+                .replace(`{${"teamspace"}}`, encodeURIComponent(String(teamspace)))
                 .replace(`{${"name"}}`, encodeURIComponent(String(name)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -4173,63 +5204,70 @@ export const OrganizationApiFp = function(configuration?: Configuration) {
     return {
         /**
          * Create a new credential for the namespace
-         * @param {string} namespace namespace
+         * @param {string} workspace the workspace containing the teamspace the array belongs to
+         * @param {string} teamspace the teamspace the array belongs to
          * @param {AccessCredential} accessCredential The new credentials to be created.
          * @param {string} [provider] Show only the credentials from this provider. This should be one of the CloudProvider enum values.
+         * @param {string} [type] Show only the credentials of this type. This should be one of the AccessCredentialType enum values.
          * @param {number} [page] pagination offset
          * @param {number} [perPage] pagination limit
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async addCredential(namespace: string, accessCredential: AccessCredential, provider?: string, page?: number, perPage?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.addCredential(namespace, accessCredential, provider, page, perPage, options);
+        async addCredential(workspace: string, teamspace: string, accessCredential: AccessCredential, provider?: string, type?: string, page?: number, perPage?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.addCredential(workspace, teamspace, accessCredential, provider, type, page, perPage, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * Delete the named access credential. Any arrays still set to use this credential will use the namespace\'s default and may become unreachable.
-         * @param {string} namespace namespace
+         * @param {string} workspace the workspace containing the teamspace the array belongs to
+         * @param {string} teamspace the teamspace the array belongs to
          * @param {string} name A URL-safe version of the credential\&#39;s user-provided name
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async deleteCredential(namespace: string, name: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteCredential(namespace, name, options);
+        async deleteCredential(workspace: string, teamspace: string, name: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteCredential(workspace, teamspace, name, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * Retrieve an access credential by name
-         * @param {string} namespace namespace
+         * @param {string} workspace the workspace containing the teamspace the array belongs to
+         * @param {string} teamspace the teamspace the array belongs to
          * @param {string} name A URL-safe version of the credential\&#39;s user-provided name
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getCredential(namespace: string, name: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AccessCredential>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getCredential(namespace, name, options);
+        async getCredential(workspace: string, teamspace: string, name: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AccessCredential>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getCredential(workspace, teamspace, name, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * List the credentials available in the namespace
-         * @param {string} namespace namespace
+         * @param {string} workspace the workspace containing the teamspace the array belongs to
+         * @param {string} teamspace the teamspace the array belongs to
          * @param {string} [provider] Show only the credentials from this provider. This should be one of the CloudProvider enum values.
+         * @param {string} [type] Show only the credentials of this type. This should be one of the AccessCredentialType enum values.
          * @param {number} [page] pagination offset
          * @param {number} [perPage] pagination limit
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listCredentials(namespace: string, provider?: string, page?: number, perPage?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AccessCredentialsData>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.listCredentials(namespace, provider, page, perPage, options);
+        async listCredentials(workspace: string, teamspace: string, provider?: string, type?: string, page?: number, perPage?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AccessCredentialsData>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listCredentials(workspace, teamspace, provider, type, page, perPage, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * Update the named access credential. This will also update the information used to access arrays set to use this credential.
-         * @param {string} namespace namespace
+         * @param {string} workspace the workspace containing the teamspace the array belongs to
+         * @param {string} teamspace the teamspace the array belongs to
          * @param {string} name A URL-safe version of the credential\&#39;s user-provided name
          * @param {AccessCredential} accessCredential Changes to make to this credential
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async updateCredential(namespace: string, name: string, accessCredential: AccessCredential, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.updateCredential(namespace, name, accessCredential, options);
+        async updateCredential(workspace: string, teamspace: string, name: string, accessCredential: AccessCredential, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateCredential(workspace, teamspace, name, accessCredential, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
     }
@@ -4244,59 +5282,66 @@ export const OrganizationApiFactory = function (configuration?: Configuration, b
     return {
         /**
          * Create a new credential for the namespace
-         * @param {string} namespace namespace
+         * @param {string} workspace the workspace containing the teamspace the array belongs to
+         * @param {string} teamspace the teamspace the array belongs to
          * @param {AccessCredential} accessCredential The new credentials to be created.
          * @param {string} [provider] Show only the credentials from this provider. This should be one of the CloudProvider enum values.
+         * @param {string} [type] Show only the credentials of this type. This should be one of the AccessCredentialType enum values.
          * @param {number} [page] pagination offset
          * @param {number} [perPage] pagination limit
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        addCredential(namespace: string, accessCredential: AccessCredential, provider?: string, page?: number, perPage?: number, options?: any): AxiosPromise<void> {
-            return localVarFp.addCredential(namespace, accessCredential, provider, page, perPage, options).then((request) => request(axios, basePath));
+        addCredential(workspace: string, teamspace: string, accessCredential: AccessCredential, provider?: string, type?: string, page?: number, perPage?: number, options?: any): AxiosPromise<void> {
+            return localVarFp.addCredential(workspace, teamspace, accessCredential, provider, type, page, perPage, options).then((request) => request(axios, basePath));
         },
         /**
          * Delete the named access credential. Any arrays still set to use this credential will use the namespace\'s default and may become unreachable.
-         * @param {string} namespace namespace
+         * @param {string} workspace the workspace containing the teamspace the array belongs to
+         * @param {string} teamspace the teamspace the array belongs to
          * @param {string} name A URL-safe version of the credential\&#39;s user-provided name
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteCredential(namespace: string, name: string, options?: any): AxiosPromise<void> {
-            return localVarFp.deleteCredential(namespace, name, options).then((request) => request(axios, basePath));
+        deleteCredential(workspace: string, teamspace: string, name: string, options?: any): AxiosPromise<void> {
+            return localVarFp.deleteCredential(workspace, teamspace, name, options).then((request) => request(axios, basePath));
         },
         /**
          * Retrieve an access credential by name
-         * @param {string} namespace namespace
+         * @param {string} workspace the workspace containing the teamspace the array belongs to
+         * @param {string} teamspace the teamspace the array belongs to
          * @param {string} name A URL-safe version of the credential\&#39;s user-provided name
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getCredential(namespace: string, name: string, options?: any): AxiosPromise<AccessCredential> {
-            return localVarFp.getCredential(namespace, name, options).then((request) => request(axios, basePath));
+        getCredential(workspace: string, teamspace: string, name: string, options?: any): AxiosPromise<AccessCredential> {
+            return localVarFp.getCredential(workspace, teamspace, name, options).then((request) => request(axios, basePath));
         },
         /**
          * List the credentials available in the namespace
-         * @param {string} namespace namespace
+         * @param {string} workspace the workspace containing the teamspace the array belongs to
+         * @param {string} teamspace the teamspace the array belongs to
          * @param {string} [provider] Show only the credentials from this provider. This should be one of the CloudProvider enum values.
+         * @param {string} [type] Show only the credentials of this type. This should be one of the AccessCredentialType enum values.
          * @param {number} [page] pagination offset
          * @param {number} [perPage] pagination limit
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listCredentials(namespace: string, provider?: string, page?: number, perPage?: number, options?: any): AxiosPromise<AccessCredentialsData> {
-            return localVarFp.listCredentials(namespace, provider, page, perPage, options).then((request) => request(axios, basePath));
+        listCredentials(workspace: string, teamspace: string, provider?: string, type?: string, page?: number, perPage?: number, options?: any): AxiosPromise<AccessCredentialsData> {
+            return localVarFp.listCredentials(workspace, teamspace, provider, type, page, perPage, options).then((request) => request(axios, basePath));
         },
         /**
          * Update the named access credential. This will also update the information used to access arrays set to use this credential.
-         * @param {string} namespace namespace
+         * @param {string} workspace the workspace containing the teamspace the array belongs to
+         * @param {string} teamspace the teamspace the array belongs to
          * @param {string} name A URL-safe version of the credential\&#39;s user-provided name
          * @param {AccessCredential} accessCredential Changes to make to this credential
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updateCredential(namespace: string, name: string, accessCredential: AccessCredential, options?: any): AxiosPromise<void> {
-            return localVarFp.updateCredential(namespace, name, accessCredential, options).then((request) => request(axios, basePath));
+        updateCredential(workspace: string, teamspace: string, name: string, accessCredential: AccessCredential, options?: any): AxiosPromise<void> {
+            return localVarFp.updateCredential(workspace, teamspace, name, accessCredential, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -4310,68 +5355,75 @@ export const OrganizationApiFactory = function (configuration?: Configuration, b
 export class OrganizationApi extends BaseAPI {
     /**
      * Create a new credential for the namespace
-     * @param {string} namespace namespace
+     * @param {string} workspace the workspace containing the teamspace the array belongs to
+     * @param {string} teamspace the teamspace the array belongs to
      * @param {AccessCredential} accessCredential The new credentials to be created.
      * @param {string} [provider] Show only the credentials from this provider. This should be one of the CloudProvider enum values.
+     * @param {string} [type] Show only the credentials of this type. This should be one of the AccessCredentialType enum values.
      * @param {number} [page] pagination offset
      * @param {number} [perPage] pagination limit
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof OrganizationApi
      */
-    public addCredential(namespace: string, accessCredential: AccessCredential, provider?: string, page?: number, perPage?: number, options?: any) {
-        return OrganizationApiFp(this.configuration).addCredential(namespace, accessCredential, provider, page, perPage, options).then((request) => request(this.axios, this.basePath));
+    public addCredential(workspace: string, teamspace: string, accessCredential: AccessCredential, provider?: string, type?: string, page?: number, perPage?: number, options?: any) {
+        return OrganizationApiFp(this.configuration).addCredential(workspace, teamspace, accessCredential, provider, type, page, perPage, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * Delete the named access credential. Any arrays still set to use this credential will use the namespace\'s default and may become unreachable.
-     * @param {string} namespace namespace
+     * @param {string} workspace the workspace containing the teamspace the array belongs to
+     * @param {string} teamspace the teamspace the array belongs to
      * @param {string} name A URL-safe version of the credential\&#39;s user-provided name
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof OrganizationApi
      */
-    public deleteCredential(namespace: string, name: string, options?: any) {
-        return OrganizationApiFp(this.configuration).deleteCredential(namespace, name, options).then((request) => request(this.axios, this.basePath));
+    public deleteCredential(workspace: string, teamspace: string, name: string, options?: any) {
+        return OrganizationApiFp(this.configuration).deleteCredential(workspace, teamspace, name, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * Retrieve an access credential by name
-     * @param {string} namespace namespace
+     * @param {string} workspace the workspace containing the teamspace the array belongs to
+     * @param {string} teamspace the teamspace the array belongs to
      * @param {string} name A URL-safe version of the credential\&#39;s user-provided name
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof OrganizationApi
      */
-    public getCredential(namespace: string, name: string, options?: any) {
-        return OrganizationApiFp(this.configuration).getCredential(namespace, name, options).then((request) => request(this.axios, this.basePath));
+    public getCredential(workspace: string, teamspace: string, name: string, options?: any) {
+        return OrganizationApiFp(this.configuration).getCredential(workspace, teamspace, name, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * List the credentials available in the namespace
-     * @param {string} namespace namespace
+     * @param {string} workspace the workspace containing the teamspace the array belongs to
+     * @param {string} teamspace the teamspace the array belongs to
      * @param {string} [provider] Show only the credentials from this provider. This should be one of the CloudProvider enum values.
+     * @param {string} [type] Show only the credentials of this type. This should be one of the AccessCredentialType enum values.
      * @param {number} [page] pagination offset
      * @param {number} [perPage] pagination limit
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof OrganizationApi
      */
-    public listCredentials(namespace: string, provider?: string, page?: number, perPage?: number, options?: any) {
-        return OrganizationApiFp(this.configuration).listCredentials(namespace, provider, page, perPage, options).then((request) => request(this.axios, this.basePath));
+    public listCredentials(workspace: string, teamspace: string, provider?: string, type?: string, page?: number, perPage?: number, options?: any) {
+        return OrganizationApiFp(this.configuration).listCredentials(workspace, teamspace, provider, type, page, perPage, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * Update the named access credential. This will also update the information used to access arrays set to use this credential.
-     * @param {string} namespace namespace
+     * @param {string} workspace the workspace containing the teamspace the array belongs to
+     * @param {string} teamspace the teamspace the array belongs to
      * @param {string} name A URL-safe version of the credential\&#39;s user-provided name
      * @param {AccessCredential} accessCredential Changes to make to this credential
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof OrganizationApi
      */
-    public updateCredential(namespace: string, name: string, accessCredential: AccessCredential, options?: any) {
-        return OrganizationApiFp(this.configuration).updateCredential(namespace, name, accessCredential, options).then((request) => request(this.axios, this.basePath));
+    public updateCredential(workspace: string, teamspace: string, name: string, accessCredential: AccessCredential, options?: any) {
+        return OrganizationApiFp(this.configuration).updateCredential(workspace, teamspace, name, accessCredential, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -4385,8 +5437,9 @@ export const QueryApiAxiosParamCreator = function (configuration?: Configuration
     return {
         /**
          * send a query to run against a specified array/URI registered to a group/project
-         * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
-         * @param {string} array name/uri of array that is url-encoded
+         * @param {string} workspace the workspace containing the teamspace the array belongs to
+         * @param {string} teamspace the teamspace the array belongs to
+         * @param {string} array asset ID or hierarchical path of array that is url-encoded
          * @param {string} type type of query
          * @param {string} contentType Content Type of input and return mime
          * @param {Query} query query to run
@@ -4396,9 +5449,11 @@ export const QueryApiAxiosParamCreator = function (configuration?: Configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        submitQuery: async (namespace: string, array: string, type: string, contentType: string, query: Query, xPayer?: string, openAt?: number, readAll?: string, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'namespace' is not null or undefined
-            assertParamExists('submitQuery', 'namespace', namespace)
+        submitQuery: async (workspace: string, teamspace: string, array: string, type: string, contentType: string, query: Query, xPayer?: string, openAt?: number, readAll?: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'workspace' is not null or undefined
+            assertParamExists('submitQuery', 'workspace', workspace)
+            // verify required parameter 'teamspace' is not null or undefined
+            assertParamExists('submitQuery', 'teamspace', teamspace)
             // verify required parameter 'array' is not null or undefined
             assertParamExists('submitQuery', 'array', array)
             // verify required parameter 'type' is not null or undefined
@@ -4407,8 +5462,9 @@ export const QueryApiAxiosParamCreator = function (configuration?: Configuration
             assertParamExists('submitQuery', 'contentType', contentType)
             // verify required parameter 'query' is not null or undefined
             assertParamExists('submitQuery', 'query', query)
-            const localVarPath = `/arrays/{namespace}/{array}/query/submit`
-                .replace(`{${"namespace"}}`, encodeURIComponent(String(namespace)))
+            const localVarPath = `/arrays/{workspace}/{teamspace}/{array}/query/submit`
+                .replace(`{${"workspace"}}`, encodeURIComponent(String(workspace)))
+                .replace(`{${"teamspace"}}`, encodeURIComponent(String(teamspace)))
                 .replace(`{${"array"}}`, encodeURIComponent(String(array)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -4478,8 +5534,9 @@ export const QueryApiFp = function(configuration?: Configuration) {
     return {
         /**
          * send a query to run against a specified array/URI registered to a group/project
-         * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
-         * @param {string} array name/uri of array that is url-encoded
+         * @param {string} workspace the workspace containing the teamspace the array belongs to
+         * @param {string} teamspace the teamspace the array belongs to
+         * @param {string} array asset ID or hierarchical path of array that is url-encoded
          * @param {string} type type of query
          * @param {string} contentType Content Type of input and return mime
          * @param {Query} query query to run
@@ -4489,8 +5546,8 @@ export const QueryApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async submitQuery(namespace: string, array: string, type: string, contentType: string, query: Query, xPayer?: string, openAt?: number, readAll?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.submitQuery(namespace, array, type, contentType, query, xPayer, openAt, readAll, options);
+        async submitQuery(workspace: string, teamspace: string, array: string, type: string, contentType: string, query: Query, xPayer?: string, openAt?: number, readAll?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.submitQuery(workspace, teamspace, array, type, contentType, query, xPayer, openAt, readAll, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
     }
@@ -4505,8 +5562,9 @@ export const QueryApiFactory = function (configuration?: Configuration, basePath
     return {
         /**
          * send a query to run against a specified array/URI registered to a group/project
-         * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
-         * @param {string} array name/uri of array that is url-encoded
+         * @param {string} workspace the workspace containing the teamspace the array belongs to
+         * @param {string} teamspace the teamspace the array belongs to
+         * @param {string} array asset ID or hierarchical path of array that is url-encoded
          * @param {string} type type of query
          * @param {string} contentType Content Type of input and return mime
          * @param {Query} query query to run
@@ -4516,8 +5574,8 @@ export const QueryApiFactory = function (configuration?: Configuration, basePath
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        submitQuery(namespace: string, array: string, type: string, contentType: string, query: Query, xPayer?: string, openAt?: number, readAll?: string, options?: any): AxiosPromise<any> {
-            return localVarFp.submitQuery(namespace, array, type, contentType, query, xPayer, openAt, readAll, options).then((request) => request(axios, basePath));
+        submitQuery(workspace: string, teamspace: string, array: string, type: string, contentType: string, query: Query, xPayer?: string, openAt?: number, readAll?: string, options?: any): AxiosPromise<any> {
+            return localVarFp.submitQuery(workspace, teamspace, array, type, contentType, query, xPayer, openAt, readAll, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -4531,8 +5589,9 @@ export const QueryApiFactory = function (configuration?: Configuration, basePath
 export class QueryApi extends BaseAPI {
     /**
      * send a query to run against a specified array/URI registered to a group/project
-     * @param {string} namespace namespace array is in (an organization name or user\&#39;s username)
-     * @param {string} array name/uri of array that is url-encoded
+     * @param {string} workspace the workspace containing the teamspace the array belongs to
+     * @param {string} teamspace the teamspace the array belongs to
+     * @param {string} array asset ID or hierarchical path of array that is url-encoded
      * @param {string} type type of query
      * @param {string} contentType Content Type of input and return mime
      * @param {Query} query query to run
@@ -4543,8 +5602,8 @@ export class QueryApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof QueryApi
      */
-    public submitQuery(namespace: string, array: string, type: string, contentType: string, query: Query, xPayer?: string, openAt?: number, readAll?: string, options?: any) {
-        return QueryApiFp(this.configuration).submitQuery(namespace, array, type, contentType, query, xPayer, openAt, readAll, options).then((request) => request(this.axios, this.basePath));
+    public submitQuery(workspace: string, teamspace: string, array: string, type: string, contentType: string, query: Query, xPayer?: string, openAt?: number, readAll?: string, options?: any) {
+        return QueryApiFp(this.configuration).submitQuery(workspace, teamspace, array, type, contentType, query, xPayer, openAt, readAll, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -4558,21 +5617,26 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
     return {
         /**
          * Create a new credential for the namespace
-         * @param {string} namespace namespace
+         * @param {string} workspace the workspace containing the teamspace the array belongs to
+         * @param {string} teamspace the teamspace the array belongs to
          * @param {AccessCredential} accessCredential The new credentials to be created.
          * @param {string} [provider] Show only the credentials from this provider. This should be one of the CloudProvider enum values.
+         * @param {string} [type] Show only the credentials of this type. This should be one of the AccessCredentialType enum values.
          * @param {number} [page] pagination offset
          * @param {number} [perPage] pagination limit
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        addCredential: async (namespace: string, accessCredential: AccessCredential, provider?: string, page?: number, perPage?: number, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'namespace' is not null or undefined
-            assertParamExists('addCredential', 'namespace', namespace)
+        addCredential: async (workspace: string, teamspace: string, accessCredential: AccessCredential, provider?: string, type?: string, page?: number, perPage?: number, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'workspace' is not null or undefined
+            assertParamExists('addCredential', 'workspace', workspace)
+            // verify required parameter 'teamspace' is not null or undefined
+            assertParamExists('addCredential', 'teamspace', teamspace)
             // verify required parameter 'accessCredential' is not null or undefined
             assertParamExists('addCredential', 'accessCredential', accessCredential)
-            const localVarPath = `/credentials/{namespace}`
-                .replace(`{${"namespace"}}`, encodeURIComponent(String(namespace)));
+            const localVarPath = `/credentials/{workspace}/{teamspace}`
+                .replace(`{${"workspace"}}`, encodeURIComponent(String(workspace)))
+                .replace(`{${"teamspace"}}`, encodeURIComponent(String(teamspace)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -4593,6 +5657,10 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
 
             if (provider !== undefined) {
                 localVarQueryParameter['provider'] = provider;
+            }
+
+            if (type !== undefined) {
+                localVarQueryParameter['type'] = type;
             }
 
             if (page !== undefined) {
@@ -4623,18 +5691,22 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
         },
         /**
          * Delete the named access credential. Any arrays still set to use this credential will use the namespace\'s default and may become unreachable.
-         * @param {string} namespace namespace
+         * @param {string} workspace the workspace containing the teamspace the array belongs to
+         * @param {string} teamspace the teamspace the array belongs to
          * @param {string} name A URL-safe version of the credential\&#39;s user-provided name
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteCredential: async (namespace: string, name: string, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'namespace' is not null or undefined
-            assertParamExists('deleteCredential', 'namespace', namespace)
+        deleteCredential: async (workspace: string, teamspace: string, name: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'workspace' is not null or undefined
+            assertParamExists('deleteCredential', 'workspace', workspace)
+            // verify required parameter 'teamspace' is not null or undefined
+            assertParamExists('deleteCredential', 'teamspace', teamspace)
             // verify required parameter 'name' is not null or undefined
             assertParamExists('deleteCredential', 'name', name)
-            const localVarPath = `/credentials/{namespace}/{name}`
-                .replace(`{${"namespace"}}`, encodeURIComponent(String(namespace)))
+            const localVarPath = `/credentials/{workspace}/{teamspace}/{name}`
+                .replace(`{${"workspace"}}`, encodeURIComponent(String(workspace)))
+                .replace(`{${"teamspace"}}`, encodeURIComponent(String(teamspace)))
                 .replace(`{${"name"}}`, encodeURIComponent(String(name)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -4671,18 +5743,22 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
         },
         /**
          * Retrieve an access credential by name
-         * @param {string} namespace namespace
+         * @param {string} workspace the workspace containing the teamspace the array belongs to
+         * @param {string} teamspace the teamspace the array belongs to
          * @param {string} name A URL-safe version of the credential\&#39;s user-provided name
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getCredential: async (namespace: string, name: string, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'namespace' is not null or undefined
-            assertParamExists('getCredential', 'namespace', namespace)
+        getCredential: async (workspace: string, teamspace: string, name: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'workspace' is not null or undefined
+            assertParamExists('getCredential', 'workspace', workspace)
+            // verify required parameter 'teamspace' is not null or undefined
+            assertParamExists('getCredential', 'teamspace', teamspace)
             // verify required parameter 'name' is not null or undefined
             assertParamExists('getCredential', 'name', name)
-            const localVarPath = `/credentials/{namespace}/{name}`
-                .replace(`{${"namespace"}}`, encodeURIComponent(String(namespace)))
+            const localVarPath = `/credentials/{workspace}/{teamspace}/{name}`
+                .replace(`{${"workspace"}}`, encodeURIComponent(String(workspace)))
+                .replace(`{${"teamspace"}}`, encodeURIComponent(String(teamspace)))
                 .replace(`{${"name"}}`, encodeURIComponent(String(name)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -4719,18 +5795,23 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
         },
         /**
          * List the credentials available in the namespace
-         * @param {string} namespace namespace
+         * @param {string} workspace the workspace containing the teamspace the array belongs to
+         * @param {string} teamspace the teamspace the array belongs to
          * @param {string} [provider] Show only the credentials from this provider. This should be one of the CloudProvider enum values.
+         * @param {string} [type] Show only the credentials of this type. This should be one of the AccessCredentialType enum values.
          * @param {number} [page] pagination offset
          * @param {number} [perPage] pagination limit
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listCredentials: async (namespace: string, provider?: string, page?: number, perPage?: number, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'namespace' is not null or undefined
-            assertParamExists('listCredentials', 'namespace', namespace)
-            const localVarPath = `/credentials/{namespace}`
-                .replace(`{${"namespace"}}`, encodeURIComponent(String(namespace)));
+        listCredentials: async (workspace: string, teamspace: string, provider?: string, type?: string, page?: number, perPage?: number, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'workspace' is not null or undefined
+            assertParamExists('listCredentials', 'workspace', workspace)
+            // verify required parameter 'teamspace' is not null or undefined
+            assertParamExists('listCredentials', 'teamspace', teamspace)
+            const localVarPath = `/credentials/{workspace}/{teamspace}`
+                .replace(`{${"workspace"}}`, encodeURIComponent(String(workspace)))
+                .replace(`{${"teamspace"}}`, encodeURIComponent(String(teamspace)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -4751,6 +5832,10 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
 
             if (provider !== undefined) {
                 localVarQueryParameter['provider'] = provider;
+            }
+
+            if (type !== undefined) {
+                localVarQueryParameter['type'] = type;
             }
 
             if (page !== undefined) {
@@ -4778,21 +5863,25 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
         },
         /**
          * Update the named access credential. This will also update the information used to access arrays set to use this credential.
-         * @param {string} namespace namespace
+         * @param {string} workspace the workspace containing the teamspace the array belongs to
+         * @param {string} teamspace the teamspace the array belongs to
          * @param {string} name A URL-safe version of the credential\&#39;s user-provided name
          * @param {AccessCredential} accessCredential Changes to make to this credential
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updateCredential: async (namespace: string, name: string, accessCredential: AccessCredential, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'namespace' is not null or undefined
-            assertParamExists('updateCredential', 'namespace', namespace)
+        updateCredential: async (workspace: string, teamspace: string, name: string, accessCredential: AccessCredential, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'workspace' is not null or undefined
+            assertParamExists('updateCredential', 'workspace', workspace)
+            // verify required parameter 'teamspace' is not null or undefined
+            assertParamExists('updateCredential', 'teamspace', teamspace)
             // verify required parameter 'name' is not null or undefined
             assertParamExists('updateCredential', 'name', name)
             // verify required parameter 'accessCredential' is not null or undefined
             assertParamExists('updateCredential', 'accessCredential', accessCredential)
-            const localVarPath = `/credentials/{namespace}/{name}`
-                .replace(`{${"namespace"}}`, encodeURIComponent(String(namespace)))
+            const localVarPath = `/credentials/{workspace}/{teamspace}/{name}`
+                .replace(`{${"workspace"}}`, encodeURIComponent(String(workspace)))
+                .replace(`{${"teamspace"}}`, encodeURIComponent(String(teamspace)))
                 .replace(`{${"name"}}`, encodeURIComponent(String(name)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -4842,63 +5931,70 @@ export const UserApiFp = function(configuration?: Configuration) {
     return {
         /**
          * Create a new credential for the namespace
-         * @param {string} namespace namespace
+         * @param {string} workspace the workspace containing the teamspace the array belongs to
+         * @param {string} teamspace the teamspace the array belongs to
          * @param {AccessCredential} accessCredential The new credentials to be created.
          * @param {string} [provider] Show only the credentials from this provider. This should be one of the CloudProvider enum values.
+         * @param {string} [type] Show only the credentials of this type. This should be one of the AccessCredentialType enum values.
          * @param {number} [page] pagination offset
          * @param {number} [perPage] pagination limit
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async addCredential(namespace: string, accessCredential: AccessCredential, provider?: string, page?: number, perPage?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.addCredential(namespace, accessCredential, provider, page, perPage, options);
+        async addCredential(workspace: string, teamspace: string, accessCredential: AccessCredential, provider?: string, type?: string, page?: number, perPage?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.addCredential(workspace, teamspace, accessCredential, provider, type, page, perPage, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * Delete the named access credential. Any arrays still set to use this credential will use the namespace\'s default and may become unreachable.
-         * @param {string} namespace namespace
+         * @param {string} workspace the workspace containing the teamspace the array belongs to
+         * @param {string} teamspace the teamspace the array belongs to
          * @param {string} name A URL-safe version of the credential\&#39;s user-provided name
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async deleteCredential(namespace: string, name: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteCredential(namespace, name, options);
+        async deleteCredential(workspace: string, teamspace: string, name: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteCredential(workspace, teamspace, name, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * Retrieve an access credential by name
-         * @param {string} namespace namespace
+         * @param {string} workspace the workspace containing the teamspace the array belongs to
+         * @param {string} teamspace the teamspace the array belongs to
          * @param {string} name A URL-safe version of the credential\&#39;s user-provided name
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getCredential(namespace: string, name: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AccessCredential>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getCredential(namespace, name, options);
+        async getCredential(workspace: string, teamspace: string, name: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AccessCredential>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getCredential(workspace, teamspace, name, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * List the credentials available in the namespace
-         * @param {string} namespace namespace
+         * @param {string} workspace the workspace containing the teamspace the array belongs to
+         * @param {string} teamspace the teamspace the array belongs to
          * @param {string} [provider] Show only the credentials from this provider. This should be one of the CloudProvider enum values.
+         * @param {string} [type] Show only the credentials of this type. This should be one of the AccessCredentialType enum values.
          * @param {number} [page] pagination offset
          * @param {number} [perPage] pagination limit
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listCredentials(namespace: string, provider?: string, page?: number, perPage?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AccessCredentialsData>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.listCredentials(namespace, provider, page, perPage, options);
+        async listCredentials(workspace: string, teamspace: string, provider?: string, type?: string, page?: number, perPage?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AccessCredentialsData>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listCredentials(workspace, teamspace, provider, type, page, perPage, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * Update the named access credential. This will also update the information used to access arrays set to use this credential.
-         * @param {string} namespace namespace
+         * @param {string} workspace the workspace containing the teamspace the array belongs to
+         * @param {string} teamspace the teamspace the array belongs to
          * @param {string} name A URL-safe version of the credential\&#39;s user-provided name
          * @param {AccessCredential} accessCredential Changes to make to this credential
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async updateCredential(namespace: string, name: string, accessCredential: AccessCredential, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.updateCredential(namespace, name, accessCredential, options);
+        async updateCredential(workspace: string, teamspace: string, name: string, accessCredential: AccessCredential, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateCredential(workspace, teamspace, name, accessCredential, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
     }
@@ -4913,59 +6009,66 @@ export const UserApiFactory = function (configuration?: Configuration, basePath?
     return {
         /**
          * Create a new credential for the namespace
-         * @param {string} namespace namespace
+         * @param {string} workspace the workspace containing the teamspace the array belongs to
+         * @param {string} teamspace the teamspace the array belongs to
          * @param {AccessCredential} accessCredential The new credentials to be created.
          * @param {string} [provider] Show only the credentials from this provider. This should be one of the CloudProvider enum values.
+         * @param {string} [type] Show only the credentials of this type. This should be one of the AccessCredentialType enum values.
          * @param {number} [page] pagination offset
          * @param {number} [perPage] pagination limit
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        addCredential(namespace: string, accessCredential: AccessCredential, provider?: string, page?: number, perPage?: number, options?: any): AxiosPromise<void> {
-            return localVarFp.addCredential(namespace, accessCredential, provider, page, perPage, options).then((request) => request(axios, basePath));
+        addCredential(workspace: string, teamspace: string, accessCredential: AccessCredential, provider?: string, type?: string, page?: number, perPage?: number, options?: any): AxiosPromise<void> {
+            return localVarFp.addCredential(workspace, teamspace, accessCredential, provider, type, page, perPage, options).then((request) => request(axios, basePath));
         },
         /**
          * Delete the named access credential. Any arrays still set to use this credential will use the namespace\'s default and may become unreachable.
-         * @param {string} namespace namespace
+         * @param {string} workspace the workspace containing the teamspace the array belongs to
+         * @param {string} teamspace the teamspace the array belongs to
          * @param {string} name A URL-safe version of the credential\&#39;s user-provided name
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteCredential(namespace: string, name: string, options?: any): AxiosPromise<void> {
-            return localVarFp.deleteCredential(namespace, name, options).then((request) => request(axios, basePath));
+        deleteCredential(workspace: string, teamspace: string, name: string, options?: any): AxiosPromise<void> {
+            return localVarFp.deleteCredential(workspace, teamspace, name, options).then((request) => request(axios, basePath));
         },
         /**
          * Retrieve an access credential by name
-         * @param {string} namespace namespace
+         * @param {string} workspace the workspace containing the teamspace the array belongs to
+         * @param {string} teamspace the teamspace the array belongs to
          * @param {string} name A URL-safe version of the credential\&#39;s user-provided name
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getCredential(namespace: string, name: string, options?: any): AxiosPromise<AccessCredential> {
-            return localVarFp.getCredential(namespace, name, options).then((request) => request(axios, basePath));
+        getCredential(workspace: string, teamspace: string, name: string, options?: any): AxiosPromise<AccessCredential> {
+            return localVarFp.getCredential(workspace, teamspace, name, options).then((request) => request(axios, basePath));
         },
         /**
          * List the credentials available in the namespace
-         * @param {string} namespace namespace
+         * @param {string} workspace the workspace containing the teamspace the array belongs to
+         * @param {string} teamspace the teamspace the array belongs to
          * @param {string} [provider] Show only the credentials from this provider. This should be one of the CloudProvider enum values.
+         * @param {string} [type] Show only the credentials of this type. This should be one of the AccessCredentialType enum values.
          * @param {number} [page] pagination offset
          * @param {number} [perPage] pagination limit
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listCredentials(namespace: string, provider?: string, page?: number, perPage?: number, options?: any): AxiosPromise<AccessCredentialsData> {
-            return localVarFp.listCredentials(namespace, provider, page, perPage, options).then((request) => request(axios, basePath));
+        listCredentials(workspace: string, teamspace: string, provider?: string, type?: string, page?: number, perPage?: number, options?: any): AxiosPromise<AccessCredentialsData> {
+            return localVarFp.listCredentials(workspace, teamspace, provider, type, page, perPage, options).then((request) => request(axios, basePath));
         },
         /**
          * Update the named access credential. This will also update the information used to access arrays set to use this credential.
-         * @param {string} namespace namespace
+         * @param {string} workspace the workspace containing the teamspace the array belongs to
+         * @param {string} teamspace the teamspace the array belongs to
          * @param {string} name A URL-safe version of the credential\&#39;s user-provided name
          * @param {AccessCredential} accessCredential Changes to make to this credential
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updateCredential(namespace: string, name: string, accessCredential: AccessCredential, options?: any): AxiosPromise<void> {
-            return localVarFp.updateCredential(namespace, name, accessCredential, options).then((request) => request(axios, basePath));
+        updateCredential(workspace: string, teamspace: string, name: string, accessCredential: AccessCredential, options?: any): AxiosPromise<void> {
+            return localVarFp.updateCredential(workspace, teamspace, name, accessCredential, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -4979,68 +6082,75 @@ export const UserApiFactory = function (configuration?: Configuration, basePath?
 export class UserApi extends BaseAPI {
     /**
      * Create a new credential for the namespace
-     * @param {string} namespace namespace
+     * @param {string} workspace the workspace containing the teamspace the array belongs to
+     * @param {string} teamspace the teamspace the array belongs to
      * @param {AccessCredential} accessCredential The new credentials to be created.
      * @param {string} [provider] Show only the credentials from this provider. This should be one of the CloudProvider enum values.
+     * @param {string} [type] Show only the credentials of this type. This should be one of the AccessCredentialType enum values.
      * @param {number} [page] pagination offset
      * @param {number} [perPage] pagination limit
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UserApi
      */
-    public addCredential(namespace: string, accessCredential: AccessCredential, provider?: string, page?: number, perPage?: number, options?: any) {
-        return UserApiFp(this.configuration).addCredential(namespace, accessCredential, provider, page, perPage, options).then((request) => request(this.axios, this.basePath));
+    public addCredential(workspace: string, teamspace: string, accessCredential: AccessCredential, provider?: string, type?: string, page?: number, perPage?: number, options?: any) {
+        return UserApiFp(this.configuration).addCredential(workspace, teamspace, accessCredential, provider, type, page, perPage, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * Delete the named access credential. Any arrays still set to use this credential will use the namespace\'s default and may become unreachable.
-     * @param {string} namespace namespace
+     * @param {string} workspace the workspace containing the teamspace the array belongs to
+     * @param {string} teamspace the teamspace the array belongs to
      * @param {string} name A URL-safe version of the credential\&#39;s user-provided name
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UserApi
      */
-    public deleteCredential(namespace: string, name: string, options?: any) {
-        return UserApiFp(this.configuration).deleteCredential(namespace, name, options).then((request) => request(this.axios, this.basePath));
+    public deleteCredential(workspace: string, teamspace: string, name: string, options?: any) {
+        return UserApiFp(this.configuration).deleteCredential(workspace, teamspace, name, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * Retrieve an access credential by name
-     * @param {string} namespace namespace
+     * @param {string} workspace the workspace containing the teamspace the array belongs to
+     * @param {string} teamspace the teamspace the array belongs to
      * @param {string} name A URL-safe version of the credential\&#39;s user-provided name
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UserApi
      */
-    public getCredential(namespace: string, name: string, options?: any) {
-        return UserApiFp(this.configuration).getCredential(namespace, name, options).then((request) => request(this.axios, this.basePath));
+    public getCredential(workspace: string, teamspace: string, name: string, options?: any) {
+        return UserApiFp(this.configuration).getCredential(workspace, teamspace, name, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * List the credentials available in the namespace
-     * @param {string} namespace namespace
+     * @param {string} workspace the workspace containing the teamspace the array belongs to
+     * @param {string} teamspace the teamspace the array belongs to
      * @param {string} [provider] Show only the credentials from this provider. This should be one of the CloudProvider enum values.
+     * @param {string} [type] Show only the credentials of this type. This should be one of the AccessCredentialType enum values.
      * @param {number} [page] pagination offset
      * @param {number} [perPage] pagination limit
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UserApi
      */
-    public listCredentials(namespace: string, provider?: string, page?: number, perPage?: number, options?: any) {
-        return UserApiFp(this.configuration).listCredentials(namespace, provider, page, perPage, options).then((request) => request(this.axios, this.basePath));
+    public listCredentials(workspace: string, teamspace: string, provider?: string, type?: string, page?: number, perPage?: number, options?: any) {
+        return UserApiFp(this.configuration).listCredentials(workspace, teamspace, provider, type, page, perPage, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * Update the named access credential. This will also update the information used to access arrays set to use this credential.
-     * @param {string} namespace namespace
+     * @param {string} workspace the workspace containing the teamspace the array belongs to
+     * @param {string} teamspace the teamspace the array belongs to
      * @param {string} name A URL-safe version of the credential\&#39;s user-provided name
      * @param {AccessCredential} accessCredential Changes to make to this credential
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UserApi
      */
-    public updateCredential(namespace: string, name: string, accessCredential: AccessCredential, options?: any) {
-        return UserApiFp(this.configuration).updateCredential(namespace, name, accessCredential, options).then((request) => request(this.axios, this.basePath));
+    public updateCredential(workspace: string, teamspace: string, name: string, accessCredential: AccessCredential, options?: any) {
+        return UserApiFp(this.configuration).updateCredential(workspace, teamspace, name, accessCredential, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
