@@ -4,7 +4,9 @@ import UDF from "./UDF";
 
 const mock = new MockAdapter(axios);
 const BASE_PATH = "https://api.tiledb.com";
-const client = new UDF({});
+const client = new UDF({
+  basePath: BASE_PATH + "/v1"
+});
 
 describe("UDF", () => {
   beforeEach(() => {
@@ -12,11 +14,11 @@ describe("UDF", () => {
   });
 
   it("Should register udf", async () => {
-    mock.onPost(`${BASE_PATH}/v1/udf/demo/demo`).reply(200);
+    mock.onPost(`${BASE_PATH}/v1/udf/ws_demo/demo`).reply(200);
 
-    await client.registerUdf("demo", "demo", {});
+    await client.registerUdf("ws_demo", "demo", {});
     expect(mock.history.post).toHaveLength(1);
-    expect(mock.history.post[0].url).toBe(`${BASE_PATH}/v1/udf/demo/demo`);
+    expect(mock.history.post[0].url).toBe(`${BASE_PATH}/v1/udf/ws_demo/demo`);
   });
 
   it("Should register a generic udf", async () => {
@@ -56,12 +58,12 @@ describe("UDF", () => {
   });
 
   it("Should exec a udf", async () => {
-    mock.onPost(`${BASE_PATH}/v1/udfs/generic/TileDB-inc`).reply(200);
+    mock.onPost(`${BASE_PATH}/v1/udfs/generic/ws_demo/ts_demo`).reply(200);
 
-    await client.exec("TileDB-inc/demoUDF");
+    await client.exec("ws_demo", "ts_demo", "demoUDF");
     
     expect(mock.history.post).toHaveLength(1);
-    expect(mock.history.post[0].url).toBe(`${BASE_PATH}/v1/udfs/generic/TileDB-inc`);
+    expect(mock.history.post[0].url).toBe(`${BASE_PATH}/v1/udfs/generic/ws_demo/ts_demo`);
   });
 
   it("Should get a udf info", async () => {
