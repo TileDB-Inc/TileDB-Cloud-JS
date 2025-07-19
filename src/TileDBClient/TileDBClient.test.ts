@@ -18,72 +18,72 @@ describe("TileDBClient", () => {
     process.env = OLD_ENV;
   });
   it("Should get array metadata", async () => {
-    mock.onGet(`${BASE_PATH}/v1/arrays/demo/demo/metadata`).reply(200);
+    mock.onGet(`${BASE_PATH}/v1/arrays/ws_demo/ts_demo/demo/metadata`).reply(200);
 
-    await client.info("demo", "demo");
+    await client.info("ws_demo", "ts_demo", "demo");
     expect(mock.history.get).toHaveLength(1);
     expect(mock.history.get[0].url).toBe(
-      `${BASE_PATH}/v1/arrays/demo/demo/metadata`
+      `${BASE_PATH}/v1/arrays/ws_demo/ts_demo/demo/metadata`
     );
   });
 
   it("Should get array activity", async () => {
-    mock.onGet(`${BASE_PATH}/v1/arrays/demo/demo/activity`).reply(200);
+    mock.onGet(`${BASE_PATH}/v1/arrays/ws_demo/ts_demo/demo/activity`).reply(200);
 
-    await client.arrayActivity("demo", "demo");
+    await client.arrayActivity("ws_demo", "ts_demo", "demo");
     expect(mock.history.get).toHaveLength(1);
     expect(mock.history.get[0].url).toBe(
-      `${BASE_PATH}/v1/arrays/demo/demo/activity`
+      `${BASE_PATH}/v1/arrays/ws_demo/ts_demo/demo/activity`
     );
   });
 
   it("Should get deregister array", async () => {
-    mock.onDelete(`${BASE_PATH}/v1/arrays/demo/demo/deregister`).reply(200);
+    mock.onDelete(`${BASE_PATH}/v1/arrays/ws_demo/ts_demo/demo/deregister`).reply(200);
 
-    await client.deregisterArray("demo", "demo");
+    await client.deregisterArray("ws_demo", "ts_demo", "demo");
     expect(mock.history.delete).toHaveLength(1);
     expect(mock.history.delete[0].url).toBe(
-      `${BASE_PATH}/v1/arrays/demo/demo/deregister`
+      `${BASE_PATH}/v1/arrays/ws_demo/ts_demo/demo/deregister`
     );
   });
 
   it("Should get register array", async () => {
-    mock.onPost(`${BASE_PATH}/v1/arrays/demo/demo/register`).reply(200);
+    mock.onPost(`${BASE_PATH}/v1/arrays/ws_demo/ts_demo/demo/register`).reply(200);
 
-    await client.registerArray("demo", "demo", {});
+    await client.registerArray("ws_demo", "ts_demo", "demo", {});
     expect(mock.history.post).toHaveLength(1);
     expect(mock.history.post[0].url).toBe(
-      `${BASE_PATH}/v1/arrays/demo/demo/register`
+      `${BASE_PATH}/v1/arrays/ws_demo/ts_demo/demo/register`
     );
   });
 
   it("Should list shared array", async () => {
-    mock.onGet(`${BASE_PATH}/v1/arrays/demo/demo/share`).reply(200);
+    mock.onGet(`${BASE_PATH}/v1/arrays/ws_demo/ts_demo/demo/share`).reply(200);
 
-    await client.listSharedWith("demo", "demo");
+    await client.listSharedWith("ws_demo", "ts_demo", "demo");
     expect(mock.history.get).toHaveLength(1);
     expect(mock.history.get[0].url).toBe(
-      `${BASE_PATH}/v1/arrays/demo/demo/share`
+      `${BASE_PATH}/v1/arrays/ws_demo/ts_demo/demo/share`
     );
   });
 
   it("Should share array", async () => {
-    mock.onPatch(`${BASE_PATH}/v1/arrays/demo/demo/share`).reply(200);
+    mock.onPatch(`${BASE_PATH}/v1/arrays/ws_demo/ts_demo/demo/share`).reply(200);
 
-    await client.shareArray("demo", "demo", {});
+    await client.shareArray("ws_demo", "ts_demo", "demo", {});
     expect(mock.history.patch).toHaveLength(1);
     expect(mock.history.patch[0].url).toBe(
-      `${BASE_PATH}/v1/arrays/demo/demo/share`
+      `${BASE_PATH}/v1/arrays/ws_demo/ts_demo/demo/share`
     );
   });
 
   it("Should unshare array", async () => {
-    mock.onPatch(`${BASE_PATH}/v1/arrays/demo/demo/share`).reply(200);
+    mock.onPatch(`${BASE_PATH}/v1/arrays/ws_demo/ts_demo/demo/share`).reply(200);
 
-    await client.unshareArray("demo", "demo", "johndoe");
+    await client.unshareArray("ws_demo", "ts_demo", "demo", "johndoe");
     expect(mock.history.patch).toHaveLength(1);
     expect(mock.history.patch[0].url).toBe(
-      `${BASE_PATH}/v1/arrays/demo/demo/share`
+      `${BASE_PATH}/v1/arrays/ws_demo/ts_demo/demo/share`
     );
 
     expect(mock.history.patch[0].data).toEqual(
@@ -154,22 +154,22 @@ describe("TileDBClient", () => {
   });
 
   it("Should rename a notebook", async () => {
-    mock.onPatch(`${BASE_PATH}/v1/notebooks/demo/demo/rename`).reply(200);
+    mock.onPatch(`${BASE_PATH}/v1/notebooks/ws_demo/ts_demo/demo/rename`).reply(200);
 
-    await client.renameNotebook("demo", "demo", "new_name");
+    await client.renameNotebook("ws_demo", "ts_demo", "demo", "new_name");
     expect(mock.history.patch).toHaveLength(1);
     expect(mock.history.patch[0].url).toBe(
-      `${BASE_PATH}/v1/notebooks/demo/demo/rename`
+      `${BASE_PATH}/v1/notebooks/ws_demo/ts_demo/demo/rename`
     );
     expect(mock.history.patch[0].data).toEqual('{"name":"new_name"}');
   });
 
   it("Should return a task by id", async () => {
-    mock.onGet(`${BASE_PATH}/v1/task/12345`).reply(200);
+    mock.onGet(`${BASE_PATH}/v1/task/ws_demo/12345`).reply(200);
 
-    await client.task("12345");
+    await client.task("ws_demo", "12345");
     expect(mock.history.get).toHaveLength(1);
-    expect(mock.history.get[0].url).toBe(`${BASE_PATH}/v1/task/12345`);
+    expect(mock.history.get[0].url).toBe(`${BASE_PATH}/v1/task/ws_demo/12345`);
   });
 
   it("Should add default basePath if no config is passed", () => {

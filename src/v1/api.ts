@@ -1233,6 +1233,12 @@ export interface Attribute {
      */
     name: string;
     /**
+     * Enumeration name
+     * @type {string}
+     * @memberof Attribute
+     */
+    enumerationName?: string;
+    /**
      * 
      * @type {Datatype}
      * @memberof Attribute
@@ -1741,7 +1747,7 @@ export interface Enumeration {
      * @type {string}
      * @memberof Enumeration
      */
-    path_name?: string;
+    pathName?: string;
     /**
      * 
      * @type {string}
@@ -1753,7 +1759,7 @@ export interface Enumeration {
      * @type {number}
      * @memberof Enumeration
      */
-    cell_val_num?: number;
+    cellValNum?: number;
     /**
      * 
      * @type {boolean}

@@ -11,10 +11,7 @@ const isAttributeVarLength = (
   }
 
   // Attribute has a different name for cell_val_num
-  if ('cellValNum' in attribute) {
-    return attribute.cellValNum === 4294967295;
-  }
-  return attribute.cell_val_num === 4294967295;
+  return attribute.cellValNum === 4294967295;
 };
 
 export default isAttributeVarLength;

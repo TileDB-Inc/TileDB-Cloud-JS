@@ -755,6 +755,12 @@ export interface Attribute {
      */
     name: string;
     /**
+     * Enumeration name
+     * @type {string}
+     * @memberof Attribute
+     */
+    enumerationName?: string;
+    /**
      * 
      * @type {Datatype}
      * @memberof Attribute

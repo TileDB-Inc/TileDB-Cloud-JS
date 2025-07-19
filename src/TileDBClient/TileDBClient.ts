@@ -92,8 +92,13 @@ class TileDBClient {
     this.query = new TileDBQuery(this.configV2, this.axios);
   }
 
-  public info(namespace: string, array: string, options?: any) {
-    return this.ArrayApi.getArrayMetadata(namespace, array, options);
+  public info(
+    workspace: string,
+    teamspace: string,
+    array: string,
+    options?: any
+  ) {
+    return this.ArrayApi.getArrayMetadata(workspace, teamspace, array, options);
   }
 
   public async loadEnumerationsRequest(
@@ -164,40 +169,55 @@ class TileDBClient {
     );
   }
 
-  public deregisterArray(namespace: string, array: string, options?: any) {
-    return this.ArrayApi.deregisterArray(namespace, array, options);
+  public deregisterArray(
+    workspace: string,
+    teamspace: string,
+    array: string,
+    options?: any
+  ) {
+    return this.ArrayApi.deregisterArray(workspace, teamspace, array, options);
   }
 
   public registerArray(
     workspace: string,
-    namespace: string,
+    teamspace: string,
     array: string,
     arrayMetadata: ArrayInfoUpdate,
     options?: any
   ) {
     return this.ArrayApi.registerArray(
       workspace,
-      namespace,
+      teamspace,
       array,
       arrayMetadata,
       options
     );
   }
 
-  public listSharedWith(namespace: string, array: string, options?: any) {
-    return this.ArrayApi.getArraySharingPolicies(namespace, array, options);
+  public listSharedWith(
+    workspace: string,
+    teamspace: string,
+    array: string,
+    options?: any
+  ) {
+    return this.ArrayApi.getArraySharingPolicies(
+      workspace,
+      teamspace,
+      array,
+      options
+    );
   }
 
   public shareArray(
     workspace: string,
-    namespace: string,
+    teamspace: string,
     array: string,
     arraySharing: ArraySharing,
     options?: any
   ) {
     return this.ArrayApi.shareArray(
       workspace,
-      namespace,
+      teamspace,
       array,
       arraySharing,
       options
@@ -206,18 +226,18 @@ class TileDBClient {
 
   public unshareArray(
     workspace: string,
-    namespace: string,
+    teamspace: string,
     array: string,
-    namespaceToUnshare: string,
+    teamspaceToUnshare: string,
     options?: any
   ) {
     const noActions = {
       actions: [],
-      namespace: namespaceToUnshare
+      namespace: teamspaceToUnshare
     };
     return this.ArrayApi.shareArray(
       workspace,
-      namespace,
+      teamspace,
       array,
       noActions,
       options
