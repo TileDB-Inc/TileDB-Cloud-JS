@@ -353,6 +353,19 @@ export interface ArrayActivityLogData {
     pagination_metadata?: PaginationMetadata;
 }
 /**
+ * ArraySchema during creation or retrieval
+ * @export
+ * @interface ArrayCreateRequest
+ */
+export interface ArrayCreateRequest {
+    /**
+     * Storage location for the array, or empty to use default storage.
+     * @type {string}
+     * @memberof ArrayCreateRequest
+     */
+    uri?: string;
+}
+/**
  * Array directory (for reads)
  * @export
  * @interface ArrayDirectory
