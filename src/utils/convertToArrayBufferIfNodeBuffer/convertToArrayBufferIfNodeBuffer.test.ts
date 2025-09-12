@@ -1,4 +1,5 @@
 import convertToArrayBufferIfNodeBuffer from './convertToArrayBufferIfNodeBuffer';
+import { describe, it, expect } from 'vitest';
 
 describe('convertToArrayBufferIfNodeBuffer()', () => {
   it('Should return arraybuffer from NodeJS buffer', () => {

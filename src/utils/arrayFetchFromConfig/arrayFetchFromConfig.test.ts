@@ -1,6 +1,7 @@
 import { Configuration } from '../../v1';
 import { Querytype } from '../../v2';
 import arrayFetchFromConfig from './arrayFetchFromConfig';
+import { describe, it, expect } from 'vitest';
 
 describe('arrayFetchFromConfig()', () => {
   it('Should should add token', () => {

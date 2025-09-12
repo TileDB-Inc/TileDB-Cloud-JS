@@ -1,4 +1,5 @@
 import enumerationToHumanReadable from './enumerationToHumanReadable';
+import { describe, it, expect } from 'vitest';
 
 describe('enumerationToHumanReadable()', () => {
   it('Should return human readable data', async () => {

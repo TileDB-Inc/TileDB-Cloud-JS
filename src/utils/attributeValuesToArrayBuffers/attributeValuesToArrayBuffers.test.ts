@@ -1,4 +1,5 @@
 import attributeValuesToArrayBuffers from "./attributeValuesToArrayBuffers";
+import { describe, it, expect } from 'vitest';
 
 describe("attributeValuesToArrayBuffers()", () => {
   it("Should return a map of all the arrayBuffers of an attribute/dimension", () => {

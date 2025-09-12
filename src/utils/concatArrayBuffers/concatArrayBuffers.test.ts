@@ -1,4 +1,5 @@
 import concatArrayBuffers from "./concatArrayBuffers";
+import { describe, it, expect } from 'vitest';
 
 describe("concatArrayBuffers()", () => {
   it("Should concat 2 ArrayBuffers", () => {

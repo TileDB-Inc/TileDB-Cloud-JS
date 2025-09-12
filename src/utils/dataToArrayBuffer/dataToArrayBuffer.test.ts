@@ -1,6 +1,7 @@
 import { Datatype } from '../../v2';
 import bufferToData from '../bufferToData';
 import dataToArrayBuffer from './dataToArrayBuffer';
+import { describe, it, expect } from 'vitest';
 
 describe('dataToArrayBuffer()', () => {
   it('Should return empty Arraybuffer if data is undefined', () => {

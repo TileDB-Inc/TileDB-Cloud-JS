@@ -1,5 +1,6 @@
 import mapToBigIntIfNeeded from './mapToBigIntIfNeeded';
 import { Datatype } from '../../v2';
+import { describe, it, expect } from 'vitest';
 
 
 describe("mapToBigIntIfNeeded()", () => {

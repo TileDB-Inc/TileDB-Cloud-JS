@@ -1,4 +1,5 @@
 import concatChars from "./concatChars";
+import { describe, it, expect } from 'vitest';
 
 describe("concatChars()", () => {
   it("Should concat character array", () => {

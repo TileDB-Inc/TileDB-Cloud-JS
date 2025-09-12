@@ -1,6 +1,7 @@
 import { ArrayFetch } from "../../../v2";
 import capnpArrayFetchDeserializer from "../../deserialization/capnpArrayFetchDeserializer/capnpArrayFetchDeserializer";
 import capnpArrayFetchSerializer from "./capnpArrayFetchSerializer";
+import { describe, it, expect } from "vitest";
 
 describe("capnpArrayFetchSerializer()", () => {
   it("Should serialize ArrayFetch object to capnp", () => {

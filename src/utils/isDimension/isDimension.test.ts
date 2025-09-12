@@ -1,5 +1,6 @@
 import attributesAndDomains from "../../fixtures/attributesAndDomains";
 import isDimension from "./isDimension";
+import { describe, it, expect } from "vitest";
 
 describe("isDimension()", () => {
   it("Should return true if it is a dimension", () => {

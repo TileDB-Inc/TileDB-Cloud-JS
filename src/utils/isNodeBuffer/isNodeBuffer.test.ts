@@ -1,4 +1,5 @@
 import isNodeBuffer from './isNodeBuffer';
+import { describe, it, expect } from 'vitest';
 
 describe('isNodeBuffer()', () => {
   it('Should return true if data is a NodeJS buffer', () => {

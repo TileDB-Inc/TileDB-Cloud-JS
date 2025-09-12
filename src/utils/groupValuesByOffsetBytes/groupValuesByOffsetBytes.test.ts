@@ -1,5 +1,6 @@
 import groupValuesByOffsetBytes from "./groupValuesByOffsetBytes";
 import convertToArray from "../convertToArray";
+import { describe, it, expect } from "vitest";
 
 describe("groupValuesByOffsets()", () => {
   it("Should group numbers by offsets", async () => {
@@ -23,7 +24,7 @@ describe("groupValuesByOffsets()", () => {
       371,
     ];
     const str = `AMC JavelinCadillac FleetwoodCamaro Z28Chrysler ImperialDatsun 710Dodge ChallengerDuster 360Ferrari DinoFiat 128Fiat X1-9Ford Pantera LHonda CivicHornet 4 DriveHornet SportaboutLincoln ContinentalLotus EuropaMaserati BoraMazda RX4Mazda RX4 WagMerc 230Merc 240DMerc 280Merc 280CMerc 450SEMerc 450SLMerc 450SLCPontiac FirebirdPorsche 914-2Toyota CorollaToyota CoronaValiantVolvo 142E`;
-    const result: any = await groupValuesByOffsetBytes(
+    const result = await groupValuesByOffsetBytes(
       convertToArray(str),
       offsets
     );
@@ -77,5 +78,5 @@ describe("groupValuesByOffsets()", () => {
       offsets
     )) as string[][];
     expect(result.map((s) => s.join(""))).toEqual(strings);
-  });
+  }, {timeout: 20000});
 });

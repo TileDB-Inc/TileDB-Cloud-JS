@@ -1,8 +1,10 @@
+import { Datatype, Dimension } from "../../v2";
 import getRanges from "./getRanges";
+import { describe, it, expect } from "vitest";
 
 describe("getRanges()", () => {
   it("Should create int32 ranges", () => {
-    const dimensions: any = [
+    const dimensions: Dimension[] = [
       {
         domain: {
           int32: [1, 4],
@@ -13,7 +15,7 @@ describe("getRanges()", () => {
         tileExtent: {
           int32: 4,
         },
-        type: "INT32",
+        type: Datatype.Int32,
       },
       {
         domain: {
@@ -25,7 +27,7 @@ describe("getRanges()", () => {
         tileExtent: {
           int32: 4,
         },
-        type: "INT32",
+        type: Datatype.Int32,
       },
     ];
     const expected = [
@@ -56,7 +58,7 @@ describe("getRanges()", () => {
   });
 
   it("Should create overlapped ranges", () => {
-    const dimensions: any = [
+    const dimensions: Dimension[] = [
       {
         domain: {
           int32: [1, 4],
@@ -67,7 +69,7 @@ describe("getRanges()", () => {
         tileExtent: {
           int32: 4,
         },
-        type: "INT32",
+        type: Datatype.Int32,
       },
       {
         domain: {
@@ -79,7 +81,7 @@ describe("getRanges()", () => {
         tileExtent: {
           int32: 4,
         },
-        type: "INT32",
+        type: Datatype.Int32,
       },
     ];
 
@@ -115,14 +117,14 @@ describe("getRanges()", () => {
   });
 
   it("Should create string ranges", () => {
-    const dimensions: any = [
+    const dimensions: Dimension[] = [
       {
         domain: null,
         filterPipeline: {},
         name: "rows",
         nullTileExtent: true,
         tileExtent: {},
-        type: "STRING_ASCII",
+        type: Datatype.StringAscii,
       },
       {
         domain: {
@@ -134,7 +136,7 @@ describe("getRanges()", () => {
         tileExtent: {
           int32: 4,
         },
-        type: "INT32",
+        type: Datatype.Int32,
       },
     ];
     const expected = [
@@ -165,14 +167,14 @@ describe("getRanges()", () => {
   });
 
   it("Should create string empty ranges", () => {
-    const dimensions: any = [
+    const dimensions: Dimension[] = [
       {
         domain: null,
         filterPipeline: {},
         name: "rows",
         nullTileExtent: true,
         tileExtent: {},
-        type: "STRING_ASCII",
+        type: Datatype.StringAscii,
       },
       {
         domain: {
@@ -184,7 +186,7 @@ describe("getRanges()", () => {
         tileExtent: {
           int32: 4,
         },
-        type: "INT32",
+        type: Datatype.Int32,
       },
     ];
     const expected = [
@@ -207,14 +209,14 @@ describe("getRanges()", () => {
   });
 
   it("Should create string overlapped ranges", () => {
-    const dimensions: any = [
+    const dimensions: Dimension[] = [
       {
         domain: null,
         filterPipeline: {},
         name: "rows",
         nullTileExtent: true,
         tileExtent: {},
-        type: "STRING_ASCII",
+        type: Datatype.StringAscii,
       },
       {
         domain: {
@@ -226,7 +228,7 @@ describe("getRanges()", () => {
         tileExtent: {
           int32: 4,
         },
-        type: "INT32",
+        type: Datatype.Int32,
       },
     ];
     const expected = [
@@ -260,14 +262,14 @@ describe("getRanges()", () => {
   });
 
   it("Should create string genomics ranges", () => {
-    const dimensions: any = [
+    const dimensions: Dimension[] = [
       {
         domain: null,
         filterPipeline: {},
         name: "gene_id",
         nullTileExtent: true,
         tileExtent: {},
-        type: "STRING_ASCII",
+        type: Datatype.StringAscii,
       },
       {
         domain: null,
@@ -275,7 +277,7 @@ describe("getRanges()", () => {
         name: "sample",
         nullTileExtent: true,
         tileExtent: {},
-        type: "STRING_ASCII",
+        type: Datatype.StringAscii,
       },
     ];
     const expected = [
@@ -307,14 +309,14 @@ describe("getRanges()", () => {
   });
 
   it("Should create string genomics ranges that select all", () => {
-    const dimensions: any = [
+    const dimensions: Dimension[] = [
       {
         domain: null,
         filterPipeline: {},
         name: "gene_id",
         nullTileExtent: true,
         tileExtent: {},
-        type: "STRING_ASCII",
+        type: Datatype.StringAscii,
       },
       {
         domain: null,
@@ -322,7 +324,7 @@ describe("getRanges()", () => {
         name: "sample",
         nullTileExtent: true,
         tileExtent: {},
-        type: "STRING_ASCII",
+        type: Datatype.StringAscii,
       },
     ];
     const expected = [
@@ -350,7 +352,7 @@ describe("getRanges()", () => {
   });
 
   it("Should create datetime ranges", () => {
-    const dimensions: any = [
+    const dimensions: Dimension[] = [
       {
         domain: {
           int32: [1, 100],
@@ -361,19 +363,19 @@ describe("getRanges()", () => {
         tileExtent: {
           int32: 10,
         },
-        type: "INT32",
+        type: Datatype.Int32,
       },
       {
         domain: {
-          int64: ["0", "3153600000"],
+          int64: [0, 3153600000],
         },
         filterPipeline: {},
         name: "timestamp",
         nullTileExtent: false,
         tileExtent: {
-          int64: "86400",
+          int64: 86400,
         },
-        type: "DATETIME_SEC",
+        type: Datatype.DatetimeSec,
       },
     ];
     const expected = [

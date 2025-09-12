@@ -1,17 +1,18 @@
 import dataToQueryWriter from './dataToQueryWriter';
 import attributeValuesToArrayBuffers from '../attributeValuesToArrayBuffers';
-import { Layout } from '../../v2';
+import { Attribute, Datatype, Dimension, Layout } from '../../v2';
+import { describe, it, expect } from 'vitest';
 
 describe("dataToQueryWriter()", () => {
   it("Should return query object", () => {
-    const dimensions: any = [
+    const dimensions: Dimension[] = [
       {
         domain: null,
         filterPipeline: {},
         name: "rows",
         nullTileExtent: true,
         tileExtent: {},
-        type: "STRING_ASCII",
+        type: Datatype.StringAscii,
       },
       {
         domain: {
@@ -23,16 +24,16 @@ describe("dataToQueryWriter()", () => {
         tileExtent: {
           int32: 4,
         },
-        type: "INT32",
+        type: Datatype.Int32,
       },
     ];
 
-    const attributes: any = [
+    const attributes: Attribute[] = [
       {
-        cellValNum: "1",
+        cellValNum: 1,
         filterPipeline: {},
         name: "a",
-        type: "INT32",
+        type: Datatype.Int32,
       },
     ];
 

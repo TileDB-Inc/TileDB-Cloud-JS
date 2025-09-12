@@ -1,5 +1,6 @@
 import attributesAndDomains from "../../fixtures/attributesAndDomains";
 import getAttributeSchema from "./getAttributeSchema";
+import { describe, it, expect } from 'vitest';
 
 describe("getAttributeSchema()", () => {
   it("Should find the attribute/domain schema needed by name", () => {

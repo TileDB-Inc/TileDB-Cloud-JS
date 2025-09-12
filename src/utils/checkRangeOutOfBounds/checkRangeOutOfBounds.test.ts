@@ -1,4 +1,5 @@
 import checkRangeOutOfBounds from "./checkRangeOutOfBounds";
+import { describe, it, expect } from 'vitest';
 
 describe("checkRangeOutOfBounds()", () => {
   it("Should return true when empty range", () => {

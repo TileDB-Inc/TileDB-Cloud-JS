@@ -1,4 +1,5 @@
 import typedArrayToArray from "./typedArrayToArray";
+import { describe, it, expect } from "vitest";
 
 describe("typedArrayToArray()", () => {
   it("Should return an array", () => {

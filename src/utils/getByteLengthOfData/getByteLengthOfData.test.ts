@@ -1,5 +1,6 @@
 import getByteLengthOfData from "./getByteLengthOfData";
 import { Datatype } from "../../v2";
+import { describe, it, expect } from "vitest";
 
 describe("getByteLengthOfData()", () => {
   it("Should return byte length of char", () => {

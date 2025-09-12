@@ -1,5 +1,6 @@
 import rangesToBuffer from "./rangesToBuffer";
 import { Datatype } from "../../v2";
+import { describe, it, expect } from "vitest";
 
 describe("rangesToBuffer()", () => {
   it("should convert int16", () => {

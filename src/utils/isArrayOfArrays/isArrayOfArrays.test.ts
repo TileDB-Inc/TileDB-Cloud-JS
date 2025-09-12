@@ -1,4 +1,5 @@
 import isArrayOfArrays from "./isArrayOfArrays";
+import { describe, it, expect } from "vitest";
 
 describe("isArrayOfArrays()", () => {
   it("Should return true if value is a multidimensional array", () => {

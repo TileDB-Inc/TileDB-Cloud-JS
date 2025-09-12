@@ -1,6 +1,7 @@
 import axios from "axios";
 import MockAdapter from "axios-mock-adapter";
 import UDF from "./UDF";
+import { describe, it, expect, beforeEach } from "vitest"; 
 
 const mock = new MockAdapter(axios);
 const BASE_PATH = "https://api.tiledb.com";

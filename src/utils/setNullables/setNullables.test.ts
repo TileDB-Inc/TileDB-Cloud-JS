@@ -1,4 +1,5 @@
 import setNullables from "./setNullables";
+import { describe, it, expect } from "vitest";
 
 describe("setNullables()", () => {
   it("Should set NULL in every index with 0", async () => {

@@ -10,6 +10,7 @@ import {
   fixedLenAttributesSchema,
   varLenNullableAttributesSchema,
 } from "../../fixtures/attributes";
+import { describe, it, expect } from "vitest";
 
 describe("getResultsFromArrayBuffer()", () => {
   it("Should convert a raw ArrayBuffer to a results object with fixed length attributes", async () => {

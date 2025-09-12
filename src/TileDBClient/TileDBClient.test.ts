@@ -1,6 +1,7 @@
 import axios from "axios";
 import MockAdapter from "axios-mock-adapter";
 import TileDBClient from "./TileDBClient";
+import { describe, it, expect, beforeEach, afterEach, vitest } from "vitest";
 
 const mock = new MockAdapter(axios);
 const BASE_PATH = "https://api.tiledb.com";
@@ -11,7 +12,7 @@ describe("TileDBClient", () => {
 
   beforeEach(() => {
     mock.reset();
-    jest.resetModules();
+    vitest.resetModules();
   });
 
   afterEach(() => {
@@ -87,7 +88,7 @@ describe("TileDBClient", () => {
     );
 
     expect(mock.history.patch[0].data).toEqual(
-      `{\"actions\":[],\"namespace\":\"johndoe\"}`
+      `{"actions":[],"namespace":"johndoe"}`
     );
   });
 
@@ -184,17 +185,17 @@ describe("TileDBClient", () => {
     expect(client.configV2.basePath).toBe(BASE_PATH + "/v2");
   });
 
-  it("Should add API versions if env variable is set", () => {
+  it("Should add API versions if env variable is set", async () => {
     process.env.TILEDB_REST_HOST = "https://api.dev.tiledb.io";
-    const TileDBClient = require("./TileDBClient").default;
+    const TileDBClient = await import("./TileDBClient").then(x => x.default);
     const client = new TileDBClient();
     expect(client.config.basePath).toBe("https://api.dev.tiledb.io/v1");
     expect(client.configV2.basePath).toBe("https://api.dev.tiledb.io/v2");
   });
 
-  it("Should add API versions if env variable is set and pass empty config", () => {
+  it("Should add API versions if env variable is set and pass empty config", async () => {
     process.env.TILEDB_REST_HOST = "https://api.dev.tiledb.io";
-    const TileDBClient = require("./TileDBClient").default;
+    const TileDBClient = await import("./TileDBClient").then(x => x.default);
     const client = new TileDBClient({});
     expect(client.config.basePath).toBe("https://api.dev.tiledb.io/v1");
     expect(client.configV2.basePath).toBe("https://api.dev.tiledb.io/v2");
@@ -212,19 +213,24 @@ describe("TileDBClient", () => {
     const client = new TileDBClient({
       basePath: "https://api.dev.tiledb.io",
     });
-    expect((client.ArrayApi as any).basePath).toBe(
+    // @ts-expect-error: `basePath` is protected
+    expect(client.ArrayApi.basePath).toBe(
       "https://api.dev.tiledb.io/v1"
     );
-    expect((client.OrganizationApi as any).basePath).toBe(
+    // @ts-expect-error: `basePath` is protected
+    expect(client.OrganizationApi.basePath).toBe(
       "https://api.dev.tiledb.io/v1"
     );
-    expect((client.UserApi as any).basePath).toBe(
+    // @ts-expect-error: `basePath` is protected
+    expect(client.UserApi.basePath).toBe(
       "https://api.dev.tiledb.io/v1"
     );
-    expect((client.NotebookApi as any).basePath).toBe(
+    // @ts-expect-error: `basePath` is protected
+    expect(client.NotebookApi.basePath).toBe(
       "https://api.dev.tiledb.io/v1"
     );
-    expect((client.TasksApi as any).basePath).toBe(
+    // @ts-expect-error: `basePath` is protected
+    expect(client.TasksApi.basePath).toBe(
       "https://api.dev.tiledb.io/v1"
     );
     expect(client.udf.config.basePath).toBe("https://api.dev.tiledb.io/v1");
