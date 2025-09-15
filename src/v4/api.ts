@@ -54,55 +54,61 @@ export interface APIToken {
      * @type {string}
      * @memberof APIToken
      */
-    token_id: string;
+    'token_id': string;
     /**
      * The name of the token
      * @type {string}
      * @memberof APIToken
      */
-    name: string;
+    'name': string;
     /**
      * The creation date and time of the token
      * @type {string}
      * @memberof APIToken
      */
-    created_at: string;
+    'created_at': string;
     /**
      * The expiration date and time of the token
      * @type {string}
      * @memberof APIToken
      */
-    expires_at: string;
+    'expires_at': string;
     /**
      * The secret API key that\'s used for authentication. If workspace_id is set, the format of the key is \"tiledb_<random bytes>\". Otherwise, the format is a JWT. 
      * @type {string}
      * @memberof APIToken
      */
-    api_key: string;
+    'api_key': string;
     /**
      * The workspace ID of the token (if API token)
      * @type {string}
      * @memberof APIToken
      */
-    workspace_id?: string;
+    'workspace_id'?: string;
     /**
      * 
      * @type {TokenScope}
      * @memberof APIToken
      */
-    scope: TokenScope;
+    'scope': TokenScope;
 }
+
+
 /**
  * The version of the API that was used to perform the activity
  * @export
  * @enum {string}
  */
-export enum APIVersion {
-    V1 = 'v1',
-    V2 = 'v2',
-    V3 = 'v3',
-    V4 = 'v4'
-}
+
+export const APIVersion = {
+    V1: 'v1',
+    V2: 'v2',
+    V3: 'v3',
+    V4: 'v4'
+} as const;
+
+export type APIVersion = typeof APIVersion[keyof typeof APIVersion];
+
 
 /**
  * Credential information to access Amazon Web Services
@@ -115,19 +121,19 @@ export interface AWSCredential {
      * @type {string}
      * @memberof AWSCredential
      */
-    access_key_id: string;
+    'access_key_id': string;
     /**
      * The access key\'s secret. Never returned in responses.
      * @type {string}
      * @memberof AWSCredential
      */
-    secret_access_key: string;
+    'secret_access_key': string;
     /**
      * The endpoint used for this credential
      * @type {string}
      * @memberof AWSCredential
      */
-    endpoint?: string;
+    'endpoint'?: string;
 }
 /**
  * The role information itself. Exactly one sub-field may be set. The names match those in the CloudProvider enum
@@ -140,19 +146,19 @@ export interface AWSRole {
      * @type {string}
      * @memberof AWSRole
      */
-    role_arn: string;
+    'role_arn': string;
     /**
      * The role external id used to access
      * @type {string}
      * @memberof AWSRole
      */
-    external_id: string;
+    'external_id': string;
     /**
      * The endpoint used for this role
      * @type {string}
      * @memberof AWSRole
      */
-    endpoint?: string;
+    'endpoint'?: string;
 }
 /**
  * The academy lesson object
@@ -165,25 +171,25 @@ export interface AcademyLesson {
      * @type {string}
      * @memberof AcademyLesson
      */
-    lesson_id: string;
+    'lesson_id': string;
     /**
      * Version of the lesson
      * @type {string}
      * @memberof AcademyLesson
      */
-    lesson_version: string;
+    'lesson_version': string;
     /**
      * Indicates if lesson is completed
      * @type {boolean}
      * @memberof AcademyLesson
      */
-    completed?: boolean;
+    'completed'?: boolean;
     /**
      * Indicates if lesson is pinned
      * @type {boolean}
      * @memberof AcademyLesson
      */
-    pinned?: boolean;
+    'pinned'?: boolean;
 }
 /**
  * object for get academy lessons list response
@@ -196,7 +202,7 @@ export interface AcademyLessonsListResponse {
      * @type {Array<AcademyLesson>}
      * @memberof AcademyLessonsListResponse
      */
-    data: Array<AcademyLesson>;
+    'data': Array<AcademyLesson>;
 }
 /**
  * The academy questionnaire object
@@ -209,25 +215,25 @@ export interface AcademyQuestionnaire {
      * @type {string}
      * @memberof AcademyQuestionnaire
      */
-    questionnaire_id: string;
+    'questionnaire_id': string;
     /**
      * Version of the questionnaire
      * @type {string}
      * @memberof AcademyQuestionnaire
      */
-    questionnaire_version: string;
+    'questionnaire_version': string;
     /**
      * Indicates if questionnaire is completed
      * @type {boolean}
      * @memberof AcademyQuestionnaire
      */
-    completed: boolean;
+    'completed': boolean;
     /**
      * Array of user answers
      * @type {Array<UserAnswer>}
      * @memberof AcademyQuestionnaire
      */
-    user_answers: Array<UserAnswer>;
+    'user_answers': Array<UserAnswer>;
 }
 /**
  * object for get academy questionnaire list response
@@ -240,7 +246,7 @@ export interface AcademyQuestionnaireListResponse {
      * @type {Array<AcademyQuestionnaire>}
      * @memberof AcademyQuestionnaireListResponse
      */
-    data: Array<AcademyQuestionnaire>;
+    'data': Array<AcademyQuestionnaire>;
 }
 /**
  * parameters for build create academy questionnaire request
@@ -253,25 +259,25 @@ export interface AcademyQuestionnairePutRequest {
      * @type {string}
      * @memberof AcademyQuestionnairePutRequest
      */
-    questionnaire_id: string;
+    'questionnaire_id': string;
     /**
      * Version of the questionnaire
      * @type {string}
      * @memberof AcademyQuestionnairePutRequest
      */
-    questionnaire_version: string;
+    'questionnaire_version': string;
     /**
      * Indicates if questionnaire is completed
      * @type {boolean}
      * @memberof AcademyQuestionnairePutRequest
      */
-    completed: boolean;
+    'completed': boolean;
     /**
      * Array of user answers
      * @type {Array<UserAnswer>}
      * @memberof AcademyQuestionnairePutRequest
      */
-    user_answers: Array<UserAnswer>;
+    'user_answers': Array<UserAnswer>;
 }
 /**
  * The user credential object
@@ -284,68 +290,70 @@ export interface AccessCredential {
      * @type {CredentialType}
      * @memberof AccessCredential
      */
-    credential_type: CredentialType;
+    'credential_type': CredentialType;
     /**
      * The ID of the credential
      * @type {string}
      * @memberof AccessCredential
      */
-    id: string;
+    'id': string;
     /**
      * credential name
      * @type {string}
      * @memberof AccessCredential
      */
-    name: string;
+    'name': string;
     /**
      * 
      * @type {CloudProvider}
      * @memberof AccessCredential
      */
-    provider: CloudProvider;
+    'provider': CloudProvider;
     /**
      * True if this is the user\'s default credential to be used when connecting to the given cloud provider. There can be at most one default for each unique provider
      * @type {boolean}
      * @memberof AccessCredential
      */
-    provider_default?: boolean;
+    'provider_default'?: boolean;
     /**
      * Datetime credentials were created in UTC
      * @type {string}
      * @memberof AccessCredential
      */
-    created_at: string;
+    'created_at': string;
     /**
      * Datetime credentials were updated in UTC
      * @type {string}
      * @memberof AccessCredential
      */
-    updated_at?: string;
+    'updated_at'?: string;
     /**
      * Is this credential allowed to be used in tasks
      * @type {boolean}
      * @memberof AccessCredential
      */
-    allowed_in_tasks?: boolean;
+    'allowed_in_tasks'?: boolean;
     /**
      * 
      * @type {Credential}
      * @memberof AccessCredential
      */
-    credential?: Credential;
+    'credential'?: Credential;
     /**
      * 
      * @type {AccessCredentialRole}
      * @memberof AccessCredential
      */
-    role?: AccessCredentialRole;
+    'role'?: AccessCredentialRole;
     /**
      * 
      * @type {Token}
      * @memberof AccessCredential
      */
-    token?: Token;
+    'token'?: Token;
 }
+
+
 /**
  * object for access credential role
  * @export
@@ -357,7 +365,7 @@ export interface AccessCredentialRole {
      * @type {AWSRole}
      * @memberof AccessCredentialRole
      */
-    aws?: AWSRole;
+    'aws'?: AWSRole;
 }
 /**
  * The response object when requesting activities
@@ -370,13 +378,13 @@ export interface ActivitiesListResponse {
      * @type {Array<Activity>}
      * @memberof ActivitiesListResponse
      */
-    data: Array<Activity>;
+    'data': Array<Activity>;
     /**
      * 
      * @type {PaginationMetadata}
      * @memberof ActivitiesListResponse
      */
-    pagination_metadata?: PaginationMetadata;
+    'pagination_metadata'?: PaginationMetadata;
 }
 /**
  * An activity is a record of an action taken by a user. Usually, an activity is an API request. 
@@ -389,83 +397,81 @@ export interface Activity {
      * @type {string}
      * @memberof Activity
      */
-    activity_id: string;
+    'activity_id': string;
     /**
      * 
      * @type {APIVersion}
      * @memberof Activity
      */
-    api_version: APIVersion;
+    'api_version': APIVersion;
     /**
      * 
-     * @type {User | WorkspaceUser}
+     * @type {ActivitySubject}
      * @memberof Activity
      */
-    subject: User | WorkspaceUser;
+    'subject': ActivitySubject;
     /**
      * The action that was performed on the object
      * @type {string}
      * @memberof Activity
      */
-    action: ActivityActionEnum;
+    'action': ActivityActionEnum;
     /**
      * 
-     * @type {ActivityAsset | ActivityToken}
+     * @type {ActivityObject}
      * @memberof Activity
      */
-    object: ActivityAsset | ActivityToken;
+    'object': ActivityObject;
     /**
      * 
      * @type {ActivityArrayTask}
      * @memberof Activity
      */
-    array_task?: ActivityArrayTask;
+    'array_task'?: ActivityArrayTask;
     /**
      * 
-     * @type {ExtraDataMembers | ExtraDataMetadata | ExtraDataMove}
+     * @type {ActivityExtraData}
      * @memberof Activity
      */
-    extra_data?: ExtraDataMembers | ExtraDataMetadata | ExtraDataMove;
+    'extra_data'?: ActivityExtraData;
     /**
      * 
      * @type {WorkspaceLight}
      * @memberof Activity
      */
-    workspace?: WorkspaceLight;
+    'workspace'?: WorkspaceLight;
     /**
      * 
      * @type {TeamspaceLight}
      * @memberof Activity
      */
-    teamspace?: TeamspaceLight;
+    'teamspace'?: TeamspaceLight;
     /**
      * The time the activity was recorded
      * @type {string}
      * @memberof Activity
      */
-    recorded_at: string;
+    'recorded_at': string;
 }
 
-/**
-    * @export
-    * @enum {string}
-    */
-export enum ActivityActionEnum {
-    Create = 'create',
-    Read = 'read',
-    Update = 'update',
-    Delete = 'delete',
-    StartNotebook = 'start-notebook',
-    StopNotebook = 'stop-notebook',
-    ReadMetadata = 'read-metadata',
-    AddMetadata = 'add-metadata',
-    RemoveMetadata = 'remove-metadata',
-    AddContent = 'add-content',
-    RemoveContent = 'remove-content',
-    ReadContent = 'read-content',
-    Move = 'move',
-    QueryRead = 'query-read'
-}
+export const ActivityActionEnum = {
+    Create: 'create',
+    Read: 'read',
+    Update: 'update',
+    Delete: 'delete',
+    StartNotebook: 'start-notebook',
+    StopNotebook: 'stop-notebook',
+    ReadMetadata: 'read-metadata',
+    AddMetadata: 'add-metadata',
+    RemoveMetadata: 'remove-metadata',
+    AddContent: 'add-content',
+    RemoveContent: 'remove-content',
+    ReadContent: 'read-content',
+    Move: 'move',
+    QueryRead: 'query-read'
+} as const;
+
+export type ActivityActionEnum = typeof ActivityActionEnum[keyof typeof ActivityActionEnum];
 
 /**
  * The array task that is associated with the activity. 
@@ -478,13 +484,13 @@ export interface ActivityArrayTask {
      * @type {string}
      * @memberof ActivityArrayTask
      */
-    id: string;
+    'id': string;
     /**
      * The name of the array task.
      * @type {string}
      * @memberof ActivityArrayTask
      */
-    name?: string;
+    'name'?: string;
 }
 /**
  * The asset that was affected by the activity. 
@@ -497,26 +503,46 @@ export interface ActivityAsset {
      * @type {string}
      * @memberof ActivityAsset
      */
-    id: string;
+    'id': string;
     /**
      * The path of the asset.
      * @type {string}
      * @memberof ActivityAsset
      */
-    path: string;
+    'path': string;
     /**
      * 
      * @type {AssetType}
      * @memberof ActivityAsset
      */
-    type: AssetType;
+    'type': AssetType;
     /**
      * The name of the asset.
      * @type {string}
      * @memberof ActivityAsset
      */
-    name: string;
+    'name': string;
 }
+
+
+/**
+ * @type ActivityExtraData
+ * @export
+ */
+export type ActivityExtraData = ExtraDataMembers | ExtraDataMetadata | ExtraDataMove;
+
+/**
+ * @type ActivityObject
+ * @export
+ */
+export type ActivityObject = ActivityAsset | ActivityToken;
+
+/**
+ * @type ActivitySubject
+ * @export
+ */
+export type ActivitySubject = User | WorkspaceUser;
+
 /**
  * The token that was affected by the activity. 
  * @export
@@ -528,20 +554,22 @@ export interface ActivityToken {
      * @type {string}
      * @memberof ActivityToken
      */
-    token_id: string;
+    'token_id': string;
     /**
      * The name of the token
      * @type {string}
      * @memberof ActivityToken
      */
-    name: string;
+    'name': string;
     /**
      * 
      * @type {TokenScope}
      * @memberof ActivityToken
      */
-    scope: TokenScope;
+    'scope': TokenScope;
 }
+
+
 /**
  * 
  * @export
@@ -553,7 +581,7 @@ export interface ArrayInfo {
      * @type {number}
      * @memberof ArrayInfo
      */
-    size: number;
+    'size': number;
 }
 /**
  * 
@@ -566,133 +594,139 @@ export interface Asset {
      * @type {string}
      * @memberof Asset
      */
-    id: string;
+    'id': string;
     /**
      * The workspace\'s ID
      * @type {string}
      * @memberof Asset
      */
-    workspace_id: string;
+    'workspace_id': string;
     /**
      * The teamspace\'s ID
      * @type {string}
      * @memberof Asset
      */
-    teamspace_id: string;
+    'teamspace_id': string;
     /**
      * The name of the asset.
      * @type {string}
      * @memberof Asset
      */
-    name: string;
+    'name': string;
     /**
      * The description of the asset.
      * @type {string}
      * @memberof Asset
      */
-    description?: string;
+    'description'?: string;
     /**
      * 
      * @type {AssetMemberType}
      * @memberof Asset
      */
-    member_type?: AssetMemberType;
+    'member_type'?: AssetMemberType;
     /**
      * The MIME type of the asset.
      * @type {string}
      * @memberof Asset
      */
-    mime?: string;
+    'mime'?: string;
     /**
      * 
      * @type {AssetBackingType}
      * @memberof Asset
      */
-    backing_type: AssetBackingType;
+    'backing_type': AssetBackingType;
     /**
      * 
      * @type {AssetType}
      * @memberof Asset
      */
-    type: AssetType;
+    'type': AssetType;
     /**
      * The path of the asset.
      * @type {string}
      * @memberof Asset
      */
-    path: string;
+    'path': string;
     /**
      * Datetime asset was created in UTC
      * @type {string}
      * @memberof Asset
      */
-    created_at: string;
+    'created_at': string;
     /**
      * Datetime asset was updated in UTC
      * @type {string}
      * @memberof Asset
      */
-    updated_at?: string;
+    'updated_at'?: string;
     /**
      * 
      * @type {WorkspaceUser}
      * @memberof Asset
      */
-    created_by: WorkspaceUser;
+    'created_by': WorkspaceUser;
     /**
      * 
      * @type {Array<AssetMetadata>}
      * @memberof Asset
      */
-    metadata?: Array<AssetMetadata>;
+    'metadata'?: Array<AssetMetadata>;
     /**
      * URI where the asset is located.
      * @type {string}
      * @memberof Asset
      */
-    uri?: string;
+    'uri'?: string;
     /**
      * The TileDB URI in the form of tiledb://workspace_name/teamspace_name/asset_id
      * @type {string}
      * @memberof Asset
      */
-    tiledb_uri: string;
+    'tiledb_uri': string;
     /**
      * 
      * @type {FileInfo}
      * @memberof Asset
      */
-    fileInfo?: FileInfo;
+    'fileInfo'?: FileInfo;
     /**
      * 
      * @type {ArrayInfo}
      * @memberof Asset
      */
-    arrayInfo?: ArrayInfo;
+    'arrayInfo'?: ArrayInfo;
     /**
      * 
      * @type {GroupInfo}
      * @memberof Asset
      */
-    groupInfo?: GroupInfo;
+    'groupInfo'?: GroupInfo;
     /**
      * 
      * @type {FolderInfo}
      * @memberof Asset
      */
-    folderInfo?: FolderInfo;
+    'folderInfo'?: FolderInfo;
 }
+
+
 /**
  * The backing type of the asset (e.g., array, group, file, folder).
  * @export
  * @enum {string}
  */
-export enum AssetBackingType {
-    Array = 'array',
-    Group = 'group',
-    File = 'file',
-    Folder = 'folder'
-}
+
+export const AssetBackingType = {
+    Array: 'array',
+    Group: 'group',
+    File: 'file',
+    Folder: 'folder'
+} as const;
+
+export type AssetBackingType = typeof AssetBackingType[keyof typeof AssetBackingType];
+
 
 /**
  * The response object when requesting a single asset
@@ -705,7 +739,7 @@ export interface AssetGetResponse {
      * @type {Asset}
      * @memberof AssetGetResponse
      */
-    data: Asset;
+    'data': Asset;
 }
 /**
  * The response object when requesting the list of assets
@@ -718,28 +752,32 @@ export interface AssetListResponse {
      * @type {Array<Asset>}
      * @memberof AssetListResponse
      */
-    data: Array<Asset>;
+    'data': Array<Asset>;
     /**
      * 
      * @type {PaginationMetadata}
      * @memberof AssetListResponse
      */
-    pagination_metadata: PaginationMetadata;
+    'pagination_metadata': PaginationMetadata;
 }
 /**
  * The member type associated with the asset.
  * @export
  * @enum {string}
  */
-export enum AssetMemberType {
-    VcfMember = 'vcf_member',
-    SomaMember = 'soma_member',
-    BioimgMember = 'bioimg_member',
-    VectorSearchMember = 'vector_search_member',
-    GeometryMember = 'geometry_member',
-    RasterMember = 'raster_member',
-    PointCloudMember = 'point_cloud_member'
-}
+
+export const AssetMemberType = {
+    VcfMember: 'vcf_member',
+    SomaMember: 'soma_member',
+    BioimgMember: 'bioimg_member',
+    VectorSearchMember: 'vector_search_member',
+    GeometryMember: 'geometry_member',
+    RasterMember: 'raster_member',
+    PointCloudMember: 'point_cloud_member'
+} as const;
+
+export type AssetMemberType = typeof AssetMemberType[keyof typeof AssetMemberType];
+
 
 /**
  * key/value pair representing an asset metadata entry
@@ -752,20 +790,22 @@ export interface AssetMetadata {
      * @type {string}
      * @memberof AssetMetadata
      */
-    key: string;
+    'key': string;
     /**
      * The value property of metadata pair.
      * @type {string}
      * @memberof AssetMetadata
      */
-    value: string;
+    'value': string;
     /**
      * 
      * @type {AssetMetadataType}
      * @memberof AssetMetadata
      */
-    type: AssetMetadataType;
+    'type': AssetMetadataType;
 }
+
+
 /**
  * The response object when requesting the list of asset metadata
  * @export
@@ -777,13 +817,13 @@ export interface AssetMetadataListResponse {
      * @type {Array<AssetMetadata>}
      * @memberof AssetMetadataListResponse
      */
-    data: Array<AssetMetadata>;
+    'data': Array<AssetMetadata>;
     /**
      * 
      * @type {PaginationMetadata}
      * @memberof AssetMetadataListResponse
      */
-    pagination_metadata: PaginationMetadata;
+    'pagination_metadata': PaginationMetadata;
 }
 /**
  * Asset metadata entry
@@ -796,20 +836,22 @@ export interface AssetMetadataSaveRequestInner {
      * @type {string}
      * @memberof AssetMetadataSaveRequestInner
      */
-    key: string;
+    'key': string;
     /**
      * The value property of metadata pair.
      * @type {string}
      * @memberof AssetMetadataSaveRequestInner
      */
-    value: string;
+    'value': string;
     /**
      * 
      * @type {AssetMetadataType}
      * @memberof AssetMetadataSaveRequestInner
      */
-    type: AssetMetadataType;
+    'type': AssetMetadataType;
 }
+
+
 /**
  * object for save asset metadata response
  * @export
@@ -821,57 +863,61 @@ export interface AssetMetadataSaveResponse {
      * @type {Array<AssetMetadata>}
      * @memberof AssetMetadataSaveResponse
      */
-    data: Array<AssetMetadata>;
+    'data': Array<AssetMetadata>;
 }
 /**
  * The TileDB type property of metadata pair
  * @export
  * @enum {string}
  */
-export enum AssetMetadataType {
-    Int32 = 'INT32',
-    Int64 = 'INT64',
-    Float32 = 'FLOAT32',
-    Float64 = 'FLOAT64',
-    Char = 'CHAR',
-    Int8 = 'INT8',
-    Uint8 = 'UINT8',
-    Int16 = 'INT16',
-    Uint16 = 'UINT16',
-    Uint32 = 'UINT32',
-    Uint64 = 'UINT64',
-    StringAscii = 'STRING_ASCII',
-    StringUtf8 = 'STRING_UTF8',
-    StringUtf16 = 'STRING_UTF16',
-    StringUtf32 = 'STRING_UTF32',
-    StringUcs2 = 'STRING_UCS2',
-    StringUcs4 = 'STRING_UCS4',
-    Any = 'ANY',
-    DatetimeYear = 'DATETIME_YEAR',
-    DatetimeMonth = 'DATETIME_MONTH',
-    DatetimeWeek = 'DATETIME_WEEK',
-    DatetimeDay = 'DATETIME_DAY',
-    DatetimeHr = 'DATETIME_HR',
-    DatetimeMin = 'DATETIME_MIN',
-    DatetimeSec = 'DATETIME_SEC',
-    DatetimeMs = 'DATETIME_MS',
-    DatetimeUs = 'DATETIME_US',
-    DatetimeNs = 'DATETIME_NS',
-    DatetimePs = 'DATETIME_PS',
-    DatetimeFs = 'DATETIME_FS',
-    DatetimeAs = 'DATETIME_AS',
-    TimeHr = 'TIME_HR',
-    TimeMin = 'TIME_MIN',
-    TimeSec = 'TIME_SEC',
-    TimeMs = 'TIME_MS',
-    TimeUs = 'TIME_US',
-    TimeNs = 'TIME_NS',
-    TimePs = 'TIME_PS',
-    TimeFs = 'TIME_FS',
-    TimeAs = 'TIME_AS',
-    Blob = 'BLOB',
-    Bool = 'BOOL'
-}
+
+export const AssetMetadataType = {
+    Int32: 'INT32',
+    Int64: 'INT64',
+    Float32: 'FLOAT32',
+    Float64: 'FLOAT64',
+    Char: 'CHAR',
+    Int8: 'INT8',
+    Uint8: 'UINT8',
+    Int16: 'INT16',
+    Uint16: 'UINT16',
+    Uint32: 'UINT32',
+    Uint64: 'UINT64',
+    StringAscii: 'STRING_ASCII',
+    StringUtf8: 'STRING_UTF8',
+    StringUtf16: 'STRING_UTF16',
+    StringUtf32: 'STRING_UTF32',
+    StringUcs2: 'STRING_UCS2',
+    StringUcs4: 'STRING_UCS4',
+    Any: 'ANY',
+    DatetimeYear: 'DATETIME_YEAR',
+    DatetimeMonth: 'DATETIME_MONTH',
+    DatetimeWeek: 'DATETIME_WEEK',
+    DatetimeDay: 'DATETIME_DAY',
+    DatetimeHr: 'DATETIME_HR',
+    DatetimeMin: 'DATETIME_MIN',
+    DatetimeSec: 'DATETIME_SEC',
+    DatetimeMs: 'DATETIME_MS',
+    DatetimeUs: 'DATETIME_US',
+    DatetimeNs: 'DATETIME_NS',
+    DatetimePs: 'DATETIME_PS',
+    DatetimeFs: 'DATETIME_FS',
+    DatetimeAs: 'DATETIME_AS',
+    TimeHr: 'TIME_HR',
+    TimeMin: 'TIME_MIN',
+    TimeSec: 'TIME_SEC',
+    TimeMs: 'TIME_MS',
+    TimeUs: 'TIME_US',
+    TimeNs: 'TIME_NS',
+    TimePs: 'TIME_PS',
+    TimeFs: 'TIME_FS',
+    TimeAs: 'TIME_AS',
+    Blob: 'BLOB',
+    Bool: 'BOOL'
+} as const;
+
+export type AssetMetadataType = typeof AssetMetadataType[keyof typeof AssetMetadataType];
+
 
 /**
  * The response object when requesting all assets in a given path
@@ -884,7 +930,7 @@ export interface AssetPathResponse {
      * @type {Array<Asset>}
      * @memberof AssetPathResponse
      */
-    data: Array<Asset>;
+    'data': Array<Asset>;
 }
 /**
  * key/value pair representing an asset property entry
@@ -897,33 +943,31 @@ export interface AssetProperty {
      * @type {string}
      * @memberof AssetProperty
      */
-    key: AssetPropertyKeyEnum;
+    'key': AssetPropertyKeyEnum;
     /**
      * The value property of property pair.
      * @type {string}
      * @memberof AssetProperty
      */
-    value: string;
+    'value': string;
     /**
      * The id of the asset property
      * @type {string}
      * @memberof AssetProperty
      */
-    id?: string;
+    'id'?: string;
 }
 
-/**
-    * @export
-    * @enum {string}
-    */
-export enum AssetPropertyKeyEnum {
-    Image = 'image',
-    Size = 'size',
-    DefaultRegion = 'default_region',
-    DefaultView = 'default_view',
-    VersionPruningLimit = 'version_pruning_limit',
-    VersionPruningEnabled = 'version_pruning_enabled'
-}
+export const AssetPropertyKeyEnum = {
+    Image: 'image',
+    Size: 'size',
+    DefaultRegion: 'default_region',
+    DefaultView: 'default_view',
+    VersionPruningLimit: 'version_pruning_limit',
+    VersionPruningEnabled: 'version_pruning_enabled'
+} as const;
+
+export type AssetPropertyKeyEnum = typeof AssetPropertyKeyEnum[keyof typeof AssetPropertyKeyEnum];
 
 /**
  * The response object when requesting the list of asset properties
@@ -936,7 +980,7 @@ export interface AssetPropertyListResponse {
      * @type {Array<AssetProperty>}
      * @memberof AssetPropertyListResponse
      */
-    data: Array<AssetProperty>;
+    'data': Array<AssetProperty>;
 }
 /**
  * Asset property entry
@@ -949,33 +993,31 @@ export interface AssetPropertySaveRequestInner {
      * @type {string}
      * @memberof AssetPropertySaveRequestInner
      */
-    key: AssetPropertySaveRequestInnerKeyEnum;
+    'key': AssetPropertySaveRequestInnerKeyEnum;
     /**
      * The value property of property pair.
      * @type {string}
      * @memberof AssetPropertySaveRequestInner
      */
-    value: string;
+    'value': string;
     /**
      * The id of the asset property if it has been set already
      * @type {string}
      * @memberof AssetPropertySaveRequestInner
      */
-    id?: string | null;
+    'id'?: string | null;
 }
 
-/**
-    * @export
-    * @enum {string}
-    */
-export enum AssetPropertySaveRequestInnerKeyEnum {
-    Image = 'image',
-    Size = 'size',
-    DefaultRegion = 'default_region',
-    DefaultView = 'default_view',
-    VersionPruningLimit = 'version_pruning_limit',
-    VersionPruningEnabled = 'version_pruning_enabled'
-}
+export const AssetPropertySaveRequestInnerKeyEnum = {
+    Image: 'image',
+    Size: 'size',
+    DefaultRegion: 'default_region',
+    DefaultView: 'default_view',
+    VersionPruningLimit: 'version_pruning_limit',
+    VersionPruningEnabled: 'version_pruning_enabled'
+} as const;
+
+export type AssetPropertySaveRequestInnerKeyEnum = typeof AssetPropertySaveRequestInnerKeyEnum[keyof typeof AssetPropertySaveRequestInnerKeyEnum];
 
 /**
  * object for save asset properties response
@@ -988,7 +1030,7 @@ export interface AssetPropertySaveResponse {
      * @type {Array<AssetProperty>}
      * @memberof AssetPropertySaveResponse
      */
-    data: Array<AssetProperty>;
+    'data': Array<AssetProperty>;
 }
 /**
  * Request to register an asset
@@ -1001,49 +1043,53 @@ export interface AssetRegisterRequest {
      * @type {string}
      * @memberof AssetRegisterRequest
      */
-    name: string;
+    'name': string;
     /**
      * URI of the asset (e.g., S3 location)
      * @type {string}
      * @memberof AssetRegisterRequest
      */
-    uri: string;
+    'uri': string;
     /**
      * Named reference to access credentials
      * @type {string}
      * @memberof AssetRegisterRequest
      */
-    access_credentials_name: string;
+    'access_credentials_name': string;
     /**
      * Target path under the teamspace
      * @type {string}
      * @memberof AssetRegisterRequest
      */
-    path: string;
+    'path': string;
 }
 /**
  * The type of asset based on how it is represented.
  * @export
  * @enum {string}
  */
-export enum AssetType {
-    Array = 'array',
-    Notebook = 'notebook',
-    Dashboard = 'dashboard',
-    UserDefinedFunction = 'user_defined_function',
-    MlModel = 'ml_model',
-    File = 'file',
-    RegisteredTaskGraph = 'registered_task_graph',
-    Group = 'group',
-    Vcf = 'vcf',
-    Soma = 'soma',
-    Pointcloud = 'pointcloud',
-    Bioimg = 'bioimg',
-    Geometry = 'geometry',
-    Raster = 'raster',
-    VectorSearch = 'vector_search',
-    Folder = 'folder'
-}
+
+export const AssetType = {
+    Array: 'array',
+    Notebook: 'notebook',
+    Dashboard: 'dashboard',
+    UserDefinedFunction: 'user_defined_function',
+    MlModel: 'ml_model',
+    File: 'file',
+    RegisteredTaskGraph: 'registered_task_graph',
+    Group: 'group',
+    Vcf: 'vcf',
+    Soma: 'soma',
+    Pointcloud: 'pointcloud',
+    Bioimg: 'bioimg',
+    Geometry: 'geometry',
+    Raster: 'raster',
+    VectorSearch: 'vector_search',
+    Folder: 'folder'
+} as const;
+
+export type AssetType = typeof AssetType[keyof typeof AssetType];
+
 
 /**
  * Request body for updating an asset.
@@ -1056,20 +1102,22 @@ export interface AssetUpdateRequest {
      * @type {string}
      * @memberof AssetUpdateRequest
      */
-    name?: string;
+    'name'?: string;
     /**
      * The description of the asset.
      * @type {string}
      * @memberof AssetUpdateRequest
      */
-    description?: string;
+    'description'?: string;
     /**
      * 
      * @type {AssetType}
      * @memberof AssetUpdateRequest
      */
-    type?: AssetType;
+    'type'?: AssetType;
 }
+
+
 /**
  * Request to move assets to a target folder
  * @export
@@ -1081,13 +1129,13 @@ export interface AssetsMoveRequest {
      * @type {Array<string>}
      * @memberof AssetsMoveRequest
      */
-    assets_to_add: Array<string>;
+    'assets_to_add': Array<string>;
     /**
      * The asset id or path
      * @type {string}
      * @memberof AssetsMoveRequest
      */
-    target: string;
+    'target': string;
 }
 /**
  * Credential information to access Microsoft Azure. Each supported property is the snake_case version of its name in an Azure Storage connection string
@@ -1100,13 +1148,13 @@ export interface AzureCredential {
      * @type {string}
      * @memberof AzureCredential
      */
-    account_name?: string;
+    'account_name'?: string;
     /**
      * The secret key. Never returned in responses.
      * @type {string}
      * @memberof AzureCredential
      */
-    account_key?: string;
+    'account_key'?: string;
 }
 /**
  * Token information to access Azure services
@@ -1119,13 +1167,13 @@ export interface AzureToken {
      * @type {string}
      * @memberof AzureToken
      */
-    account_name: string;
+    'account_name': string;
     /**
      * The token to use for this account
      * @type {string}
      * @memberof AzureToken
      */
-    sas_token: string;
+    'sas_token': string;
 }
 /**
  * Object containing the necessary data to change a user\'s password
@@ -1138,24 +1186,28 @@ export interface ChangePasswordRequest {
      * @type {string}
      * @memberof ChangePasswordRequest
      */
-    current_password: string;
+    'current_password': string;
     /**
      * The new password
      * @type {string}
      * @memberof ChangePasswordRequest
      */
-    new_password: string;
+    'new_password': string;
 }
 /**
  * A service where data is stored or computations take place
  * @export
  * @enum {string}
  */
-export enum CloudProvider {
-    Aws = 'AWS',
-    Azure = 'AZURE',
-    Gcp = 'GCP'
-}
+
+export const CloudProvider = {
+    Aws: 'AWS',
+    Azure: 'AZURE',
+    Gcp: 'GCP'
+} as const;
+
+export type CloudProvider = typeof CloudProvider[keyof typeof CloudProvider];
+
 
 /**
  * A folder returned by FileList
@@ -1168,7 +1220,7 @@ export interface CommonPrefix {
      * @type {string}
      * @memberof CommonPrefix
      */
-    Prefix?: string;
+    'Prefix'?: string;
 }
 /**
  * The credential information itself. Exactly one sub-field may be set. The names match those in the CloudProvider enum.
@@ -1181,19 +1233,19 @@ export interface Credential {
      * @type {AWSCredential}
      * @memberof Credential
      */
-    aws?: AWSCredential;
+    'aws'?: AWSCredential;
     /**
      * 
      * @type {AzureCredential}
      * @memberof Credential
      */
-    azure?: AzureCredential;
+    'azure'?: AzureCredential;
     /**
      * 
      * @type {GCPInteroperabilityCredential}
      * @memberof Credential
      */
-    gcp?: GCPInteroperabilityCredential;
+    'gcp'?: GCPInteroperabilityCredential;
 }
 /**
  * object metadata for a credential that will be created
@@ -1206,44 +1258,46 @@ export interface CredentialCreateRequest {
      * @type {string}
      * @memberof CredentialCreateRequest
      */
-    name: string;
+    'name': string;
     /**
      * 
      * @type {CloudProvider}
      * @memberof CredentialCreateRequest
      */
-    provider: CloudProvider;
+    'provider': CloudProvider;
     /**
      * True if this is the namespace\'s default credential to be used when connecting to the given cloud provider. There can be at most one default for each unique provider
      * @type {boolean}
      * @memberof CredentialCreateRequest
      */
-    provider_default?: boolean;
+    'provider_default'?: boolean;
     /**
      * Is this credential allowed to be used in tasks
      * @type {boolean}
      * @memberof CredentialCreateRequest
      */
-    allowed_in_tasks?: boolean;
+    'allowed_in_tasks'?: boolean;
     /**
      * 
      * @type {Credential}
      * @memberof CredentialCreateRequest
      */
-    credential?: Credential;
+    'credential'?: Credential;
     /**
      * 
      * @type {AccessCredentialRole}
      * @memberof CredentialCreateRequest
      */
-    role?: AccessCredentialRole;
+    'role'?: AccessCredentialRole;
     /**
      * 
      * @type {Token}
      * @memberof CredentialCreateRequest
      */
-    token?: Token;
+    'token'?: Token;
 }
+
+
 /**
  * object for get credential response
  * @export
@@ -1255,17 +1309,21 @@ export interface CredentialGetResponse {
      * @type {AccessCredential}
      * @memberof CredentialGetResponse
      */
-    data: AccessCredential;
+    'data': AccessCredential;
 }
 /**
  * Enumeration of tileDB Credential types
  * @export
  * @enum {string}
  */
-export enum CredentialType {
-    Workspace = 'workspace',
-    Teamspace = 'teamspace'
-}
+
+export const CredentialType = {
+    Workspace: 'workspace',
+    Teamspace: 'teamspace'
+} as const;
+
+export type CredentialType = typeof CredentialType[keyof typeof CredentialType];
+
 
 /**
  * The credential update object
@@ -1278,44 +1336,46 @@ export interface CredentialUpdateRequest {
      * @type {string}
      * @memberof CredentialUpdateRequest
      */
-    name?: string;
+    'name'?: string;
     /**
      * True if this is the user\'s default credential to be used when connecting to the given cloud provider. There can be at most one default for each unique provider
      * @type {boolean}
      * @memberof CredentialUpdateRequest
      */
-    provider_default?: boolean;
+    'provider_default'?: boolean;
     /**
      * 
      * @type {CloudProvider}
      * @memberof CredentialUpdateRequest
      */
-    provider?: CloudProvider;
+    'provider'?: CloudProvider;
     /**
      * Is this credential allowed to be used in tasks
      * @type {boolean}
      * @memberof CredentialUpdateRequest
      */
-    allowed_in_tasks?: boolean;
+    'allowed_in_tasks'?: boolean;
     /**
      * 
      * @type {Credential}
      * @memberof CredentialUpdateRequest
      */
-    credential?: Credential;
+    'credential'?: Credential;
     /**
      * 
      * @type {AccessCredentialRole}
      * @memberof CredentialUpdateRequest
      */
-    role?: AccessCredentialRole;
+    'role'?: AccessCredentialRole;
     /**
      * 
      * @type {Token}
      * @memberof CredentialUpdateRequest
      */
-    token?: Token;
+    'token'?: Token;
 }
+
+
 /**
  * object for get credentials list response
  * @export
@@ -1327,13 +1387,13 @@ export interface CredentialsListResponse {
      * @type {Array<AccessCredential>}
      * @memberof CredentialsListResponse
      */
-    data: Array<AccessCredential>;
+    'data': Array<AccessCredential>;
     /**
      * 
      * @type {PaginationMetadata}
      * @memberof CredentialsListResponse
      */
-    pagination_metadata?: PaginationMetadata;
+    'pagination_metadata'?: PaginationMetadata;
 }
 /**
  * object metadata for a credential that will be created
@@ -1346,56 +1406,58 @@ export interface CredentialsVerifyRequest {
      * @type {string}
      * @memberof CredentialsVerifyRequest
      */
-    name: string;
+    'name': string;
     /**
      * 
      * @type {CloudProvider}
      * @memberof CredentialsVerifyRequest
      */
-    provider: CloudProvider;
+    'provider': CloudProvider;
     /**
      * True if this is the namespace\'s default credential to be used when connecting to the given cloud provider. There can be at most one default for each unique provider
      * @type {boolean}
      * @memberof CredentialsVerifyRequest
      */
-    provider_default?: boolean;
+    'provider_default'?: boolean;
     /**
      * Is this credential allowed to be used in tasks
      * @type {boolean}
      * @memberof CredentialsVerifyRequest
      */
-    allowed_in_tasks?: boolean;
+    'allowed_in_tasks'?: boolean;
     /**
      * 
      * @type {Credential}
      * @memberof CredentialsVerifyRequest
      */
-    credential?: Credential;
+    'credential'?: Credential;
     /**
      * 
      * @type {AccessCredentialRole}
      * @memberof CredentialsVerifyRequest
      */
-    role?: AccessCredentialRole;
+    'role'?: AccessCredentialRole;
     /**
      * 
      * @type {Token}
      * @memberof CredentialsVerifyRequest
      */
-    token?: Token;
+    'token'?: Token;
     /**
      * The workspace\'s ID. If provided, the given role will be verified in a daisy chain fashion, starting with the role ARN associated with the given workspace. 
      * @type {string}
      * @memberof CredentialsVerifyRequest
      */
-    workspace_id?: string;
+    'workspace_id'?: string;
     /**
      * The teamspace\'s ID. If provided, the given role will be verified in a daisy chain fashion, starting with the role ARN associated with the given teamspace. 
      * @type {string}
      * @memberof CredentialsVerifyRequest
      */
-    teamspace_id?: string;
+    'teamspace_id'?: string;
 }
+
+
 /**
  * Delta share table change file object
  * @export
@@ -1407,43 +1469,43 @@ export interface DataChangeFile {
      * @type {string}
      * @memberof DataChangeFile
      */
-    url: string;
+    'url': string;
     /**
      * A unique string for the file in a table. The same file is guaranteed to have the same id across multiple requests. A client may cache the file content and use this id as a key to decide whether to use the cached file content.
      * @type {string}
      * @memberof DataChangeFile
      */
-    id: string;
+    'id': string;
     /**
      * A map from partition column to value for this file. See Partition Value Serialization for how to parse the partition values. When the table doesn\'t have partition columns, this will be an empty map.
-     * @type {{ [key: string]: object; }}
+     * @type {{ [key: string]: any; }}
      * @memberof DataChangeFile
      */
-    partitionValues: { [key: string]: object; };
+    'partitionValues': { [key: string]: any; };
     /**
      * The size of this file in bytes.
      * @type {number}
      * @memberof DataChangeFile
      */
-    size: number;
+    'size': number;
     /**
      * The timestamp of the file in milliseconds from epoch.
      * @type {number}
      * @memberof DataChangeFile
      */
-    timestamp: number;
+    'timestamp': number;
     /**
      * The table version of this file.
      * @type {number}
      * @memberof DataChangeFile
      */
-    version: number;
+    'version': number;
     /**
      * The unix timestamp corresponding to the expiration of the url, in milliseconds, returned when the server supports the feature.
      * @type {number}
      * @memberof DataChangeFile
      */
-    expirationTimestamp?: number;
+    'expirationTimestamp'?: number;
 }
 /**
  * Delta share table change file object for additions
@@ -1456,49 +1518,49 @@ export interface DataChangeFileAdd {
      * @type {string}
      * @memberof DataChangeFileAdd
      */
-    url: string;
+    'url': string;
     /**
      * A unique string for the file in a table. The same file is guaranteed to have the same id across multiple requests. A client may cache the file content and use this id as a key to decide whether to use the cached file content.
      * @type {string}
      * @memberof DataChangeFileAdd
      */
-    id: string;
+    'id': string;
     /**
      * A map from partition column to value for this file. See Partition Value Serialization for how to parse the partition values. When the table doesn\'t have partition columns, this will be an empty map.
-     * @type {{ [key: string]: object; }}
+     * @type {{ [key: string]: any; }}
      * @memberof DataChangeFileAdd
      */
-    partitionValues: { [key: string]: object; };
+    'partitionValues': { [key: string]: any; };
     /**
      * The size of this file in bytes.
      * @type {number}
      * @memberof DataChangeFileAdd
      */
-    size: number;
+    'size': number;
     /**
      * The timestamp of the file in milliseconds from epoch.
      * @type {number}
      * @memberof DataChangeFileAdd
      */
-    timestamp: number;
+    'timestamp': number;
     /**
      * The table version of this file.
      * @type {number}
      * @memberof DataChangeFileAdd
      */
-    version: number;
+    'version': number;
     /**
      * Contains statistics (e.g., count, min/max values for columns) about the data in this file. This field may be missing. A file may or may not have stats. This is a serialized JSON string which can be deserialized to a Statistics Struct. A client can decide whether to use stats or drop it.
      * @type {string}
      * @memberof DataChangeFileAdd
      */
-    stats?: string;
+    'stats'?: string;
     /**
      * The unix timestamp corresponding to the expiration of the url, in milliseconds, returned when the server supports the feature.
      * @type {number}
      * @memberof DataChangeFileAdd
      */
-    expirationTimestamp?: number;
+    'expirationTimestamp'?: number;
 }
 /**
  * Delta share table change file object for removals
@@ -1511,59 +1573,63 @@ export interface DataChangeFileRemove {
      * @type {string}
      * @memberof DataChangeFileRemove
      */
-    url: string;
+    'url': string;
     /**
      * A unique string for the file in a table. The same file is guaranteed to have the same id across multiple requests. A client may cache the file content and use this id as a key to decide whether to use the cached file content.
      * @type {string}
      * @memberof DataChangeFileRemove
      */
-    id: string;
+    'id': string;
     /**
      * A map from partition column to value for this file. See Partition Value Serialization for how to parse the partition values. When the table doesn\'t have partition columns, this will be an empty map.
-     * @type {{ [key: string]: object; }}
+     * @type {{ [key: string]: any; }}
      * @memberof DataChangeFileRemove
      */
-    partitionValues: { [key: string]: object; };
+    'partitionValues': { [key: string]: any; };
     /**
      * The size of this file in bytes.
      * @type {number}
      * @memberof DataChangeFileRemove
      */
-    size: number;
+    'size': number;
     /**
      * The timestamp of the file in milliseconds from epoch.
      * @type {number}
      * @memberof DataChangeFileRemove
      */
-    timestamp: number;
+    'timestamp': number;
     /**
      * The table version of this file.
      * @type {number}
      * @memberof DataChangeFileRemove
      */
-    version: number;
+    'version': number;
     /**
      * The unix timestamp corresponding to the expiration of the url, in milliseconds, returned when the server supports the feature.
      * @type {number}
      * @memberof DataChangeFileRemove
      */
-    expirationTimestamp?: number;
+    'expirationTimestamp'?: number;
 }
 /**
  * The type of the entity
  * @export
  * @enum {string}
  */
-export enum EntityTypes {
-    Array = 'array',
-    Asset = 'asset',
-    File = 'file',
-    Folder = 'folder',
-    Group = 'group',
-    Notebook = 'notebook',
-    Token = 'token',
-    User = 'user'
-}
+
+export const EntityTypes = {
+    Array: 'array',
+    Asset: 'asset',
+    File: 'file',
+    Folder: 'folder',
+    Group: 'group',
+    Notebook: 'notebook',
+    Token: 'token',
+    User: 'user'
+} as const;
+
+export type EntityTypes = typeof EntityTypes[keyof typeof EntityTypes];
+
 
 /**
  * Object containing data about a handled error by REST server in delta format
@@ -1576,13 +1642,13 @@ export interface ErrorResponse {
      * @type {number}
      * @memberof ErrorResponse
      */
-    errorCode: number;
+    'errorCode': number;
     /**
      * A friendly message to be shown to the client
      * @type {string}
      * @memberof ErrorResponse
      */
-    message: string;
+    'message': string;
 }
 /**
  * Object containing data about a handled error by REST server, presented in a format compatible with S3
@@ -1595,19 +1661,19 @@ export interface ErrorXML {
      * @type {string}
      * @memberof ErrorXML
      */
-    code: string;
+    'code': string;
     /**
      * A friendly message to be shown to the client
      * @type {string}
      * @memberof ErrorXML
      */
-    message: string;
+    'message': string;
     /**
      * The request id to be used for tracing/debugging
      * @type {string}
      * @memberof ErrorXML
      */
-    request_id: string;
+    'request_id': string;
 }
 /**
  * An array of asset IDs. Depending on the activity action, these asset IDs can be added or removed from a folder or a group. 
@@ -1620,7 +1686,7 @@ export interface ExtraDataMembers {
      * @type {string}
      * @memberof ExtraDataMembers
      */
-    asset_id: string;
+    'asset_id': string;
 }
 /**
  * A key-value pair of metadata. 
@@ -1633,13 +1699,13 @@ export interface ExtraDataMetadata {
      * @type {string}
      * @memberof ExtraDataMetadata
      */
-    key: string;
+    'key': string;
     /**
      * The value of the metadata.
      * @type {string}
      * @memberof ExtraDataMetadata
      */
-    value: string;
+    'value': string;
 }
 /**
  * The previous and new location of an asset. 
@@ -1652,13 +1718,13 @@ export interface ExtraDataMove {
      * @type {string}
      * @memberof ExtraDataMove
      */
-    from: string;
+    'from': string;
     /**
      * The new location of the asset.
      * @type {string}
      * @memberof ExtraDataMove
      */
-    to: string;
+    'to': string;
 }
 /**
  * 
@@ -1671,7 +1737,7 @@ export interface FileInfo {
      * @type {number}
      * @memberof FileInfo
      */
-    size: number;
+    'size': number;
 }
 /**
  * The result of a list files operation. Compatible with S3\'s ListObjectResult
@@ -1684,55 +1750,74 @@ export interface FileListResponse {
      * @type {string}
      * @memberof FileListResponse
      */
-    Name?: string;
+    'Name'?: string;
     /**
      * The prefix under which objects are listed
      * @type {string}
      * @memberof FileListResponse
      */
-    Prefix?: string;
+    'Prefix'?: string;
     /**
      * The string that delimits the path segments. Only forward slash is supported
      * @type {string}
      * @memberof FileListResponse
      */
-    Delimiter?: string;
+    'Delimiter'?: string;
     /**
      * The maximum amount of objects to return
      * @type {number}
      * @memberof FileListResponse
      */
-    MaxKeys?: number;
+    'MaxKeys'?: number;
     /**
      * The continuation token that was passed to the operation
      * @type {string}
      * @memberof FileListResponse
      */
-    ContinuationToken?: string;
+    'ContinuationToken'?: string;
     /**
      * The continuation token to pass to list the next items
      * @type {string}
      * @memberof FileListResponse
      */
-    NextContinuationToken?: string;
+    'NextContinuationToken'?: string;
     /**
      * Whether there are no more files to list
      * @type {boolean}
      * @memberof FileListResponse
      */
-    IsTruncated?: boolean;
+    'IsTruncated'?: boolean;
     /**
      * The common prefixes (folders) contained under prefix.
      * @type {Array<CommonPrefix>}
      * @memberof FileListResponse
      */
-    CommonPrefixes?: Array<CommonPrefix>;
+    'CommonPrefixes'?: Array<CommonPrefix>;
     /**
      * The objects (files) contained under prefix.
      * @type {Array<ModelObject>}
      * @memberof FileListResponse
      */
-    Objects?: Array<ModelObject>;
+    'Objects'?: Array<ModelObject>;
+}
+/**
+ * The prefixed URL for the given path.
+ * @export
+ * @interface FilePresignedURLResponse
+ */
+export interface FilePresignedURLResponse {
+    /**
+     * The prefixed URL for the given path. The URL will expire after a specified duration.
+     * @type {string}
+     * @memberof FilePresignedURLResponse
+     */
+    'SignedUrl'?: string;
+    /**
+     * The expiration date and time of the presigned url
+     * @type {string}
+     * @memberof FilePresignedURLResponse
+     */
+    'ExpiresAt'?: string;
 }
 /**
  * 
@@ -1745,67 +1830,67 @@ export interface Folder {
      * @type {string}
      * @memberof Folder
      */
-    id: string;
+    'id': string;
     /**
      * The workspace\'s ID
      * @type {string}
      * @memberof Folder
      */
-    workspace_id: string;
+    'workspace_id': string;
     /**
      * The teamspace\'s ID
      * @type {string}
      * @memberof Folder
      */
-    teamspace_id: string;
+    'teamspace_id': string;
     /**
      * The group\'s ID
      * @type {string}
      * @memberof Folder
      */
-    group_id?: string;
+    'group_id'?: string;
     /**
      * The asset\'s ID
      * @type {string}
      * @memberof Folder
      */
-    asset_id: string;
+    'asset_id': string;
     /**
      * The folder\'s ID
      * @type {string}
      * @memberof Folder
      */
-    parent_folder_id?: string;
+    'parent_folder_id'?: string;
     /**
      * The name of the folder.
      * @type {string}
      * @memberof Folder
      */
-    name: string;
+    'name': string;
     /**
      * Datetime asset was created in UTC
      * @type {string}
      * @memberof Folder
      */
-    created_at: string;
+    'created_at': string;
     /**
      * Datetime asset was updated in UTC
      * @type {string}
      * @memberof Folder
      */
-    updated_at?: string;
+    'updated_at'?: string;
     /**
      * 
      * @type {WorkspaceUser}
      * @memberof Folder
      */
-    created_by: WorkspaceUser;
+    'created_by': WorkspaceUser;
     /**
      * The description of the folder.
      * @type {string}
      * @memberof Folder
      */
-    description?: string;
+    'description'?: string;
 }
 /**
  * The response object when requesting the list of folder contents
@@ -1818,13 +1903,13 @@ export interface FolderContentsResponse {
      * @type {Array<Asset>}
      * @memberof FolderContentsResponse
      */
-    data: Array<Asset>;
+    'data': Array<Asset>;
     /**
      * 
      * @type {PaginationMetadata}
      * @memberof FolderContentsResponse
      */
-    pagination_metadata: PaginationMetadata;
+    'pagination_metadata': PaginationMetadata;
 }
 /**
  * object metadata for folders that will be created
@@ -1837,7 +1922,7 @@ export interface FolderCreateRequestInner {
      * @type {string}
      * @memberof FolderCreateRequestInner
      */
-    description?: string;
+    'description'?: string;
 }
 /**
  * object for create folder response
@@ -1850,7 +1935,7 @@ export interface FolderCreateResponse {
      * @type {Folder}
      * @memberof FolderCreateResponse
      */
-    data: Folder;
+    'data': Folder;
 }
 /**
  * The response object when requesting a single folder
@@ -1863,7 +1948,7 @@ export interface FolderGetResponse {
      * @type {Folder}
      * @memberof FolderGetResponse
      */
-    data: Folder;
+    'data': Folder;
 }
 /**
  * 
@@ -1876,7 +1961,7 @@ export interface FolderInfo {
      * @type {number}
      * @memberof FolderInfo
      */
-    length: number;
+    'length': number;
 }
 /**
  * The request object for updating a folder
@@ -1889,13 +1974,13 @@ export interface FolderUpdateRequest {
      * @type {string}
      * @memberof FolderUpdateRequest
      */
-    name?: string;
+    'name'?: string;
     /**
      * The folder description
      * @type {string}
      * @memberof FolderUpdateRequest
      */
-    description?: string;
+    'description'?: string;
 }
 /**
  * The request object to add or remove contents under a folder
@@ -1908,13 +1993,13 @@ export interface FoldersContentsModifyInner {
      * @type {Array<string>}
      * @memberof FoldersContentsModifyInner
      */
-    members_to_add: Array<string>;
+    'members_to_add': Array<string>;
     /**
      * An array of asset ids to remove from a folder
      * @type {Array<string>}
      * @memberof FoldersContentsModifyInner
      */
-    members_to_remove: Array<string>;
+    'members_to_remove': Array<string>;
 }
 /**
  * Delta share table metadata object
@@ -1927,7 +2012,7 @@ export interface Format {
      * @type {string}
      * @memberof Format
      */
-    provider: string;
+    'provider': string;
 }
 /**
  * Credential information to access Google Cloud. using well knows key/secret pair to access storage.
@@ -1940,13 +2025,13 @@ export interface GCPInteroperabilityCredential {
      * @type {string}
      * @memberof GCPInteroperabilityCredential
      */
-    access_key_id?: string;
+    'access_key_id'?: string;
     /**
      * The access key\'s secret. Never returned in responses.
      * @type {string}
      * @memberof GCPInteroperabilityCredential
      */
-    secret_access_key?: string;
+    'secret_access_key'?: string;
 }
 /**
  * The key to a Google Cloud Platform service account.
@@ -1959,19 +2044,19 @@ export interface GCPServiceAccountKey {
      * @type {string}
      * @memberof GCPServiceAccountKey
      */
-    account_id: string;
+    'account_id': string;
     /**
      * The ID of the particular key. This identifies it among other keys issued for this service account.  This is ignored when uploading key information, and is only provided by the server when downloading metadata about an existing key. 
      * @type {string}
      * @memberof GCPServiceAccountKey
      */
-    key_id: string;
+    'key_id': string;
     /**
      * The full file provided by Google Cloud. This is usually in the form of a JSON document, but TileDB Cloud treats it as opaque (except to attempt to extract the service account ID and the key ID). 
      * @type {string}
      * @memberof GCPServiceAccountKey
      */
-    key_text: string;
+    'key_text': string;
 }
 /**
  * The generalspace object
@@ -1984,37 +2069,37 @@ export interface Generalspace {
      * @type {string}
      * @memberof Generalspace
      */
-    generalspace_id: string;
+    'generalspace_id': string;
     /**
      * The generalspace name
      * @type {string}
      * @memberof Generalspace
      */
-    name: string;
+    'name': string;
     /**
      * The generalspace icon as a UTF8-encoded Unicode symbol, e.g. 🚀
      * @type {string}
      * @memberof Generalspace
      */
-    icon?: string;
+    'icon'?: string;
     /**
      * The datetime the generalspace was created (in UTC)
      * @type {string}
      * @memberof Generalspace
      */
-    created_at: string;
+    'created_at': string;
     /**
      * The generalspace description
      * @type {string}
      * @memberof Generalspace
      */
-    description?: string;
+    'description'?: string;
     /**
      * The datetime the generalspace was updated (in UTC)
      * @type {string}
      * @memberof Generalspace
      */
-    updated_at?: string;
+    'updated_at'?: string;
 }
 /**
  * The response object when requesting a generalspace
@@ -2027,7 +2112,7 @@ export interface GeneralspaceGetResponse {
      * @type {Generalspace}
      * @memberof GeneralspaceGetResponse
      */
-    data: Generalspace;
+    'data': Generalspace;
 }
 /**
  * The request object for updating a generalspace
@@ -2040,26 +2125,28 @@ export interface GeneralspaceUpdateRequest {
      * @type {string}
      * @memberof GeneralspaceUpdateRequest
      */
-    name?: string;
+    'name'?: string;
     /**
      * The generalspace description
      * @type {string}
      * @memberof GeneralspaceUpdateRequest
      */
-    description?: string;
+    'description'?: string;
     /**
      * The generalspace icon as a UTF8-encoded Unicode symbol, e.g. 🚀
      * @type {string}
      * @memberof GeneralspaceUpdateRequest
      */
-    icon?: string;
+    'icon'?: string;
     /**
      * 
      * @type {TeamspaceVisibility}
      * @memberof GeneralspaceUpdateRequest
      */
-    visibility_level?: TeamspaceVisibility;
+    'visibility_level'?: TeamspaceVisibility;
 }
+
+
 /**
  * 
  * @export
@@ -2071,7 +2158,7 @@ export interface GroupInfo {
      * @type {number}
      * @memberof GroupInfo
      */
-    length: number;
+    'length': number;
 }
 /**
  * The invitation object
@@ -2084,31 +2171,31 @@ export interface Invitation {
      * @type {string}
      * @memberof Invitation
      */
-    invitation_id: string;
+    'invitation_id': string;
     /**
      * The invited user\'s email address
      * @type {string}
      * @memberof Invitation
      */
-    invitee_email: string;
+    'invitee_email': string;
     /**
      * 
      * @type {InvitingUser}
      * @memberof Invitation
      */
-    created_by: InvitingUser;
+    'created_by': InvitingUser;
     /**
      * The date and time the invitation was created
      * @type {string}
      * @memberof Invitation
      */
-    created_at: string;
+    'created_at': string;
     /**
      * 
      * @type {InvitationWorkspace}
      * @memberof Invitation
      */
-    workspace_invitation?: InvitationWorkspace;
+    'workspace_invitation'?: InvitationWorkspace;
 }
 /**
  * The request body for responding to an invitation
@@ -2121,23 +2208,21 @@ export interface InvitationRespondRequest {
      * @type {string}
      * @memberof InvitationRespondRequest
      */
-    jwt: string;
+    'jwt': string;
     /**
      * The response to the invitation
      * @type {string}
      * @memberof InvitationRespondRequest
      */
-    response: InvitationRespondRequestResponseEnum;
+    'response': InvitationRespondRequestResponseEnum;
 }
 
-/**
-    * @export
-    * @enum {string}
-    */
-export enum InvitationRespondRequestResponseEnum {
-    Accept = 'accept',
-    Reject = 'reject'
-}
+export const InvitationRespondRequestResponseEnum = {
+    Accept: 'accept',
+    Reject: 'reject'
+} as const;
+
+export type InvitationRespondRequestResponseEnum = typeof InvitationRespondRequestResponseEnum[keyof typeof InvitationRespondRequestResponseEnum];
 
 /**
  * The request body for retrieving an invitation
@@ -2150,7 +2235,7 @@ export interface InvitationRetrieveRequest {
      * @type {string}
      * @memberof InvitationRetrieveRequest
      */
-    jwt: string;
+    'jwt': string;
 }
 /**
  * The response object when retrieving an invitation
@@ -2163,7 +2248,7 @@ export interface InvitationRetrieveResponse {
      * @type {Invitation}
      * @memberof InvitationRetrieveResponse
      */
-    data: Invitation;
+    'data': Invitation;
 }
 /**
  * 
@@ -2176,32 +2261,34 @@ export interface InvitationWorkspace {
      * @type {string}
      * @memberof InvitationWorkspace
      */
-    workspace_id: string;
+    'workspace_id': string;
     /**
      * The workspace\'s name
      * @type {string}
      * @memberof InvitationWorkspace
      */
-    name: string;
+    'name': string;
     /**
      * The workspace\'s description
      * @type {string}
      * @memberof InvitationWorkspace
      */
-    description?: string;
+    'description'?: string;
     /**
      * The image\'s ID
      * @type {string}
      * @memberof InvitationWorkspace
      */
-    image_id?: string;
+    'image_id'?: string;
     /**
      * 
      * @type {WorkspaceRole}
      * @memberof InvitationWorkspace
      */
-    prospective_role: WorkspaceRole;
+    'prospective_role': WorkspaceRole;
 }
+
+
 /**
  * The invitations to create
  * @export
@@ -2213,13 +2300,13 @@ export interface InvitationsCreateRequestInner {
      * @type {string}
      * @memberof InvitationsCreateRequestInner
      */
-    invitee_email: string;
+    'invitee_email': string;
     /**
      * 
      * @type {InvitationsCreateRequestWorkspace}
      * @memberof InvitationsCreateRequestInner
      */
-    workspace_invitation?: InvitationsCreateRequestWorkspace;
+    'workspace_invitation'?: InvitationsCreateRequestWorkspace;
 }
 /**
  * 
@@ -2232,14 +2319,16 @@ export interface InvitationsCreateRequestWorkspace {
      * @type {string}
      * @memberof InvitationsCreateRequestWorkspace
      */
-    workspace_id: string;
+    'workspace_id': string;
     /**
      * 
      * @type {WorkspaceRole}
      * @memberof InvitationsCreateRequestWorkspace
      */
-    prospective_role: WorkspaceRole;
+    'prospective_role': WorkspaceRole;
 }
+
+
 /**
  * The response object when requesting all invitations
  * @export
@@ -2251,13 +2340,13 @@ export interface InvitationsListResponse {
      * @type {Array<Invitation>}
      * @memberof InvitationsListResponse
      */
-    data: Array<Invitation>;
+    'data': Array<Invitation>;
     /**
      * 
      * @type {PaginationMetadata}
      * @memberof InvitationsListResponse
      */
-    pagination_metadata?: PaginationMetadata;
+    'pagination_metadata'?: PaginationMetadata;
 }
 /**
  * The user who sent the invitation
@@ -2270,53 +2359,59 @@ export interface InvitingUser {
      * @type {string}
      * @memberof InvitingUser
      */
-    user_id: string;
+    'user_id': string;
     /**
      * The user\'s display name
      * @type {string}
      * @memberof InvitingUser
      */
-    display_name: string;
+    'display_name': string;
     /**
      * The user\'s email
      * @type {string}
      * @memberof InvitingUser
      */
-    email: string;
+    'email': string;
     /**
      * The image\'s ID
      * @type {string}
      * @memberof InvitingUser
      */
-    image_id?: string;
+    'image_id'?: string;
     /**
      * 
      * @type {WorkspaceRole}
      * @memberof InvitingUser
      */
-    workspace_role: WorkspaceRole;
+    'workspace_role': WorkspaceRole;
 }
+
+
 /**
  * List of values that Item can take.
  * @export
  * @enum {string}
  */
-export enum Item {
-    ThemeSelection = 'theme_selection',
-    ProfileInfo = 'profile_info',
-    ClaimCredits = 'claim_credits',
-    CloudStorage = 'cloud_storage',
-    RootPath = 'root_path',
-    Intro = 'intro',
-    BasicTour = 'basic_tour',
-    SkipUserOnboarding = 'skip_user_onboarding',
-    AddAsset = 'add_asset',
-    LaunchNotebook = 'launch_notebook',
-    IndicateFinishUserOnboarding = 'indicate_finish_user_onboarding',
-    OrganizationBasicTour = 'organization_basic_tour',
-    IndicateFinishOrgOnboarding = 'indicate_finish_org_onboarding',
-    SkipOrganizationOnboarding = 'skip_organization_onboarding'
-}
+
+export const Item = {
+    ThemeSelection: 'theme_selection',
+    ProfileInfo: 'profile_info',
+    ClaimCredits: 'claim_credits',
+    CloudStorage: 'cloud_storage',
+    RootPath: 'root_path',
+    Intro: 'intro',
+    BasicTour: 'basic_tour',
+    SkipUserOnboarding: 'skip_user_onboarding',
+    AddAsset: 'add_asset',
+    LaunchNotebook: 'launch_notebook',
+    IndicateFinishUserOnboarding: 'indicate_finish_user_onboarding',
+    OrganizationBasicTour: 'organization_basic_tour',
+    IndicateFinishOrgOnboarding: 'indicate_finish_org_onboarding',
+    SkipOrganizationOnboarding: 'skip_organization_onboarding'
+} as const;
+
+export type Item = typeof Item[keyof typeof Item];
+
 
 /**
  * Listing of delta share schema tables
@@ -2329,13 +2424,13 @@ export interface ListShareSchemaTablesResponse {
      * @type {Array<TableItem>}
      * @memberof ListShareSchemaTablesResponse
      */
-    items: Array<TableItem>;
+    'items': Array<TableItem>;
     /**
      * The next page token
      * @type {string}
      * @memberof ListShareSchemaTablesResponse
      */
-    nextPageToken?: string;
+    'nextPageToken'?: string;
 }
 /**
  * Listing of delta shares
@@ -2348,13 +2443,13 @@ export interface ListShareSchemasResponse {
      * @type {Array<SchemaItem>}
      * @memberof ListShareSchemasResponse
      */
-    items: Array<SchemaItem>;
+    'items': Array<SchemaItem>;
     /**
      * The next page token
      * @type {string}
      * @memberof ListShareSchemasResponse
      */
-    nextPageToken?: string;
+    'nextPageToken'?: string;
 }
 /**
  * Listing of delta shares
@@ -2367,13 +2462,13 @@ export interface ListSharesResponse {
      * @type {Array<ShareItem>}
      * @memberof ListSharesResponse
      */
-    items: Array<ShareItem>;
+    'items': Array<ShareItem>;
     /**
      * The next page token
      * @type {string}
      * @memberof ListSharesResponse
      */
-    nextPageToken?: string;
+    'nextPageToken'?: string;
 }
 /**
  * Listing of delta share schema tables
@@ -2386,13 +2481,13 @@ export interface ListTablesResponse {
      * @type {Array<TableItem>}
      * @memberof ListTablesResponse
      */
-    items: Array<TableItem>;
+    'items': Array<TableItem>;
     /**
      * The next page token
      * @type {string}
      * @memberof ListTablesResponse
      */
-    nextPageToken?: string;
+    'nextPageToken'?: string;
 }
 /**
  * Delta share table metadata object
@@ -2405,67 +2500,67 @@ export interface Metadata {
      * @type {string}
      * @memberof Metadata
      */
-    id: string;
+    'id': string;
     /**
      * User-provided identifier for this table
      * @type {string}
      * @memberof Metadata
      */
-    name?: string;
+    'name'?: string;
     /**
      * User-provided description for this table
      * @type {string}
      * @memberof Metadata
      */
-    description?: string;
+    'description'?: string;
     /**
      * 
      * @type {Format}
      * @memberof Metadata
      */
-    format: Format;
+    'format': Format;
     /**
      * 
      * @type {Schema}
      * @memberof Metadata
      */
-    schema?: Schema;
+    'schema'?: Schema;
     /**
      * Schema of the table. This is a serialized JSON string which can be deserialized to a Schema Object.
      * @type {string}
      * @memberof Metadata
      */
-    schemaString: string;
+    'schemaString': string;
     /**
      * An array containing the names of columns by which the data should be partitioned. When a table doesn’t have partition columns, this will be an empty array.
      * @type {Array<string>}
      * @memberof Metadata
      */
-    partitionColumns: Array<string>;
+    'partitionColumns': Array<string>;
     /**
      * A map containing configuration options for the table
-     * @type {{ [key: string]: object; }}
+     * @type {{ [key: string]: any; }}
      * @memberof Metadata
      */
-    configuration?: { [key: string]: object; };
+    'configuration'?: { [key: string]: any; };
     /**
      * The table version the metadata corresponds to, returned when querying table data with a version or timestamp parameter, or cdf query with includeHistoricalMetadata set to true.
      * @type {number}
      * @memberof Metadata
      */
-    version?: number;
+    'version'?: number;
     /**
      * The size of the table in bytes, will be returned if available in the delta log.
      * @type {number}
      * @memberof Metadata
      */
-    size?: number;
+    'size'?: number;
     /**
      * The number of files in the table, will be returned if available in the delta log.
      * @type {number}
      * @memberof Metadata
      */
-    numFiles?: number;
+    'numFiles'?: number;
 }
 /**
  * Object containing data about a handled error by REST server
@@ -2478,25 +2573,25 @@ export interface ModelError {
      * @type {number}
      * @memberof ModelError
      */
-    code: number;
+    'code': number;
     /**
      * A friendly message to be shown to the client
      * @type {string}
      * @memberof ModelError
      */
-    message: string;
+    'message': string;
     /**
      * The request id to be used for tracing/debugging
      * @type {string}
      * @memberof ModelError
      */
-    request_id: string;
+    'request_id': string;
     /**
      * 
      * @type {ValidationError}
      * @memberof ModelError
      */
-    validation_error?: ValidationError;
+    'validation_error'?: ValidationError;
 }
 /**
  * Delta share table file object
@@ -2509,49 +2604,49 @@ export interface ModelFile {
      * @type {string}
      * @memberof ModelFile
      */
-    url: string;
+    'url': string;
     /**
      * A unique string for the file in a table. The same file is guaranteed to have the same id across multiple requests. A client may cache the file content and use this id as a key to decide whether to use the cached file content.
      * @type {string}
      * @memberof ModelFile
      */
-    id: string;
+    'id': string;
     /**
      * A map from partition column to value for this file. See Partition Value Serialization for how to parse the partition values. When the table doesn\'t have partition columns, this will be an empty map.
-     * @type {{ [key: string]: object; }}
+     * @type {{ [key: string]: any; }}
      * @memberof ModelFile
      */
-    partitionValues: { [key: string]: object; };
+    'partitionValues': { [key: string]: any; };
     /**
      * The size of this file in bytes.
      * @type {number}
      * @memberof ModelFile
      */
-    size: number;
+    'size': number;
     /**
      * The timestamp of the file in milliseconds from epoch.
      * @type {number}
      * @memberof ModelFile
      */
-    timestamp?: number;
+    'timestamp'?: number;
     /**
      * The table version of this file.
      * @type {number}
      * @memberof ModelFile
      */
-    version?: number;
+    'version'?: number;
     /**
      * Contains statistics (e.g., count, min/max values for columns) about the data in this file. This field may be missing. A file may or may not have stats. This is a serialized JSON string which can be deserialized to a Statistics Struct. A client can decide whether to use stats or drop it.
      * @type {string}
      * @memberof ModelFile
      */
-    stats?: string;
+    'stats'?: string;
     /**
      * The unix timestamp corresponding to the expiration of the url, in milliseconds, returned when the server supports the feature.
      * @type {number}
      * @memberof ModelFile
      */
-    expirationTimestamp?: number;
+    'expirationTimestamp'?: number;
 }
 /**
  * Description of a TileDB file.
@@ -2564,25 +2659,25 @@ export interface ModelObject {
      * @type {string}
      * @memberof ModelObject
      */
-    Key?: string;
+    'Key'?: string;
     /**
      * The date the file was last modified
      * @type {string}
      * @memberof ModelObject
      */
-    LastModified?: string;
+    'LastModified'?: string;
     /**
      * The file\'s ETag
      * @type {string}
      * @memberof ModelObject
      */
-    ETag?: string;
+    'ETag'?: string;
     /**
      * The file\'s size
      * @type {number}
      * @memberof ModelObject
      */
-    Size?: number;
+    'Size'?: number;
 }
 /**
  * object for get items response
@@ -2595,7 +2690,7 @@ export interface OnboardingGetItemsResponse {
      * @type {OnboardingGetItemsResponseData}
      * @memberof OnboardingGetItemsResponse
      */
-    data: OnboardingGetItemsResponseData;
+    'data': OnboardingGetItemsResponseData;
 }
 /**
  * user\'s onboarding items
@@ -2608,7 +2703,7 @@ export interface OnboardingGetItemsResponseData {
      * @type {Array<Item>}
      * @memberof OnboardingGetItemsResponseData
      */
-    entries: Array<Item>;
+    'entries': Array<Item>;
 }
 /**
  * object for get items response
@@ -2621,7 +2716,7 @@ export interface OnboardingSetItemsRequest {
      * @type {OnboardingGetItemsResponseData}
      * @memberof OnboardingSetItemsRequest
      */
-    data: OnboardingGetItemsResponseData;
+    'data': OnboardingGetItemsResponseData;
 }
 /**
  * Pagination metadata object
@@ -2634,25 +2729,25 @@ export interface PaginationMetadata {
      * @type {number}
      * @memberof PaginationMetadata
      */
-    page: number;
+    'page': number;
     /**
      * pagination limit (page size)
      * @type {number}
      * @memberof PaginationMetadata
      */
-    per_page: number;
+    'per_page': number;
     /**
      * number of total pages with current limit
      * @type {number}
      * @memberof PaginationMetadata
      */
-    total_pages: number;
+    'total_pages': number;
     /**
      * number of total available items
      * @type {number}
      * @memberof PaginationMetadata
      */
-    total_items: number;
+    'total_items': number;
 }
 /**
  * Delta sharing protocol object
@@ -2665,7 +2760,7 @@ export interface Protocol {
      * @type {number}
      * @memberof Protocol
      */
-    minReaderVersion: number;
+    'minReaderVersion': number;
 }
 /**
  * A sequence of JSON strings delimited by newline.  The response contains three or more lines:   The first line is a JSON wrapper object containing the table Protocol object.   The second line is a JSON wrapper object containing the table Metadata object.   The rest of the lines are JSON wrapper objects for Data Change Files of the change data feed.     Historical Metadata will be returned if includeHistoricalMetadata is set to true.     The ordering of the lines doesn\'t matter. 
@@ -2678,103 +2773,103 @@ export interface QueryTableChangeResponse {
      * @type {number}
      * @memberof QueryTableChangeResponse
      */
-    minReaderVersion: number;
+    'minReaderVersion': number;
     /**
      * A unique string for the file in a table. The same file is guaranteed to have the same id across multiple requests. A client may cache the file content and use this id as a key to decide whether to use the cached file content.
      * @type {string}
      * @memberof QueryTableChangeResponse
      */
-    id: string;
+    'id': string;
     /**
      * User-provided identifier for this table
      * @type {string}
      * @memberof QueryTableChangeResponse
      */
-    name?: string;
+    'name'?: string;
     /**
      * User-provided description for this table
      * @type {string}
      * @memberof QueryTableChangeResponse
      */
-    description?: string;
+    'description'?: string;
     /**
      * 
      * @type {Format}
      * @memberof QueryTableChangeResponse
      */
-    format: Format;
+    'format': Format;
     /**
      * 
      * @type {Schema}
      * @memberof QueryTableChangeResponse
      */
-    schema?: Schema;
+    'schema'?: Schema;
     /**
      * Schema of the table. This is a serialized JSON string which can be deserialized to a Schema Object.
      * @type {string}
      * @memberof QueryTableChangeResponse
      */
-    schemaString: string;
+    'schemaString': string;
     /**
      * An array containing the names of columns by which the data should be partitioned. When a table doesn’t have partition columns, this will be an empty array.
      * @type {Array<string>}
      * @memberof QueryTableChangeResponse
      */
-    partitionColumns: Array<string>;
+    'partitionColumns': Array<string>;
     /**
      * A map containing configuration options for the table
-     * @type {{ [key: string]: object; }}
+     * @type {{ [key: string]: any; }}
      * @memberof QueryTableChangeResponse
      */
-    configuration?: { [key: string]: object; };
+    'configuration'?: { [key: string]: any; };
     /**
      * The table version of this file.
      * @type {number}
      * @memberof QueryTableChangeResponse
      */
-    version: number;
+    'version': number;
     /**
      * The size of this file in bytes.
      * @type {number}
      * @memberof QueryTableChangeResponse
      */
-    size: number;
+    'size': number;
     /**
      * The number of files in the table, will be returned if available in the delta log.
      * @type {number}
      * @memberof QueryTableChangeResponse
      */
-    numFiles?: number;
+    'numFiles'?: number;
     /**
      * An https url that a client can use to read the file directly. The same file in different responses may have different urls.
      * @type {string}
      * @memberof QueryTableChangeResponse
      */
-    url: string;
+    'url': string;
     /**
      * A map from partition column to value for this file. See Partition Value Serialization for how to parse the partition values. When the table doesn\'t have partition columns, this will be an empty map.
-     * @type {{ [key: string]: object; }}
+     * @type {{ [key: string]: any; }}
      * @memberof QueryTableChangeResponse
      */
-    partitionValues: { [key: string]: object; };
+    'partitionValues': { [key: string]: any; };
     /**
      * The timestamp of the file in milliseconds from epoch.
      * @type {number}
      * @memberof QueryTableChangeResponse
      */
-    timestamp: number;
+    'timestamp': number;
     /**
      * Contains statistics (e.g., count, min/max values for columns) about the data in this file. This field may be missing. A file may or may not have stats. This is a serialized JSON string which can be deserialized to a Statistics Struct. A client can decide whether to use stats or drop it.
      * @type {string}
      * @memberof QueryTableChangeResponse
      */
-    stats?: string;
+    'stats'?: string;
     /**
      * The unix timestamp corresponding to the expiration of the url, in milliseconds, returned when the server supports the feature.
      * @type {number}
      * @memberof QueryTableChangeResponse
      */
-    expirationTimestamp?: number;
+    'expirationTimestamp'?: number;
 }
 /**
  * Delta share table query request
@@ -2787,43 +2882,43 @@ export interface QueryTableRequest {
      * @type {string}
      * @memberof QueryTableRequest
      */
-    predicateHints?: string;
+    'predicateHints'?: string;
     /**
      * query predicates on partition columns specified using a structured JSON format. When it\'s present, the server will try to use the predicates to filter table\'s files, which could boost query performance.   As with predicateHints, this filtering is BEST EFFORT. The server may return files that don\'t satisfy the predicates.   If the server encounters any errors during predicate processing (for example, invalid syntax or non existing columns), it will skip filtering and return all the files. When it\'s absent, the server will return all the files in the table. 
      * @type {string}
      * @memberof QueryTableRequest
      */
-    jsonPredicateHints?: string;
+    'jsonPredicateHints'?: string;
     /**
      * an optional limit number. It\'s a hint from the client to tell the server how many rows in the table the client plans to read. The server can use this hint to return only some files by using the file stats. For example, when running SELECT * FROM table LIMIT 1000, the client can set limitHint to 1000.
      * @type {string}
      * @memberof QueryTableRequest
      */
-    limitHint?: string;
+    'limitHint'?: string;
     /**
      * an optional version number. If set, will return files as of the specified version of the table. This is only supported on tables with history sharing enabled.
      * @type {number}
      * @memberof QueryTableRequest
      */
-    version?: number;
+    'version'?: number;
     /**
      * an optional timestamp string in the Timestamp Format,. If set, will return files as of the table version corresponding to the specified timestamp. This is only supported on tables with history sharing enabled.
      * @type {string}
      * @memberof QueryTableRequest
      */
-    timestamp?: string;
+    'timestamp'?: string;
     /**
      * an optional version number. If set, will return all data change files since startingVersion, inclusive, including historical metadata if seen in the delta log.
      * @type {number}
      * @memberof QueryTableRequest
      */
-    startingVersion?: number;
+    'startingVersion'?: number;
     /**
      * an optional version number, only used if startingVersion is set. If set, the server can use it as a hint to avoid returning data change files after endingVersion. This is not enforcement. Hence, when sending the endingVersion parameter, the client should still handle the case that it may receive files after endingVersion.
      * @type {number}
      * @memberof QueryTableRequest
      */
-    endingVersion?: number;
+    'endingVersion'?: number;
 }
 /**
  * A sequence of JSON strings delimited by newline.  The response contains three or more lines:   The first line is a JSON wrapper object containing the table Protocol object.   The second line is a JSON wrapper object containing the table Metadata object.   The rest of the lines are JSON wrapper objects for data change files, Metadata, or files, the ordering of the lines doesn\'t matter. 
@@ -2836,103 +2931,103 @@ export interface QueryTableResponse {
      * @type {number}
      * @memberof QueryTableResponse
      */
-    minReaderVersion: number;
+    'minReaderVersion': number;
     /**
      * A unique string for the file in a table. The same file is guaranteed to have the same id across multiple requests. A client may cache the file content and use this id as a key to decide whether to use the cached file content.
      * @type {string}
      * @memberof QueryTableResponse
      */
-    id: string;
+    'id': string;
     /**
      * User-provided identifier for this table
      * @type {string}
      * @memberof QueryTableResponse
      */
-    name?: string;
+    'name'?: string;
     /**
      * User-provided description for this table
      * @type {string}
      * @memberof QueryTableResponse
      */
-    description?: string;
+    'description'?: string;
     /**
      * 
      * @type {Format}
      * @memberof QueryTableResponse
      */
-    format: Format;
+    'format': Format;
     /**
      * 
      * @type {Schema}
      * @memberof QueryTableResponse
      */
-    schema?: Schema;
+    'schema'?: Schema;
     /**
      * Schema of the table. This is a serialized JSON string which can be deserialized to a Schema Object.
      * @type {string}
      * @memberof QueryTableResponse
      */
-    schemaString: string;
+    'schemaString': string;
     /**
      * An array containing the names of columns by which the data should be partitioned. When a table doesn’t have partition columns, this will be an empty array.
      * @type {Array<string>}
      * @memberof QueryTableResponse
      */
-    partitionColumns: Array<string>;
+    'partitionColumns': Array<string>;
     /**
      * A map containing configuration options for the table
-     * @type {{ [key: string]: object; }}
+     * @type {{ [key: string]: any; }}
      * @memberof QueryTableResponse
      */
-    configuration?: { [key: string]: object; };
+    'configuration'?: { [key: string]: any; };
     /**
      * The table version of this file.
      * @type {number}
      * @memberof QueryTableResponse
      */
-    version: number;
+    'version': number;
     /**
      * The size of this file in bytes.
      * @type {number}
      * @memberof QueryTableResponse
      */
-    size: number;
+    'size': number;
     /**
      * The number of files in the table, will be returned if available in the delta log.
      * @type {number}
      * @memberof QueryTableResponse
      */
-    numFiles?: number;
+    'numFiles'?: number;
     /**
      * An https url that a client can use to read the file directly. The same file in different responses may have different urls.
      * @type {string}
      * @memberof QueryTableResponse
      */
-    url: string;
+    'url': string;
     /**
      * A map from partition column to value for this file. See Partition Value Serialization for how to parse the partition values. When the table doesn\'t have partition columns, this will be an empty map.
-     * @type {{ [key: string]: object; }}
+     * @type {{ [key: string]: any; }}
      * @memberof QueryTableResponse
      */
-    partitionValues: { [key: string]: object; };
+    'partitionValues': { [key: string]: any; };
     /**
      * The timestamp of the file in milliseconds from epoch.
      * @type {number}
      * @memberof QueryTableResponse
      */
-    timestamp: number;
+    'timestamp': number;
     /**
      * Contains statistics (e.g., count, min/max values for columns) about the data in this file. This field may be missing. A file may or may not have stats. This is a serialized JSON string which can be deserialized to a Statistics Struct. A client can decide whether to use stats or drop it.
      * @type {string}
      * @memberof QueryTableResponse
      */
-    stats?: string;
+    'stats'?: string;
     /**
      * The unix timestamp corresponding to the expiration of the url, in milliseconds, returned when the server supports the feature.
      * @type {number}
      * @memberof QueryTableResponse
      */
-    expirationTimestamp?: number;
+    'expirationTimestamp'?: number;
 }
 /**
  * Object containing the necessary data to request an email address confirmation email.
@@ -2945,7 +3040,7 @@ export interface RequestEmailConfirmationRequest {
      * @type {string}
      * @memberof RequestEmailConfirmationRequest
      */
-    username_or_email: string;
+    'username_or_email': string;
 }
 /**
  * Object containing the necessary data to request a password reset link.
@@ -2958,7 +3053,7 @@ export interface RequestPasswordResetRequest {
      * @type {string}
      * @memberof RequestPasswordResetRequest
      */
-    username_or_email: string;
+    'username_or_email': string;
 }
 /**
  * Object containing the necessary data to reset a user\'s password
@@ -2971,7 +3066,7 @@ export interface ResetPasswordRequest {
      * @type {string}
      * @memberof ResetPasswordRequest
      */
-    new_password: string;
+    'new_password': string;
 }
 /**
  * Model representing REST capabilities
@@ -2984,13 +3079,13 @@ export interface RestCapabilities {
      * @type {TileDBVersion}
      * @memberof RestCapabilities
      */
-    deployedTileDBVersion: TileDBVersion;
+    'deployedTileDBVersion': TileDBVersion;
     /**
      * 
      * @type {TileDBVersion}
      * @memberof RestCapabilities
      */
-    minimumSupportedTileDBClientVersion: TileDBVersion;
+    'minimumSupportedTileDBClientVersion': TileDBVersion;
 }
 /**
  * A struct is used to represent both the top-level schema of the table as well as struct columns that contain nested columns. A struct is encoded as a JSON object with the following fields
@@ -3003,13 +3098,13 @@ export interface Schema {
      * @type {string}
      * @memberof Schema
      */
-    type: string;
+    'type': string;
     /**
      * User-provided identifier for this table
      * @type {Array<SchemaField>}
      * @memberof Schema
      */
-    fields: Array<SchemaField>;
+    'fields': Array<SchemaField>;
 }
 /**
  * A struct field represents a top-level or nested column.
@@ -3022,25 +3117,25 @@ export interface SchemaField {
      * @type {string}
      * @memberof SchemaField
      */
-    name: string;
+    'name': string;
     /**
-     * String containing the name of a primitive type, a struct definition, an array definition or a map definition
-     * @type {SchemaFieldDataType | SchemaFieldArray | SchemaFieldMap}
+     * 
+     * @type {SchemaFieldType}
      * @memberof SchemaField
      */
-    type: SchemaFieldDataType | SchemaFieldArray | SchemaFieldMap;
+    'type': SchemaFieldType;
     /**
      * A JSON map containing information about this column. For example, the comment key means its value is the column comment.
      * @type {boolean}
      * @memberof SchemaField
      */
-    nullable: boolean;
+    'nullable': boolean;
     /**
      * A JSON map containing information about this column. For example, the comment key means its value is the column comment.
-     * @type {{ [key: string]: object; }}
+     * @type {{ [key: string]: any; }}
      * @memberof SchemaField
      */
-    metadata?: { [key: string]: object; };
+    'metadata'?: { [key: string]: any; };
 }
 /**
  * An array stores a variable length collection of items of some type.
@@ -3053,41 +3148,52 @@ export interface SchemaFieldArray {
      * @type {string}
      * @memberof SchemaFieldArray
      */
-    type: string;
+    'type': string;
     /**
-     * The type of element stored in this array represented as a string containing the name of a primitive type, a struct definition, an array definition or a map definition
-     * @type {SchemaFieldDataType | SchemaFieldArray | SchemaFieldMap}
+     * 
+     * @type {SchemaFieldArrayElementType}
      * @memberof SchemaFieldArray
      */
-    elementType: SchemaFieldDataType | SchemaFieldArray | SchemaFieldMap;
+    'elementType': SchemaFieldArrayElementType;
     /**
      * Boolean denoting whether this array can contain one or more null values
      * @type {boolean}
      * @memberof SchemaFieldArray
      */
-    containsNull: boolean;
+    'containsNull': boolean;
 }
+/**
+ * @type SchemaFieldArrayElementType
+ * The type of element stored in this array represented as a string containing the name of a primitive type, a struct definition, an array definition or a map definition
+ * @export
+ */
+export type SchemaFieldArrayElementType = SchemaFieldArray | SchemaFieldDataType | SchemaFieldMap;
+
 /**
  * A enum represents a field type
  * @export
  * @enum {string}
  */
-export enum SchemaFieldDataType {
-    String = 'string',
-    Long = 'long',
-    Integer = 'integer',
-    Short = 'short',
-    Byte = 'byte',
-    Float = 'float',
-    Double = 'double',
-    Boolean = 'boolean',
-    Binary = 'binary',
-    Date = 'date',
-    Timestamp = 'timestamp',
-    Decimal = 'decimal',
-    Array = 'array',
-    Struct = 'struct'
-}
+
+export const SchemaFieldDataType = {
+    String: 'string',
+    Long: 'long',
+    Integer: 'integer',
+    Short: 'short',
+    Byte: 'byte',
+    Float: 'float',
+    Double: 'double',
+    Boolean: 'boolean',
+    Binary: 'binary',
+    Date: 'date',
+    Timestamp: 'timestamp',
+    Decimal: 'decimal',
+    Array: 'array',
+    Struct: 'struct'
+} as const;
+
+export type SchemaFieldDataType = typeof SchemaFieldDataType[keyof typeof SchemaFieldDataType];
+
 
 /**
  * A map stores an arbitrary length collection of key-value pairs with a single keyType and a single valueType.
@@ -3100,26 +3206,33 @@ export interface SchemaFieldMap {
      * @type {string}
      * @memberof SchemaFieldMap
      */
-    type: string;
+    'type': string;
     /**
      * The type of element used for the key of this map, represented as a string containing the name of a primitive type, a struct definition, an array definition or a map definition
      * @type {string}
      * @memberof SchemaFieldMap
      */
-    keyType: string;
+    'keyType': string;
     /**
      * The type of element used for the key of this map, represented as a string containing the name of a primitive type, a struct definition, an array definition or a map definition
      * @type {string}
      * @memberof SchemaFieldMap
      */
-    valueType: string;
+    'valueType': string;
     /**
      * Indicates if map values have null values.
      * @type {boolean}
      * @memberof SchemaFieldMap
      */
-    valueContainsNull: boolean;
+    'valueContainsNull': boolean;
 }
+/**
+ * @type SchemaFieldType
+ * String containing the name of a primitive type, a struct definition, an array definition or a map definition
+ * @export
+ */
+export type SchemaFieldType = SchemaFieldArray | SchemaFieldDataType | SchemaFieldMap;
+
 /**
  * Delta share schema table item
  * @export
@@ -3131,13 +3244,13 @@ export interface SchemaItem {
      * @type {string}
      * @memberof SchemaItem
      */
-    name: string;
+    'name': string;
     /**
      * name of share
      * @type {string}
      * @memberof SchemaItem
      */
-    share: string;
+    'share': string;
 }
 /**
  * Delta share item
@@ -3150,13 +3263,13 @@ export interface ShareItem {
      * @type {string}
      * @memberof ShareItem
      */
-    name: string;
+    'name': string;
     /**
      * optional ID of share
      * @type {string}
      * @memberof ShareItem
      */
-    id?: string;
+    'id'?: string;
 }
 /**
  * Delta share details
@@ -3169,7 +3282,7 @@ export interface ShareResponse {
      * @type {ShareItem}
      * @memberof ShareResponse
      */
-    share: ShareItem;
+    'share': ShareItem;
 }
 /**
  * The path at which a given asset will be stored, and the credentials used to access that asset. Storage location contains a pair of storage path  and storage credentials 
@@ -3182,43 +3295,43 @@ export interface StorageSetting {
      * @type {string}
      * @memberof StorageSetting
      */
-    storage_setting_id: string;
+    'storage_setting_id': string;
     /**
      * storage location name
      * @type {string}
      * @memberof StorageSetting
      */
-    name: string;
+    'name': string;
     /**
      * True if this is the workspace\'s or teamspace\'s default storage setting
      * @type {boolean}
      * @memberof StorageSetting
      */
-    is_default: boolean;
+    'is_default': boolean;
     /**
      * The path to store an asset.
      * @type {string}
      * @memberof StorageSetting
      */
-    path: string;
+    'path': string;
     /**
      * The name of the credentials used to access this storage path
      * @type {string}
      * @memberof StorageSetting
      */
-    credentials_name: string;
+    'credentials_name': string;
     /**
      * True if the storage settings pair is not valid
      * @type {boolean}
      * @memberof StorageSetting
      */
-    invalid: boolean;
+    'invalid': boolean;
     /**
      * The reason why the storage setting pair is not valid
      * @type {string}
      * @memberof StorageSetting
      */
-    reason?: string;
+    'reason'?: string;
 }
 /**
  * object for get storage setting response
@@ -3231,7 +3344,7 @@ export interface StorageSettingGetResponse {
      * @type {StorageSetting}
      * @memberof StorageSettingGetResponse
      */
-    data: StorageSetting;
+    'data': StorageSetting;
 }
 /**
  * The path at which a given asset will be stored, and the credentials used to access that asset. Storage setting contains a pair of storage path  and storage credentials 
@@ -3244,25 +3357,25 @@ export interface StorageSettingUpdateRequest {
      * @type {string}
      * @memberof StorageSettingUpdateRequest
      */
-    name?: string;
+    'name'?: string;
     /**
      * True if this is the workspace\'s or teamspace\'s default storage setting
      * @type {boolean}
      * @memberof StorageSettingUpdateRequest
      */
-    is_default?: boolean;
+    'is_default'?: boolean;
     /**
      * The path to store an asset.
      * @type {string}
      * @memberof StorageSettingUpdateRequest
      */
-    path?: string;
+    'path'?: string;
     /**
      * The name of the credentials used to access this storage path
      * @type {string}
      * @memberof StorageSettingUpdateRequest
      */
-    credentials_name?: string;
+    'credentials_name'?: string;
 }
 /**
  * The path at which a given asset will be stored, and the credentials used to access that asset. Storage setting contains a pair of storage path  and storage credentials 
@@ -3275,25 +3388,25 @@ export interface StorageSettingsCreateRequest {
      * @type {string}
      * @memberof StorageSettingsCreateRequest
      */
-    name: string;
+    'name': string;
     /**
      * True if this is the workspace\'s or teamspace\'s default storage setting
      * @type {boolean}
      * @memberof StorageSettingsCreateRequest
      */
-    is_default: boolean;
+    'is_default': boolean;
     /**
      * URI containing the VFS path of where assets will be stored. Local file paths must start with `file://`. 
      * @type {string}
      * @memberof StorageSettingsCreateRequest
      */
-    path: string;
+    'path': string;
     /**
      * The name of the credentials used to access this storage path
      * @type {string}
      * @memberof StorageSettingsCreateRequest
      */
-    credentials_name: string;
+    'credentials_name': string;
 }
 /**
  * object for create workspace response
@@ -3306,7 +3419,7 @@ export interface StorageSettingsCreateResponse {
      * @type {StorageSetting}
      * @memberof StorageSettingsCreateResponse
      */
-    data: StorageSetting;
+    'data': StorageSetting;
 }
 /**
  * The path at which a given asset will be stored, and the credentials used to access that asset. Storage setting contains a pair of storage path  and storage credentials 
@@ -3319,19 +3432,19 @@ export interface StorageSettingsForTeamspaceCreateRequest {
      * @type {string}
      * @memberof StorageSettingsForTeamspaceCreateRequest
      */
-    name: string;
+    'name': string;
     /**
      * True if this is the workspace\'s or teamspace\'s default storage setting
      * @type {boolean}
      * @memberof StorageSettingsForTeamspaceCreateRequest
      */
-    is_default: boolean;
+    'is_default': boolean;
     /**
      * The path to store an asset.
      * @type {string}
      * @memberof StorageSettingsForTeamspaceCreateRequest
      */
-    path: string;
+    'path': string;
 }
 /**
  * object for get storage settings list response
@@ -3344,13 +3457,13 @@ export interface StorageSettingsListResponse {
      * @type {Array<StorageSetting>}
      * @memberof StorageSettingsListResponse
      */
-    data: Array<StorageSetting>;
+    'data': Array<StorageSetting>;
     /**
      * 
      * @type {PaginationMetadata}
      * @memberof StorageSettingsListResponse
      */
-    pagination_metadata: PaginationMetadata;
+    'pagination_metadata': PaginationMetadata;
 }
 /**
  * Delta share schema table item
@@ -3363,31 +3476,31 @@ export interface TableItem {
      * @type {string}
      * @memberof TableItem
      */
-    name: string;
+    'name': string;
     /**
      * name of schema
      * @type {string}
      * @memberof TableItem
      */
-    schema: string;
+    'schema': string;
     /**
      * name of share
      * @type {string}
      * @memberof TableItem
      */
-    share: string;
+    'share': string;
     /**
      * optional ID of share
      * @type {string}
      * @memberof TableItem
      */
-    shareId?: string;
+    'shareId'?: string;
     /**
      * optional ID of table
      * @type {string}
      * @memberof TableItem
      */
-    id?: string;
+    'id'?: string;
 }
 /**
  * A sequence of JSON strings delimited by newline.  The response contains two lines:   The first line is a JSON wrapper object containing the table Protocol object.   The second line is a JSON wrapper object containing the table Metadata object. 
@@ -3400,73 +3513,73 @@ export interface TableMetadataResponse {
      * @type {number}
      * @memberof TableMetadataResponse
      */
-    minReaderVersion: number;
+    'minReaderVersion': number;
     /**
      * Unique identifier for this table
      * @type {string}
      * @memberof TableMetadataResponse
      */
-    id: string;
+    'id': string;
     /**
      * User-provided identifier for this table
      * @type {string}
      * @memberof TableMetadataResponse
      */
-    name?: string;
+    'name'?: string;
     /**
      * User-provided description for this table
      * @type {string}
      * @memberof TableMetadataResponse
      */
-    description?: string;
+    'description'?: string;
     /**
      * 
      * @type {Format}
      * @memberof TableMetadataResponse
      */
-    format: Format;
+    'format': Format;
     /**
      * 
      * @type {Schema}
      * @memberof TableMetadataResponse
      */
-    schema?: Schema;
+    'schema'?: Schema;
     /**
      * Schema of the table. This is a serialized JSON string which can be deserialized to a Schema Object.
      * @type {string}
      * @memberof TableMetadataResponse
      */
-    schemaString: string;
+    'schemaString': string;
     /**
      * An array containing the names of columns by which the data should be partitioned. When a table doesn’t have partition columns, this will be an empty array.
      * @type {Array<string>}
      * @memberof TableMetadataResponse
      */
-    partitionColumns: Array<string>;
+    'partitionColumns': Array<string>;
     /**
      * A map containing configuration options for the table
-     * @type {{ [key: string]: object; }}
+     * @type {{ [key: string]: any; }}
      * @memberof TableMetadataResponse
      */
-    configuration?: { [key: string]: object; };
+    'configuration'?: { [key: string]: any; };
     /**
      * The table version the metadata corresponds to, returned when querying table data with a version or timestamp parameter, or cdf query with includeHistoricalMetadata set to true.
      * @type {number}
      * @memberof TableMetadataResponse
      */
-    version?: number;
+    'version'?: number;
     /**
      * The size of the table in bytes, will be returned if available in the delta log.
      * @type {number}
      * @memberof TableMetadataResponse
      */
-    size?: number;
+    'size'?: number;
     /**
      * The number of files in the table, will be returned if available in the delta log.
      * @type {number}
      * @memberof TableMetadataResponse
      */
-    numFiles?: number;
+    'numFiles'?: number;
 }
 /**
  * The teamspace object
@@ -3479,62 +3592,64 @@ export interface Teamspace {
      * @type {string}
      * @memberof Teamspace
      */
-    teamspace_id: string;
+    'teamspace_id': string;
     /**
      * The teamspace name
      * @type {string}
      * @memberof Teamspace
      */
-    name: string;
+    'name': string;
     /**
      * 
      * @type {TeamspaceType}
      * @memberof Teamspace
      */
-    space_type: TeamspaceType;
+    'space_type': TeamspaceType;
     /**
      * The teamspace icon as a UTF8-encoded Unicode symbol, e.g. 🚀
      * @type {string}
      * @memberof Teamspace
      */
-    icon?: string;
+    'icon'?: string;
     /**
      * The datetime the teamspace was created (in UTC)
      * @type {string}
      * @memberof Teamspace
      */
-    created_at: string;
+    'created_at': string;
     /**
      * 
      * @type {TeamspaceUser}
      * @memberof Teamspace
      */
-    created_by: TeamspaceUser;
+    'created_by': TeamspaceUser;
     /**
      * The teamspace description
      * @type {string}
      * @memberof Teamspace
      */
-    description?: string;
+    'description'?: string;
     /**
      * 
      * @type {TeamspaceUser}
      * @memberof Teamspace
      */
-    self?: TeamspaceUser;
+    'self'?: TeamspaceUser;
     /**
      * 
      * @type {TeamspaceVisibility}
      * @memberof Teamspace
      */
-    visibility: TeamspaceVisibility;
+    'visibility': TeamspaceVisibility;
     /**
      * The datetime the teamspace was updated (in UTC)
      * @type {string}
      * @memberof Teamspace
      */
-    updated_at?: string;
+    'updated_at'?: string;
 }
+
+
 /**
  * default credential object for a teamspace. Gives the option to use an existing credential  from parent workspace or create a new credential on teamspace level 
  * @export
@@ -3546,13 +3661,13 @@ export interface TeamspaceDefaultCredential {
      * @type {CredentialCreateRequest}
      * @memberof TeamspaceDefaultCredential
      */
-    new_credential?: CredentialCreateRequest;
+    'new_credential'?: CredentialCreateRequest;
     /**
      * Existing workspace credential name
      * @type {string}
      * @memberof TeamspaceDefaultCredential
      */
-    existing_credential_name?: string;
+    'existing_credential_name'?: string;
 }
 /**
  * The response object when requesting a single teamspace
@@ -3565,7 +3680,7 @@ export interface TeamspaceGetResponse {
      * @type {Teamspace}
      * @memberof TeamspaceGetResponse
      */
-    data: Teamspace;
+    'data': Teamspace;
 }
 /**
  * A lightweight version of the Teamspace object, containing only essential fields. 
@@ -3578,47 +3693,57 @@ export interface TeamspaceLight {
      * @type {string}
      * @memberof TeamspaceLight
      */
-    teamspace_id: string;
+    'teamspace_id': string;
     /**
      * The teamspace name
      * @type {string}
      * @memberof TeamspaceLight
      */
-    name: string;
+    'name': string;
     /**
      * 
      * @type {TeamspaceType}
      * @memberof TeamspaceLight
      */
-    space_type: TeamspaceType;
+    'space_type': TeamspaceType;
     /**
      * The teamspace icon as a UTF8-encoded Unicode symbol, e.g. 🚀
      * @type {string}
      * @memberof TeamspaceLight
      */
-    icon?: string;
+    'icon'?: string;
 }
+
+
 /**
  * The enumeration of roles a user can have within a teamspace
  * @export
  * @enum {string}
  */
-export enum TeamspaceRole {
-    Owner = 'owner',
-    Editor = 'editor',
-    Viewer = 'viewer'
-}
+
+export const TeamspaceRole = {
+    Owner: 'owner',
+    Editor: 'editor',
+    Viewer: 'viewer'
+} as const;
+
+export type TeamspaceRole = typeof TeamspaceRole[keyof typeof TeamspaceRole];
+
 
 /**
  * The enumeration of space types of a teamspace
  * @export
  * @enum {string}
  */
-export enum TeamspaceType {
-    Teamspace = 'teamspace',
-    Userspace = 'userspace',
-    Generalspace = 'generalspace'
-}
+
+export const TeamspaceType = {
+    Teamspace: 'teamspace',
+    Userspace: 'userspace',
+    Generalspace: 'generalspace'
+} as const;
+
+export type TeamspaceType = typeof TeamspaceType[keyof typeof TeamspaceType];
+
 
 /**
  * The request object for updating a teamspace
@@ -3631,26 +3756,28 @@ export interface TeamspaceUpdateRequest {
      * @type {string}
      * @memberof TeamspaceUpdateRequest
      */
-    name?: string;
+    'name'?: string;
     /**
      * The teamspace description
      * @type {string}
      * @memberof TeamspaceUpdateRequest
      */
-    description?: string;
+    'description'?: string;
     /**
      * The teamspace icon as a UTF8-encoded Unicode symbol, e.g. 🚀
      * @type {string}
      * @memberof TeamspaceUpdateRequest
      */
-    icon?: string;
+    'icon'?: string;
     /**
      * 
      * @type {TeamspaceVisibility}
      * @memberof TeamspaceUpdateRequest
      */
-    visibility_level?: TeamspaceVisibility;
+    'visibility_level'?: TeamspaceVisibility;
 }
+
+
 /**
  * The teamspace user object
  * @export
@@ -3662,56 +3789,58 @@ export interface TeamspaceUser {
      * @type {string}
      * @memberof TeamspaceUser
      */
-    user_id: string;
+    'user_id': string;
     /**
      * The user\'s username
      * @type {string}
      * @memberof TeamspaceUser
      */
-    username: string;
+    'username': string;
     /**
      * The user\'s display name
      * @type {string}
      * @memberof TeamspaceUser
      */
-    display_name: string;
+    'display_name': string;
     /**
      * The user\'s email
      * @type {string}
      * @memberof TeamspaceUser
      */
-    email: string;
+    'email': string;
     /**
      * The image\'s ID
      * @type {string}
      * @memberof TeamspaceUser
      */
-    image_id?: string;
+    'image_id'?: string;
     /**
      * 
      * @type {TeamspaceRole}
      * @memberof TeamspaceUser
      */
-    role: TeamspaceRole;
+    'role': TeamspaceRole;
     /**
      * The user\'s ID
      * @type {string}
      * @memberof TeamspaceUser
      */
-    added_by: string;
+    'added_by': string;
     /**
      * The datetime the teamspace user was created (in UTC)
      * @type {string}
      * @memberof TeamspaceUser
      */
-    created_at: string;
+    'created_at': string;
     /**
      * The datetime the teamspace user was deleted (in UTC)
      * @type {string}
      * @memberof TeamspaceUser
      */
-    deleted_at?: string;
+    'deleted_at'?: string;
 }
+
+
 /**
  * The response object when requesting a single teamspace user
  * @export
@@ -3723,7 +3852,7 @@ export interface TeamspaceUserGetResponse {
      * @type {TeamspaceUser}
      * @memberof TeamspaceUserGetResponse
      */
-    data: TeamspaceUser;
+    'data': TeamspaceUser;
 }
 /**
  * The request object for updating a single teamspace user
@@ -3736,8 +3865,10 @@ export interface TeamspaceUserUpdateRequest {
      * @type {TeamspaceRole}
      * @memberof TeamspaceUserUpdateRequest
      */
-    role: TeamspaceRole;
+    'role': TeamspaceRole;
 }
+
+
 /**
  * The teamspace user update object
  * @export
@@ -3749,14 +3880,16 @@ export interface TeamspaceUsersBulkUpdateRequestInner {
      * @type {string}
      * @memberof TeamspaceUsersBulkUpdateRequestInner
      */
-    user_id: string;
+    'user_id': string;
     /**
      * 
      * @type {TeamspaceRole}
      * @memberof TeamspaceUsersBulkUpdateRequestInner
      */
-    role: TeamspaceRole;
+    'role': TeamspaceRole;
 }
+
+
 /**
  * The teamspace user that should be created
  * @export
@@ -3768,14 +3901,16 @@ export interface TeamspaceUsersCreateRequestInner {
      * @type {string}
      * @memberof TeamspaceUsersCreateRequestInner
      */
-    user_id: string;
+    'user_id': string;
     /**
      * 
      * @type {TeamspaceRole}
      * @memberof TeamspaceUsersCreateRequestInner
      */
-    role: TeamspaceRole;
+    'role': TeamspaceRole;
 }
+
+
 /**
  * The response object when creating multiple teamspace users
  * @export
@@ -3787,7 +3922,7 @@ export interface TeamspaceUsersCreateResponse {
      * @type {Array<TeamspaceUser>}
      * @memberof TeamspaceUsersCreateResponse
      */
-    data: Array<TeamspaceUser>;
+    'data': Array<TeamspaceUser>;
 }
 /**
  * The response object when joining a teamspace
@@ -3800,7 +3935,7 @@ export interface TeamspaceUsersJoinResponse {
      * @type {TeamspaceUser}
      * @memberof TeamspaceUsersJoinResponse
      */
-    data: TeamspaceUser;
+    'data': TeamspaceUser;
 }
 /**
  * The response object when requesting multiple teamspace users
@@ -3813,17 +3948,21 @@ export interface TeamspaceUsersListResponse {
      * @type {Array<TeamspaceUser>}
      * @memberof TeamspaceUsersListResponse
      */
-    data: Array<TeamspaceUser>;
+    'data': Array<TeamspaceUser>;
 }
 /**
  * The enumeration of visibility levels for a teamspace
  * @export
  * @enum {string}
  */
-export enum TeamspaceVisibility {
-    Private = 'private',
-    Public = 'public'
-}
+
+export const TeamspaceVisibility = {
+    Private: 'private',
+    Public: 'public'
+} as const;
+
+export type TeamspaceVisibility = typeof TeamspaceVisibility[keyof typeof TeamspaceVisibility];
+
 
 /**
  * The request object for creating a teamspace
@@ -3836,38 +3975,40 @@ export interface TeamspacesCreateRequest {
      * @type {string}
      * @memberof TeamspacesCreateRequest
      */
-    name: string;
+    'name': string;
     /**
      * The teamspace description
      * @type {string}
      * @memberof TeamspacesCreateRequest
      */
-    description?: string;
+    'description'?: string;
     /**
      * The teamspace icon as a UTF8-encoded Unicode symbol, e.g. 🚀
      * @type {string}
      * @memberof TeamspacesCreateRequest
      */
-    icon?: string;
+    'icon'?: string;
     /**
      * 
      * @type {TeamspaceVisibility}
      * @memberof TeamspacesCreateRequest
      */
-    visibility: TeamspaceVisibility;
+    'visibility': TeamspaceVisibility;
     /**
      * 
      * @type {TeamspaceDefaultCredential}
      * @memberof TeamspacesCreateRequest
      */
-    default_credential?: TeamspaceDefaultCredential;
+    'default_credential'?: TeamspaceDefaultCredential;
     /**
      * 
      * @type {StorageSettingsForTeamspaceCreateRequest}
      * @memberof TeamspacesCreateRequest
      */
-    default_storage_setting?: StorageSettingsForTeamspaceCreateRequest;
+    'default_storage_setting'?: StorageSettingsForTeamspaceCreateRequest;
 }
+
+
 /**
  * The response object when creating one or more teamspaces
  * @export
@@ -3879,7 +4020,7 @@ export interface TeamspacesCreateResponse {
      * @type {Teamspace}
      * @memberof TeamspacesCreateResponse
      */
-    data: Teamspace;
+    'data': Teamspace;
 }
 /**
  * The response object when requesting multiple teamspaces
@@ -3892,7 +4033,7 @@ export interface TeamspacesListResponse {
      * @type {Array<Teamspace>}
      * @memberof TeamspacesListResponse
      */
-    data: Array<Teamspace>;
+    'data': Array<Teamspace>;
 }
 /**
  * Model representing TileDB version
@@ -3905,19 +4046,19 @@ export interface TileDBVersion {
      * @type {number}
      * @memberof TileDBVersion
      */
-    major: number;
+    'major': number;
     /**
      * TileDB core minor version
      * @type {number}
      * @memberof TileDBVersion
      */
-    minor: number;
+    'minor': number;
     /**
      * TileDB core patch version
      * @type {number}
      * @memberof TileDBVersion
      */
-    patch: number;
+    'patch': number;
 }
 /**
  * The token information itself. Exactly one sub-field may be set. The names match those in the CloudProvider enum
@@ -3930,13 +4071,13 @@ export interface Token {
      * @type {AzureToken}
      * @memberof Token
      */
-    azure?: AzureToken;
+    'azure'?: AzureToken;
     /**
      * 
      * @type {GCPServiceAccountKey}
      * @memberof Token
      */
-    gcp?: GCPServiceAccountKey;
+    'gcp'?: GCPServiceAccountKey;
 }
 /**
  * The request object for creating a token
@@ -3949,26 +4090,28 @@ export interface TokenCreateRequest {
      * @type {string}
      * @memberof TokenCreateRequest
      */
-    name?: string;
+    'name'?: string;
     /**
      * 
      * @type {TokenScope}
      * @memberof TokenCreateRequest
      */
-    scope: TokenScope;
+    'scope': TokenScope;
     /**
      * The workspace ID or Name that the token will be scoped for. This must be provided if the token is meant to be an API token (instead of a session token). 
      * @type {string}
      * @memberof TokenCreateRequest
      */
-    workspace_id?: string;
+    'workspace_id'?: string;
     /**
      * The expiration date and time of the token. If no expiration date is provided, the server will set the default expiration date. 
      * @type {string}
      * @memberof TokenCreateRequest
      */
-    expires_at?: string;
+    'expires_at'?: string;
 }
+
+
 /**
  * The response object when creating a token
  * @export
@@ -3980,7 +4123,7 @@ export interface TokenCreateResponse {
      * @type {APIToken}
      * @memberof TokenCreateResponse
      */
-    data: APIToken;
+    'data': APIToken;
 }
 /**
  * The response object when requesting all tokens
@@ -3993,36 +4136,40 @@ export interface TokenListResponse {
      * @type {Array<APIToken>}
      * @memberof TokenListResponse
      */
-    data: Array<APIToken>;
+    'data': Array<APIToken>;
     /**
      * 
      * @type {PaginationMetadata}
      * @memberof TokenListResponse
      */
-    pagination_metadata?: PaginationMetadata;
+    'pagination_metadata'?: PaginationMetadata;
 }
 /**
  * The scopes a token can have
  * @export
  * @enum {string}
  */
-export enum TokenScope {
-    Star = '*',
-    PasswordReset = 'password_reset',
-    ConfirmEmail = 'confirm_email',
-    Userread = 'user:read',
-    UserreadWrite = 'user:read-write',
-    Useradmin = 'user:admin',
-    Arrayread = 'array:read',
-    ArrayreadWrite = 'array:read-write',
-    Arrayadmin = 'array:admin',
-    Organizationread = 'organization:read',
-    OrganizationreadWrite = 'organization:read-write',
-    Organizationadmin = 'organization:admin',
-    Groupread = 'group:read',
-    GroupreadWrite = 'group:read-write',
-    Groupadmin = 'group:admin'
-}
+
+export const TokenScope = {
+    Star: '*',
+    PasswordReset: 'password_reset',
+    ConfirmEmail: 'confirm_email',
+    Userread: 'user:read',
+    UserreadWrite: 'user:read-write',
+    Useradmin: 'user:admin',
+    Arrayread: 'array:read',
+    ArrayreadWrite: 'array:read-write',
+    Arrayadmin: 'array:admin',
+    Organizationread: 'organization:read',
+    OrganizationreadWrite: 'organization:read-write',
+    Organizationadmin: 'organization:admin',
+    Groupread: 'group:read',
+    GroupreadWrite: 'group:read-write',
+    Groupadmin: 'group:admin'
+} as const;
+
+export type TokenScope = typeof TokenScope[keyof typeof TokenScope];
+
 
 /**
  * object for a registered user
@@ -4035,68 +4182,70 @@ export interface User {
      * @type {string}
      * @memberof User
      */
-    id: string;
+    'id': string;
     /**
      * display name of the user
      * @type {string}
      * @memberof User
      */
-    display_name: string;
+    'display_name': string;
     /**
      * The image\'s ID
      * @type {string}
      * @memberof User
      */
-    image_id?: string;
+    'image_id'?: string;
     /**
      * user email
      * @type {string}
      * @memberof User
      */
-    email: string;
+    'email': string;
     /**
      * if a user has validated their email
      * @type {boolean}
      * @memberof User
      */
-    is_valid_email?: boolean;
+    'is_valid_email'?: boolean;
     /**
      * 
      * @type {UserRole}
      * @memberof User
      */
-    role: UserRole;
+    'role': UserRole;
     /**
      * user email
      * @type {string}
      * @memberof User
      */
-    username: string;
+    'username': string;
     /**
      * user timezone
      * @type {string}
      * @memberof User
      */
-    timezone: string;
+    'timezone': string;
     /**
      * Datetime the user was created in UTC
      * @type {string}
      * @memberof User
      */
-    created_at: string;
+    'created_at': string;
     /**
      * Datetime the user was updated in UTC
      * @type {string}
      * @memberof User
      */
-    updated_at?: string;
+    'updated_at'?: string;
     /**
      * Datetime the user was deleted in UTC
      * @type {string}
      * @memberof User
      */
-    deleted_at?: string;
+    'deleted_at'?: string;
 }
+
+
 /**
  * The academy questionnaire user\'s answer
  * @export
@@ -4108,13 +4257,13 @@ export interface UserAnswer {
      * @type {string}
      * @memberof UserAnswer
      */
-    question_id: string;
+    'question_id': string;
     /**
      * ID of the answer in the questionnaire
      * @type {string}
      * @memberof UserAnswer
      */
-    answer_id: string;
+    'answer_id': string;
 }
 /**
  * object metadata for a user that will be created
@@ -4127,37 +4276,37 @@ export interface UserCreateRequest {
      * @type {string}
      * @memberof UserCreateRequest
      */
-    display_name?: string;
+    'display_name'?: string;
     /**
      * user email
      * @type {string}
      * @memberof UserCreateRequest
      */
-    email: string;
+    'email': string;
     /**
      * username that can be logged in with
      * @type {string}
      * @memberof UserCreateRequest
      */
-    username: string;
+    'username': string;
     /**
      * password for the user
      * @type {string}
      * @memberof UserCreateRequest
      */
-    password: string;
+    'password': string;
     /**
      * user timezone
      * @type {string}
      * @memberof UserCreateRequest
      */
-    timezone?: string;
+    'timezone'?: string;
     /**
      * Image data in the form data:image/png;base64,iVBORw0KGgoAAAA
      * @type {string}
      * @memberof UserCreateRequest
      */
-    image?: string;
+    'image'?: string;
 }
 /**
  * object for create user response
@@ -4170,7 +4319,7 @@ export interface UserCreateResponse {
      * @type {User}
      * @memberof UserCreateResponse
      */
-    data: User;
+    'data': User;
 }
 /**
  * object for get user response
@@ -4183,18 +4332,22 @@ export interface UserGetResponse {
      * @type {User}
      * @memberof UserGetResponse
      */
-    data: User;
+    'data': User;
 }
 /**
  * Enumeration of possible roles a user can have within a deployment
  * @export
  * @enum {string}
  */
-export enum UserRole {
-    Owner = 'owner',
-    Admin = 'admin',
-    Member = 'member'
-}
+
+export const UserRole = {
+    Owner: 'owner',
+    Admin: 'admin',
+    Member: 'member'
+} as const;
+
+export type UserRole = typeof UserRole[keyof typeof UserRole];
+
 
 /**
  * object for get self user response
@@ -4207,7 +4360,7 @@ export interface UserSelfResponse {
      * @type {UserSelfResponseData}
      * @memberof UserSelfResponse
      */
-    data: UserSelfResponseData;
+    'data': UserSelfResponseData;
 }
 /**
  * 
@@ -4220,13 +4373,13 @@ export interface UserSelfResponseData {
      * @type {User}
      * @memberof UserSelfResponseData
      */
-    user: User;
+    'user': User;
     /**
      * 
      * @type {Array<UserSelfWorkspace>}
      * @memberof UserSelfResponseData
      */
-    workspaces: Array<UserSelfWorkspace>;
+    'workspaces': Array<UserSelfWorkspace>;
 }
 /**
  * list of workspaces a user is a part of
@@ -4239,49 +4392,49 @@ export interface UserSelfWorkspace {
      * @type {string}
      * @memberof UserSelfWorkspace
      */
-    workspace_id: string;
+    'workspace_id': string;
     /**
      * workspace name
      * @type {string}
      * @memberof UserSelfWorkspace
      */
-    name: string;
+    'name': string;
     /**
      * 
      * @type {WorkspaceUser}
      * @memberof UserSelfWorkspace
      */
-    created_by: WorkspaceUser;
+    'created_by': WorkspaceUser;
     /**
      * 
      * @type {WorkspaceUser}
      * @memberof UserSelfWorkspace
      */
-    self: WorkspaceUser;
+    'self': WorkspaceUser;
     /**
      * Workspace description
      * @type {string}
      * @memberof UserSelfWorkspace
      */
-    description?: string;
+    'description'?: string;
     /**
      * Datetime workspace was created in UTC
      * @type {string}
      * @memberof UserSelfWorkspace
      */
-    created_at: string;
+    'created_at': string;
     /**
      * Datetime workspace was updated in UTC
      * @type {string}
      * @memberof UserSelfWorkspace
      */
-    updated_at?: string;
+    'updated_at'?: string;
     /**
      * The image\'s ID
      * @type {string}
      * @memberof UserSelfWorkspace
      */
-    image_id?: string;
+    'image_id'?: string;
 }
 /**
  * object metadata for updates made to a user
@@ -4294,25 +4447,25 @@ export interface UserUpdateRequest {
      * @type {string}
      * @memberof UserUpdateRequest
      */
-    display_name?: string;
+    'display_name'?: string;
     /**
      * user email
      * @type {string}
      * @memberof UserUpdateRequest
      */
-    email?: string;
+    'email'?: string;
     /**
      * user timezone
      * @type {string}
      * @memberof UserUpdateRequest
      */
-    timezone?: string;
+    'timezone'?: string;
     /**
      * Image data in the form data:image/png;base64,iVBORw0KGgoAAAA
      * @type {string}
      * @memberof UserUpdateRequest
      */
-    image?: string;
+    'image'?: string;
 }
 /**
  * The userspace object
@@ -4325,37 +4478,37 @@ export interface Userspace {
      * @type {string}
      * @memberof Userspace
      */
-    userspace_id: string;
+    'userspace_id': string;
     /**
      * The userspace name
      * @type {string}
      * @memberof Userspace
      */
-    name: string;
+    'name': string;
     /**
      * The userspace icon as a UTF8-encoded Unicode symbol, e.g. 🚀
      * @type {string}
      * @memberof Userspace
      */
-    icon?: string;
+    'icon'?: string;
     /**
      * The datetime the userspace was created (in UTC)
      * @type {string}
      * @memberof Userspace
      */
-    created_at: string;
+    'created_at': string;
     /**
      * The userspace description
      * @type {string}
      * @memberof Userspace
      */
-    description?: string;
+    'description'?: string;
     /**
      * The datetime the userspace was updated (in UTC)
      * @type {string}
      * @memberof Userspace
      */
-    updated_at?: string;
+    'updated_at'?: string;
 }
 /**
  * The response object when requesting a userspace
@@ -4368,7 +4521,7 @@ export interface UserspaceGetResponse {
      * @type {Userspace}
      * @memberof UserspaceGetResponse
      */
-    data: Userspace;
+    'data': Userspace;
 }
 /**
  * The request object for updating a userspace
@@ -4381,19 +4534,19 @@ export interface UserspaceUpdateRequest {
      * @type {string}
      * @memberof UserspaceUpdateRequest
      */
-    name?: string;
+    'name'?: string;
     /**
      * The userspace description
      * @type {string}
      * @memberof UserspaceUpdateRequest
      */
-    description?: string;
+    'description'?: string;
     /**
      * The userspace icon as a UTF8-encoded Unicode symbol, e.g. 🚀
      * @type {string}
      * @memberof UserspaceUpdateRequest
      */
-    icon?: string;
+    'icon'?: string;
 }
 /**
  * Object containing data about a handled error by REST server
@@ -4406,7 +4559,7 @@ export interface ValidationError {
      * @type {Array<ValidationErrorField>}
      * @memberof ValidationError
      */
-    fields: Array<ValidationErrorField>;
+    'fields': Array<ValidationErrorField>;
 }
 /**
  * Object containing data about a handled error by REST server
@@ -4419,13 +4572,13 @@ export interface ValidationErrorField {
      * @type {string}
      * @memberof ValidationErrorField
      */
-    field: string;
+    'field': string;
     /**
      * A friendly message about the validation error
      * @type {string}
      * @memberof ValidationErrorField
      */
-    message: string;
+    'message': string;
 }
 /**
  * Various version numbers for the server
@@ -4438,43 +4591,43 @@ export interface Versions {
      * @type {string}
      * @memberof Versions
      */
-    go_version: string;
+    'go_version': string;
     /**
      * The version of TileDB used by the server
      * @type {string}
      * @memberof Versions
      */
-    tiledb_version: string;
+    'tiledb_version': string;
     /**
      * The UDF images that the server supports
      * @type {Array<string>}
      * @memberof Versions
      */
-    udf_images_version: Array<string>;
+    'udf_images_version': Array<string>;
     /**
      * The name of the version control system (vcs) used to develop the server 
      * @type {string}
      * @memberof Versions
      */
-    vcs_name?: string;
+    'vcs_name'?: string;
     /**
      * The vcs revision of the server
      * @type {string}
      * @memberof Versions
      */
-    vcs_revision?: string;
+    'vcs_revision'?: string;
     /**
      * The modification time associated with the vcs revision
      * @type {string}
      * @memberof Versions
      */
-    vcs_time?: string;
+    'vcs_time'?: string;
     /**
      * The build ID of the server. If set, this will be either the branch name or the git tag. 
      * @type {string}
      * @memberof Versions
      */
-    build_id?: string;
+    'build_id'?: string;
 }
 /**
  * Object for versions response
@@ -4487,7 +4640,7 @@ export interface VersionsResponse {
      * @type {Versions}
      * @memberof VersionsResponse
      */
-    data: Versions;
+    'data': Versions;
 }
 /**
  * The response object of the GetWorkspace endpoint
@@ -4500,49 +4653,49 @@ export interface Workspace {
      * @type {string}
      * @memberof Workspace
      */
-    workspace_id: string;
+    'workspace_id': string;
     /**
      * The image\'s ID
      * @type {string}
      * @memberof Workspace
      */
-    image_id?: string;
+    'image_id'?: string;
     /**
      * workspace name
      * @type {string}
      * @memberof Workspace
      */
-    name: string;
+    'name': string;
     /**
      * 
      * @type {WorkspaceUser}
      * @memberof Workspace
      */
-    created_by: WorkspaceUser;
+    'created_by': WorkspaceUser;
     /**
      * Workspace description
      * @type {string}
      * @memberof Workspace
      */
-    description?: string;
+    'description'?: string;
     /**
      * 
      * @type {WorkspaceUser}
      * @memberof Workspace
      */
-    self: WorkspaceUser;
+    'self': WorkspaceUser;
     /**
      * Datetime workspace was created in UTC
      * @type {string}
      * @memberof Workspace
      */
-    created_at: string;
+    'created_at': string;
     /**
      * Datetime workspace was updated in UTC
      * @type {string}
      * @memberof Workspace
      */
-    updated_at?: string;
+    'updated_at'?: string;
 }
 /**
  * object metadata for a workspace that will be created
@@ -4555,31 +4708,31 @@ export interface WorkspaceCreateRequest {
      * @type {string}
      * @memberof WorkspaceCreateRequest
      */
-    name: string;
+    'name': string;
     /**
      * Workspace description
      * @type {string}
      * @memberof WorkspaceCreateRequest
      */
-    description?: string;
+    'description'?: string;
     /**
      * Image data in the form data:image/png;base64,iVBORw0KGgoAAAA
      * @type {string}
      * @memberof WorkspaceCreateRequest
      */
-    image?: string;
+    'image'?: string;
     /**
      * 
      * @type {CredentialCreateRequest}
      * @memberof WorkspaceCreateRequest
      */
-    default_credential: CredentialCreateRequest;
+    'default_credential': CredentialCreateRequest;
     /**
      * 
      * @type {StorageSettingsCreateRequest}
      * @memberof WorkspaceCreateRequest
      */
-    default_storage_setting: StorageSettingsCreateRequest;
+    'default_storage_setting': StorageSettingsCreateRequest;
 }
 /**
  * object for create workspace response
@@ -4592,7 +4745,7 @@ export interface WorkspaceCreateResponse {
      * @type {Workspace}
      * @memberof WorkspaceCreateResponse
      */
-    data: Workspace;
+    'data': Workspace;
 }
 /**
  * object for get workspace response
@@ -4605,7 +4758,7 @@ export interface WorkspaceGetResponse {
      * @type {Workspace}
      * @memberof WorkspaceGetResponse
      */
-    data: Workspace;
+    'data': Workspace;
 }
 /**
  * A lightweight version of the Workspace object, containing only essential fields. 
@@ -4618,30 +4771,34 @@ export interface WorkspaceLight {
      * @type {string}
      * @memberof WorkspaceLight
      */
-    workspace_id: string;
+    'workspace_id': string;
     /**
      * The image\'s ID
      * @type {string}
      * @memberof WorkspaceLight
      */
-    image_id?: string;
+    'image_id'?: string;
     /**
      * workspace name
      * @type {string}
      * @memberof WorkspaceLight
      */
-    name: string;
+    'name': string;
 }
 /**
  * The enumeration of roles a user can have within a workspace
  * @export
  * @enum {string}
  */
-export enum WorkspaceRole {
-    Owner = 'owner',
-    Admin = 'admin',
-    Member = 'member'
-}
+
+export const WorkspaceRole = {
+    Owner: 'owner',
+    Admin: 'admin',
+    Member: 'member'
+} as const;
+
+export type WorkspaceRole = typeof WorkspaceRole[keyof typeof WorkspaceRole];
+
 
 /**
  * The workspace update object of the UpdateWorkspace endpoint
@@ -4654,19 +4811,19 @@ export interface WorkspaceUpdateRequest {
      * @type {string}
      * @memberof WorkspaceUpdateRequest
      */
-    name?: string;
+    'name'?: string;
     /**
      * Image data in the form data:image/png;base64,iVBORw0KGgoAAAA
      * @type {string}
      * @memberof WorkspaceUpdateRequest
      */
-    image?: string;
+    'image'?: string;
     /**
      * Workspace description
      * @type {string}
      * @memberof WorkspaceUpdateRequest
      */
-    description?: string;
+    'description'?: string;
 }
 /**
  * The workspace user object
@@ -4679,56 +4836,58 @@ export interface WorkspaceUser {
      * @type {string}
      * @memberof WorkspaceUser
      */
-    user_id: string;
+    'user_id': string;
     /**
      * The user\'s username
      * @type {string}
      * @memberof WorkspaceUser
      */
-    username: string;
+    'username': string;
     /**
      * The user\'s display name
      * @type {string}
      * @memberof WorkspaceUser
      */
-    display_name: string;
+    'display_name': string;
     /**
      * The user\'s email
      * @type {string}
      * @memberof WorkspaceUser
      */
-    email: string;
+    'email': string;
     /**
      * The image\'s ID
      * @type {string}
      * @memberof WorkspaceUser
      */
-    image_id?: string;
+    'image_id'?: string;
     /**
      * 
      * @type {WorkspaceRole}
      * @memberof WorkspaceUser
      */
-    role: WorkspaceRole;
+    'role': WorkspaceRole;
     /**
      * The user\'s ID
      * @type {string}
      * @memberof WorkspaceUser
      */
-    added_by: string;
+    'added_by': string;
     /**
      * Datetime workspace user was created in UTC
      * @type {string}
      * @memberof WorkspaceUser
      */
-    created_at: string;
+    'created_at': string;
     /**
      * Datetime workspace user was deleted in UTC
      * @type {string}
      * @memberof WorkspaceUser
      */
-    deleted_at?: string;
+    'deleted_at'?: string;
 }
+
+
 /**
  * The response object when requesting a single workspace user
  * @export
@@ -4740,7 +4899,7 @@ export interface WorkspaceUserGetResponse {
      * @type {WorkspaceUser}
      * @memberof WorkspaceUserGetResponse
      */
-    data: WorkspaceUser;
+    'data': WorkspaceUser;
 }
 /**
  * The request object for updating a single workspace users
@@ -4753,8 +4912,10 @@ export interface WorkspaceUserUpdateRequest {
      * @type {WorkspaceRole}
      * @memberof WorkspaceUserUpdateRequest
      */
-    role: WorkspaceRole;
+    'role': WorkspaceRole;
 }
+
+
 /**
  * The workspace user update object
  * @export
@@ -4766,14 +4927,16 @@ export interface WorkspaceUsersBulkUpdateRequestInner {
      * @type {string}
      * @memberof WorkspaceUsersBulkUpdateRequestInner
      */
-    user_id: string;
+    'user_id': string;
     /**
      * 
      * @type {WorkspaceRole}
      * @memberof WorkspaceUsersBulkUpdateRequestInner
      */
-    role: WorkspaceRole;
+    'role': WorkspaceRole;
 }
+
+
 /**
  * The workspace user that should be created
  * @export
@@ -4785,14 +4948,16 @@ export interface WorkspaceUsersCreateRequestInner {
      * @type {string}
      * @memberof WorkspaceUsersCreateRequestInner
      */
-    user_id: string;
+    'user_id': string;
     /**
      * 
      * @type {WorkspaceRole}
      * @memberof WorkspaceUsersCreateRequestInner
      */
-    role: WorkspaceRole;
+    'role': WorkspaceRole;
 }
+
+
 /**
  * The response object when creating multiple workspace users
  * @export
@@ -4804,7 +4969,7 @@ export interface WorkspaceUsersCreateResponse {
      * @type {Array<WorkspaceUser>}
      * @memberof WorkspaceUsersCreateResponse
      */
-    data: Array<WorkspaceUser>;
+    'data': Array<WorkspaceUser>;
 }
 /**
  * The response object when requesting multiple workspace users
@@ -4817,13 +4982,13 @@ export interface WorkspaceUsersListResponse {
      * @type {Array<WorkspaceUser>}
      * @memberof WorkspaceUsersListResponse
      */
-    data: Array<WorkspaceUser>;
+    'data': Array<WorkspaceUser>;
     /**
      * 
      * @type {PaginationMetadata}
      * @memberof WorkspaceUsersListResponse
      */
-    pagination_metadata?: PaginationMetadata;
+    'pagination_metadata'?: PaginationMetadata;
 }
 
 
@@ -4852,16 +5017,16 @@ export const AcademyApiAxiosParamCreator = function (configuration?: Configurati
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
 
     
@@ -4901,16 +5066,16 @@ export const AcademyApiAxiosParamCreator = function (configuration?: Configurati
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
 
     
@@ -4949,16 +5114,16 @@ export const AcademyApiAxiosParamCreator = function (configuration?: Configurati
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
 
     
@@ -5004,16 +5169,16 @@ export const AcademyApiAxiosParamCreator = function (configuration?: Configurati
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
 
     
@@ -5242,16 +5407,16 @@ export const ActivitiesApiAxiosParamCreator = function (configuration?: Configur
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
             if (page !== undefined) {
                 localVarQueryParameter['page'] = page;
@@ -5350,16 +5515,16 @@ export const ActivitiesApiAxiosParamCreator = function (configuration?: Configur
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
             if (page !== undefined) {
                 localVarQueryParameter['page'] = page;
@@ -5630,16 +5795,16 @@ export const AssetsApiAxiosParamCreator = function (configuration?: Configuratio
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
             if (deleteAssets !== undefined) {
                 localVarQueryParameter['delete-assets'] = deleteAssets;
@@ -5696,16 +5861,16 @@ export const AssetsApiAxiosParamCreator = function (configuration?: Configuratio
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
             if (startTimestamp !== undefined) {
                 localVarQueryParameter['start_timestamp'] = startTimestamp;
@@ -5765,16 +5930,16 @@ export const AssetsApiAxiosParamCreator = function (configuration?: Configuratio
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
 
     
@@ -5826,16 +5991,16 @@ export const AssetsApiAxiosParamCreator = function (configuration?: Configuratio
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
             if (startTimestamp !== undefined) {
                 localVarQueryParameter['start_timestamp'] = startTimestamp;
@@ -5899,16 +6064,16 @@ export const AssetsApiAxiosParamCreator = function (configuration?: Configuratio
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
 
     
@@ -5956,16 +6121,16 @@ export const AssetsApiAxiosParamCreator = function (configuration?: Configuratio
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
 
     
@@ -6020,16 +6185,16 @@ export const AssetsApiAxiosParamCreator = function (configuration?: Configuratio
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
             if (page !== undefined) {
                 localVarQueryParameter['page'] = page;
@@ -6104,16 +6269,16 @@ export const AssetsApiAxiosParamCreator = function (configuration?: Configuratio
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
 
     
@@ -6163,16 +6328,16 @@ export const AssetsApiAxiosParamCreator = function (configuration?: Configuratio
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
 
     
@@ -6226,16 +6391,16 @@ export const AssetsApiAxiosParamCreator = function (configuration?: Configuratio
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
 
     
@@ -6291,16 +6456,16 @@ export const AssetsApiAxiosParamCreator = function (configuration?: Configuratio
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
             if (startTimestamp !== undefined) {
                 localVarQueryParameter['start_timestamp'] = startTimestamp;
@@ -6362,16 +6527,16 @@ export const AssetsApiAxiosParamCreator = function (configuration?: Configuratio
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
 
     
@@ -6977,16 +7142,16 @@ export const CapabilitiesApiAxiosParamCreator = function (configuration?: Config
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
 
     
@@ -7099,16 +7264,16 @@ export const CredentialsApiAxiosParamCreator = function (configuration?: Configu
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
             if (teamspaceId !== undefined) {
                 localVarQueryParameter['teamspace_id'] = teamspaceId;
@@ -7160,16 +7325,16 @@ export const CredentialsApiAxiosParamCreator = function (configuration?: Configu
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
             if (teamspaceId !== undefined) {
                 localVarQueryParameter['teamspace_id'] = teamspaceId;
@@ -7218,16 +7383,16 @@ export const CredentialsApiAxiosParamCreator = function (configuration?: Configu
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
             if (teamspaceId !== undefined) {
                 localVarQueryParameter['teamspace_id'] = teamspaceId;
@@ -7276,16 +7441,16 @@ export const CredentialsApiAxiosParamCreator = function (configuration?: Configu
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
             if (teamspaceId !== undefined) {
                 localVarQueryParameter['teamspace_id'] = teamspaceId;
@@ -7353,16 +7518,16 @@ export const CredentialsApiAxiosParamCreator = function (configuration?: Configu
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
             if (teamspaceId !== undefined) {
                 localVarQueryParameter['teamspace_id'] = teamspaceId;
@@ -7408,16 +7573,16 @@ export const CredentialsApiAxiosParamCreator = function (configuration?: Configu
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
 
     
@@ -7711,6 +7876,175 @@ export class CredentialsApi extends BaseAPI {
 
 
 /**
+ * DefaultApi - axios parameter creator
+ * @export
+ */
+export const DefaultApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * Search Assets
+         * @summary Search Assets
+         * @param {string} workspace The workspace name or id
+         * @param {string} [q] query text
+         * @param {string} [path] asset path prefix
+         * @param {number} [limit] maximum number of results to return
+         * @param {Array<string>} [teamspace] teamspace_id, limit results to assets of one or more teamspaces
+         * @param {Array<string>} [filters] subexpressions for matching asset system fields {key}{op}{value} op one of: &lt; &gt; &lt;&#x3D; &gt;&#x3D; &#x3D; !&#x3D; 
+         * @param {Array<string>} [metadata] subexpressions for matching user metadata {key}{op}{value} op one of: &lt; &gt; &lt;&#x3D; &gt;&#x3D; &#x3D; !&#x3D; 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        searchAssets: async (workspace: string, q?: string, path?: string, limit?: number, teamspace?: Array<string>, filters?: Array<string>, metadata?: Array<string>, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'workspace' is not null or undefined
+            assertParamExists('searchAssets', 'workspace', workspace)
+            const localVarPath = `/assets/search/{workspace}`
+                .replace(`{${"workspace"}}`, encodeURIComponent(String(workspace)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+
+            // authentication BasicAuth required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+
+            if (q !== undefined) {
+                localVarQueryParameter['q'] = q;
+            }
+
+            if (path !== undefined) {
+                localVarQueryParameter['path'] = path;
+            }
+
+            if (limit !== undefined) {
+                localVarQueryParameter['limit'] = limit;
+            }
+
+            if (teamspace) {
+                localVarQueryParameter['teamspace'] = teamspace;
+            }
+
+            if (filters) {
+                localVarQueryParameter['filters'] = filters;
+            }
+
+            if (metadata) {
+                localVarQueryParameter['metadata'] = metadata;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (localVarRequestOptions.method === 'GET' && localVarRequestOptions.headers.Accept === 'application/capnp') {
+                // for application/capnp mime type requests default responseType to 'arraybuffer'
+                localVarRequestOptions.responseType = options.responseType || 'arraybuffer';
+            }
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * DefaultApi - functional programming interface
+ * @export
+ */
+export const DefaultApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = DefaultApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * Search Assets
+         * @summary Search Assets
+         * @param {string} workspace The workspace name or id
+         * @param {string} [q] query text
+         * @param {string} [path] asset path prefix
+         * @param {number} [limit] maximum number of results to return
+         * @param {Array<string>} [teamspace] teamspace_id, limit results to assets of one or more teamspaces
+         * @param {Array<string>} [filters] subexpressions for matching asset system fields {key}{op}{value} op one of: &lt; &gt; &lt;&#x3D; &gt;&#x3D; &#x3D; !&#x3D; 
+         * @param {Array<string>} [metadata] subexpressions for matching user metadata {key}{op}{value} op one of: &lt; &gt; &lt;&#x3D; &gt;&#x3D; &#x3D; !&#x3D; 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async searchAssets(workspace: string, q?: string, path?: string, limit?: number, teamspace?: Array<string>, filters?: Array<string>, metadata?: Array<string>, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AssetListResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.searchAssets(workspace, q, path, limit, teamspace, filters, metadata, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+    }
+};
+
+/**
+ * DefaultApi - factory interface
+ * @export
+ */
+export const DefaultApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = DefaultApiFp(configuration)
+    return {
+        /**
+         * Search Assets
+         * @summary Search Assets
+         * @param {string} workspace The workspace name or id
+         * @param {string} [q] query text
+         * @param {string} [path] asset path prefix
+         * @param {number} [limit] maximum number of results to return
+         * @param {Array<string>} [teamspace] teamspace_id, limit results to assets of one or more teamspaces
+         * @param {Array<string>} [filters] subexpressions for matching asset system fields {key}{op}{value} op one of: &lt; &gt; &lt;&#x3D; &gt;&#x3D; &#x3D; !&#x3D; 
+         * @param {Array<string>} [metadata] subexpressions for matching user metadata {key}{op}{value} op one of: &lt; &gt; &lt;&#x3D; &gt;&#x3D; &#x3D; !&#x3D; 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        searchAssets(workspace: string, q?: string, path?: string, limit?: number, teamspace?: Array<string>, filters?: Array<string>, metadata?: Array<string>, options?: any): AxiosPromise<AssetListResponse> {
+            return localVarFp.searchAssets(workspace, q, path, limit, teamspace, filters, metadata, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * DefaultApi - object-oriented interface
+ * @export
+ * @class DefaultApi
+ * @extends {BaseAPI}
+ */
+export class DefaultApi extends BaseAPI {
+    /**
+     * Search Assets
+     * @summary Search Assets
+     * @param {string} workspace The workspace name or id
+     * @param {string} [q] query text
+     * @param {string} [path] asset path prefix
+     * @param {number} [limit] maximum number of results to return
+     * @param {Array<string>} [teamspace] teamspace_id, limit results to assets of one or more teamspaces
+     * @param {Array<string>} [filters] subexpressions for matching asset system fields {key}{op}{value} op one of: &lt; &gt; &lt;&#x3D; &gt;&#x3D; &#x3D; !&#x3D; 
+     * @param {Array<string>} [metadata] subexpressions for matching user metadata {key}{op}{value} op one of: &lt; &gt; &lt;&#x3D; &gt;&#x3D; &#x3D; !&#x3D; 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    public searchAssets(workspace: string, q?: string, path?: string, limit?: number, teamspace?: Array<string>, filters?: Array<string>, metadata?: Array<string>, options?: any) {
+        return DefaultApiFp(this.configuration).searchAssets(workspace, q, path, limit, teamspace, filters, metadata, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+
+/**
  * DeltasharingApi - axios parameter creator
  * @export
  */
@@ -7739,16 +8073,16 @@ export const DeltasharingApiAxiosParamCreator = function (configuration?: Config
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
 
     
@@ -7790,16 +8124,16 @@ export const DeltasharingApiAxiosParamCreator = function (configuration?: Config
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
             if (maxResults !== undefined) {
                 localVarQueryParameter['maxResults'] = maxResults;
@@ -7853,16 +8187,16 @@ export const DeltasharingApiAxiosParamCreator = function (configuration?: Config
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
             if (maxResults !== undefined) {
                 localVarQueryParameter['maxResults'] = maxResults;
@@ -7912,16 +8246,16 @@ export const DeltasharingApiAxiosParamCreator = function (configuration?: Config
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
             if (maxResults !== undefined) {
                 localVarQueryParameter['maxResults'] = maxResults;
@@ -7967,16 +8301,16 @@ export const DeltasharingApiAxiosParamCreator = function (configuration?: Config
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
             if (maxResults !== undefined) {
                 localVarQueryParameter['maxResults'] = maxResults;
@@ -8035,16 +8369,16 @@ export const DeltasharingApiAxiosParamCreator = function (configuration?: Config
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
 
     
@@ -8100,16 +8434,16 @@ export const DeltasharingApiAxiosParamCreator = function (configuration?: Config
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
             if (startingVersion !== undefined) {
                 localVarQueryParameter['startingVersion'] = startingVersion;
@@ -8177,16 +8511,16 @@ export const DeltasharingApiAxiosParamCreator = function (configuration?: Config
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
 
     
@@ -8235,16 +8569,16 @@ export const DeltasharingApiAxiosParamCreator = function (configuration?: Config
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
             if (startingTimestamp !== undefined) {
                 localVarQueryParameter['startingTimestamp'] = startingTimestamp;
@@ -8677,10 +9011,11 @@ export const FilesApiAxiosParamCreator = function (configuration?: Configuration
          * @param {string} teamspace The teamspace name or id
          * @param {string} path The path to the file
          * @param {string} [range] The range of bytes to fetch. Supports only single ranges.
+         * @param {boolean} [presigned] If true, returns a presigned S3 URL instead of the file contents
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        fileGet: async (workspace: string, teamspace: string, path: string, range?: string, options: any = {}): Promise<RequestArgs> => {
+        fileGet: async (workspace: string, teamspace: string, path: string, range?: string, presigned?: boolean, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'workspace' is not null or undefined
             assertParamExists('fileGet', 'workspace', workspace)
             // verify required parameter 'teamspace' is not null or undefined
@@ -8702,16 +9037,20 @@ export const FilesApiAxiosParamCreator = function (configuration?: Configuration
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+
+            if (presigned !== undefined) {
+                localVarQueryParameter['presigned'] = presigned;
+            }
 
             if (range !== undefined && range !== null) {
                 localVarHeaderParameter['Range'] = String(range);
@@ -8763,16 +9102,16 @@ export const FilesApiAxiosParamCreator = function (configuration?: Configuration
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
 
     
@@ -8825,16 +9164,16 @@ export const FilesApiAxiosParamCreator = function (configuration?: Configuration
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
             if (prefix !== undefined) {
                 localVarQueryParameter['prefix'] = prefix;
@@ -8877,11 +9216,11 @@ export const FilesApiAxiosParamCreator = function (configuration?: Configuration
          * @param {string} workspace The workspace name or id
          * @param {string} teamspace The teamspace name or id
          * @param {string} path The path to the file
-         * @param {any} body 
+         * @param {File} body 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        uploadPart: async (workspace: string, teamspace: string, path: string, body: any, options: any = {}): Promise<RequestArgs> => {
+        uploadPart: async (workspace: string, teamspace: string, path: string, body: File, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'workspace' is not null or undefined
             assertParamExists('uploadPart', 'workspace', workspace)
             // verify required parameter 'teamspace' is not null or undefined
@@ -8905,16 +9244,16 @@ export const FilesApiAxiosParamCreator = function (configuration?: Configuration
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
 
     
@@ -8951,11 +9290,12 @@ export const FilesApiFp = function(configuration?: Configuration) {
          * @param {string} teamspace The teamspace name or id
          * @param {string} path The path to the file
          * @param {string} [range] The range of bytes to fetch. Supports only single ranges.
+         * @param {boolean} [presigned] If true, returns a presigned S3 URL instead of the file contents
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async fileGet(workspace: string, teamspace: string, path: string, range?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.fileGet(workspace, teamspace, path, range, options);
+        async fileGet(workspace: string, teamspace: string, path: string, range?: string, presigned?: boolean, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<FilePresignedURLResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.fileGet(workspace, teamspace, path, range, presigned, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -8967,7 +9307,7 @@ export const FilesApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async fileHead(workspace: string, teamspace: string, path: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
+        async fileHead(workspace: string, teamspace: string, path: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<File>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.fileHead(workspace, teamspace, path, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -8994,11 +9334,11 @@ export const FilesApiFp = function(configuration?: Configuration) {
          * @param {string} workspace The workspace name or id
          * @param {string} teamspace The teamspace name or id
          * @param {string} path The path to the file
-         * @param {any} body 
+         * @param {File} body 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async uploadPart(workspace: string, teamspace: string, path: string, body: any, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+        async uploadPart(workspace: string, teamspace: string, path: string, body: File, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.uploadPart(workspace, teamspace, path, body, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -9019,11 +9359,12 @@ export const FilesApiFactory = function (configuration?: Configuration, basePath
          * @param {string} teamspace The teamspace name or id
          * @param {string} path The path to the file
          * @param {string} [range] The range of bytes to fetch. Supports only single ranges.
+         * @param {boolean} [presigned] If true, returns a presigned S3 URL instead of the file contents
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        fileGet(workspace: string, teamspace: string, path: string, range?: string, options?: any): AxiosPromise<void> {
-            return localVarFp.fileGet(workspace, teamspace, path, range, options).then((request) => request(axios, basePath));
+        fileGet(workspace: string, teamspace: string, path: string, range?: string, presigned?: boolean, options?: any): AxiosPromise<FilePresignedURLResponse> {
+            return localVarFp.fileGet(workspace, teamspace, path, range, presigned, options).then((request) => request(axios, basePath));
         },
         /**
          * End point to get information about the file at the given path 
@@ -9034,7 +9375,7 @@ export const FilesApiFactory = function (configuration?: Configuration, basePath
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        fileHead(workspace: string, teamspace: string, path: string, options?: any): AxiosPromise<any> {
+        fileHead(workspace: string, teamspace: string, path: string, options?: any): AxiosPromise<File> {
             return localVarFp.fileHead(workspace, teamspace, path, options).then((request) => request(axios, basePath));
         },
         /**
@@ -9059,11 +9400,11 @@ export const FilesApiFactory = function (configuration?: Configuration, basePath
          * @param {string} workspace The workspace name or id
          * @param {string} teamspace The teamspace name or id
          * @param {string} path The path to the file
-         * @param {any} body 
+         * @param {File} body 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        uploadPart(workspace: string, teamspace: string, path: string, body: any, options?: any): AxiosPromise<void> {
+        uploadPart(workspace: string, teamspace: string, path: string, body: File, options?: any): AxiosPromise<void> {
             return localVarFp.uploadPart(workspace, teamspace, path, body, options).then((request) => request(axios, basePath));
         },
     };
@@ -9083,12 +9424,13 @@ export class FilesApi extends BaseAPI {
      * @param {string} teamspace The teamspace name or id
      * @param {string} path The path to the file
      * @param {string} [range] The range of bytes to fetch. Supports only single ranges.
+     * @param {boolean} [presigned] If true, returns a presigned S3 URL instead of the file contents
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof FilesApi
      */
-    public fileGet(workspace: string, teamspace: string, path: string, range?: string, options?: any) {
-        return FilesApiFp(this.configuration).fileGet(workspace, teamspace, path, range, options).then((request) => request(this.axios, this.basePath));
+    public fileGet(workspace: string, teamspace: string, path: string, range?: string, presigned?: boolean, options?: any) {
+        return FilesApiFp(this.configuration).fileGet(workspace, teamspace, path, range, presigned, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -9129,12 +9471,12 @@ export class FilesApi extends BaseAPI {
      * @param {string} workspace The workspace name or id
      * @param {string} teamspace The teamspace name or id
      * @param {string} path The path to the file
-     * @param {any} body 
+     * @param {File} body 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof FilesApi
      */
-    public uploadPart(workspace: string, teamspace: string, path: string, body: any, options?: any) {
+    public uploadPart(workspace: string, teamspace: string, path: string, body: File, options?: any) {
         return FilesApiFp(this.configuration).uploadPart(workspace, teamspace, path, body, options).then((request) => request(this.axios, this.basePath));
     }
 }
@@ -9181,16 +9523,16 @@ export const FoldersApiAxiosParamCreator = function (configuration?: Configurati
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
 
     
@@ -9242,16 +9584,16 @@ export const FoldersApiAxiosParamCreator = function (configuration?: Configurati
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
             if (deleteAssets !== undefined) {
                 localVarQueryParameter['delete-assets'] = deleteAssets;
@@ -9303,16 +9645,16 @@ export const FoldersApiAxiosParamCreator = function (configuration?: Configurati
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
 
     
@@ -9360,16 +9702,16 @@ export const FoldersApiAxiosParamCreator = function (configuration?: Configurati
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
 
     
@@ -9420,16 +9762,16 @@ export const FoldersApiAxiosParamCreator = function (configuration?: Configurati
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
 
     
@@ -9483,16 +9825,16 @@ export const FoldersApiAxiosParamCreator = function (configuration?: Configurati
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
 
     
@@ -9824,16 +10166,16 @@ export const GeneralspacesApiAxiosParamCreator = function (configuration?: Confi
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
 
     
@@ -9873,16 +10215,16 @@ export const GeneralspacesApiAxiosParamCreator = function (configuration?: Confi
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
 
     
@@ -9929,16 +10271,16 @@ export const GeneralspacesApiAxiosParamCreator = function (configuration?: Confi
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
 
     
@@ -9984,16 +10326,16 @@ export const GeneralspacesApiAxiosParamCreator = function (configuration?: Confi
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
 
     
@@ -10219,16 +10561,16 @@ export const ImagesApiAxiosParamCreator = function (configuration?: Configuratio
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
 
     
@@ -10262,7 +10604,7 @@ export const ImagesApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getImage(imageId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
+        async getImage(imageId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<File>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getImage(imageId, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -10283,7 +10625,7 @@ export const ImagesApiFactory = function (configuration?: Configuration, basePat
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getImage(imageId: string, options?: any): AxiosPromise<any> {
+        getImage(imageId: string, options?: any): AxiosPromise<File> {
             return localVarFp.getImage(imageId, options).then((request) => request(axios, basePath));
         },
     };
@@ -10343,16 +10685,16 @@ export const InvitationsApiAxiosParamCreator = function (configuration?: Configu
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
 
     
@@ -10398,16 +10740,16 @@ export const InvitationsApiAxiosParamCreator = function (configuration?: Configu
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
 
     
@@ -10452,16 +10794,16 @@ export const InvitationsApiAxiosParamCreator = function (configuration?: Configu
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
             if (page !== undefined) {
                 localVarQueryParameter['page'] = page;
@@ -10512,16 +10854,16 @@ export const InvitationsApiAxiosParamCreator = function (configuration?: Configu
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
 
     
@@ -10568,16 +10910,16 @@ export const InvitationsApiAxiosParamCreator = function (configuration?: Configu
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
 
     
@@ -10835,16 +11177,16 @@ export const OnboardingApiAxiosParamCreator = function (configuration?: Configur
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
 
     
@@ -10880,16 +11222,16 @@ export const OnboardingApiAxiosParamCreator = function (configuration?: Configur
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
 
     
@@ -10928,16 +11270,16 @@ export const OnboardingApiAxiosParamCreator = function (configuration?: Configur
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
 
     
@@ -11116,16 +11458,16 @@ export const StoragesettingsApiAxiosParamCreator = function (configuration?: Con
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
             if (teamspaceId !== undefined) {
                 localVarQueryParameter['teamspace_id'] = teamspaceId;
@@ -11177,16 +11519,16 @@ export const StoragesettingsApiAxiosParamCreator = function (configuration?: Con
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
             if (teamspaceId !== undefined) {
                 localVarQueryParameter['teamspace_id'] = teamspaceId;
@@ -11235,16 +11577,16 @@ export const StoragesettingsApiAxiosParamCreator = function (configuration?: Con
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
             if (teamspaceId !== undefined) {
                 localVarQueryParameter['teamspace_id'] = teamspaceId;
@@ -11291,16 +11633,16 @@ export const StoragesettingsApiAxiosParamCreator = function (configuration?: Con
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
             if (teamspaceId !== undefined) {
                 localVarQueryParameter['teamspace_id'] = teamspaceId;
@@ -11360,16 +11702,16 @@ export const StoragesettingsApiAxiosParamCreator = function (configuration?: Con
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
             if (teamspaceId !== undefined) {
                 localVarQueryParameter['teamspace_id'] = teamspaceId;
@@ -11663,16 +12005,16 @@ export const TeamspacesApiAxiosParamCreator = function (configuration?: Configur
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
 
     
@@ -11718,16 +12060,16 @@ export const TeamspacesApiAxiosParamCreator = function (configuration?: Configur
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
 
     
@@ -11775,16 +12117,16 @@ export const TeamspacesApiAxiosParamCreator = function (configuration?: Configur
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
             if (deleteAssets !== undefined) {
                 localVarQueryParameter['delete-assets'] = deleteAssets;
@@ -11836,16 +12178,16 @@ export const TeamspacesApiAxiosParamCreator = function (configuration?: Configur
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
 
     
@@ -11892,16 +12234,16 @@ export const TeamspacesApiAxiosParamCreator = function (configuration?: Configur
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
 
     
@@ -11944,16 +12286,16 @@ export const TeamspacesApiAxiosParamCreator = function (configuration?: Configur
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
 
     
@@ -11997,16 +12339,16 @@ export const TeamspacesApiAxiosParamCreator = function (configuration?: Configur
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
 
     
@@ -12054,16 +12396,16 @@ export const TeamspacesApiAxiosParamCreator = function (configuration?: Configur
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
 
     
@@ -12107,16 +12449,16 @@ export const TeamspacesApiAxiosParamCreator = function (configuration?: Configur
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
 
     
@@ -12160,16 +12502,16 @@ export const TeamspacesApiAxiosParamCreator = function (configuration?: Configur
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
 
     
@@ -12213,16 +12555,16 @@ export const TeamspacesApiAxiosParamCreator = function (configuration?: Configur
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
 
     
@@ -12265,16 +12607,16 @@ export const TeamspacesApiAxiosParamCreator = function (configuration?: Configur
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
             if (orderBy !== undefined) {
                 localVarQueryParameter['order_by'] = orderBy;
@@ -12333,16 +12675,16 @@ export const TeamspacesApiAxiosParamCreator = function (configuration?: Configur
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
 
     
@@ -12396,16 +12738,16 @@ export const TeamspacesApiAxiosParamCreator = function (configuration?: Configur
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
 
     
@@ -12455,16 +12797,16 @@ export const TeamspacesApiAxiosParamCreator = function (configuration?: Configur
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
 
     
@@ -13115,16 +13457,16 @@ export const TokensApiAxiosParamCreator = function (configuration?: Configuratio
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
 
     
@@ -13168,16 +13510,16 @@ export const TokensApiAxiosParamCreator = function (configuration?: Configuratio
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
             if (page !== undefined) {
                 localVarQueryParameter['page'] = page;
@@ -13229,16 +13571,16 @@ export const TokensApiAxiosParamCreator = function (configuration?: Configuratio
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
 
     
@@ -13421,16 +13763,16 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
 
     
@@ -13472,16 +13814,16 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
             if (xTILEDBRESTAPIKEY !== undefined && xTILEDBRESTAPIKEY !== null) {
                 localVarHeaderParameter['X-TILEDB-REST-API-KEY'] = String(xTILEDBRESTAPIKEY);
@@ -13524,16 +13866,16 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
 
     
@@ -13576,16 +13918,16 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
 
     
@@ -13621,16 +13963,16 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
 
     
@@ -13670,16 +14012,16 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
 
     
@@ -13718,16 +14060,16 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
 
     
@@ -13769,16 +14111,16 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
 
     
@@ -13823,16 +14165,16 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
             if (xTILEDBRESTAPIKEY !== undefined && xTILEDBRESTAPIKEY !== null) {
                 localVarHeaderParameter['X-TILEDB-REST-API-KEY'] = String(xTILEDBRESTAPIKEY);
@@ -13882,16 +14224,16 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
 
     
@@ -14310,16 +14652,16 @@ export const UserspacesApiAxiosParamCreator = function (configuration?: Configur
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
 
     
@@ -14366,16 +14708,16 @@ export const UserspacesApiAxiosParamCreator = function (configuration?: Configur
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
 
     
@@ -14528,16 +14870,16 @@ export const VersionsApiAxiosParamCreator = function (configuration?: Configurat
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
 
     
@@ -14645,16 +14987,16 @@ export const WorkspacesApiAxiosParamCreator = function (configuration?: Configur
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
 
     
@@ -14700,16 +15042,16 @@ export const WorkspacesApiAxiosParamCreator = function (configuration?: Configur
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
 
     
@@ -14752,16 +15094,16 @@ export const WorkspacesApiAxiosParamCreator = function (configuration?: Configur
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
 
     
@@ -14805,16 +15147,16 @@ export const WorkspacesApiAxiosParamCreator = function (configuration?: Configur
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
 
     
@@ -14857,16 +15199,16 @@ export const WorkspacesApiAxiosParamCreator = function (configuration?: Configur
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
 
     
@@ -14909,16 +15251,16 @@ export const WorkspacesApiAxiosParamCreator = function (configuration?: Configur
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
 
     
@@ -14962,16 +15304,16 @@ export const WorkspacesApiAxiosParamCreator = function (configuration?: Configur
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
 
     
@@ -15014,16 +15356,16 @@ export const WorkspacesApiAxiosParamCreator = function (configuration?: Configur
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
             if (page !== undefined) {
                 localVarQueryParameter['page'] = page;
@@ -15078,16 +15420,16 @@ export const WorkspacesApiAxiosParamCreator = function (configuration?: Configur
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
 
     
@@ -15137,16 +15479,16 @@ export const WorkspacesApiAxiosParamCreator = function (configuration?: Configur
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
 
     
@@ -15192,16 +15534,16 @@ export const WorkspacesApiAxiosParamCreator = function (configuration?: Configur
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
 
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
-            // authentication OAuth2 required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2", ["read", "write", "admin"], configuration)
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
 
     
