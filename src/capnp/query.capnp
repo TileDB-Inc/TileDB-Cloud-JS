@@ -52,6 +52,23 @@ struct Query {
 
     denseReader @16 :QueryReader;
     # denseReader contains data needed for continuation of incomplete dense reads with dense reader
+
+    delete @17 :Delete;
+    # delete contains QueryCondition representing deletion expression
+
+    writtenFragmentInfo @18 :List(WrittenFragmentInfo);
+    # Needed in global order writes when WrittenFragmentInfo gets updated
+    # during finalize, but doesn't end up back on the client Query object
+
+    writtenBuffers @19 : List(Text);
+    # written buffers for partial attribute writes
+
+    orderedDimLabelReader @20 :QueryReader;
+    # orderedDimLabelReader contains data needed for dense dimension label reads.
+
+    channels @21 :List(QueryChannel);
+    # channels contains the list of channels (streams of data) within a read
+    # query. It always contains at least one element, the default channel.
 }
 
 struct ReaderIndex {
