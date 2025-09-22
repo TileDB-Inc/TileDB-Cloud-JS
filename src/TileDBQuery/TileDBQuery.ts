@@ -1,18 +1,15 @@
 import dataToQuery from '../utils/dataToQuery';
 import capnpQueryDeSerializer from '../utils/deserialization/capnpQueryDeSerializer';
-import { ArrayApi } from '../v1';
 import {
-  ArraySchema,
-  AttributeBufferHeader,
   Configuration,
   ConfigurationParameters,
   Query,
   QueryApi,
-  ArrayApi as ArrayApiV2,
-  Querystatus,
-  Querytype,
+  QueryStatus,
+  QueryType,
   ModelArray
-} from '../v2';
+} from '../v3';
+import { ArrayApi } from '../v2';
 import getWriterBody from '../utils/getWriterBody';
 import convertToArrayBufferIfNodeBuffer from '../utils/convertToArrayBufferIfNodeBuffer';
 import getSizeInBytesOfAllAttributes from '../utils/getSizeInBytesOfAllAttributes';
@@ -20,10 +17,12 @@ import getResultsFromArrayBuffer, {
   Options
 } from '../utils/getResultsFromArrayBuffer';
 import globalAxios, { AxiosInstance } from 'axios';
-import capnpArrayDeserializer from '../utils/deserialization/capnpArrayDeserializer';
 import arrayFetchFromConfig from '../utils/arrayFetchFromConfig';
-import capnpArrayFetchSerializer from '../utils/serialization/capnpArrayFetchSerializer';
-import responseTypes from '../constants/responseTypes';
+import capnpQuerySerializer from '../utils/serialization/capnpQuerySerializer';
+import {
+  getQueryAttributeHeaders,
+  getQueryStatus
+} from '../utils/deserialization/capnpDeSerializer';
 
 export type Range = number[] | string[];
 export interface QueryData extends Pick<Query, 'layout'>, Options {
@@ -50,7 +49,6 @@ export class TileDBQuery {
   private axios: AxiosInstance;
   private queryAPI: QueryApi;
   private arrayAPI: ArrayApi;
-  private arrayAPIV2: ArrayApiV2;
   private config: Configuration;
 
   constructor(
@@ -58,19 +56,25 @@ export class TileDBQuery {
     axios: AxiosInstance = globalAxios
   ) {
     this.configurationParams = params;
+    this.axios = axios;
 
     const config = new Configuration(this.configurationParams);
-    const baseV1 = config.basePath?.replace('v2', 'v1');
+    const baseV2 = config.basePath?.replace('v2', 'v2');
+    const baseV3 = config.basePath?.replace('v2', 'v3');
     // Add versioning if basePath exists
-    const configV1 = new Configuration({
+    const configV2 = new Configuration({
       ...this.configurationParams,
       // Override basePath v2 for v1 to make calls to get ArraySchema (from v1 API)
-      ...(baseV1 ? { basePath: baseV1 } : {})
+      ...(baseV2 ? { basePath: baseV2 } : {})
     });
-    this.config = configV1;
-    this.queryAPI = new QueryApi(config, undefined, this.axios);
-    this.arrayAPI = new ArrayApi(configV1, undefined, this.axios);
-    this.arrayAPIV2 = new ArrayApiV2(config, undefined, this.axios);
+    const configV3 = new Configuration({
+      ...this.configurationParams,
+      // Override basePath v2 for v1 to make calls to get ArraySchema (from v1 API)
+      ...(baseV3 ? { basePath: baseV3 } : {})
+    });
+    this.queryAPI = new QueryApi(configV3, undefined, this.axios);
+    this.arrayAPI = new ArrayApi(configV2, undefined, this.axios);
+    this.config = configV2;
   }
 
   async WriteQuery(
@@ -93,12 +97,8 @@ export class TileDBQuery {
         workspace,
         teamspace,
         arrayName,
-        Querytype.Write,
-        'application/capnp',
-        body as any,
-        undefined,
-        undefined,
-        undefined,
+        QueryType.Write,
+        body,
         {
           headers: {
             'Content-Type': 'application/capnp'
@@ -134,301 +134,124 @@ export class TileDBQuery {
     }
   }
 
-  async ReadIncompleteQuery(
-    arraySchema: ArraySchema,
-    queryAsArrayBuffer: ArrayBuffer,
-    workspace: string,
-    teamspace: string,
-    arrayName: string,
-    options: Options
-  ): Promise<{
-    query: Query;
-    results: Record<string, any>;
-    queryAsArrayBuffer: ArrayBuffer;
-  }> {
-    const queryResponse = await this.queryAPI.submitQuery(
-      workspace,
-      teamspace,
-      arrayName,
-      Querytype.Read,
-      'application/capnp',
-      queryAsArrayBuffer as any,
-      undefined,
-      undefined,
-      undefined,
-      {
-        cancelToken: options.cancelToken,
-        headers: {
-          'Content-Type': 'application/capnp'
-        },
-        responseType: 'arraybuffer'
-      }
-    );
-
-    /**
-     * Axios in nodeJS environments casts the response to a Buffer object
-     * we convert it back to an ArrayBuffer if needed
-     */
-    const queryData = convertToArrayBufferIfNodeBuffer(queryResponse.data);
-    /**
-     * First 8 bytes of the response, contain a Uint64 number
-     * which is the size of the response we skip it.
-     */
-    const bufferWithoutFirstEightBytes = queryData.slice(8);
-
-    /**
-     * Deserialize buffer to a Query object
-     */
-    const queryObject = capnpQueryDeSerializer(bufferWithoutFirstEightBytes);
-
-    const attributeHeaders = queryObject.attributeBufferHeaders;
-
-    const results = await this.getResultsFromArrayBuffer(
-      arraySchema,
-      bufferWithoutFirstEightBytes,
-      attributeHeaders,
-      options
-    );
-
-    return {
-      results,
-      query: queryObject as any,
-      queryAsArrayBuffer: bufferWithoutFirstEightBytes
-    };
-  }
-
   async *ReadQuery(
     workspace: string,
     teamspace: string,
     arrayName: string,
     body: QueryData,
-    arraySchema?: ArraySchema
+    array?: ModelArray
   ) {
-    try {
-      // Get ArraySchema of arrray, to get type information of the dimensions and the attributes
-      if (typeof arraySchema === 'undefined') {
-        const arrayFromCapnp = await this.ArrayOpen(
-          workspace,
-          teamspace,
-          arrayName,
-          Querytype.Read
-        );
-        arraySchema = arrayFromCapnp.arraySchemaLatest as ArraySchema;
-      }
+    array ??= await this.ArrayOpen(
+      workspace,
+      teamspace,
+      arrayName,
+      QueryType.Read
+    );
 
-      arraySchema.arrayType;
+    const options = {
+      ignoreNullables: body.ignoreNullables,
+      ignoreOffsets: body.ignoreOffsets,
+      attributes: body.attributes,
+      returnOffsets: body.returnOffsets,
+      returnRawBuffers: body.returnRawBuffers,
+      cancelToken: body.cancelToken
+    };
 
-      const options = {
-        ignoreNullables: body.ignoreNullables,
-        ignoreOffsets: body.ignoreOffsets,
-        attributes: body.attributes,
-        returnOffsets: body.returnOffsets,
-        returnRawBuffers: body.returnRawBuffers,
-        cancelToken: body.cancelToken
-      };
-      /**
-       * Get the query response in capnp, we set responseType to arraybuffer instead of JSON
-       * in order to deserialize the query capnp object.
-       */
+    let query = capnpQuerySerializer(dataToQuery(body, array, options));
+    let status = getQueryStatus(new DataView(query));
 
-      const queryResponse = await this.queryAPI.submitQuery(
-        workspace,
-        teamspace,
-        arrayName,
-        Querytype.Read,
-        'application/capnp',
-        dataToQuery(body, arraySchema, options),
-        undefined,
-        undefined,
-        undefined,
-        {
+    while (
+      (
+        [
+          QueryStatus.Uninitialized,
+          QueryStatus.Incomplete
+        ] as Array<QueryStatus>
+      ).includes(status)
+    ) {
+      yield await this.queryAPI
+        // @ts-expect-error: query already serialized as capnp
+        .submitQuery(workspace, teamspace, arrayName, QueryType.Read, query, {
           cancelToken: body.cancelToken,
           headers: {
             'Content-Type': 'application/capnp'
           },
           responseType: 'arraybuffer'
-        }
-      );
+        })
+        .then(
+          response =>
+            // @ts-expect-error: Data is reported as File but it is either Buffer or ArrayBuffer
+            new DataView(convertToArrayBufferIfNodeBuffer(response.data), 8)
+        )
+        .then(bufferView => {
+          status = getQueryStatus(bufferView);
 
-      /**
-       * Axios in nodeJS environments casts the response to a Buffer object
-       * we convert it back to an ArrayBuffer if needed
-       */
-      const queryData = convertToArrayBufferIfNodeBuffer(queryResponse.data);
-      /**
-       * First 8 bytes of the response, contain a Uint64 number
-       * which is the size of the response we skip it.
-       */
-      let bufferWithoutFirstEightBytes = queryData.slice(8);
-
-      /**
-       * Deserialize buffer to a Query object
-       */
-      const queryObject = capnpQueryDeSerializer(bufferWithoutFirstEightBytes);
-      const attributeHeaders = queryObject.attributeBufferHeaders;
-
-      // Case it's incomplete query
-      if (queryObject.status === Querystatus.Incomplete) {
-        try {
-          yield await this.getResultsFromArrayBuffer(
-            arraySchema,
-            bufferWithoutFirstEightBytes,
-            attributeHeaders,
-            options
+          const attributeHeaders = getQueryAttributeHeaders(bufferView);
+          const resultSize = getSizeInBytesOfAllAttributes(
+            getQueryAttributeHeaders(bufferView)
           );
 
-          while (true) {
-            const { results, query, queryAsArrayBuffer } =
-              await this.ReadIncompleteQuery(
-                arraySchema,
-                bufferWithoutFirstEightBytes,
-                workspace,
-                teamspace,
-                arrayName,
-                options
-              );
-            // Override query object with the new one returned from `ReadIncompleteQuery`
-            bufferWithoutFirstEightBytes = queryAsArrayBuffer;
-
-            if (query.status === Querystatus.Incomplete) {
-              yield results;
-            } else {
-              // Case query is not incomplete
-              yield results;
-              return;
-            }
+          if (status === QueryStatus.Incomplete) {
+            const resultSize = getSizeInBytesOfAllAttributes(
+              getQueryAttributeHeaders(bufferView)
+            );
+            query = bufferView.buffer.slice(
+              8,
+              bufferView.byteOffset + bufferView.byteLength - resultSize
+            );
           }
-        } catch (e) {
-          this.throwError(e);
-        }
-      }
 
-      yield this.getResultsFromArrayBuffer(
-        arraySchema,
-        bufferWithoutFirstEightBytes,
-        attributeHeaders,
-        options
-      );
-      return;
-    } catch (e) {
-      this.throwError(e);
+          // Calculate results
+          return getResultsFromArrayBuffer(
+            new DataView(
+              bufferView.buffer,
+              bufferView.byteOffset + bufferView.byteLength - resultSize
+            ),
+            attributeHeaders,
+            [
+              ...array.arraySchemaLatest.domain.dimensions,
+              ...array.arraySchemaLatest.attributes
+            ],
+            options
+          );
+        })
+        .catch(e => {
+          /**
+           * Since we set the responseType to "arrayBuffer", in case the
+           * response error message is a buffer, we deserialize the message before throwing
+           */
+          const errorIsABuffer =
+            e?.response?.data?.buffer || e?.response?.data?.length;
+          if (errorIsABuffer) {
+            const errorArrayBuffer = convertToArrayBufferIfNodeBuffer(
+              e.response.data
+            );
+            const decodedMessage = new TextDecoder().decode(errorArrayBuffer);
+            throw new Error(decodedMessage);
+          } else {
+            throw e;
+          }
+        });
     }
-  }
 
-  private async getResultsFromArrayBuffer(
-    arraySchema: ArraySchema,
-    bufferResults: ArrayBuffer,
-    attributeHeaders: AttributeBufferHeader[],
-    options: Options
-  ) {
-    /**
-     * Calculate the size of bytes of the attributes from the attributeBufferHeaders of the Query object.
-     */
-    const numberOfBytesOfResults =
-      getSizeInBytesOfAllAttributes(attributeHeaders);
-    /**
-     * We get the last N bytes (N is the number of total bytes of the attributes), which contain
-     * the results of all the attributes
-     */
-    const resultsBuffer = bufferResults.slice(-1 * numberOfBytesOfResults);
-    const mergeAttributesAndDimensions = [
-      ...arraySchema.domain.dimensions,
-      ...arraySchema.attributes
-    ];
-
-    // Calculate results
-    const results = await getResultsFromArrayBuffer(
-      resultsBuffer,
-      attributeHeaders,
-      mergeAttributesAndDimensions,
-      options
-    );
-
-    return results;
-  }
-
-  private throwError(e: any) {
-    /**
-     * Since we set the responseType to "arrayBuffer", in case the
-     * response error message is a buffer, we deserialize the message before throwing
-     */
-    const errorIsABuffer =
-      e?.response?.data?.buffer || e?.response?.data?.length;
-    if (errorIsABuffer) {
-      const errorArrayBuffer = convertToArrayBufferIfNodeBuffer(
-        e.response.data
-      );
-      const decodedMessage = new TextDecoder().decode(errorArrayBuffer);
-      throw new Error(decodedMessage);
-    } else {
-      throw e;
-    }
+    return;
   }
 
   async ArrayOpen(
     workspace: string,
     teamspace: string,
     array: string,
-    queryType: Querytype,
-    contentType: string | undefined = 'application/json'
+    queryType: QueryType
   ): Promise<ModelArray> {
     const arrayFetch = arrayFetchFromConfig(this.config, queryType);
-    const isJSONEncoded = contentType === 'application/json';
-    /**
-     * If conntentType is application/capnp we need to serialize
-     * ArrayFetch object to capnp before sending the request.
-     */
-    const arrayFetchData: any = isJSONEncoded
-      ? arrayFetch
-      : capnpArrayFetchSerializer(arrayFetch);
 
-    return new Promise(async (resolve, reject) => {
-      try {
-        const response = await this.arrayAPIV2.getArray(
-          workspace,
-          teamspace,
-          array,
-          contentType,
-          arrayFetchData,
-          {
-            headers: {
-              'Content-Type': contentType
-            },
-            responseType: responseTypes[contentType]
-          }
-        );
-        /**
-         * If we get back JSON encoded we resolve the promise
-         * if we get back capnp buffers, we need to deserialize it before resolving
-         */
-        if (isJSONEncoded) {
-          resolve(response.data);
-          return;
-        }
-        const arrayStructAsArrayBuffer = convertToArrayBufferIfNodeBuffer(
-          response.data
-        );
-        const deserializedArrayStruct = capnpArrayDeserializer(
-          arrayStructAsArrayBuffer
-        );
-
-        resolve(deserializedArrayStruct);
-      } catch (e) {
-        if (isJSONEncoded) {
-          reject(e);
-          return;
-        }
-        /**
-         * If we request application/capnp contentType, errors return as ArrayBuffer
-         */
-        if (e.response?.data) {
-          const err = new Error(new TextDecoder().decode(e.response.data));
-          reject(err);
-        } else {
-          reject(e);
-        }
-      }
-    });
+    return this.arrayAPI
+      .getArray(workspace, teamspace, array, 'application/json', arrayFetch, {
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        responseType: 'json'
+      })
+      .then(x => x.data as unknown as ModelArray);
   }
 }
 
