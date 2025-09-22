@@ -1,11 +1,12 @@
-import { ArrayMetadata } from '../../../capnp/arrayMetadata_capnp';
-import { ArrayFetch, Query } from '../../../v2';
-import * as capnp from 'capnp-ts';
+import { ArrayMetadata } from '../../../capnp/rest';
+import { ArrayFetch } from '../../../v2';
+import { Query } from '../../../v3';
+import * as capnp from 'capnp-es';
 import { ArrayMetadata as ArrayMetadataType } from '../../../v1/api';
 import capnpQuerySerializer from '../capnpQuerySerializer';
 import capnpArrayFetchSerializer from '../capnpArrayFetchSerializer';
 
-const capnpSerializer = (data: any) => {
+const capnpSerializer = (data: unknown) => {
   if (isArrayFetch(data)) {
     return capnpArrayFetchSerializer(data);
   } else if (isArrayMetadata(data)) {
@@ -23,43 +24,45 @@ const serializeArrayMetadata = (data: ArrayMetadataType) => {
   const entriesLength = data.entries.length;
   const message = new capnp.Message();
   const metadata = message.initRoot(ArrayMetadata);
-  const entries = metadata.initEntries(entriesLength);
+  const entries = metadata._initEntries(entriesLength);
 
   data.entries.forEach((entryData, i) => {
     const entry = entries.get(i);
-    entry.setKey(entryData.key);
-    entry.setType(entryData.type);
-    entry.setValueNum(entryData.valueNum);
+    entry.key = entryData.key;
+    entry.type = entryData.type;
+    entry.valueNum = entryData.valueNum;
     const valueLength = entryData.value.length;
-    const data = entry.initValue(valueLength);
+    const data = entry._initValue(valueLength);
     const arrBuffer = new ArrayBuffer(valueLength);
     const view = new Uint8Array(arrBuffer);
     entryData.value.forEach((num, i) => {
       view[i] = num;
     });
     data.copyBuffer(view);
-    entry.setValue(data);
-    entry.setDel(entryData.del);
+    entry.value = data;
+    entry.del = entryData.del;
   });
 
   return message.toArrayBuffer();
 };
 
-const isArrayMetadata = (data: any): data is ArrayMetadataType => {
+const isArrayMetadata = (
+  data: Partial<ArrayMetadataType>
+): data is ArrayMetadataType => {
   if (data && Array.isArray(data.entries)) {
     return true;
   }
   return false;
 };
 
-const isQuerydata = (data: any): data is Query => {
+const isQuerydata = (data?: Partial<Query>): data is Query => {
   if (data && (data.denseReader || data.writer || data.reader)) {
     return true;
   }
   return false;
 };
 
-const isArrayFetch = (data: any): data is ArrayFetch => {
+const isArrayFetch = (data: Partial<ArrayFetch>): data is ArrayFetch => {
   if (data && data.queryType && data.config) {
     return true;
   }
