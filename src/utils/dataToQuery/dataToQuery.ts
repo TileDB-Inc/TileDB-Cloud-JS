@@ -1,14 +1,14 @@
 import {
-  ArraySchema,
   Datatype,
   Query,
-  Querystatus,
-  Querytype,
+  QueryStatus,
+  QueryType,
   Attribute,
   Dimension,
   ArrayType,
-  Layout
-} from '../../v2';
+  Layout,
+  ModelArray
+} from '../../v3';
 import { QueryData } from '../../TileDBQuery';
 import getRanges from '../getRanges/getRanges';
 import getByteLengthOfDatatype from '../getByteLengthOfDatatype';
@@ -87,20 +87,23 @@ const getMaxByteSizeOfAttribute = (attribute: Attribute | Dimension) => {
  * We get the essential minimal data needed from the user (such as the layout and ranges) and
  * convert it to a Query object.
  * @param data
- * @param attributes
- * @param dimensions
+ * @param array
+ * @param options
  * @returns Query object
  */
 const dataToQuery = (
   data: QueryData,
-  arraySchema: ArraySchema,
+  array: ModelArray,
   options: Options
-): any => {
-  const attributes = arraySchema.attributes;
-  const dimensions = arraySchema.domain.dimensions;
+): Query => {
+  const attributes = array.arraySchemaLatest.attributes;
+  const dimensions = array.arraySchemaLatest.domain.dimensions;
+
   if (!data.layout) {
-    return data as any;
+    // return data;
+    throw new Error('Missing layout');
   }
+
   const { bufferSize } = data;
   // Use default dimension's Domain for ranges that are set empty []
   const rangesWithDomain = emptyRangesToDomain(data.ranges, dimensions);
@@ -140,16 +143,17 @@ const dataToQuery = (
     }
   };
 
-  const query = {
+  const query: Query = {
     attributeBufferHeaders,
     layout: data.layout,
-    status: Querystatus.Uninitialized,
-    type: Querytype.Read
-  } as Query;
+    status: QueryStatus.Uninitialized,
+    type: QueryType.Read,
+    array: array
+  };
 
   // Should use denseReader if it's a dense array, or for sparse layout is not row-major or col-major
   if (
-    arraySchema.arrayType === ArrayType.Dense ||
+    array.arraySchemaLatest.arrayType === ArrayType.Dense ||
     (data.layout !== Layout.ColMajor && data.layout !== Layout.RowMajor)
   ) {
     query.denseReader = reader;
