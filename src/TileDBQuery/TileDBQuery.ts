@@ -195,7 +195,7 @@ export class TileDBQuery {
               getQueryAttributeHeaders(bufferView)
             );
             query = bufferView.buffer.slice(
-              8,
+              bufferView.byteOffset,
               bufferView.byteOffset + bufferView.byteLength - resultSize
             );
           }
