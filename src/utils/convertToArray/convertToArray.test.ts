@@ -14,6 +14,6 @@ describe('convertToArray()', () => {
 
   it('Should convert Buffers to arrays of ints', () => {
     const result = convertToArray(Uint8Array.from([1, 5, 12]).buffer);
-    expect(result).toStrictEqual([1, 5 , 12]);
+    expect(result).toStrictEqual([1, 5, 12]);
   });
 });

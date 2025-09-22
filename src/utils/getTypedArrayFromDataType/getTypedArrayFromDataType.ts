@@ -1,4 +1,4 @@
-import { Datatype } from '../../v2';
+import { Datatype } from '../../v3';
 import { int64Types } from '../mapToBigIntIfNeeded';
 
 /**
@@ -28,6 +28,8 @@ const getTypedArrayFromDataType = (type: Datatype) => {
   } else if (int64Types.includes(type)) {
     return BigInt64Array;
   }
+
+  return undefined;
 };
 
 export default getTypedArrayFromDataType;

@@ -1,54 +1,55 @@
-import attributeValuesToArrayBuffers from "./attributeValuesToArrayBuffers";
+import { Attribute, Datatype, Dimension } from '../../v2';
+import attributeValuesToArrayBuffers from './attributeValuesToArrayBuffers';
 import { describe, it, expect } from 'vitest';
 
-describe("attributeValuesToArrayBuffers()", () => {
-  it("Should return a map of all the arrayBuffers of an attribute/dimension", () => {
-    const dimensions: any = [
+describe('attributeValuesToArrayBuffers()', () => {
+  it('Should return a map of all the arrayBuffers of an attribute/dimension', () => {
+    const dimensions: Dimension[] = [
       {
         domain: null,
         filterPipeline: {},
-        name: "rows",
+        name: 'rows',
         nullTileExtent: true,
         tileExtent: {},
-        type: "STRING_ASCII",
+        type: Datatype.StringAscii
       },
       {
         domain: {
-          int32: [1, 4],
+          int32: [1, 4]
         },
         filterPipeline: {},
-        name: "cols",
+        name: 'cols',
         nullTileExtent: false,
         tileExtent: {
-          int32: 4,
+          int32: 4
         },
-        type: "INT32",
-      },
+        type: Datatype.Int32
+      }
     ];
 
-    const attributes: any[] = [
+    const attributes: Attribute[] = [
       {
-        cellValNum: "1",
+        cellValNum: 1,
         filterPipeline: {},
-        name: "a",
-        type: "INT32",
-      },
+        name: 'a',
+        type: Datatype.Int32
+      }
     ];
 
     const query = {
-      layout: "unordered",
+      layout: 'unordered',
       values: {
         a: {
-          values: [9, 12, 230],
+          values: [9, 12, 230]
         },
         rows: {
-          values: ["a", "b", "b", "c"],
-          offsets: [0, 1, 3],
+          values: ['a', 'b', 'b', 'c'],
+          offsets: [0, 1, 3]
         },
         cols: {
-          values: [1, 4, 3],
-        },
-      },
+          values: [1, 4, 3]
+        }
+      }
     };
 
     const attrBuffers = attributeValuesToArrayBuffers(

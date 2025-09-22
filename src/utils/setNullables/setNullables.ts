@@ -5,7 +5,10 @@
  * @param offsets []
  * @returns [NULL, 15, 22, NULL, 8]
  */
-const setNullables = async <T>(values: T[], nullables: number[]) => {
+const setNullables = <T>(
+  values: Array<T>,
+  nullables: number[]
+): Array<T | null> => {
   // We explicitly set as NULL index where nullable array is 0
   return values.map((val, i) => (nullables[i] ? val : null));
 };

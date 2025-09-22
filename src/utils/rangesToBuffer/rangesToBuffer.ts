@@ -6,12 +6,16 @@ import mapToBigIntIfNeeded from '../mapToBigIntIfNeeded';
 /**
  * Convert user defined ranges to a Uint8Array
  */
-const rangesToBuffer = (ranges: any[], type: Datatype) => {
+const rangesToBuffer = (
+  ranges: Array<number> | Array<string>,
+  type: Datatype
+) => {
   const TypedArray = getTypedArrayFromDataType(type);
 
   if (TypedArray) {
     const nums = mapToBigIntIfNeeded(ranges as number[], type);
-    const dataview = (TypedArray as any).from(nums);
+    // @ts-expect-error: BigInt typed arrays expect bigint array and have different signature from the other methods
+    const dataview = TypedArray.from(nums);
     const uint8Array = new Uint8Array(dataview.buffer, 0, dataview.byteLength);
     return Array.from(uint8Array);
   } else if (type === Datatype.StringAscii) {

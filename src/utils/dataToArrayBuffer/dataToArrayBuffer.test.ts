@@ -75,7 +75,7 @@ describe('dataToArrayBuffer()', () => {
   });
 
   it('Should return itself if datatype is Blob', () => {
-    const buffer = Uint8Array.from([1,2,3,4])
+    const buffer = Uint8Array.from([1, 2, 3, 4]);
     const result = dataToArrayBuffer(buffer, Datatype.Blob);
 
     expect(result).toBe(buffer);

@@ -1,5 +1,4 @@
-import { ArraySchema } from '../../v1';
-import { Dimension, Attribute } from '../../v2';
+import { ArraySchema, Dimension, Attribute } from '../../v3';
 import dataToQueryWriter from '../dataToQueryWriter';
 import attributeValuesToArrayBuffers from '../attributeValuesToArrayBuffers';
 import capnpQuerySerializer from '../serialization/capnpQuerySerializer';

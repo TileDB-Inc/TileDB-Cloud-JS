@@ -1,4 +1,4 @@
-import { Datatype } from '../../v2';
+import { Datatype } from '../../v3';
 import getTypedArrayFromDataType from '../getTypedArrayFromDataType';
 
 /**

@@ -1,8 +1,8 @@
-import concatArrayBuffers from "./concatArrayBuffers";
+import concatArrayBuffers from './concatArrayBuffers';
 import { describe, it, expect } from 'vitest';
 
-describe("concatArrayBuffers()", () => {
-  it("Should concat 2 ArrayBuffers", () => {
+describe('concatArrayBuffers()', () => {
+  it('Should concat 2 ArrayBuffers', () => {
     const arr1 = Uint32Array.from([88, 122, 29]);
     const arr2 = Uint16Array.from([22, 17, 4]);
     const concatenatedArrayBuffer = concatArrayBuffers(
@@ -12,7 +12,7 @@ describe("concatArrayBuffers()", () => {
 
     expect(concatenatedArrayBuffer.byteLength).toBe(18);
     expect(Array.from(new Uint16Array(concatenatedArrayBuffer))).toEqual([
-      88, 0, 122, 0, 29, 0, 22, 17, 4,
+      88, 0, 122, 0, 29, 0, 22, 17, 4
     ]);
   });
 });

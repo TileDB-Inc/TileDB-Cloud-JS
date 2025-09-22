@@ -21,7 +21,7 @@ describe('arrayFetchFromConfig()', () => {
         ]
       },
       queryType: 'READ'
-    }
+    };
 
     expect(expectedResult).toEqual(result);
   });
@@ -43,7 +43,7 @@ describe('arrayFetchFromConfig()', () => {
         ]
       },
       queryType: 'READ'
-    }
+    };
 
     expect(expectedResult).toEqual(result);
   });
@@ -65,7 +65,7 @@ describe('arrayFetchFromConfig()', () => {
         ]
       },
       queryType: 'READ'
-    }
+    };
 
     expect(expectedResult).toEqual(result);
   });

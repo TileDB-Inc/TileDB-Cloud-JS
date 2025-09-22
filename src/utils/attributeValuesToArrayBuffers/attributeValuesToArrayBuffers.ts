@@ -1,6 +1,6 @@
 import { AttributeValues } from '../../TileDBQuery';
 import dataToArrayBuffer from '../dataToArrayBuffer';
-import { Datatype, Attribute, Dimension } from '../../v2';
+import { Datatype, Attribute, Dimension } from '../../v3';
 import mapToBigIntIfNeeded from '../mapToBigIntIfNeeded';
 
 interface ValueBuffer {

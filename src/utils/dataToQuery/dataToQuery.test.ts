@@ -1,5 +1,12 @@
 import { QueryData } from '../../TileDBQuery';
-import { ArraySchema, ArrayType, Attribute, Datatype, Dimension, Layout } from '../../v2/api';
+import {
+  ArraySchema,
+  ArrayType,
+  Attribute,
+  Datatype,
+  Dimension,
+  Layout
+} from '../../v2/api';
 import dataToQuery from './dataToQuery';
 import { describe, it, expect } from 'vitest';
 

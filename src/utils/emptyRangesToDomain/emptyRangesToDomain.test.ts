@@ -1,30 +1,30 @@
-import { Datatype, Dimension } from "../../v2";
-import emptyRangesToDomain from "./emptyRangesToDomain";
+import { Datatype, Dimension } from '../../v2';
+import emptyRangesToDomain from './emptyRangesToDomain';
 import { describe, it, expect } from 'vitest';
 
-describe("emptyRangesToDomain()", () => {
+describe('emptyRangesToDomain()', () => {
   it("should change empty ranges with the dimensions's domain", () => {
     const dimensions: Dimension[] = [
       {
         domain: null,
         filterPipeline: {},
-        name: "rows",
+        name: 'rows',
         nullTileExtent: true,
         tileExtent: {},
-        type: Datatype.StringAscii,
+        type: Datatype.StringAscii
       },
       {
         domain: {
-          int64: [1, 4],
+          int64: [1, 4]
         },
         filterPipeline: {},
-        name: "cols",
+        name: 'cols',
         nullTileExtent: false,
         tileExtent: {
-          int64: 4,
+          int64: 4
         },
-        type: Datatype.Int64,
-      },
+        type: Datatype.Int64
+      }
     ];
     const results = emptyRangesToDomain([[], []], dimensions);
 

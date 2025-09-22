@@ -1,5 +1,4 @@
-import { Enumeration } from '../../v1';
-import { Attribute, Dimension } from '../../v2';
+import { Attribute, Dimension, Enumeration } from '../../v3';
 
 const isDimension = (
   data: Attribute | Dimension | Enumeration

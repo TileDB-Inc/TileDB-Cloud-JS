@@ -1,4 +1,4 @@
-import { Datatype } from '../../v2';
+import { Datatype } from '../../v3';
 
 // DateTime types are Int64 numbers
 export const int64Types: Array<Datatype> = [
@@ -23,8 +23,8 @@ export const int64Types: Array<Datatype> = [
  * If the type is an INT64 (e.g. Datetimes or Uint64 or Int64)
  * we convert the number array to an array of BigInts.
  */
-const mapToBigIntIfNeeded = (data: number[], type: Datatype) => {
-  let nums: Array<number | bigint> = data;
+const mapToBigIntIfNeeded = (data: unknown[], type: Datatype) => {
+  let nums: Array<unknown> = data;
   if (int64Types.includes(type) && typeof nums[0] === 'number') {
     nums = data.map(BigInt);
   }
