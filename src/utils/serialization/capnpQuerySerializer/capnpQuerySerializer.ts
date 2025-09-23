@@ -35,7 +35,8 @@ import {
   Config,
   Delete,
   QueryChannel,
-  ASTNode
+  ASTNode,
+  WebpConfig
 } from '../../../v3';
 import {
   Query as QueryCapnp,
@@ -75,7 +76,8 @@ import {
   Config as ConfigCapnp,
   Delete as DeleteCapnp,
   QueryChannel as QueryChannelCapnp,
-  ASTNode as ASTNodeCapnp
+  ASTNode as ASTNodeCapnp,
+  WebpConfig as WebpConfigCapnp
 } from '../../../capnp/rest';
 
 import * as capnp from 'capnp-es';
@@ -1135,66 +1137,68 @@ const serializeFilterPipeline = (
   filterPipelineCapnp: FilterPipelineCapnp,
   filterPipeline: FilterPipeline
 ) => {
-  const filters = filterPipelineCapnp._initFilters(
-    filterPipeline.filters.length || 0
-  );
-  filters.map((filter, i) => {
-    const filterData = filterPipeline.filters[i];
+  const { filters = [] } = filterPipeline;
 
-    filter.type = filterData.type;
-    const data = filter._initData();
+  const filtersCapnp = filterPipelineCapnp._initFilters(filters.length);
+  filters.forEach((filter, i) => {
+    const filterCapnp = filtersCapnp.get(i);
 
-    if (filterData.data.float32) {
-      data.float32 = filterData.data.float32;
+    filterCapnp.type = filter.type;
+    const data = filterCapnp._initData();
+
+    if (filter.data.float32) {
+      data.float32 = filter.data.float32;
     }
 
-    if (filterData.data.float64) {
-      data.float64 = filterData.data.float64;
+    if (filter.data.float64) {
+      data.float64 = filter.data.float64;
     }
 
-    if (filterData.data.int32) {
-      data.int32 = filterData.data.int32;
+    if (filter.data.int32) {
+      data.int32 = filter.data.int32;
     }
 
-    if (filterData.data.int16) {
-      data.int16 = filterData.data.int16;
+    if (filter.data.int16) {
+      data.int16 = filter.data.int16;
     }
 
-    if (filterData.data.int8) {
-      data.int8 = filterData.data.int8;
+    if (filter.data.int8) {
+      data.int8 = filter.data.int8;
     }
 
-    if (filterData.data.int64) {
-      data.int64 = BigInt(filterData.data.int64);
+    if (filter.data.int64) {
+      data.int64 = BigInt(filter.data.int64);
     }
 
-    if (filterData.data.uint16) {
-      data.uint16 = filterData.data.uint16;
+    if (filter.data.uint16) {
+      data.uint16 = filter.data.uint16;
     }
 
-    if (filterData.data.uint32) {
-      data.uint32 = filterData.data.uint32;
+    if (filter.data.uint32) {
+      data.uint32 = filter.data.uint32;
     }
 
-    if (filterData.data.uint8) {
-      data.uint8 = filterData.data.uint8;
+    if (filter.data.uint8) {
+      data.uint8 = filter.data.uint8;
     }
 
-    if (filterData.data.uint64) {
-      data.uint64 = BigInt(filterData.data.uint64);
+    if (filter.data.uint64) {
+      data.uint64 = BigInt(filter.data.uint64);
     }
 
-    if (filterData.floatScaleConfig) {
+    if (filter.floatScaleConfig) {
       serializeFloatScaleConfig(
-        filter._initFloatScaleConfig(),
-        filterData.floatScaleConfig
+        filterCapnp._initFloatScaleConfig(),
+        filter.floatScaleConfig
       );
+    }
+
+    if (filter.webpConfig) {
+      serializeWebPConfig(filterCapnp._initWebpConfig(), filter.webpConfig);
     }
 
     return filter;
   });
-
-  filterPipelineCapnp.filters = filters;
 
   return filterPipelineCapnp;
 };
@@ -1215,6 +1219,17 @@ const serializeFloatScaleConfig = (
     floatScaleConfig.scale = floatScaleData.scale;
   }
 };
+
+function serializeWebPConfig(
+  configCapnp: WebpConfigCapnp,
+  config: WebpConfig
+): void {
+  configCapnp.extentX = config.extentX;
+  configCapnp.extentY = config.extentY;
+  configCapnp.format = config.format;
+  configCapnp.quality = config.quality;
+  configCapnp.lossless = config.lossless;
+}
 
 const serializeDomainArray = (
   domainArray: DomainArrayCapnp,
