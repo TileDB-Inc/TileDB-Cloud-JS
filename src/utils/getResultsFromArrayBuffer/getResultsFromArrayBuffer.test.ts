@@ -17,7 +17,7 @@ describe('getResultsFromArrayBuffer()', () => {
     const file = path.join(__dirname, '../../fixtures/fixed_buffer.raw');
     const rawBuffer = readFileSync(file);
     const arrayBufferOfFixedLengthAttributes =
-      convertToArrayBufferIfNodeBuffer(rawBuffer);
+      new DataView(convertToArrayBufferIfNodeBuffer(rawBuffer));
 
     const results = await getResultsFromArrayBuffer(
       arrayBufferOfFixedLengthAttributes,
@@ -37,7 +37,7 @@ describe('getResultsFromArrayBuffer()', () => {
     const file = path.join(__dirname, '../../fixtures/nullable_buffer.raw');
     const rawBuffer = readFileSync(file);
     const arrayBufferOfFixedLengthAttributes =
-      convertToArrayBufferIfNodeBuffer(rawBuffer);
+      new DataView(convertToArrayBufferIfNodeBuffer(rawBuffer));
 
     const results = await getResultsFromArrayBuffer(
       arrayBufferOfFixedLengthAttributes,
@@ -65,7 +65,7 @@ describe('getResultsFromArrayBuffer()', () => {
     const file = path.join(__dirname, '../../fixtures/nullable_buffer.raw');
     const rawBuffer = readFileSync(file);
     const arrayBufferOfFixedLengthAttributes =
-      convertToArrayBufferIfNodeBuffer(rawBuffer);
+      new DataView(convertToArrayBufferIfNodeBuffer(rawBuffer));
 
     const attributeBufferHeaders = [
       {
@@ -92,7 +92,7 @@ describe('getResultsFromArrayBuffer()', () => {
     const file = path.join(__dirname, '../../fixtures/nullable_buffer.raw');
     const rawBuffer = readFileSync(file);
     const arrayBufferOfFixedLengthAttributes =
-      convertToArrayBufferIfNodeBuffer(rawBuffer);
+      new DataView(convertToArrayBufferIfNodeBuffer(rawBuffer));
 
     const attributeBufferHeaders = [
       {

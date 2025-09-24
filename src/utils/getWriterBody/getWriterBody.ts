@@ -1,4 +1,4 @@
-import { ArraySchema, Dimension, Attribute } from '../../v3';
+import { Dimension, Attribute, ModelArray } from '../../v3';
 import dataToQueryWriter from '../dataToQueryWriter';
 import attributeValuesToArrayBuffers from '../attributeValuesToArrayBuffers';
 import capnpQuerySerializer from '../serialization/capnpQuerySerializer';
@@ -7,15 +7,15 @@ import { QueryWrite } from '../../TileDBQuery';
 
 const emptyArrayBuffer = new ArrayBuffer(0);
 
-const getWriterBody = (data: QueryWrite, arraySchema: ArraySchema) => {
-  const dimensions = arraySchema.domain.dimensions as Dimension[];
-  const attributes = arraySchema.attributes as Attribute[];
+const getWriterBody = (data: QueryWrite, array: ModelArray) => {
+  const dimensions = array.arraySchemaLatest.domain.dimensions as Dimension[];
+  const attributes = array.arraySchemaLatest.attributes as Attribute[];
   const valueBuffers = attributeValuesToArrayBuffers(
     data.values,
     dimensions,
     attributes
   );
-  const queryObject = dataToQueryWriter(data, dimensions, valueBuffers);
+  const queryObject = dataToQueryWriter(data, array, valueBuffers);
 
   const querySerialized = capnpQuerySerializer(queryObject);
   const attributeBuffersArray = Object.values(valueBuffers).reduce(

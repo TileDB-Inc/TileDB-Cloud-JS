@@ -1,4 +1,4 @@
-import { Datatype } from '../../v2';
+import { Datatype } from '../../v3';
 import flatten from '../flatten';
 import getTypedArrayFromDataType from '../getTypedArrayFromDataType';
 import mapToBigIntIfNeeded from '../mapToBigIntIfNeeded';

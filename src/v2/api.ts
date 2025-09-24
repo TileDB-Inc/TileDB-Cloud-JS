@@ -23,7 +23,7 @@ import type { RequestArgs } from '../commons/base';
 import { COLLECTION_FORMATS, RequiredError } from '../commons/base';
 import updateBasePathAfterRedirect from '../utils/updateBasePathAfterRedirect';
 
-export const BASE_PATH = "/v2".replace(/\/+$/, "");
+export const BASE_PATH = "http://localhost/v2".replace(/\/+$/, "");
 /**
  *
  * @export

@@ -26,7 +26,7 @@ const arrayFetchFromConfig = (
         }
       ]
     },
-    queryType: queryType as QueryType
+    queryType: queryType
   };
 
   if (config.accessToken) {

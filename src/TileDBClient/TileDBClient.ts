@@ -105,7 +105,7 @@ class TileDBClient {
     this.udf = new UDF(this.config, this.axios);
     this.sql = new Sql(this.config, this.axios);
     this.groups = new Groups(this.config, this.configV2, this.axios);
-    this.query = new TileDBQuery(this.configV2, this.axios);
+    this.query = new TileDBQuery(this.config, this.axios);
   }
 
   public info(

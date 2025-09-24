@@ -17,7 +17,7 @@ describe('dataToArrayBuffer()', () => {
 
     expect(result.byteLength).toBe(str.length);
     // Sanity check that we get back the same data
-    expect(bufferToData(result, type)).toBe(str);
+    expect(bufferToData(new DataView(result), type)).toBe(str);
   });
 
   it('Should return bytes for utf-16 strings', () => {
@@ -26,7 +26,7 @@ describe('dataToArrayBuffer()', () => {
     const result = dataToArrayBuffer(str, type);
 
     expect(result.byteLength).toBe(str.length * 2);
-    expect(bufferToData(result, type)).toBe(str);
+    expect(bufferToData(new DataView(result), type)).toBe(str);
   });
 
   it('Should return bytes for utf-32 strings', () => {
@@ -35,7 +35,7 @@ describe('dataToArrayBuffer()', () => {
     const result = dataToArrayBuffer(str, type);
 
     expect(result.byteLength).toBe(str.length * 4);
-    expect(bufferToData(result, type)).toBe(str);
+    expect(bufferToData(new DataView(result), type)).toBe(str);
   });
 
   it('Should return bytes for ascii strings', () => {
@@ -44,7 +44,7 @@ describe('dataToArrayBuffer()', () => {
     const result = dataToArrayBuffer(str, type);
 
     expect(result.byteLength).toBe(str.length * 1);
-    expect(bufferToData(result, type)).toBe(str);
+    expect(bufferToData(new DataView(result), type)).toBe(str);
   });
 
   it('Should return bytes for usc2 strings', () => {
@@ -53,7 +53,7 @@ describe('dataToArrayBuffer()', () => {
     const result = dataToArrayBuffer(str, type);
 
     expect(result.byteLength).toBe(str.length * 2);
-    expect(bufferToData(result, type)).toBe(str);
+    expect(bufferToData(new DataView(result), type)).toBe(str);
   });
 
   it('Should return bytes for usc4 strings', () => {
@@ -62,7 +62,7 @@ describe('dataToArrayBuffer()', () => {
     const result = dataToArrayBuffer(str, type);
 
     expect(result.byteLength).toBe(str.length * 4);
-    expect(bufferToData(result, type)).toBe(str);
+    expect(bufferToData(new DataView(result), type)).toBe(str);
   });
 
   it('Should return bytes for char strings', () => {
@@ -71,11 +71,11 @@ describe('dataToArrayBuffer()', () => {
     const result = dataToArrayBuffer(str, type);
 
     expect(result.byteLength).toBe(str.length);
-    expect(bufferToData(result, type)).toBe(str);
+    expect(bufferToData(new DataView(result), type)).toBe(str);
   });
 
   it('Should return itself if datatype is Blob', () => {
-    const buffer = Uint8Array.from([1, 2, 3, 4]);
+    const buffer = Uint8Array.from([1, 2, 3, 4]).buffer;
     const result = dataToArrayBuffer(buffer, Datatype.Blob);
 
     expect(result).toBe(buffer);

@@ -24,12 +24,11 @@ export const int64Types: Array<Datatype> = [
  * we convert the number array to an array of BigInts.
  */
 const mapToBigIntIfNeeded = (data: unknown[], type: Datatype) => {
-  let nums: Array<unknown> = data;
-  if (int64Types.includes(type) && typeof nums[0] === 'number') {
-    nums = data.map(BigInt);
+  if (int64Types.includes(type) && typeof data[0] === 'number') {
+    return data.map(BigInt);
   }
 
-  return nums;
+  return data;
 };
 
 export default mapToBigIntIfNeeded;

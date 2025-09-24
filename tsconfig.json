@@ -1,20 +1,18 @@
 {
-    "compilerOptions": {
-      "declaration": true,
-      "esModuleInterop":true,
-      "module": "es2022",
-      "moduleResolution": "node",
-      "noEmitOnError": true,
-      "noUnusedLocals": true,
-      "outDir": "lib",
-      "rootDir": "src",
-      "resolveJsonModule": true,
-      "skipLibCheck": true,
-      "sourceMap": true,
-      "inlineSources": true,
-      "target": "es2022"
-    },
-    "include": [
-      "./src/"
-    ]
-  }
+  "compilerOptions": {
+    "declaration": true,
+    "esModuleInterop": true,
+    "module": "es2022",
+    "moduleResolution": "node",
+    "noEmitOnError": true,
+    "noUnusedLocals": true,
+    "outDir": "lib",
+    "rootDir": "src",
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "inlineSources": true,
+    "target": "es2022"
+  },
+  "include": ["./src/"]
+}

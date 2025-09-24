@@ -13,6 +13,7 @@ import setNullables from '../setNullables';
 import groupValuesByOffsetBytes from '../groupValuesByOffsetBytes';
 import concatChars from '../concatChars';
 import convertToArray from '../convertToArray';
+import { getAlignedBuffer } from '../getAlignedBuffer';
 
 export interface Options {
   /**
@@ -103,7 +104,7 @@ export const getResultsFromArrayBuffer = async (
       : 0;
     const validityOffset =
       totalNumberOfBytesOfAttribute -
-      (isVarLengthSized ? attribute.fixedLenBufferSizeInBytes : 0);
+      (isNullable ? attribute.validityLenBufferSizeInBytes : 0);
     /**
      * If attribute is varLengthSized, we ignore the first N bytes (where N = fixedLenBufferSizeInBytes)
      * These first N bytes contain the offsets of the attribute, which is a uint64 array.
@@ -123,10 +124,17 @@ export const getResultsFromArrayBuffer = async (
     let byteOffsets: bigint[] = [];
 
     if (isVarLengthSized) {
+      const { buffer, offset } = getAlignedBuffer(
+        arrayBuffer.buffer,
+        arrayBuffer.byteOffset + byteOffset,
+        attribute.fixedLenBufferSizeInBytes,
+        BigUint64Array.BYTES_PER_ELEMENT
+      );
+
       byteOffsets = Array.from(
         new BigUint64Array(
-          arrayBuffer.buffer,
-          arrayBuffer.byteOffset + byteOffset,
+          buffer,
+          offset,
           attribute.fixedLenBufferSizeInBytes / BigUint64Array.BYTES_PER_ELEMENT
         )
       );

@@ -35,7 +35,7 @@ export interface QueryData extends Pick<Query, 'layout'>, Options {
 interface AttributeValue {
   validity?: number[];
   offsets?: number[];
-  values: any[];
+  values: unknown[];
 }
 
 export type AttributeValues = Record<string, AttributeValue>;
@@ -59,8 +59,9 @@ export class TileDBQuery {
     this.axios = axios;
 
     const config = new Configuration(this.configurationParams);
-    const baseV2 = config.basePath?.replace('v2', 'v2');
-    const baseV3 = config.basePath?.replace('v2', 'v3');
+    const baseV2 = config.basePath?.replace('v1', 'v2');
+    const baseV3 = config.basePath?.replace('v1', 'v3');
+
     // Add versioning if basePath exists
     const configV2 = new Configuration({
       ...this.configurationParams,
@@ -83,21 +84,22 @@ export class TileDBQuery {
     arrayName: string,
     data: QueryWrite
   ) {
-    try {
-      const arraySchemaResponse = await this.arrayAPI.getArray(
-        workspace,
-        teamspace,
-        arrayName,
-        'application/json'
-      );
-      const arraySchema = arraySchemaResponse.data;
-      const body = getWriterBody(data, arraySchema);
+    const array = await this.ArrayOpen(
+      workspace,
+      teamspace,
+      arrayName,
+      QueryType.Write
+    );
 
-      const queryResponse = await this.queryAPI.submitQuery(
+    const body = getWriterBody(data, array);
+
+    return this.queryAPI
+      .submitQuery(
         workspace,
         teamspace,
         arrayName,
         QueryType.Write,
+        // @ts-expect-error: query already serialized as capnp
         body,
         {
           headers: {
@@ -105,33 +107,30 @@ export class TileDBQuery {
           },
           responseType: 'arraybuffer'
         }
-      );
-
-      /**
-       * Axios in nodeJS environments casts the response to a Buffer object
-       * we convert it back to an ArrayBuffer if needed
-       */
-      const queryData = convertToArrayBufferIfNodeBuffer(queryResponse.data);
-      const bufferWithoutFirstEightBytes = queryData.slice(8);
-
-      return capnpQueryDeSerializer(bufferWithoutFirstEightBytes);
-    } catch (e) {
-      /**
-       * Since we set the responseType to "arrayBuffer", in case the
-       * response error message is a buffer, we deserialize the message before throwing
-       */
-      const errorIsABuffer =
-        e?.response?.data?.buffer || e?.response?.data?.length;
-      if (errorIsABuffer) {
-        const errorArrayBuffer = convertToArrayBufferIfNodeBuffer(
-          e.response.data
-        );
-        const decodedMessage = new TextDecoder().decode(errorArrayBuffer);
-        throw new Error(decodedMessage);
-      } else {
-        throw e;
-      }
-    }
+      )
+      .then(response =>
+        capnpQueryDeSerializer(
+          // @ts-expect-error: Data is reported as File but it is either Buffer or ArrayBuffer
+          new DataView(convertToArrayBufferIfNodeBuffer(response.data), 8)
+        )
+      )
+      .catch(e => {
+        /**
+         * Since we set the responseType to "arrayBuffer", in case the
+         * response error message is a buffer, we deserialize the message before throwing
+         */
+        const errorIsABuffer =
+          e?.response?.data?.buffer || e?.response?.data?.length;
+        if (errorIsABuffer) {
+          const errorArrayBuffer = convertToArrayBufferIfNodeBuffer(
+            e.response.data
+          );
+          const decodedMessage = new TextDecoder().decode(errorArrayBuffer);
+          throw new Error(decodedMessage);
+        } else {
+          throw e;
+        }
+      });
   }
 
   async *ReadQuery(

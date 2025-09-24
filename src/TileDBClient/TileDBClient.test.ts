@@ -8,15 +8,12 @@ const BASE_PATH = 'https://api.tiledb.com';
 const client = new TileDBClient({});
 
 describe('TileDBClient', () => {
-  const OLD_ENV = process.env;
-
   beforeEach(() => {
     mock.reset();
     vitest.resetModules();
   });
 
   afterEach(() => {
-    process.env = OLD_ENV;
   });
   it('Should get array metadata', async () => {
     mock
@@ -242,7 +239,7 @@ describe('TileDBClient', () => {
     expect(client.udf.config.basePath).toBe('https://api.dev.tiledb.io/v1');
     expect(client.sql.config.basePath).toBe('https://api.dev.tiledb.io/v1');
     expect(client.query.configurationParams.basePath).toBe(
-      'https://api.dev.tiledb.io/v2'
+      'https://api.dev.tiledb.io/v1'
     );
   });
 });

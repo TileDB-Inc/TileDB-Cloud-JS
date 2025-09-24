@@ -2,6 +2,8 @@ import dataToQueryWriter from './dataToQueryWriter';
 import attributeValuesToArrayBuffers from '../attributeValuesToArrayBuffers';
 import { Attribute, Datatype, Dimension, Layout } from '../../v2';
 import { describe, it, expect } from 'vitest';
+import { QueryWrite } from '../../TileDBQuery';
+import { ArrayType, ModelArray } from '../../v3';
 
 describe('dataToQueryWriter()', () => {
   it('Should return query object', () => {
@@ -37,7 +39,18 @@ describe('dataToQueryWriter()', () => {
       }
     ];
 
-    const query = {
+    const array: ModelArray = {
+      uri: '',
+      arraySchemaLatest: {
+        arrayType: ArrayType.Sparse,
+        attributes: attributes,
+        domain: {
+          dimensions: dimensions
+        }
+      }
+    };
+
+    const query: QueryWrite = {
       layout: Layout.Unordered,
       values: {
         a: {
@@ -107,11 +120,10 @@ describe('dataToQueryWriter()', () => {
     ];
 
     expect(
-      dataToQueryWriter(query, dimensions, attrBuffers).writer.subarrayRanges
-        .ranges
+      dataToQueryWriter(query, array, attrBuffers).writer.subarrayRanges.ranges
     ).toEqual(expectedRanges);
     expect(
-      dataToQueryWriter(query, dimensions, attrBuffers).attributeBufferHeaders
+      dataToQueryWriter(query, array, attrBuffers).attributeBufferHeaders
     ).toEqual(expectedAttrBuffer);
   });
 });

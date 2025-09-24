@@ -78,6 +78,6 @@ describe('groupValuesByOffsets()', () => {
       )) as string[][];
       expect(result.map(s => s.join(''))).toEqual(strings);
     },
-    { timeout: 20000 }
+    20000
   );
 });

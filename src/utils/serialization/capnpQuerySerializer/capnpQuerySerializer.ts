@@ -171,7 +171,7 @@ const capnpQuerySerializer = (data: Partial<Query>) => {
 
     // Serialize subarrayRanges
     if (writer.subarrayRanges) {
-      serializeSubArray(
+      serializeSubarray(
         queryWriter._initSubarrayRanges(),
         writer.subarrayRanges
       );
@@ -324,7 +324,7 @@ function serializeReaderIndex(
   readerIndexCapnp.layout = layout;
 
   if (subarray) {
-    serializeSubArray(readerIndexCapnp._initSubarray(), subarray);
+    serializeSubarray(readerIndexCapnp._initSubarray(), subarray);
   }
 
   if (readState) {
@@ -457,15 +457,15 @@ function serializeFragmentIndex(
 
 export default capnpQuerySerializer;
 
-export const serializeQueryReader = (
+function serializeQueryReader(
   readerCapnp: QueryReaderCapnp,
   reader: QueryReader
-) => {
+): void {
   readerCapnp.layout = reader.layout;
   readerCapnp.dimLabelIncreasing = reader.dimLabelIncreasing;
 
   if (reader.subarray) {
-    serializeSubArray(readerCapnp._initSubarray(), reader.subarray);
+    serializeSubarray(readerCapnp._initSubarray(), reader.subarray);
   }
 
   if (reader.readState) {
@@ -479,17 +479,9 @@ export const serializeQueryReader = (
   if (reader.stats) {
     serializeStats(readerCapnp._initStats(), reader.stats);
   }
-};
+}
 
-export const serializeArrayData = (array: ModelArray) => {
-  const message = new capnp.Message();
-  const arrayData = message.initRoot(ArrayCapnp);
-  serializeArray(arrayData, array);
-
-  return message.toArrayBuffer();
-};
-
-export const serializeArray = (arrayCapnp: ArrayCapnp, array: ModelArray) => {
+function serializeArray(arrayCapnp: ArrayCapnp, array: ModelArray): void {
   const { fragmentMetadataAll = [] } = array;
 
   arrayCapnp.startTimestamp = BigInt(
@@ -558,7 +550,7 @@ export const serializeArray = (arrayCapnp: ArrayCapnp, array: ModelArray) => {
   });
 
   arrayCapnp.openedAtEndTimestamp = BigInt(array.openedAtEndTimestamp);
-};
+}
 
 const serializeGenericOffsets = (
   genericOffsetsCapnp: FragmentMetadata_GenericTileOffsets,
@@ -1034,7 +1026,7 @@ function serializeCurrentDomain(
     currentDomain.ndRectangle.ndranges.forEach((range, i) => {
       const rangeCapnp = ndRectangleCapnp.ndranges.get(i);
 
-      serializeSubArrayRange(rangeCapnp, range);
+      serializeSubarrayRange(rangeCapnp, range);
     });
   }
 }
@@ -1299,7 +1291,7 @@ const serializeDomainArray = (
   });
 };
 
-function serializeSubArray(
+function serializeSubarray(
   subarrayCapnp: SubarrayCapnp,
   subarray: Subarray
 ): void {
@@ -1323,7 +1315,7 @@ function serializeSubArray(
 
   const rangesCapnp = subarrayCapnp._initRanges(ranges.length);
   ranges.forEach((range, i) =>
-    serializeSubArrayRange(rangesCapnp.get(i), range)
+    serializeSubarrayRange(rangesCapnp.get(i), range)
   );
 
   const labelRangesCapnp = subarrayCapnp._initLabelRanges(labelRanges.length);
@@ -1332,7 +1324,7 @@ function serializeSubArray(
 
     labelSubarrayRangeCapnp.dimensionId = labelSubarrayRange.dimensionId;
     labelSubarrayRangeCapnp.name = labelSubarrayRange.name;
-    serializeSubArrayRange(
+    serializeSubarrayRange(
       labelSubarrayRangeCapnp._initRanges(),
       labelSubarrayRange.ranges
     );
@@ -1347,7 +1339,7 @@ function serializeSubArray(
 
     capnp.utils.setText(0, entry.key, entryCapnp);
     capnp.utils.initStruct(SubarrayRangesCapnp._capnp.size, entryCapnp.value);
-    serializeSubArrayRange(
+    serializeSubarrayRange(
       capnp.utils.getAs(SubarrayRangesCapnp, entryCapnp.value),
       entry.value
     );
@@ -1358,7 +1350,7 @@ function serializeSubArray(
   }
 }
 
-function serializeSubArrayRange(
+function serializeSubarrayRange(
   subarrayRangeCapnp: SubarrayRangesCapnp,
   range: SubarrayRanges
 ): void {
@@ -1774,7 +1766,7 @@ function serializeSubarrayPartitioner(
   } = subarrayPartitioner;
 
   if (subarrayPartitioner.subarray) {
-    serializeSubArray(
+    serializeSubarray(
       subarrayPartitionerCapnp._initSubarray(),
       subarrayPartitioner.subarray
     );
@@ -1811,7 +1803,7 @@ function serializeSubarrayPartitioner(
     const currentCapnp = subarrayPartitionerCapnp._initCurrent();
 
     if (subarray) {
-      serializeSubArray(
+      serializeSubarray(
         currentCapnp._initSubarray(),
         subarrayPartitioner.current.subarray
       );
@@ -1839,14 +1831,14 @@ function serializeSubarrayPartitioner(
 
     singleRange.forEach((range, i) => {
       const rangeCapnp = singleRangeCapnp.get(i);
-      serializeSubArray(rangeCapnp, range);
+      serializeSubarray(rangeCapnp, range);
     });
 
     const multiRangeCapnp = stateCapnp._initMultiRange(multiRange.length);
 
     multiRange.forEach((range, i) => {
       const rangeCapnp = multiRangeCapnp.get(i);
-      serializeSubArray(rangeCapnp, range);
+      serializeSubarray(rangeCapnp, range);
     });
   }
 

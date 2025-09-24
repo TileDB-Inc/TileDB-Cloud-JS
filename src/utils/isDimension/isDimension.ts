@@ -3,7 +3,7 @@ import { Attribute, Dimension, Enumeration } from '../../v3';
 const isDimension = (
   data: Attribute | Dimension | Enumeration
 ): data is Dimension => {
-  return Object.prototype.hasOwnProperty.call(data, 'nullTileExtent');
+  return 'nullTileExtent' in data;
 };
 
 export default isDimension;

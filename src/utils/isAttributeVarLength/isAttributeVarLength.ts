@@ -1,5 +1,4 @@
-import { Enumeration } from '../../v1';
-import { Attribute, Dimension, Datatype } from '../../v2';
+import { Attribute, Dimension, Datatype, Enumeration } from '../../v3';
 import isDimension from '../isDimension';
 
 const isAttributeVarLength = (

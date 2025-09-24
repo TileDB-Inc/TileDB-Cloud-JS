@@ -2,14 +2,14 @@ import { Datatype } from '../../v3';
 import getTypedArrayFromDataType from '../getTypedArrayFromDataType';
 
 const dataToArrayBuffer = (
-  data: Array<unknown> | ArrayBuffer,
+  data: Array<unknown> | ArrayBuffer | string,
   type: Datatype
 ): ArrayBuffer => {
   if (type === Datatype.Blob && data instanceof ArrayBuffer) {
     return data;
   }
 
-  if (Array.isArray(data) && data.length === 0) {
+  if (!data || (Array.isArray(data) && data.length === 0)) {
     return new ArrayBuffer(0);
   } else if (
     (Array.isArray(data) && typeof data[0] === 'string') ||
