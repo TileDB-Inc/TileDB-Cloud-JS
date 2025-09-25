@@ -10,9 +10,9 @@ jobs:
     pool:
       vmImage: ubuntu-latest
     steps:
-      - task: NodeTool@0
+      - task: UseNode@1
         inputs:
-          versionSpec: 18.x
+          version: 22.x
       - script: |
           npm install \
           && npm run lint \
