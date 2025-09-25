@@ -276,6 +276,7 @@ class TileDBClient {
       fileType?: string[];
       excludeFileType?: string[];
       fileProperty?: string[];
+      withMetadata?: boolean;
       options?: { [key: string]: unknown };
     } = {}
   ) {
@@ -291,6 +292,7 @@ class TileDBClient {
       fileType,
       excludeFileType,
       fileProperty,
+      withMetadata = false,
       options
     } = params;
     return this.ArrayApi.arraysBrowserOwnedGet(
@@ -305,6 +307,7 @@ class TileDBClient {
       fileType,
       excludeFileType,
       fileProperty,
+      withMetadata,
       options
     );
   }
@@ -325,6 +328,7 @@ class TileDBClient {
       fileType?: string[];
       excludeFileType?: string[];
       fileProperty?: string[];
+      withMetadata?: boolean;
       options?: { [key: string]: unknown };
     } = {}
   ) {
@@ -340,6 +344,7 @@ class TileDBClient {
       fileType,
       excludeFileType,
       fileProperty,
+      withMetadata = false,
       options
     } = params;
     return this.ArrayApi.arraysBrowserPublicGet(
@@ -354,6 +359,7 @@ class TileDBClient {
       fileType,
       excludeFileType,
       fileProperty,
+      withMetadata,
       options
     );
   }
@@ -374,6 +380,8 @@ class TileDBClient {
       fileType?: string[];
       excludeFileType?: string[];
       fileProperty?: string[];
+      sharedTo?: string[];
+      withMetadata?: boolean;
       options?: { [key: string]: unknown };
     } = {}
   ) {
@@ -389,6 +397,8 @@ class TileDBClient {
       fileType,
       excludeFileType,
       fileProperty,
+      sharedTo,
+      withMetadata = false,
       options
     } = params;
     return this.ArrayApi.arraysBrowserSharedGet(
@@ -403,6 +413,8 @@ class TileDBClient {
       fileType,
       excludeFileType,
       fileProperty,
+      sharedTo,
+      withMetadata,
       options
     );
   }
