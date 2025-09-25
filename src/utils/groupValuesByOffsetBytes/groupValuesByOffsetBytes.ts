@@ -34,8 +34,8 @@ const groupValuesByOffsetBytes = <T>(
 
   return offsetsP
     .map<Array<T>>(([offset, i]) => {
-      const vals = globalThis.env.values as Array<Serializable<T>>;
-      const globalOffsets = globalThis.env.offsets;
+      const vals = global.env.values as Array<Serializable<T>>;
+      const globalOffsets = global.env.offsets;
       const nextOffset = globalOffsets[i + 1];
       // Note: Array.prototype.slice doesn't accept BigInt
       const grpoupedValues = vals.slice(offset, nextOffset);

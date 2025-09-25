@@ -72,10 +72,10 @@ describe('groupValuesByOffsets()', () => {
         .fill(0)
         .map((v, i) => i * txt.length);
 
-      const result = (await groupValuesByOffsetBytes(
+      const result = await groupValuesByOffsetBytes(
         convertToArray(str),
         offsets
-      )) as string[][];
+      );
       expect(result.map(s => s.join(''))).toEqual(strings);
     },
     20000
