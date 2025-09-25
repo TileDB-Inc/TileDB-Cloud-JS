@@ -19,13 +19,15 @@ export default defineConfig({
           browser: {
             enabled: true,
             provider: 'playwright',
-            instances: [{ browser: 'chromium' }]
+            instances: [{ browser: 'chromium' }],
+            headless: true
           },
           include: [
             './src/**/*.{test,spec}.?(c|m)[jt]s?(x)',
             './tests/**/*.{test,spec}.?(c|m)[jt]s?(x)'
           ],
           exclude: [
+            './src/utils/getResultsFromArrayBuffer/getResultsFromArrayBuffer.test.ts',
             './src/utils/convertToArrayBufferIfNodeBuffer/convertToArrayBufferIfNodeBuffer.test.ts',
             './src/utils/isNodeBuffer/isNodeBuffer.test.ts'
           ]

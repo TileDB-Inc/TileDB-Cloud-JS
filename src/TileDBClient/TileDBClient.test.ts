@@ -2,6 +2,7 @@ import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import TileDBClient from './TileDBClient';
 import { describe, it, expect, beforeEach, afterEach, vitest } from 'vitest';
+import { isNode } from '../utils/isNode/isNode';
 
 const mock = new MockAdapter(axios);
 const BASE_PATH = 'https://api.tiledb.com';
@@ -196,7 +197,7 @@ describe('TileDBClient', () => {
     expect(client.configV2.basePath).toBe(BASE_PATH + '/v2');
   });
 
-  it('Should add API versions if env variable is set', async () => {
+  it.skipIf(!isNode())('Should add API versions if env variable is set', async () => {
     process.env.TILEDB_REST_HOST = 'https://api.dev.tiledb.io';
     const TileDBClient = await import('./TileDBClient').then(x => x.default);
     const client = new TileDBClient();
@@ -204,7 +205,7 @@ describe('TileDBClient', () => {
     expect(client.configV2.basePath).toBe('https://api.dev.tiledb.io/v2');
   });
 
-  it('Should add API versions if env variable is set and pass empty config', async () => {
+  it.skipIf(!isNode())('Should add API versions if env variable is set and pass empty config', async () => {
     process.env.TILEDB_REST_HOST = 'https://api.dev.tiledb.io';
     const TileDBClient = await import('./TileDBClient').then(x => x.default);
     const client = new TileDBClient({});

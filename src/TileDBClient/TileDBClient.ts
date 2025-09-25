@@ -292,7 +292,7 @@ class TileDBClient {
       fileType,
       excludeFileType,
       fileProperty,
-      withMetadata = false,
+      withMetadata,
       options
     } = params;
     return this.ArrayApi.arraysBrowserOwnedGet(
@@ -344,7 +344,7 @@ class TileDBClient {
       fileType,
       excludeFileType,
       fileProperty,
-      withMetadata = false,
+      withMetadata,
       options
     } = params;
     return this.ArrayApi.arraysBrowserPublicGet(
@@ -398,7 +398,7 @@ class TileDBClient {
       excludeFileType,
       fileProperty,
       sharedTo,
-      withMetadata = false,
+      withMetadata,
       options
     } = params;
     return this.ArrayApi.arraysBrowserSharedGet(
