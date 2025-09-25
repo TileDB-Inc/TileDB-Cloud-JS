@@ -95,7 +95,7 @@ const dataToQuery = (
   data: QueryData,
   array: ModelArray,
   options: Options
-): Query => {
+): Partial<Query> => {
   const attributes = array.arraySchemaLatest.attributes;
   const dimensions = array.arraySchemaLatest.domain.dimensions;
 
@@ -143,7 +143,7 @@ const dataToQuery = (
     }
   };
 
-  const query: Query = {
+  const query: Partial<Query> = {
     attributeBufferHeaders,
     layout: data.layout,
     status: QueryStatus.Uninitialized,

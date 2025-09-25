@@ -6,7 +6,7 @@ import { ArrayMetadata as ArrayMetadataType } from '../../../v1/api';
 import capnpQuerySerializer from '../capnpQuerySerializer';
 import capnpArrayFetchSerializer from '../capnpArrayFetchSerializer';
 
-const capnpSerializer = (data: unknown) => {
+const capnpSerializer = (data: unknown): ArrayBuffer => {
   if (isArrayFetch(data)) {
     return capnpArrayFetchSerializer(data);
   } else if (isArrayMetadata(data)) {
@@ -15,7 +15,7 @@ const capnpSerializer = (data: unknown) => {
     return capnpQuerySerializer(data);
   }
 
-  return data;
+  return data as ArrayBuffer;
 };
 
 export default capnpSerializer;
