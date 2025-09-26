@@ -13,12 +13,16 @@ jobs:
       - task: UseNode@1
         inputs:
           version: 22.x
-      - script: |
-          npm install \
-          && npm run lint \
-          && npm run build-ts \
-          && npm run test
-        displayName: Install dependencies, build and run tests
+      - script: npm ci
+        displayName: Clean install dependencies
+      - script: npx playwright install --with-deps
+        displayName: 'Install Playwright browsers'
+      - script: npm run lint
+        displayName: Run lint
+      - script: npm run build-ts
+        displayName: Run typescript build
+      - script: npm run test
+        displayName: Run node and browser tests
       - script: |
           echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
         displayName: Write npm token to npmrc
