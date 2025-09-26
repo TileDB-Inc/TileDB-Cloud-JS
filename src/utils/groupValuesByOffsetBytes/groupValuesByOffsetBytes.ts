@@ -1,6 +1,5 @@
-import { Serializable } from 'paralleljs/lib/types';
 import range from '../range';
-import Parallel from 'paralleljs';
+import { Parallel, Serializable } from 'paralleljs';
 
 /**
  * Group values together according to offsets
