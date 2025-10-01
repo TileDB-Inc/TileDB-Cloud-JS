@@ -866,10 +866,12 @@ function serializeNonEmptyDomain(
   nonEmptyDomain: NonEmptyDomain
 ): void {
   nonEmptyDomainCapnp.isEmpty = nonEmptyDomain.isEmpty;
-  serializeDomainArray(
-    nonEmptyDomainCapnp._initNonEmptyDomain(),
-    nonEmptyDomain.nonEmptyDomain
-  );
+  if (nonEmptyDomain.nonEmptyDomain) {
+    serializeDomainArray(
+      nonEmptyDomainCapnp._initNonEmptyDomain(),
+      nonEmptyDomain.nonEmptyDomain
+    );
+  }
 
   if (nonEmptyDomain.sizes?.length) {
     const sizes = nonEmptyDomainCapnp._initSizes(nonEmptyDomain.sizes.length);
@@ -1055,7 +1057,9 @@ const serializeDimension = (
     dimension.filterPipeline
   );
 
-  serializeDomainArray(dimensionCapnp._initDomain(), dimension.domain);
+  if (dimension.domain) {
+    serializeDomainArray(dimensionCapnp._initDomain(), dimension.domain);
+  }
 
   const { tileExtent } = dimension;
   const tileExtentCapnp = dimensionCapnp._initTileExtent();

@@ -6,9 +6,11 @@ export default defineConfig({
     outDir: 'lib',
     emptyOutDir: true,
     lib: {
-      entry: 'src/index.ts',
-      formats: ['es'],
-      fileName: 'index'
+      entry: {
+        'index': 'src/index.ts', 
+        'v3/index': 'src/v3/index.ts'
+      },
+      formats: ['es']
     },
     minify: true,
     sourcemap: true,
@@ -19,5 +21,5 @@ export default defineConfig({
   worker: {
     format: 'es'
   },
-  plugins: [dts({ rollupTypes: true })]
+  plugins: [dts({ rollupTypes: false })]
 });

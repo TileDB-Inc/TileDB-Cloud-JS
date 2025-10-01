@@ -174,7 +174,7 @@ export class TileDBQuery {
           headers: {
             'Content-Type': 'application/capnp'
           },
-          responseType: 'arraybuffer'
+          responseType: 'arraybuffer',
         })
         .then(
           response =>
