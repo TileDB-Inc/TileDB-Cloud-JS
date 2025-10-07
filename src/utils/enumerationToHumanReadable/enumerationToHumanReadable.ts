@@ -1,5 +1,4 @@
-import { Enumeration } from '../../v1';
-import { Datatype } from '../../v2';
+import { Datatype, Enumeration } from '../../v3';
 import bufferToData from '../bufferToData';
 import concatChars from '../concatChars';
 import convertToArray from '../convertToArray';
@@ -11,7 +10,7 @@ const enumerationToHumanReadable = async (enumeration: Enumeration) => {
   const { type, data, name, offsets } = enumeration;
   // Data is returned as array of numbers, convert it to buffer
   const dataBuffer = Uint8Array.from(data).buffer;
-  let values: any = bufferToData(dataBuffer, type as Datatype);
+  const values = bufferToData(new DataView(dataBuffer), type as Datatype);
 
   // In case of var-length data, use offsets to get results
   if (isAttributeVarLength(enumeration)) {
@@ -38,9 +37,14 @@ const enumerationToHumanReadable = async (enumeration: Enumeration) => {
     );
 
     const valueIsString = typeof values === 'string';
-    values = valueIsString
-      ? concatChars(groupedValues as string[][])
-      : (groupedValues as number[][] | bigint[][]);
+
+    return {
+      name: name,
+      type: type,
+      values: valueIsString
+        ? concatChars(groupedValues as string[][])
+        : (groupedValues as number[][] | bigint[][])
+    };
   }
 
   return {

@@ -1,15 +1,16 @@
-import attributesAndDomains from "../../fixtures/attributesAndDomains";
-import getAttributeSchema from "./getAttributeSchema";
+import attributesAndDomains from '../../fixtures/attributesAndDomains';
+import getAttributeSchema from './getAttributeSchema';
+import { describe, it, expect } from 'vitest';
 
-describe("getAttributeSchema()", () => {
-  it("Should find the attribute/domain schema needed by name", () => {
-    const result = getAttributeSchema("a2", attributesAndDomains);
+describe('getAttributeSchema()', () => {
+  it('Should find the attribute/domain schema needed by name', () => {
+    const result = getAttributeSchema('a2', attributesAndDomains);
 
     expect(result).toEqual({
       cellValNum: 4294967295,
       filterPipeline: {},
-      name: "a2",
-      type: 'INT32',
+      name: 'a2',
+      type: 'INT32'
     });
   });
 });

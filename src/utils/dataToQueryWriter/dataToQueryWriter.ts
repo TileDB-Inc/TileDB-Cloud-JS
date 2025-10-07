@@ -1,14 +1,15 @@
 import { ValueBuffers } from '../attributeValuesToArrayBuffers';
-import { Querystatus, Querytype, Dimension } from '../../v2';
+import { QueryStatus, QueryType, Dimension, ModelArray } from '../../v3';
 import getRanges from '../getRanges';
 import { QueryWrite } from '../../TileDBQuery';
 import flatten from '../flatten';
 
 const dataToQueryWriter = (
   data: QueryWrite,
-  dimensions: Dimension[],
+  array: ModelArray,
   valueBuffer: ValueBuffers
 ) => {
+  const dimensions = array.arraySchemaLatest.domain.dimensions as Dimension[];
   const attributeBufferHeaders = Object.entries(valueBuffer).map(
     ([key, val]) => {
       const isVarLength = val.offsetsBuffer.byteLength;
@@ -47,8 +48,9 @@ const dataToQueryWriter = (
   return {
     attributeBufferHeaders,
     layout: data.layout,
-    status: Querystatus.Uninitialized,
-    type: Querytype.Write,
+    status: QueryStatus.Uninitialized,
+    type: QueryType.Write,
+    array: array,
     writer: {
       checkCoordDups: false,
       checkCoordOOB: false,

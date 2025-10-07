@@ -2,54 +2,68 @@
   "name": "@tiledb-inc/tiledb-cloud",
   "version": "1.0.12",
   "description": "JavaScript client for the TileDB Cloud Service.",
-  "main": "lib/index.js",
+  "type": "module",
   "files": [
     "/lib"
   ],
+  "exports": {
+    ".": {
+      "types": "./lib/index.d.ts",
+      "import": "./lib/index.js"
+    },
+    "./v3": {
+      "types": "./lib/v3/index.d.ts",
+      "import": "./lib/v3/index.js"
+    }
+  },
   "scripts": {
     "generate-openapi:v1": "openapi-generator-cli generate -i ../TileDB-Server/openapi/v1to3/src/openapi-v1.yaml -o ./src/v1 -g typescript-axios -t ./openapi-templates --reserved-words-mappings default=default --type-mappings=Array=ModelArray",
     "generate-openapi:v2": "openapi-generator-cli generate -i ../TileDB-Server/openapi/v1to3/src/openapi-v2.yaml -o ./src/v2 -g typescript-axios -t ./openapi-templates --reserved-words-mappings default=default --type-mappings=Array=ModelArray",
-    "generate-openapi:v4": "openapi-generator-cli generate -i ../TileDB-Server/openapi/v4/src/main.yaml -o ./src/v4 -g typescript-axios -t ./openapi-templates --reserved-words-mappings default=default --type-mappings=Array=ModelArray",
+    "generate-openapi:v3": "openapi-generator-cli generate -i ../TileDB-Server/openapi/v3/build/spec/openapi.yaml -o ./src/v3 -g typescript-axios -t ./openapi-templates --reserved-words-mappings default=default --type-mappings=Array=ModelArray",
+    "generate-openapi:v4": "openapi-generator-cli generate -i ../TileDB-Server/openapi/v4/build/spec/openapi.yaml -o ./src/v4 -g typescript-axios -t ./openapi-templates --reserved-words-mappings default=default --type-mappings=Array=ModelArray",
     "generate-openapi:commons": "openapi-generator-cli generate -i ../TileDB-Server/openapi/v1to3/src/openapi-v1.yaml -o ./src/commons -g typescript-axios -t ./openapi-templates-commons --reserved-words-mappings default=default --type-mappings=Array=ModelArray",
-    "build": "npm run generate-openapi:commons && npm run generate-openapi:v1 && npm run generate-openapi:v2 && tsc",
-    "build-ts": "tsc --project tsconfig.build.json",
-    "test": "jest",
-    "lint": "eslint './src/**/*.{ts,tsx}'",
+    "build": "npm run generate-openapi:commons && npm run generate-openapi:v1 && npm run generate-openapi:v2 && vite build",
+    "build-ts": "vite build",
+    "test": "vitest",
+    "coverage": "vitest run --coverage",
+    "lint": "eslint 'src/**/*.{ts,tsx}'",
     "lint:fix": "eslint './src/**/*.{ts,tsx}' --fix",
-    "capnp": "capnpc -o ts src/capnp/arrayMetadata.capnp && capnpc -o ts src/capnp/query.capnp"
+    "capnp": "capnp-es src/capnp/rest.capnp -ots"
   },
   "dependencies": {
-    "axios": "^0.21.1",
-    "capnp-ts": "^0.7.0",
-    "capnpc-ts": "^0.7.0",
-    "paralleljs": "github:SarantopoulosKon/parallel.js#use-globalThis",
+    "axios": "^1.12.2",
+    "capnp-es": "^0.0.11",
+    "paralleljs": "github:TileDB-Inc/parallel.js",
     "save-file": "^2.3.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.15.5",
-    "@babel/preset-env": "^7.15.4",
-    "@openapitools/openapi-generator-cli": "^2.1.26",
-    "@types/jest": "^27.0.1",
-    "@typescript-eslint/eslint-plugin": "^5.59.2",
-    "@typescript-eslint/parser": "^5.59.2",
-    "axios-mock-adapter": "^1.20.0",
-    "eslint": "^8.39.0",
-    "eslint-config-prettier": "^8.8.0",
-    "eslint-plugin-prettier": "^4.2.1",
-    "eslint-plugin-storybook": "^0.6.11",
-    "jest": "^27.2.0",
-    "ts-jest": "^27.0.5",
-    "typescript": "^4.9.5"
-  },
-  "overrides": {
-    "capnp-ts": {
-      "tslib": "1.14.1"
-    }
+    "@babel/core": "^7.28.4",
+    "@babel/preset-env": "^7.28.3",
+    "@babel/preset-typescript": "^7.27.1",
+    "@eslint/js": "^9.36.0",
+    "@openapitools/openapi-generator-cli": "^2.23.4",
+    "@vitest/browser": "^3.2.4",
+    "@vitest/coverage-v8": "^3.2.4",
+    "axios-mock-adapter": "^2.1.0",
+    "eslint": "^9.36.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.4",
+    "playwright": "^1.55.1",
+    "prettier": "^3.6.2",
+    "ts-node": "10.9.2",
+    "typescript": "^5.9.2",
+    "typescript-eslint": "^8.44.1",
+    "vite": "7.1.7",
+    "vite-plugin-dts": "4.5.4",
+    "vitest": "3.2.4"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/TileDB-Inc/TileDB-Cloud-JS.git"
   },
   "author": "",
-  "license": "MIT"
+  "license": "MIT",
+  "engines": {
+    "node": ">=20.0.0"
+  }
 }

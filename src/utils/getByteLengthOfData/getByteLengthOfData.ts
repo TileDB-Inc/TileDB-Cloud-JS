@@ -1,4 +1,4 @@
-import { Datatype } from '../../v2';
+import { Datatype } from '../../v3';
 import getTypedArrayFromDataType from '../getTypedArrayFromDataType';
 import mapToBigIntIfNeeded from '../mapToBigIntIfNeeded';
 
@@ -45,7 +45,8 @@ const getByteLengthOfData = (data: number[] | string[], type: Datatype) => {
   }
 
   if (type === Datatype.Blob) {
-    return (data as any).byteLength;
+    // @ts-expect-error: Add typed array for buffer
+    return (data as unknown).byteLength;
   }
 };
 

@@ -1,5 +1,5 @@
-import { Array as ArrayCapnp } from '../../../capnp/query_capnp';
-import * as capnp from 'capnp-ts';
+import { Array as ArrayCapnp } from '../../../capnp/rest';
+import * as capnp from 'capnp-es';
 import { deserializeArray } from '../capnpQueryDeSerializer';
 
 const capnpArrayDeserializer = (buffer: ArrayBuffer) => {

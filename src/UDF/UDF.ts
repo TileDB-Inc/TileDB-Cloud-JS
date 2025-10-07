@@ -83,7 +83,7 @@ class UDF {
     workspace: string,
     teamspace: string,
     name: string,
-    args?: Array<any>,
+    args?: Array<unknown>,
     options?: Omit<GenericUDF, 'argument' | 'udf_info_name'>
   ) {
     if (args && !Array.isArray(args)) {

@@ -1,41 +1,227 @@
-import { Datatype } from '../../v2';
+import { Datatype } from '../../v3';
 import { int64Types } from '../mapToBigIntIfNeeded';
 import typedArrayToArray from '../typedArrayToArray';
 
-export const bufferToInt8 = (arrayBuffer: ArrayBuffer) =>
-  new Int8Array(arrayBuffer);
-export const bufferToUint8 = (arrayBuffer: ArrayBuffer) =>
-  new Uint8Array(arrayBuffer);
-export const bufferToUint16 = (arrayBuffer: ArrayBuffer) =>
-  new Uint16Array(arrayBuffer);
-export const bufferToUint32 = (arrayBuffer: ArrayBuffer) =>
-  new Uint32Array(arrayBuffer);
-export const bufferToInt16 = (arrayBuffer: ArrayBuffer) =>
-  new Int16Array(arrayBuffer);
-export const bufferToInt32 = (arrayBuffer: ArrayBuffer) =>
-  new Int32Array(arrayBuffer);
-export const bufferToUint64 = (arrayBuffer: ArrayBuffer) =>
-  new BigUint64Array(arrayBuffer);
-export const bufferToInt64 = (arrayBuffer: ArrayBuffer) =>
-  new BigInt64Array(arrayBuffer);
-export const bufferToFloat32 = (arrayBuffer: ArrayBuffer) =>
-  new Float32Array(arrayBuffer);
-export const bufferToFloat64 = (arrayBuffer: ArrayBuffer) =>
-  new Float64Array(arrayBuffer);
-export const bufferToString = (arrayBuffer: ArrayBuffer) => {
+export const bufferToInt8 = (arrayBuffer: ArrayBufferView) => {
+  if (arrayBuffer.byteLength % Int8Array.BYTES_PER_ELEMENT !== 0) {
+    throw new Error(
+      `Incompatible buffer size. Buffer size with size ${arrayBuffer.byteLength} should be a multiple of ${Int8Array.BYTES_PER_ELEMENT}`
+    );
+  }
+
+  return new Int8Array(
+    arrayBuffer.buffer,
+    arrayBuffer.byteOffset,
+    arrayBuffer.byteLength / Int8Array.BYTES_PER_ELEMENT
+  );
+};
+export const bufferToUint8 = (arrayBuffer: ArrayBufferView) => {
+  if (arrayBuffer.byteLength % Uint8Array.BYTES_PER_ELEMENT !== 0) {
+    throw new Error(
+      `Incompatible buffer size. Buffer size with size ${arrayBuffer.byteLength} should be a multiple of ${Uint8Array.BYTES_PER_ELEMENT}`
+    );
+  }
+
+  return new Uint8Array(
+    arrayBuffer.buffer,
+    arrayBuffer.byteOffset,
+    arrayBuffer.byteLength / Uint8Array.BYTES_PER_ELEMENT
+  );
+};
+export const bufferToInt16 = (arrayBuffer: ArrayBufferView) => {
+  if (arrayBuffer.byteLength % Int16Array.BYTES_PER_ELEMENT !== 0) {
+    throw new Error(
+      `Incompatible buffer size. Buffer size with size ${arrayBuffer.byteLength} should be a multiple of ${Int16Array.BYTES_PER_ELEMENT}`
+    );
+  }
+
+  if (arrayBuffer.byteOffset % Int16Array.BYTES_PER_ELEMENT !== 0) {
+    return new Int16Array(
+      arrayBuffer.buffer.slice(
+        arrayBuffer.byteOffset,
+        arrayBuffer.byteOffset + arrayBuffer.byteLength
+      )
+    );
+  }
+
+  return new Int16Array(
+    arrayBuffer.buffer,
+    arrayBuffer.byteOffset,
+    arrayBuffer.byteLength / Int16Array.BYTES_PER_ELEMENT
+  );
+};
+export const bufferToUint16 = (arrayBuffer: ArrayBufferView) => {
+  if (arrayBuffer.byteLength % Uint16Array.BYTES_PER_ELEMENT !== 0) {
+    throw new Error(
+      `Incompatible buffer size. Buffer size with size ${arrayBuffer.byteLength} should be a multiple of ${Uint16Array.BYTES_PER_ELEMENT}`
+    );
+  }
+
+  if (arrayBuffer.byteOffset % Uint16Array.BYTES_PER_ELEMENT !== 0) {
+    return new Uint16Array(
+      arrayBuffer.buffer.slice(
+        arrayBuffer.byteOffset,
+        arrayBuffer.byteOffset + arrayBuffer.byteLength
+      )
+    );
+  }
+
+  return new Uint16Array(
+    arrayBuffer.buffer,
+    arrayBuffer.byteOffset,
+    arrayBuffer.byteLength / Uint16Array.BYTES_PER_ELEMENT
+  );
+};
+export const bufferToInt32 = (arrayBuffer: ArrayBufferView) => {
+  if (arrayBuffer.byteLength % Int32Array.BYTES_PER_ELEMENT !== 0) {
+    throw new Error(
+      `Incompatible buffer size. Buffer size with size ${arrayBuffer.byteLength} should be a multiple of ${Int32Array.BYTES_PER_ELEMENT}`
+    );
+  }
+
+  if (arrayBuffer.byteOffset % Int32Array.BYTES_PER_ELEMENT !== 0) {
+    return new Int32Array(
+      arrayBuffer.buffer.slice(
+        arrayBuffer.byteOffset,
+        arrayBuffer.byteOffset + arrayBuffer.byteLength
+      )
+    );
+  }
+
+  return new Int32Array(
+    arrayBuffer.buffer,
+    arrayBuffer.byteOffset,
+    arrayBuffer.byteLength / Int32Array.BYTES_PER_ELEMENT
+  );
+};
+export const bufferToUint32 = (arrayBuffer: ArrayBufferView) => {
+  if (arrayBuffer.byteLength % Uint32Array.BYTES_PER_ELEMENT !== 0) {
+    throw new Error(
+      `Incompatible buffer size. Buffer size with size ${arrayBuffer.byteLength} should be a multiple of ${Uint32Array.BYTES_PER_ELEMENT}`
+    );
+  }
+
+  if (arrayBuffer.byteOffset % Uint32Array.BYTES_PER_ELEMENT !== 0) {
+    return new Uint32Array(
+      arrayBuffer.buffer.slice(
+        arrayBuffer.byteOffset,
+        arrayBuffer.byteOffset + arrayBuffer.byteLength
+      )
+    );
+  }
+
+  return new Uint32Array(
+    arrayBuffer.buffer,
+    arrayBuffer.byteOffset,
+    arrayBuffer.byteLength / Uint32Array.BYTES_PER_ELEMENT
+  );
+};
+export const bufferToInt64 = (arrayBuffer: ArrayBufferView) => {
+  if (arrayBuffer.byteLength % BigInt64Array.BYTES_PER_ELEMENT !== 0) {
+    throw new Error(
+      `Incompatible buffer size. Buffer size with size ${arrayBuffer.byteLength} should be a multiple of ${BigInt64Array.BYTES_PER_ELEMENT}`
+    );
+  }
+
+  if (arrayBuffer.byteOffset % BigInt64Array.BYTES_PER_ELEMENT !== 0) {
+    return new BigInt64Array(
+      arrayBuffer.buffer.slice(
+        arrayBuffer.byteOffset,
+        arrayBuffer.byteOffset + arrayBuffer.byteLength
+      )
+    );
+  }
+
+  return new BigInt64Array(
+    arrayBuffer.buffer,
+    arrayBuffer.byteOffset,
+    arrayBuffer.byteLength / BigInt64Array.BYTES_PER_ELEMENT
+  );
+};
+export const bufferToUint64 = (arrayBuffer: ArrayBufferView) => {
+  if (arrayBuffer.byteLength % BigUint64Array.BYTES_PER_ELEMENT !== 0) {
+    throw new Error(
+      `Incompatible buffer size. Buffer size with size ${arrayBuffer.byteLength} should be a multiple of ${BigUint64Array.BYTES_PER_ELEMENT}`
+    );
+  }
+
+  if (arrayBuffer.byteOffset % BigUint64Array.BYTES_PER_ELEMENT !== 0) {
+    return new BigUint64Array(
+      arrayBuffer.buffer.slice(
+        arrayBuffer.byteOffset,
+        arrayBuffer.byteOffset + arrayBuffer.byteLength
+      )
+    );
+  }
+
+  return new BigUint64Array(
+    arrayBuffer.buffer,
+    arrayBuffer.byteOffset,
+    arrayBuffer.byteLength / BigUint64Array.BYTES_PER_ELEMENT
+  );
+};
+export const bufferToFloat32 = (arrayBuffer: ArrayBufferView) => {
+  if (arrayBuffer.byteLength % Float32Array.BYTES_PER_ELEMENT !== 0) {
+    throw new Error(
+      `Incompatible buffer size. Buffer size with size ${arrayBuffer.byteLength} should be a multiple of ${Float32Array.BYTES_PER_ELEMENT}`
+    );
+  }
+
+  if (arrayBuffer.byteOffset % Float32Array.BYTES_PER_ELEMENT !== 0) {
+    return new Float32Array(
+      arrayBuffer.buffer.slice(
+        arrayBuffer.byteOffset,
+        arrayBuffer.byteOffset + arrayBuffer.byteLength
+      )
+    );
+  }
+
+  return new Float32Array(
+    arrayBuffer.buffer,
+    arrayBuffer.byteOffset,
+    arrayBuffer.byteLength / Float32Array.BYTES_PER_ELEMENT
+  );
+};
+export const bufferToFloat64 = (arrayBuffer: ArrayBufferView) => {
+  if (arrayBuffer.byteLength % Float64Array.BYTES_PER_ELEMENT !== 0) {
+    throw new Error(
+      `Incompatible buffer size. Buffer size with size ${arrayBuffer.byteLength} should be a multiple of ${Float64Array.BYTES_PER_ELEMENT}`
+    );
+  }
+
+  if (arrayBuffer.byteOffset % Float64Array.BYTES_PER_ELEMENT !== 0) {
+    return new Float64Array(
+      arrayBuffer.buffer.slice(
+        arrayBuffer.byteOffset,
+        arrayBuffer.byteOffset + arrayBuffer.byteLength
+      )
+    );
+  }
+
+  return new Float64Array(
+    arrayBuffer.buffer,
+    arrayBuffer.byteOffset,
+    arrayBuffer.byteLength / Float64Array.BYTES_PER_ELEMENT
+  );
+};
+export const bufferToString = (arrayBuffer: ArrayBufferView) => {
   const utf8decoder = new TextDecoder();
   return utf8decoder.decode(arrayBuffer);
 };
-export const bufferToAscii = (arrayBuffer: ArrayBuffer) => {
+export const bufferToAscii = (arrayBuffer: ArrayBufferView) => {
   const utf8decoder = new TextDecoder('ascii');
   return utf8decoder.decode(arrayBuffer);
 };
-export const bufferToUTF16 = (arrayBuffer: ArrayBuffer) => {
+export const bufferToUTF16 = (arrayBuffer: ArrayBufferView) => {
   const utf8decoder = new TextDecoder('utf-16');
   return utf8decoder.decode(arrayBuffer);
 };
-export const bufferToUTF32 = (arrayBuffer: ArrayBuffer) => {
-  const view = new DataView(arrayBuffer, 0, arrayBuffer.byteLength);
+export const bufferToUTF32 = (arrayBuffer: ArrayBufferView) => {
+  const view = new DataView(
+    arrayBuffer.buffer,
+    arrayBuffer.byteOffset,
+    arrayBuffer.byteLength
+  );
   let result = '';
 
   for (let i = 0; i < arrayBuffer.byteLength; i += 4) {
@@ -48,7 +234,10 @@ export const bufferToUTF32 = (arrayBuffer: ArrayBuffer) => {
 /**
  * Convert an ArrayBuffer to its corresponding type
  */
-const bufferToData = (arrayBuffer: ArrayBuffer, type: Datatype) => {
+const bufferToData = (
+  arrayBuffer: ArrayBufferView<ArrayBuffer>,
+  type: Datatype
+) => {
   if (type === Datatype.Int32) {
     return typedArrayToArray(bufferToInt32(arrayBuffer));
   } else if (type === Datatype.Uint64) {
@@ -87,10 +276,13 @@ const bufferToData = (arrayBuffer: ArrayBuffer, type: Datatype) => {
   } else if (int64Types.includes(type)) {
     return typedArrayToArray(bufferToInt64(arrayBuffer));
   } else if (type === Datatype.Blob) {
-    return arrayBuffer;
+    return arrayBuffer.buffer.slice(
+      arrayBuffer.byteLength,
+      arrayBuffer.byteOffset + arrayBuffer.byteLength
+    );
   }
 
-  return arrayBuffer;
+  return arrayBuffer.buffer;
 };
 
 export default bufferToData;

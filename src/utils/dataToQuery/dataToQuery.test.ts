@@ -1,11 +1,20 @@
-import { ArrayType } from '../../v2/api';
+import { QueryData } from '../../TileDBQuery';
+import {
+  ArrayType,
+  Attribute,
+  Datatype,
+  Dimension,
+  Layout
+} from '../../v2/api';
+import { ModelArray } from '../../v3';
 import dataToQuery from './dataToQuery';
+import { describe, it, expect } from 'vitest';
 
-const arraySchemaAttributes: any = [
+const arraySchemaAttributes: Attribute[] = [
   {
     cellValNum: 4294967295,
     name: 'a1',
-    type: 'CHAR',
+    type: Datatype.Char,
     filterPipeline: {},
     fillValue: [128],
     nullable: false,
@@ -14,7 +23,7 @@ const arraySchemaAttributes: any = [
   {
     cellValNum: 4294967295,
     name: 'a2',
-    type: 'UINT64',
+    type: Datatype.Uint64,
     filterPipeline: {},
     fillValue: [255, 255, 255, 255, 255, 255, 255, 255],
     nullable: false,
@@ -23,7 +32,7 @@ const arraySchemaAttributes: any = [
   {
     cellValNum: 4294967295,
     name: 'a4',
-    type: 'INT32',
+    type: Datatype.Int32,
     filterPipeline: {},
     fillValue: [0, 0, 0, 128],
     nullable: false,
@@ -32,7 +41,7 @@ const arraySchemaAttributes: any = [
   {
     cellValNum: 1,
     name: 'a3',
-    type: 'INT32',
+    type: Datatype.Int32,
     filterPipeline: {},
     fillValue: [0, 0, 0, 128],
     nullable: false,
@@ -41,7 +50,7 @@ const arraySchemaAttributes: any = [
   {
     cellValNum: 1,
     name: 'a0',
-    type: 'INT32',
+    type: Datatype.Int32,
     filterPipeline: {},
     fillValue: [0, 0, 0, 128],
     nullable: false,
@@ -50,7 +59,7 @@ const arraySchemaAttributes: any = [
   {
     cellValNum: 1,
     name: 'a5',
-    type: 'INT32',
+    type: Datatype.Int32,
     filterPipeline: {},
     fillValue: [0, 0, 0, 128],
     nullable: true,
@@ -59,7 +68,7 @@ const arraySchemaAttributes: any = [
   {
     cellValNum: 4294967295,
     name: 'a6',
-    type: 'INT32',
+    type: Datatype.Int32,
     filterPipeline: {},
     fillValue: [0, 0, 0, 128],
     nullable: true,
@@ -67,33 +76,33 @@ const arraySchemaAttributes: any = [
   }
 ];
 
-const dimensions: any = [
+const dimensions: Dimension[] = [
   {
     domain: null,
     filterPipeline: {},
     name: 'rows',
     nullTileExtent: true,
     tileExtent: {},
-    type: 'STRING_ASCII'
+    type: Datatype.StringAscii
   },
   {
     domain: {
-      int64: ['1', '4']
+      int64: [1, 4]
     },
     filterPipeline: {},
     name: 'cols',
     nullTileExtent: false,
     tileExtent: {
-      int64: '4'
+      int64: 4
     },
-    type: 'INT64'
+    type: Datatype.Int64
   }
 ];
 
 describe('dataToQuery()', () => {
   it('Should return correct data', () => {
-    const stringQueryData: any = {
-      layout: 'row-major',
+    const stringQueryData: QueryData = {
+      layout: Layout.RowMajor,
       ranges: [
         [
           ['a', 'c'],
@@ -216,13 +225,18 @@ describe('dataToQuery()', () => {
         attr.originalValidityLenBufferSizeInBytes
       );
     }, 0);
-    const arraySchema: any = {
-      attributes: arraySchemaAttributes,
-      domain: {
-        dimensions
+
+    const array: ModelArray = {
+      uri: '',
+      arraySchemaLatest: {
+        attributes: arraySchemaAttributes,
+        domain: {
+          dimensions
+        }
       }
     };
-    const res = dataToQuery(stringQueryData, arraySchema, {});
+
+    const res = dataToQuery(stringQueryData, array, {});
 
     expect(res.reader.layout).toEqual('row-major');
     expect(res.reader.subarray.ranges).toEqual(exptectedRanges);
@@ -231,7 +245,7 @@ describe('dataToQuery()', () => {
   });
 
   it('Should set denseReader for dense reads', () => {
-    const stringQueryData: any = {
+    const stringQueryData: QueryData = {
       layout: 'row-major',
       ranges: [
         [
@@ -245,21 +259,26 @@ describe('dataToQuery()', () => {
       ],
       bufferSize: 15000
     };
-    const arraySchema: any = {
-      arrayType: ArrayType.Dense,
-      attributes: arraySchemaAttributes,
-      domain: {
-        dimensions
+
+    const array: ModelArray = {
+      uri: '',
+      arraySchemaLatest: {
+        arrayType: ArrayType.Dense,
+        attributes: arraySchemaAttributes,
+        domain: {
+          dimensions: dimensions
+        }
       }
     };
-    const res = dataToQuery(stringQueryData, arraySchema, {});
+
+    const res = dataToQuery(stringQueryData, array, {});
 
     expect(res.reader).toBe(undefined);
     expect(res.denseReader).not.toBe(undefined);
   });
 
   it('Should set reader for sparse reads with row-major/col-major', () => {
-    const stringQueryData: any = {
+    const stringQueryData: QueryData = {
       layout: 'row-major',
       ranges: [
         [
@@ -273,21 +292,26 @@ describe('dataToQuery()', () => {
       ],
       bufferSize: 15000
     };
-    const arraySchema: any = {
-      arrayType: ArrayType.Sparse,
-      attributes: arraySchemaAttributes,
-      domain: {
-        dimensions
+
+    const array: ModelArray = {
+      uri: '',
+      arraySchemaLatest: {
+        arrayType: ArrayType.Sparse,
+        attributes: arraySchemaAttributes,
+        domain: {
+          dimensions: dimensions
+        }
       }
     };
-    const res = dataToQuery(stringQueryData, arraySchema, {});
+
+    const res = dataToQuery(stringQueryData, array, {});
 
     expect(res.reader).not.toBe(undefined);
     expect(res.denseReader).toBe(undefined);
   });
 
   it('Should set denseReader for sparse reads with layout that is not row-major/col-major', () => {
-    const stringQueryData: any = {
+    const stringQueryData: QueryData = {
       layout: 'unordered',
       ranges: [
         [
@@ -301,14 +325,17 @@ describe('dataToQuery()', () => {
       ],
       bufferSize: 15000
     };
-    const arraySchema: any = {
-      arrayType: ArrayType.Sparse,
-      attributes: arraySchemaAttributes,
-      domain: {
-        dimensions
+    const array: ModelArray = {
+      uri: '',
+      arraySchemaLatest: {
+        arrayType: ArrayType.Sparse,
+        attributes: arraySchemaAttributes,
+        domain: {
+          dimensions: dimensions
+        }
       }
     };
-    const res = dataToQuery(stringQueryData, arraySchema, {});
+    const res = dataToQuery(stringQueryData, array, {});
 
     expect(res.reader).toBe(undefined);
     expect(res.denseReader).not.toBe(undefined);

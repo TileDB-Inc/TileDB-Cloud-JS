@@ -1,6 +1,7 @@
 import { Configuration } from '../../v1';
 import { Querytype } from '../../v2';
 import arrayFetchFromConfig from './arrayFetchFromConfig';
+import { describe, it, expect } from 'vitest';
 
 describe('arrayFetchFromConfig()', () => {
   it('Should should add token', () => {
@@ -12,7 +13,7 @@ describe('arrayFetchFromConfig()', () => {
           { key: 'rest.use_refactored_array_open', value: 'true' },
           {
             key: 'rest.use_refactored_array_open_and_query_submit',
-            value: 'false'
+            value: 'true'
           },
           { key: 'rest.load_metadata_on_array_open', value: 'true' },
           { key: 'rest.load_non_empty_domain_on_array_open', value: 'true' },
@@ -20,7 +21,7 @@ describe('arrayFetchFromConfig()', () => {
         ]
       },
       queryType: 'READ'
-    }
+    };
 
     expect(expectedResult).toEqual(result);
   });
@@ -34,7 +35,7 @@ describe('arrayFetchFromConfig()', () => {
           { key: 'rest.use_refactored_array_open', value: 'true' },
           {
             key: 'rest.use_refactored_array_open_and_query_submit',
-            value: 'false'
+            value: 'true'
           },
           { key: 'rest.load_metadata_on_array_open', value: 'true' },
           { key: 'rest.load_non_empty_domain_on_array_open', value: 'true' },
@@ -42,7 +43,7 @@ describe('arrayFetchFromConfig()', () => {
         ]
       },
       queryType: 'READ'
-    }
+    };
 
     expect(expectedResult).toEqual(result);
   });
@@ -56,7 +57,7 @@ describe('arrayFetchFromConfig()', () => {
           { key: 'rest.use_refactored_array_open', value: 'true' },
           {
             key: 'rest.use_refactored_array_open_and_query_submit',
-            value: 'false'
+            value: 'true'
           },
           { key: 'rest.load_metadata_on_array_open', value: 'true' },
           { key: 'rest.load_non_empty_domain_on_array_open', value: 'true' },
@@ -64,7 +65,7 @@ describe('arrayFetchFromConfig()', () => {
         ]
       },
       queryType: 'READ'
-    }
+    };
 
     expect(expectedResult).toEqual(result);
   });

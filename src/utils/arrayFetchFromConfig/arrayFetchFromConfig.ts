@@ -1,9 +1,9 @@
-import { ArrayFetch, Querytype } from '../../v2';
-import { Configuration } from '../../v1';
+import { ArrayFetch } from '../../v2';
+import { QueryType, Configuration } from '../../v3';
 
 const arrayFetchFromConfig = (
   config: Configuration,
-  queryType: Querytype
+  queryType: QueryType
 ): ArrayFetch => {
   const arrayFetch = {
     config: {
@@ -14,7 +14,7 @@ const arrayFetchFromConfig = (
         },
         {
           key: 'rest.use_refactored_array_open_and_query_submit',
-          value: 'false'
+          value: 'true'
         },
         {
           key: 'rest.load_metadata_on_array_open',
@@ -26,7 +26,7 @@ const arrayFetchFromConfig = (
         }
       ]
     },
-    queryType
+    queryType: queryType
   };
 
   if (config.accessToken) {

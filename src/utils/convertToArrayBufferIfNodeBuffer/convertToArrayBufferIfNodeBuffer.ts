@@ -6,7 +6,9 @@ import isNodeBuffer from '../isNodeBuffer';
  * @param buffer ArrayBuffer or Nodejs Buffer
  * @returns ArrayBuffer
  */
-function convertToArrayBufferIfNodeBuffer(buffer: any): ArrayBuffer {
+function convertToArrayBufferIfNodeBuffer(
+  buffer: ArrayBuffer | Buffer
+): ArrayBuffer {
   if (isNodeBuffer(buffer)) {
     return new Uint8Array(buffer).buffer;
   }

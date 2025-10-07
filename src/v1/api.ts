@@ -493,6 +493,12 @@ export interface ArrayInfo {
      */
     created_by?: string;
     /**
+     * The TileDB-internal path of the array.
+     * @type {string}
+     * @memberof ArrayInfo
+     */
+    asset_path?: string;
+    /**
      * Contains the metadata of the array. **Note:** This property is included in the response only if the `with_metadata` query parameter is set to `true`. 
      * @type {Array<MetadataStringifiedEntry>}
      * @memberof ArrayInfo
@@ -4501,11 +4507,17 @@ export interface RegisteredTaskGraph {
      */
     uuid?: string;
     /**
-     * The namespace that owns this task graph log.
+     * The workspace that owns this task graph log.
      * @type {string}
      * @memberof RegisteredTaskGraph
      */
-    namespace?: string;
+    workspace?: string;
+    /**
+     * The teamspace that owns this task graph log.
+     * @type {string}
+     * @memberof RegisteredTaskGraph
+     */
+    teamspace?: string;
     /**
      * The name of this graph, to appear in URLs. Must be unique per-namespace. 
      * @type {string}
@@ -5155,12 +5167,6 @@ export interface TGUDFEnvironment {
      */
     access_credentials_name?: string;
     /**
-     * If set, the non-default namespace to execute this UDF under (and to query any Array Nodes that are used as inputs to this UDF). 
-     * @type {string}
-     * @memberof TGUDFEnvironment
-     */
-    namespace?: string | null;
-    /**
      * The resource class to use for the UDF execution. Resource classes define resource limits for memory and CPUs. If this is empty, then the UDF will execute in the standard resource class of the TileDB Cloud provider. 
      * @type {string}
      * @memberof TGUDFEnvironment
@@ -5303,11 +5309,11 @@ export interface TaskGraph {
      */
     uuid?: string;
     /**
-     * The namespace that owns this task graph. When creating a task graph log, this is used as the namespace to create the log in; thereafter it is read-only. 
+     * The workspace that owns this task graph. When creating a task graph log, this is used as the workspace to create the log in; thereafter it is read-only. 
      * @type {string}
      * @memberof TaskGraph
      */
-    namespace?: string;
+    workspace?: string;
     /**
      * The name of the user who created this task graph log.
      * @type {string}
@@ -5399,11 +5405,11 @@ export interface TaskGraphLog {
      */
     uuid?: string;
     /**
-     * The namespace that owns this task graph log. When creating a task graph log, this is used as the namespace to create the log in; thereafter it is read-only. 
+     * The workspace that owns this task graph log. When creating a task graph log, this is used as the workspace to create the log in; thereafter it is read-only. 
      * @type {string}
      * @memberof TaskGraphLog
      */
-    namespace?: string;
+    workspace?: string;
     /**
      * The name of the user who created this task graph log.
      * @type {string}
@@ -5686,18 +5692,6 @@ export interface TaskGraphSharing {
      * @memberof TaskGraphSharing
      */
     actions?: Array<TaskGraphActions>;
-    /**
-     * namespace being granted array access can be a user or organization
-     * @type {string}
-     * @memberof TaskGraphSharing
-     */
-    namespace?: string;
-    /**
-     * details on if the namespace is a organization or user
-     * @type {string}
-     * @memberof TaskGraphSharing
-     */
-    namespace_type?: string;
 }
 /**
  * The type of a task graph. 

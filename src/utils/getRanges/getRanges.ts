@@ -1,16 +1,16 @@
 import rangesToBuffer from '../rangesToBuffer';
 import flatten from '../flatten';
 import { QueryData } from '../../TileDBQuery';
-import getByteLengthOfdata from '../getByteLengthOfData';
+import getByteLengthOfData from '../getByteLengthOfData';
 import checkRangeOutOfBounds from '../checkRangeOutOfBounds';
-import { DomainArray, Dimension } from '../../v2';
+import { DomainArray, Dimension } from '../../v3';
 
 /**
  * Checks if data is an array of numbers
  * @param data
  * @returns Boolean if data is an array of numbers
  */
-const isNumberArray = (data: any[]): data is number[] => {
+const isNumberArray = (data: Array<unknown>): data is number[] => {
   return typeof data[0] === 'number';
 };
 
@@ -39,14 +39,14 @@ const getRanges = (
     }
 
     const bufferSizes = isArrayOfArrays
-      ? range.map(r => getByteLengthOfdata(r, type))
-      : [getByteLengthOfdata(range as number[], type)];
+      ? range.map(r => getByteLengthOfData(r, type))
+      : [getByteLengthOfData(range as number[], type)];
     const startRanges = isArrayOfArrays ? range.map(r => r[0]) : [firstRange];
     const bufferStartSizes = startRanges.map(startingRange => {
       if (!startingRange) {
         return 0;
       }
-      return getByteLengthOfdata([startingRange], type);
+      return getByteLengthOfData([startingRange], type);
     });
     /**
      * bufferStartSizes is used only for var length string ascii dimensions,
@@ -60,7 +60,10 @@ const getRanges = (
       type,
       // TODO: How do we know "hasDefaultRange" ? Is it related with the domain?
       hasDefaultRange: isEmpty || !!hasDefaultRange,
-      buffer: rangesToBuffer(flatten(range), type),
+      buffer: rangesToBuffer(
+        flatten(range) as Array<number> | Array<string>,
+        type
+      ),
       bufferSizes,
       bufferStartSizes: isEmpty ? [0] : bufferStartSizes
     };

@@ -1,7 +1,10 @@
-import * as capnp from 'capnp-ts';
-import { ArrayMetadata } from '../../../capnp/arrayMetadata_capnp';
-import capnpQueryDeSerializer from '../capnpQueryDeSerializer';
+import * as capnp from 'capnp-es';
+import { ArrayMetadata, Query as QueryCapnp } from '../../../capnp/rest';
+import capnpQueryDeSerializer, {
+  deserializeAttributeBufferHeaders
+} from '../capnpQueryDeSerializer';
 import capnpArrayDeserializer from '../capnpArrayDeserializer';
+import { AttributeBufferHeader, QueryStatus } from '../../../v3';
 
 export enum DeserializableType {
   'arrayMetadata',
@@ -9,7 +12,7 @@ export enum DeserializableType {
   'array'
 }
 
-export const deserializeCapnp = (data: any, type: DeserializableType) => {
+export const deserializeCapnp = (data: unknown, type: DeserializableType) => {
   if (!isArrayBuffer(data)) {
     throw new Error('Data is not of type ArrayBuffer');
   }
@@ -25,27 +28,42 @@ export const deserializeCapnp = (data: any, type: DeserializableType) => {
 };
 
 const capnpArrayMetadaDeSerializer = (
-  buffer: ArrayBuffer | ArrayBufferLike
+  buffer: ArrayBuffer | ArrayBufferView<ArrayBufferLike>
 ) => {
   const message = new capnp.Message(buffer, false);
   const arrayMetadata = message.getRoot(ArrayMetadata);
-  const entries = arrayMetadata.getEntries().map(entry => {
-    const value = entry.getValue().toArray();
+  const entries = arrayMetadata.entries.map(entry => {
+    const value = entry.value.toArray();
 
     return {
       value,
-      del: entry.getDel(),
-      key: entry.getKey(),
-      type: entry.getType(),
-      valueNum: entry.getValueNum()
+      del: entry.del,
+      key: entry.key,
+      type: entry.type,
+      valueNum: entry.valueNum
     };
   });
   return { entries };
 };
 
-const isArrayBuffer = (data: any): data is ArrayBuffer => {
+const isArrayBuffer = (data: Partial<ArrayBuffer>): data is ArrayBuffer => {
   if (data && data.byteLength && data.slice) {
     return true;
   }
   return false;
 };
+
+export function getQueryStatus(
+  bufferView: ArrayBufferView<ArrayBuffer>
+): QueryStatus {
+  return new capnp.Message(bufferView, false).getRoot(QueryCapnp)
+    .status as QueryStatus;
+}
+
+export function getQueryAttributeHeaders(
+  bufferView: ArrayBufferView<ArrayBuffer>
+): Array<AttributeBufferHeader> {
+  return deserializeAttributeBufferHeaders(
+    new capnp.Message(bufferView, false).getRoot(QueryCapnp)
+  );
+}

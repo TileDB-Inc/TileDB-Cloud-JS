@@ -1,5 +1,5 @@
-const base = require('../lib/v1/api');
-const baseV2 = require('../lib/v2/api');
+import { expect, test } from 'vitest';
+import { v1 as base, v2 as baseV2 } from '../lib';
 
 test('exported BASE_PATH is correct', () => {
   expect(base.BASE_PATH).toBe('http://localhost/v1');

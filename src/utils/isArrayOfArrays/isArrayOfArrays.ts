@@ -1,4 +1,4 @@
-const isArrayOfArrays = (data: any): data is Array<Array<any>> => {
+const isArrayOfArrays = (data: unknown): data is Array<Array<unknown>> => {
   if (Array.isArray(data) && Array.isArray(data[0])) {
     return true;
   }

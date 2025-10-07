@@ -13,7 +13,12 @@ import {
 import UDF from '../UDF';
 import Sql from '../Sql';
 import Groups from '../Groups';
-import { ConfigurationParameters, Configuration, Layout } from '../v2';
+import {
+  ConfigurationParameters,
+  Configuration,
+  Layout,
+  QueryApi
+} from '../v3';
 import TileDBQuery from '../TileDBQuery';
 import enumerationToHumanReadable from '../utils/enumerationToHumanReadable';
 
@@ -40,11 +45,13 @@ if (isNode) {
 class TileDBClient {
   config: Configuration;
   configV2: Configuration;
+  configV3: Configuration;
   ArrayApi: ArrayApi;
   OrganizationApi: OrganizationApi;
   UserApi: UserApi;
   NotebookApi: NotebookApi;
   TasksApi: TasksApi;
+  QueryApi: QueryApi;
   udf: UDF;
   groups: Groups;
   sql: Sql;
@@ -77,6 +84,14 @@ class TileDBClient {
       basePath: config.basePath + '/v2'
     });
 
+    // Add versioning if basePath exists
+    this.configV3 = new Configuration({
+      ...defaultConfig,
+      ...params,
+      // for v3 API calls, basePath needs /v3 suffix
+      basePath: config.basePath + '/v3'
+    });
+
     this.ArrayApi = new ArrayApi(this.config, undefined, this.axios);
     this.OrganizationApi = new OrganizationApi(
       this.config,
@@ -86,17 +101,18 @@ class TileDBClient {
     this.UserApi = new UserApi(this.config, undefined, this.axios);
     this.NotebookApi = new NotebookApi(this.config, undefined, this.axios);
     this.TasksApi = new TasksApi(this.config, undefined, this.axios);
+    this.QueryApi = new QueryApi(this.configV3, undefined, this.axios);
     this.udf = new UDF(this.config, this.axios);
     this.sql = new Sql(this.config, this.axios);
     this.groups = new Groups(this.config, this.configV2, this.axios);
-    this.query = new TileDBQuery(this.configV2, this.axios);
+    this.query = new TileDBQuery(this.config, this.axios);
   }
 
   public info(
     workspace: string,
     teamspace: string,
     array: string,
-    options?: any
+    options?: { [key: string]: unknown }
   ) {
     return this.ArrayApi.getArrayMetadata(workspace, teamspace, array, options);
   }
@@ -154,7 +170,7 @@ class TileDBClient {
     eventTypes?: string,
     taskId?: string,
     hasTaskId?: boolean,
-    options?: any
+    options?: { [key: string]: unknown }
   ) {
     return this.ArrayApi.arrayActivityLog(
       workspace,
@@ -173,7 +189,7 @@ class TileDBClient {
     workspace: string,
     teamspace: string,
     array: string,
-    options?: any
+    options?: { [key: string]: unknown }
   ) {
     return this.ArrayApi.deregisterArray(workspace, teamspace, array, options);
   }
@@ -183,7 +199,7 @@ class TileDBClient {
     teamspace: string,
     array: string,
     arrayMetadata: ArrayInfoUpdate,
-    options?: any
+    options?: { [key: string]: unknown }
   ) {
     return this.ArrayApi.registerArray(
       workspace,
@@ -198,7 +214,7 @@ class TileDBClient {
     workspace: string,
     teamspace: string,
     array: string,
-    options?: any
+    options?: { [key: string]: unknown }
   ) {
     return this.ArrayApi.getArraySharingPolicies(
       workspace,
@@ -213,7 +229,7 @@ class TileDBClient {
     teamspace: string,
     array: string,
     arraySharing: ArraySharing,
-    options?: any
+    options?: { [key: string]: unknown }
   ) {
     return this.ArrayApi.shareArray(
       workspace,
@@ -229,7 +245,7 @@ class TileDBClient {
     teamspace: string,
     array: string,
     teamspaceToUnshare: string,
-    options?: any
+    options?: { [key: string]: unknown }
   ) {
     const noActions = {
       actions: [],
@@ -260,7 +276,8 @@ class TileDBClient {
       fileType?: string[];
       excludeFileType?: string[];
       fileProperty?: string[];
-      options?: any;
+      withMetadata?: boolean;
+      options?: { [key: string]: unknown };
     } = {}
   ) {
     const {
@@ -275,6 +292,7 @@ class TileDBClient {
       fileType,
       excludeFileType,
       fileProperty,
+      withMetadata,
       options
     } = params;
     return this.ArrayApi.arraysBrowserOwnedGet(
@@ -289,6 +307,7 @@ class TileDBClient {
       fileType,
       excludeFileType,
       fileProperty,
+      withMetadata,
       options
     );
   }
@@ -309,7 +328,8 @@ class TileDBClient {
       fileType?: string[];
       excludeFileType?: string[];
       fileProperty?: string[];
-      options?: any;
+      withMetadata?: boolean;
+      options?: { [key: string]: unknown };
     } = {}
   ) {
     const {
@@ -324,6 +344,7 @@ class TileDBClient {
       fileType,
       excludeFileType,
       fileProperty,
+      withMetadata,
       options
     } = params;
     return this.ArrayApi.arraysBrowserPublicGet(
@@ -338,6 +359,7 @@ class TileDBClient {
       fileType,
       excludeFileType,
       fileProperty,
+      withMetadata,
       options
     );
   }
@@ -358,7 +380,9 @@ class TileDBClient {
       fileType?: string[];
       excludeFileType?: string[];
       fileProperty?: string[];
-      options?: any;
+      sharedTo?: string[];
+      withMetadata?: boolean;
+      options?: { [key: string]: unknown };
     } = {}
   ) {
     const {
@@ -373,6 +397,8 @@ class TileDBClient {
       fileType,
       excludeFileType,
       fileProperty,
+      sharedTo,
+      withMetadata,
       options
     } = params;
     return this.ArrayApi.arraysBrowserSharedGet(
@@ -387,6 +413,8 @@ class TileDBClient {
       fileType,
       excludeFileType,
       fileProperty,
+      sharedTo,
+      withMetadata,
       options
     );
   }
@@ -394,21 +422,24 @@ class TileDBClient {
   /**
    * Organization to fetch
    */
-  public organization(organization: string, options?: any) {
+  public organization(
+    organization: string,
+    options?: { [key: string]: unknown }
+  ) {
     return this.OrganizationApi.getOrganization(organization, options);
   }
 
   /**
    * List of all organizations user is part of
    */
-  public organizations(options?: any) {
+  public organizations(options?: { [key: string]: unknown }) {
     return this.OrganizationApi.getAllOrganizations(options);
   }
 
   /**
    * Your user profile
    */
-  public userProfile(options?: any) {
+  public userProfile(options?: { [key: string]: unknown }) {
     return this.UserApi.getUser(options);
   }
 
@@ -420,7 +451,7 @@ class TileDBClient {
     teamspace: string,
     array: string,
     notebookName: string,
-    options?: any
+    options?: { [key: string]: unknown }
   ) {
     const notebookMetadata = {
       name: notebookName
@@ -434,7 +465,11 @@ class TileDBClient {
     );
   }
 
-  public task(workspace: string, id: string, options?: any) {
+  public task(
+    workspace: string,
+    id: string,
+    options?: { [key: string]: unknown }
+  ) {
     return this.TasksApi.taskWorkspaceIdGet(workspace, id, options);
   }
 

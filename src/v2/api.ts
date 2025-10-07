@@ -12,7 +12,6 @@
  * Do not edit the class manually.
  */
 
-
 import type { Configuration } from '../commons/configuration';
 import type { AxiosPromise, AxiosInstance } from 'axios';
 import globalAxios from 'axios';
@@ -25,7 +24,6 @@ import { COLLECTION_FORMATS, RequiredError } from '../commons/base';
 import updateBasePathAfterRedirect from '../utils/updateBasePathAfterRedirect';
 
 export const BASE_PATH = "http://localhost/v2".replace(/\/+$/, "");
-
 /**
  *
  * @export
@@ -45,3045 +43,1713 @@ export class BaseAPI {
 
 /**
  * Credential information to access Amazon Web Services
- * @export
- * @interface AWSCredential
  */
 export interface AWSCredential {
     /**
      * The ID of the access key
-     * @type {string}
-     * @memberof AWSCredential
      */
-    access_key_id?: string;
+    'access_key_id'?: string;
     /**
      * The access key\'s secret. Never returned in responses.
-     * @type {string}
-     * @memberof AWSCredential
      */
-    secret_access_key?: string;
+    'secret_access_key'?: string;
     /**
      * The endpoint used for this credential
-     * @type {string}
-     * @memberof AWSCredential
      */
-    endpoint?: string | null;
+    'endpoint'?: string | null;
 }
 /**
  * Role information to access Amazon Web Services
- * @export
- * @interface AWSRole
  */
 export interface AWSRole {
     /**
      * The role arn used to access
-     * @type {string}
-     * @memberof AWSRole
      */
-    role_arn?: string;
+    'role_arn'?: string;
     /**
      * The role external id used to access
-     * @type {string}
-     * @memberof AWSRole
      */
-    external_id?: string;
+    'external_id'?: string;
     /**
      * The endpoint used for this role
-     * @type {string}
-     * @memberof AWSRole
      */
-    endpoint?: string | null;
+    'endpoint'?: string | null;
 }
 /**
  * A union type which may contain a credential to access any one cloud provider.
- * @export
- * @interface AccessCredential
  */
 export interface AccessCredential {
     /**
      * The UUID of the credential
-     * @type {string}
-     * @memberof AccessCredential
      */
-    uuid?: string;
+    'uuid'?: string;
     /**
      * A user-specified name for the key
-     * @type {string}
-     * @memberof AccessCredential
      */
-    name?: string;
-    /**
-     * 
-     * @type {CloudProvider}
-     * @memberof AccessCredential
-     */
-    provider?: CloudProvider;
+    'name'?: string;
+    'provider'?: CloudProvider;
     /**
      * True if this is the namespace\'s default credential to be used when connecting to the given cloud provider. There can be at most one default for each unique provider.
-     * @type {boolean}
-     * @memberof AccessCredential
      */
-    provider_default?: boolean | null;
+    'provider_default'?: boolean | null;
     /**
      * Time when the credential was created (rfc3339)
-     * @type {string}
-     * @memberof AccessCredential
      */
-    created_at?: string;
+    'created_at'?: string;
     /**
      * Time when the credential was last updated (rfc3339)
-     * @type {string}
-     * @memberof AccessCredential
      */
-    updated_at?: string;
+    'updated_at'?: string;
     /**
      * Is this credential allowed to be used in tasks
-     * @type {boolean}
-     * @memberof AccessCredential
      */
-    allowed_in_tasks?: boolean | null;
-    /**
-     * 
-     * @type {AccessCredentialCredential}
-     * @memberof AccessCredential
-     */
-    credential?: AccessCredentialCredential;
-    /**
-     * 
-     * @type {AccessCredentialRole}
-     * @memberof AccessCredential
-     */
-    role?: AccessCredentialRole;
-    /**
-     * 
-     * @type {AccessCredentialToken}
-     * @memberof AccessCredential
-     */
-    token?: AccessCredentialToken;
+    'allowed_in_tasks'?: boolean | null;
+    'credential'?: AccessCredentialCredential;
+    'role'?: AccessCredentialRole;
+    'token'?: AccessCredentialToken;
 }
+
+
 /**
  * The credential information itself. Exactly one sub-field may be set. The names match those in the CloudProvider enum.
- * @export
- * @interface AccessCredentialCredential
  */
 export interface AccessCredentialCredential {
-    /**
-     * 
-     * @type {AWSCredential}
-     * @memberof AccessCredentialCredential
-     */
-    aws?: AWSCredential | null;
-    /**
-     * 
-     * @type {AzureCredential}
-     * @memberof AccessCredentialCredential
-     */
-    azure?: AzureCredential | null;
-    /**
-     * 
-     * @type {GCPInteroperabilityCredential}
-     * @memberof AccessCredentialCredential
-     */
-    gcp?: GCPInteroperabilityCredential | null;
+    'aws'?: AWSCredential | null;
+    'azure'?: AzureCredential | null;
+    'gcp'?: GCPInteroperabilityCredential | null;
 }
 /**
  * The role information itself. Exactly one sub-field may be set. The names match those in the CloudProvider enum.
- * @export
- * @interface AccessCredentialRole
  */
 export interface AccessCredentialRole {
-    /**
-     * 
-     * @type {AWSRole}
-     * @memberof AccessCredentialRole
-     */
-    aws?: AWSRole | null;
+    'aws'?: AWSRole | null;
 }
 /**
  * The token information itself. Exactly one sub-field may be set. The names match those in the CloudProvider enum.
- * @export
- * @interface AccessCredentialToken
  */
 export interface AccessCredentialToken {
-    /**
-     * 
-     * @type {AzureToken}
-     * @memberof AccessCredentialToken
-     */
-    azure?: AzureToken | null;
-    /**
-     * 
-     * @type {GCPServiceAccountKey}
-     * @memberof AccessCredentialToken
-     */
-    gcp?: GCPServiceAccountKey | null;
+    'azure'?: AzureToken | null;
+    'gcp'?: GCPServiceAccountKey | null;
 }
 /**
  * The types of an access credential
- * @export
- * @enum {string}
  */
-export enum AccessCredentialType {
-    Key = 'key',
-    Arn = 'arn',
-    Token = 'token',
-    AzureToken = 'azure_token'
-}
+
+export const AccessCredentialType = {
+    Key: 'key',
+    Arn: 'arn',
+    Token: 'token',
+    AzureToken: 'azure_token'
+} as const;
+
+export type AccessCredentialType = typeof AccessCredentialType[keyof typeof AccessCredentialType];
+
 
 /**
  * Object including credentials and pagination metadata
- * @export
- * @interface AccessCredentialsData
  */
 export interface AccessCredentialsData {
     /**
      * List of credentials
-     * @type {Array<AccessCredential>}
-     * @memberof AccessCredentialsData
      */
-    credentials?: Array<AccessCredential>;
-    /**
-     * 
-     * @type {PaginationMetadata}
-     * @memberof AccessCredentialsData
-     */
-    pagination_metadata?: PaginationMetadata;
+    'credentials'?: Array<AccessCredential>;
+    'pagination_metadata'?: PaginationMetadata;
 }
 /**
  * Type of activity logged
- * @export
- * @enum {string}
  */
-export enum ActivityEventType {
-    ReadSchema = 'read_schema',
-    MaxBufferSizes = 'max_buffer_sizes',
-    NonEmptyDomain = 'non_empty_domain',
-    QueryRead = 'query_read',
-    QueryWrite = 'query_write',
-    Create = 'create',
-    Delete = 'delete',
-    Register = 'register',
-    Deregister = 'deregister',
-    Udf = 'udf',
-    ArrayMetadataGet = 'array_metadata_get',
-    ArrayMetadataUpdate = 'array_metadata_update',
-    EstimatedResultSizes = 'estimated_result_sizes',
-    Update = 'update',
-    Info = 'info',
-    Run = 'run'
-}
+
+export const ActivityEventType = {
+    ReadSchema: 'read_schema',
+    MaxBufferSizes: 'max_buffer_sizes',
+    NonEmptyDomain: 'non_empty_domain',
+    QueryRead: 'query_read',
+    QueryWrite: 'query_write',
+    Create: 'create',
+    Delete: 'delete',
+    Register: 'register',
+    Deregister: 'deregister',
+    Udf: 'udf',
+    ArrayMetadataGet: 'array_metadata_get',
+    ArrayMetadataUpdate: 'array_metadata_update',
+    EstimatedResultSizes: 'estimated_result_sizes',
+    Update: 'update',
+    Info: 'info',
+    Run: 'run'
+} as const;
+
+export type ActivityEventType = typeof ActivityEventType[keyof typeof ActivityEventType];
+
 
 /**
  * Activity of an Array
- * @export
- * @interface ArrayActivityLog
  */
 export interface ArrayActivityLog {
     /**
      * time event took place (RFC3339)
-     * @type {string}
-     * @memberof ArrayActivityLog
      */
-    event_at?: string;
-    /**
-     * 
-     * @type {ActivityEventType}
-     * @memberof ArrayActivityLog
-     */
-    action?: ActivityEventType;
+    'event_at'?: string;
+    'action'?: ActivityEventType;
     /**
      * User who performed action
-     * @type {string}
-     * @memberof ArrayActivityLog
      */
-    username?: string;
+    'username'?: string;
     /**
      * Bytes sent to client
-     * @type {number}
-     * @memberof ArrayActivityLog
      */
-    bytes_sent?: number;
+    'bytes_sent'?: number;
     /**
      * Bytes recieved from client
-     * @type {number}
-     * @memberof ArrayActivityLog
      */
-    bytes_received?: number;
+    'bytes_received'?: number;
     /**
      * uuid of associated array task
-     * @type {string}
-     * @memberof ArrayActivityLog
      */
-    array_task_id?: string;
+    'array_task_id'?: string;
     /**
      * id of the activity
-     * @type {string}
-     * @memberof ArrayActivityLog
      */
-    id?: string;
+    'id'?: string;
     /**
      * ranges for query
-     * @type {string}
-     * @memberof ArrayActivityLog
      */
-    query_ranges?: string;
+    'query_ranges'?: string;
     /**
      * stats for query
-     * @type {string}
-     * @memberof ArrayActivityLog
      */
-    query_stats?: string;
+    'query_stats'?: string;
 }
+
+
 /**
  * Object including array tasks and metadata
- * @export
- * @interface ArrayActivityLogData
  */
 export interface ArrayActivityLogData {
     /**
      * Array ArrayActivityLog
-     * @type {Array<ArrayActivityLog>}
-     * @memberof ArrayActivityLogData
      */
-    activitylogs?: Array<ArrayActivityLog>;
+    'activitylogs'?: Array<ArrayActivityLog>;
+    'pagination_metadata'?: PaginationMetadata;
+}
+/**
+ * ArraySchema during creation or retrieval
+ */
+export interface ArrayCreateRequest {
     /**
-     * 
-     * @type {PaginationMetadata}
-     * @memberof ArrayActivityLogData
+     * Storage location for the array, or empty to use default storage.
      */
-    pagination_metadata?: PaginationMetadata;
+    'uri'?: string;
 }
 /**
  * Array directory (for reads)
- * @export
- * @interface ArrayDirectory
  */
 export interface ArrayDirectory {
     /**
      * fragment URIs
-     * @type {Array<string>}
-     * @memberof ArrayDirectory
      */
-    unfilteredFragmentUris?: Array<string>;
+    'unfilteredFragmentUris'?: Array<string>;
     /**
      * consolidated commit URI set
-     * @type {Array<string>}
-     * @memberof ArrayDirectory
      */
-    consolidatedCommitUris?: Array<string>;
+    'consolidatedCommitUris'?: Array<string>;
     /**
      * URIs of all the array schema files
-     * @type {Array<string>}
-     * @memberof ArrayDirectory
      */
-    arraySchemaUris?: Array<string>;
+    'arraySchemaUris'?: Array<string>;
     /**
      * latest array schema URI.
-     * @type {string}
-     * @memberof ArrayDirectory
      */
-    latestArraySchemaUri?: string;
+    'latestArraySchemaUri'?: string;
     /**
      * the array metadata files to vacuum
-     * @type {Array<string>}
-     * @memberof ArrayDirectory
      */
-    arrayMetaUrisToVacuum?: Array<string>;
+    'arrayMetaUrisToVacuum'?: Array<string>;
     /**
      * the array metadata vac files to vacuum
-     * @type {Array<string>}
-     * @memberof ArrayDirectory
      */
-    arrayMetaVacUrisToVacuum?: Array<string>;
+    'arrayMetaVacUrisToVacuum'?: Array<string>;
     /**
      * the commit files to consolidate
-     * @type {Array<string>}
-     * @memberof ArrayDirectory
      */
-    commitUrisToConsolidate?: Array<string>;
+    'commitUrisToConsolidate'?: Array<string>;
     /**
      * the commit files to vacuum
-     * @type {Array<string>}
-     * @memberof ArrayDirectory
      */
-    commitUrisToVacuum?: Array<string>;
+    'commitUrisToVacuum'?: Array<string>;
     /**
      * the consolidated commit files to vacuum
-     * @type {Array<string>}
-     * @memberof ArrayDirectory
      */
-    consolidatedCommitUrisToVacuum?: Array<string>;
+    'consolidatedCommitUrisToVacuum'?: Array<string>;
     /**
      * the URIs of the consolidated fragment metadata files
-     * @type {Array<string>}
-     * @memberof ArrayDirectory
      */
-    fragmentMetaUris?: Array<string>;
+    'fragmentMetaUris'?: Array<string>;
     /**
      * Only the files created after timestamp_start are listed
-     * @type {number}
-     * @memberof ArrayDirectory
      */
-    timestampStart?: number;
+    'timestampStart'?: number;
     /**
      * Only the files created before timestamp_end are listed
-     * @type {number}
-     * @memberof ArrayDirectory
      */
-    timestampEnd?: number;
+    'timestampEnd'?: number;
     /**
      * the timestamped filtered array metadata URIs, after removing the ones that need to be vacuumed and those that do not fall within
-     * @type {Array<TimestampedURI>}
-     * @memberof ArrayDirectory
      */
-    arrayMetaUris?: Array<TimestampedURI>;
+    'arrayMetaUris'?: Array<TimestampedURI>;
     /**
      * the location of delete tiles
-     * @type {Array<DeleteAndUpdateTileLocation>}
-     * @memberof ArrayDirectory
      */
-    deleteAndUpdateTileLocation?: Array<DeleteAndUpdateTileLocation>;
+    'deleteAndUpdateTileLocation'?: Array<DeleteAndUpdateTileLocation>;
 }
 /**
  * Model for opening an array v2
- * @export
- * @interface ArrayFetch
  */
 export interface ArrayFetch {
-    /**
-     * 
-     * @type {TileDBConfig}
-     * @memberof ArrayFetch
-     */
-    config?: TileDBConfig;
-    /**
-     * 
-     * @type {Querytype}
-     * @memberof ArrayFetch
-     */
-    queryType?: Querytype;
+    'config'?: TileDBConfig;
+    'queryType'?: Querytype;
 }
+
+
 /**
  * user\'s TileDB array metadata
- * @export
- * @interface ArrayMetadata
  */
 export interface ArrayMetadata {
     /**
      * List of metadata entries
-     * @type {Array<ArrayMetadataEntry>}
-     * @memberof ArrayMetadata
      */
-    entries?: Array<ArrayMetadataEntry>;
+    'entries'?: Array<ArrayMetadataEntry>;
 }
 /**
  * key/value pair representing an array metadata map entry
- * @export
- * @interface ArrayMetadataEntry
  */
 export interface ArrayMetadataEntry {
-    /**
-     * 
-     * @type {string}
-     * @memberof ArrayMetadataEntry
-     */
-    key?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ArrayMetadataEntry
-     */
-    type?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof ArrayMetadataEntry
-     */
-    valueNum?: number;
-    /**
-     * 
-     * @type {Array<number>}
-     * @memberof ArrayMetadataEntry
-     */
-    value?: Array<number>;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof ArrayMetadataEntry
-     */
-    del?: boolean;
+    'key'?: string;
+    'type'?: string;
+    'valueNum'?: number;
+    'value'?: Array<number>;
+    'del'?: boolean;
 }
 /**
  * ArraySchema during creation or retrieval
- * @export
- * @interface ArraySchema
  */
 export interface ArraySchema {
     /**
      * URI of schema
-     * @type {string}
-     * @memberof ArraySchema
      */
-    uri?: string;
+    'uri'?: string;
     /**
      * name of schema
-     * @type {string}
-     * @memberof ArraySchema
      */
-    name?: string;
+    'name'?: string;
     /**
      * file format version
-     * @type {Array<number>}
-     * @memberof ArraySchema
      */
-    version: Array<number>;
-    /**
-     * 
-     * @type {ArrayType}
-     * @memberof ArraySchema
-     */
-    arrayType: ArrayType;
-    /**
-     * 
-     * @type {Layout}
-     * @memberof ArraySchema
-     */
-    tileOrder: Layout;
-    /**
-     * 
-     * @type {Layout}
-     * @memberof ArraySchema
-     */
-    cellOrder: Layout;
+    'version': Array<number>;
+    'arrayType': ArrayType;
+    'tileOrder': Layout;
+    'cellOrder': Layout;
     /**
      * Capacity of array
-     * @type {number}
-     * @memberof ArraySchema
      */
-    capacity: number;
-    /**
-     * 
-     * @type {FilterPipeline}
-     * @memberof ArraySchema
-     */
-    coordsFilterPipeline: FilterPipeline;
-    /**
-     * 
-     * @type {FilterPipeline}
-     * @memberof ArraySchema
-     */
-    offsetFilterPipeline: FilterPipeline;
-    /**
-     * 
-     * @type {FilterPipeline}
-     * @memberof ArraySchema
-     */
-    validityFilterPipeline?: FilterPipeline;
-    /**
-     * 
-     * @type {Domain}
-     * @memberof ArraySchema
-     */
-    domain: Domain;
+    'capacity': number;
+    'coordsFilterPipeline': FilterPipeline;
+    'offsetFilterPipeline': FilterPipeline;
+    'validityFilterPipeline'?: FilterPipeline;
+    'domain': Domain;
     /**
      * Attributes of array
-     * @type {Array<Attribute>}
-     * @memberof ArraySchema
      */
-    attributes: Array<Attribute>;
+    'attributes': Array<Attribute>;
     /**
      * True if the array allows coordinate duplicates. Applicable only to sparse arrays.
-     * @type {boolean}
-     * @memberof ArraySchema
      */
-    allowsDuplicates?: boolean;
+    'allowsDuplicates'?: boolean;
     /**
      * The list of sizes per range
-     * @type {Array<number>}
-     * @memberof ArraySchema
      */
-    timestampRange?: Array<number>;
+    'timestampRange'?: Array<number>;
 }
+
+
 /**
  * key/value pair representing an array schema map entry
- * @export
- * @interface ArraySchemaEntry
  */
 export interface ArraySchemaEntry {
-    /**
-     * 
-     * @type {string}
-     * @memberof ArraySchemaEntry
-     */
-    key?: string;
-    /**
-     * 
-     * @type {ArraySchema}
-     * @memberof ArraySchemaEntry
-     */
-    value?: ArraySchema;
+    'key'?: string;
+    'value'?: ArraySchema;
 }
 /**
  * array\'s schemas
- * @export
- * @interface ArraySchemaMap
  */
 export interface ArraySchemaMap {
     /**
      * List of array schemas entries
-     * @type {Array<ArraySchemaEntry>}
-     * @memberof ArraySchemaMap
      */
-    entries?: Array<ArraySchemaEntry>;
+    'entries'?: Array<ArraySchemaEntry>;
 }
 /**
  * TileDB array type
- * @export
- * @enum {string}
  */
-export enum ArrayType {
-    Dense = 'dense',
-    Sparse = 'sparse'
-}
 
-/**
- * 
- * @export
- * @interface AssetActivityLog
- */
+export const ArrayType = {
+    Dense: 'dense',
+    Sparse: 'sparse'
+} as const;
+
+export type ArrayType = typeof ArrayType[keyof typeof ArrayType];
+
+
 export interface AssetActivityLog {
     /**
      * The ID of the activity
-     * @type {string}
-     * @memberof AssetActivityLog
      */
-    id: string;
+    'id': string;
     /**
      * time event took place (RFC3339)
-     * @type {string}
-     * @memberof AssetActivityLog
      */
-    event_at: string;
+    'event_at': string;
     /**
      * type of the event
-     * @type {string}
-     * @memberof AssetActivityLog
      */
-    action: string;
+    'action': string;
     /**
      * User who performed action
-     * @type {string}
-     * @memberof AssetActivityLog
      */
-    username: string;
+    'username': string;
     /**
      * uuid of associated array task
-     * @type {string}
-     * @memberof AssetActivityLog
      */
-    array_task_id?: string;
-    /**
-     * 
-     * @type {AssetActivityLogAsset}
-     * @memberof AssetActivityLog
-     */
-    asset: AssetActivityLogAsset;
+    'array_task_id'?: string;
+    'asset': AssetActivityLogAsset;
 }
 /**
  * The asset details
- * @export
- * @interface AssetActivityLogAsset
  */
 export interface AssetActivityLogAsset {
     /**
      * The asset ID
-     * @type {string}
-     * @memberof AssetActivityLogAsset
      */
-    id?: string;
+    'id'?: string;
     /**
      * The asset name
-     * @type {string}
-     * @memberof AssetActivityLogAsset
      */
-    name?: string;
+    'name'?: string;
     /**
      * The namespace that the asset belongs to
-     * @type {string}
-     * @memberof AssetActivityLogAsset
      */
-    namespace?: string;
-    /**
-     * 
-     * @type {AssetType}
-     * @memberof AssetActivityLogAsset
-     */
-    asset_type?: AssetType;
+    'namespace'?: string;
+    'asset_type'?: AssetType;
 }
+
+
 /**
  * Asset types represented as TileDB arrays
- * @export
- * @enum {string}
  */
-export enum AssetType {
-    Array = 'array',
-    Notebook = 'notebook',
-    Dashboard = 'dashboard',
-    UserDefinedFunction = 'user_defined_function',
-    MlModel = 'ml_model',
-    File = 'file',
-    RegisteredTaskGraph = 'registered_task_graph',
-    Group = 'group',
-    Vcf = 'vcf',
-    Soma = 'soma',
-    Pointcloud = 'pointcloud',
-    Bioimg = 'bioimg',
-    Geometry = 'geometry',
-    Raster = 'raster',
-    VectorSearch = 'vector_search'
-}
+
+export const AssetType = {
+    Array: 'array',
+    Notebook: 'notebook',
+    Dashboard: 'dashboard',
+    UserDefinedFunction: 'user_defined_function',
+    MlModel: 'ml_model',
+    File: 'file',
+    RegisteredTaskGraph: 'registered_task_graph',
+    Group: 'group',
+    Vcf: 'vcf',
+    Soma: 'soma',
+    Pointcloud: 'pointcloud',
+    Bioimg: 'bioimg',
+    Geometry: 'geometry',
+    Raster: 'raster',
+    VectorSearch: 'vector_search'
+} as const;
+
+export type AssetType = typeof AssetType[keyof typeof AssetType];
+
 
 /**
  * Attribute of array
- * @export
- * @interface Attribute
  */
 export interface Attribute {
     /**
      * Attribute name
-     * @type {string}
-     * @memberof Attribute
      */
-    name: string;
+    'name': string;
     /**
      * Enumeration name
-     * @type {string}
-     * @memberof Attribute
      */
-    enumerationName?: string;
-    /**
-     * 
-     * @type {Datatype}
-     * @memberof Attribute
-     */
-    type: Datatype;
-    /**
-     * 
-     * @type {FilterPipeline}
-     * @memberof Attribute
-     */
-    filterPipeline: FilterPipeline;
+    'enumerationName'?: string;
+    'type': Datatype;
+    'filterPipeline': FilterPipeline;
     /**
      * Attribute number of values per cell
-     * @type {number}
-     * @memberof Attribute
      */
-    cellValNum: number;
+    'cellValNum': number;
     /**
      * Is attribute nullable
-     * @type {boolean}
-     * @memberof Attribute
      */
-    nullable?: boolean;
+    'nullable'?: boolean;
     /**
      * Default validity fill value for nullable attributes
-     * @type {boolean}
-     * @memberof Attribute
      */
-    fillValueValidity?: boolean;
+    'fillValueValidity'?: boolean;
     /**
      * The default fill value
-     * @type {Array<number>}
-     * @memberof Attribute
      */
-    fillValue?: Array<number>;
+    'fillValue'?: Array<number>;
 }
+
+
 /**
  * Represents an attribute buffer header information
- * @export
- * @interface AttributeBufferHeader
  */
 export interface AttributeBufferHeader {
     /**
      * Attribute name
-     * @type {string}
-     * @memberof AttributeBufferHeader
      */
-    name: string;
+    'name': string;
     /**
      * Number of bytes in the fixed-length attribute data buffer (offsets for var-len attributes)
-     * @type {number}
-     * @memberof AttributeBufferHeader
      */
-    fixedLenBufferSizeInBytes: number;
+    'fixedLenBufferSizeInBytes': number;
     /**
      * Number of bytes in the var-length attribute data buffer
-     * @type {number}
-     * @memberof AttributeBufferHeader
      */
-    varLenBufferSizeInBytes: number;
+    'varLenBufferSizeInBytes': number;
     /**
      * Number of bytes for validity in case attribute is nullable
-     * @type {number}
-     * @memberof AttributeBufferHeader
      */
-    validityLenBufferSizeInBytes?: number;
+    'validityLenBufferSizeInBytes'?: number;
     /**
      * Original user set number of bytes in the fixed-length attribute data buffer
-     * @type {number}
-     * @memberof AttributeBufferHeader
      */
-    originalFixedLenBufferSizeInBytes?: number;
+    'originalFixedLenBufferSizeInBytes'?: number;
     /**
      * Original user set number of bytes in the var-length attribute data buffer
-     * @type {number}
-     * @memberof AttributeBufferHeader
      */
-    originalVarLenBufferSizeInBytes?: number;
+    'originalVarLenBufferSizeInBytes'?: number;
     /**
      * Original user set number of bytes in the validity data buffer
-     * @type {number}
-     * @memberof AttributeBufferHeader
      */
-    originalValidityLenBufferSizeInBytes?: number;
+    'originalValidityLenBufferSizeInBytes'?: number;
 }
 /**
  * object representing buffer size of an attribute
- * @export
- * @interface AttributeBufferSize
  */
 export interface AttributeBufferSize {
     /**
      * name of attribute
-     * @type {string}
-     * @memberof AttributeBufferSize
      */
-    attribute: string;
+    'attribute': string;
     /**
      * buffer size (in bytes) of offset buffer
-     * @type {number}
-     * @memberof AttributeBufferSize
      */
-    offsetBytes: number;
+    'offsetBytes': number;
     /**
      * buffer size (in bytes) of data buffer
-     * @type {number}
-     * @memberof AttributeBufferSize
      */
-    dataBytes: number;
+    'dataBytes': number;
 }
 /**
  * Credential information to access Microsoft Azure. Each supported property is the snake_case version of its name in an Azure Storage connection string.
- * @export
- * @interface AzureCredential
  */
 export interface AzureCredential {
     /**
      * The name of the Azure account to access
-     * @type {string}
-     * @memberof AzureCredential
      */
-    account_name?: string;
+    'account_name'?: string;
     /**
      * The secret key. Never returned in responses.
-     * @type {string}
-     * @memberof AzureCredential
      */
-    account_key?: string;
+    'account_key'?: string;
 }
 /**
  * Token information to access Azure services
- * @export
- * @interface AzureToken
  */
 export interface AzureToken {
     /**
      * The account name of the configuration
-     * @type {string}
-     * @memberof AzureToken
      */
-    account_name?: string;
+    'account_name'?: string;
     /**
      * The token to use for this account
-     * @type {string}
-     * @memberof AzureToken
      */
-    sas_token?: string;
+    'sas_token'?: string;
 }
 /**
  * A service where data is stored or computations take place.
- * @export
- * @enum {string}
  */
-export enum CloudProvider {
-    Aws = 'AWS',
-    Azure = 'AZURE',
-    Gcp = 'GCP'
-}
+
+export const CloudProvider = {
+    Aws: 'AWS',
+    Azure: 'AZURE',
+    Gcp: 'GCP'
+} as const;
+
+export type CloudProvider = typeof CloudProvider[keyof typeof CloudProvider];
+
 
 /**
  * The query condition
- * @export
- * @interface Condition
  */
 export interface Condition {
     /**
      * The operation that combines each condition
-     * @type {Array<string>}
-     * @memberof Condition
      */
-    clauseCombinationOps?: Array<string>;
+    'clauseCombinationOps'?: Array<string>;
     /**
      * All clauses in this condition
-     * @type {Array<ConditionClause>}
-     * @memberof Condition
      */
-    clauses?: Array<ConditionClause>;
+    'clauses'?: Array<ConditionClause>;
 }
 /**
  * A clause within a condition
- * @export
- * @interface ConditionClause
  */
 export interface ConditionClause {
     /**
      * The name of the field this clause applies to
-     * @type {string}
-     * @memberof ConditionClause
      */
-    fieldName?: string;
+    'fieldName'?: string;
     /**
      * The comparison value
-     * @type {Array<number>}
-     * @memberof ConditionClause
      */
-    value?: Array<number>;
+    'value'?: Array<number>;
     /**
      * The comparison operation
-     * @type {string}
-     * @memberof ConditionClause
      */
-    op?: string;
+    'op'?: string;
 }
 /**
  * TileDB data type
- * @export
- * @enum {string}
  */
-export enum Datatype {
-    Int32 = 'INT32',
-    Int64 = 'INT64',
-    Float32 = 'FLOAT32',
-    Float64 = 'FLOAT64',
-    Char = 'CHAR',
-    Int8 = 'INT8',
-    Uint8 = 'UINT8',
-    Int16 = 'INT16',
-    Uint16 = 'UINT16',
-    Uint32 = 'UINT32',
-    Uint64 = 'UINT64',
-    StringAscii = 'STRING_ASCII',
-    StringUtf8 = 'STRING_UTF8',
-    StringUtf16 = 'STRING_UTF16',
-    StringUtf32 = 'STRING_UTF32',
-    StringUcs2 = 'STRING_UCS2',
-    StringUcs4 = 'STRING_UCS4',
-    Any = 'ANY',
-    DatetimeYear = 'DATETIME_YEAR',
-    DatetimeMonth = 'DATETIME_MONTH',
-    DatetimeWeek = 'DATETIME_WEEK',
-    DatetimeDay = 'DATETIME_DAY',
-    DatetimeHr = 'DATETIME_HR',
-    DatetimeMin = 'DATETIME_MIN',
-    DatetimeSec = 'DATETIME_SEC',
-    DatetimeMs = 'DATETIME_MS',
-    DatetimeUs = 'DATETIME_US',
-    DatetimeNs = 'DATETIME_NS',
-    DatetimePs = 'DATETIME_PS',
-    DatetimeFs = 'DATETIME_FS',
-    DatetimeAs = 'DATETIME_AS',
-    TimeHr = 'TIME_HR',
-    TimeMin = 'TIME_MIN',
-    TimeSec = 'TIME_SEC',
-    TimeMs = 'TIME_MS',
-    TimeUs = 'TIME_US',
-    TimeNs = 'TIME_NS',
-    TimePs = 'TIME_PS',
-    TimeFs = 'TIME_FS',
-    TimeAs = 'TIME_AS',
-    Blob = 'BLOB',
-    Bool = 'BOOL'
-}
+
+export const Datatype = {
+    Int32: 'INT32',
+    Int64: 'INT64',
+    Float32: 'FLOAT32',
+    Float64: 'FLOAT64',
+    Char: 'CHAR',
+    Int8: 'INT8',
+    Uint8: 'UINT8',
+    Int16: 'INT16',
+    Uint16: 'UINT16',
+    Uint32: 'UINT32',
+    Uint64: 'UINT64',
+    StringAscii: 'STRING_ASCII',
+    StringUtf8: 'STRING_UTF8',
+    StringUtf16: 'STRING_UTF16',
+    StringUtf32: 'STRING_UTF32',
+    StringUcs2: 'STRING_UCS2',
+    StringUcs4: 'STRING_UCS4',
+    Any: 'ANY',
+    DatetimeYear: 'DATETIME_YEAR',
+    DatetimeMonth: 'DATETIME_MONTH',
+    DatetimeWeek: 'DATETIME_WEEK',
+    DatetimeDay: 'DATETIME_DAY',
+    DatetimeHr: 'DATETIME_HR',
+    DatetimeMin: 'DATETIME_MIN',
+    DatetimeSec: 'DATETIME_SEC',
+    DatetimeMs: 'DATETIME_MS',
+    DatetimeUs: 'DATETIME_US',
+    DatetimeNs: 'DATETIME_NS',
+    DatetimePs: 'DATETIME_PS',
+    DatetimeFs: 'DATETIME_FS',
+    DatetimeAs: 'DATETIME_AS',
+    TimeHr: 'TIME_HR',
+    TimeMin: 'TIME_MIN',
+    TimeSec: 'TIME_SEC',
+    TimeMs: 'TIME_MS',
+    TimeUs: 'TIME_US',
+    TimeNs: 'TIME_NS',
+    TimePs: 'TIME_PS',
+    TimeFs: 'TIME_FS',
+    TimeAs: 'TIME_AS',
+    Blob: 'BLOB',
+    Bool: 'BOOL'
+} as const;
+
+export type Datatype = typeof Datatype[keyof typeof Datatype];
+
 
 /**
  * the location of delete tiles
- * @export
- * @interface DeleteAndUpdateTileLocation
  */
 export interface DeleteAndUpdateTileLocation {
     /**
      * the uri
-     * @type {string}
-     * @memberof DeleteAndUpdateTileLocation
      */
-    uri?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof DeleteAndUpdateTileLocation
-     */
-    conditionMarker?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof DeleteAndUpdateTileLocation
-     */
-    offset?: number;
+    'uri'?: string;
+    'conditionMarker'?: string;
+    'offset'?: number;
 }
 /**
  * Dimension of array
- * @export
- * @interface Dimension
  */
 export interface Dimension {
     /**
      * Dimension name
-     * @type {string}
-     * @memberof Dimension
      */
-    name?: string;
-    /**
-     * 
-     * @type {Datatype}
-     * @memberof Dimension
-     */
-    type: Datatype;
-    /**
-     * 
-     * @type {DomainArray}
-     * @memberof Dimension
-     */
-    domain: DomainArray;
+    'name'?: string;
+    'type': Datatype;
+    'domain': DomainArray;
     /**
      * Is tile extent null
-     * @type {boolean}
-     * @memberof Dimension
      */
-    nullTileExtent: boolean;
-    /**
-     * 
-     * @type {DimensionTileExtent}
-     * @memberof Dimension
-     */
-    tileExtent?: DimensionTileExtent;
-    /**
-     * 
-     * @type {FilterPipeline}
-     * @memberof Dimension
-     */
-    filterPipeline?: FilterPipeline;
+    'nullTileExtent': boolean;
+    'tileExtent'?: DimensionTileExtent;
+    'filterPipeline'?: FilterPipeline;
 }
+
+
 /**
  * Extent of tile
- * @export
- * @interface DimensionTileExtent
  */
 export interface DimensionTileExtent {
-    /**
-     * 
-     * @type {number}
-     * @memberof DimensionTileExtent
-     */
-    int8?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof DimensionTileExtent
-     */
-    uint8?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof DimensionTileExtent
-     */
-    int16?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof DimensionTileExtent
-     */
-    uint16?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof DimensionTileExtent
-     */
-    int32?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof DimensionTileExtent
-     */
-    uint32?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof DimensionTileExtent
-     */
-    int64?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof DimensionTileExtent
-     */
-    uint64?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof DimensionTileExtent
-     */
-    float32?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof DimensionTileExtent
-     */
-    float64?: number;
+    'int8'?: number;
+    'uint8'?: number;
+    'int16'?: number;
+    'uint16'?: number;
+    'int32'?: number;
+    'uint32'?: number;
+    'int64'?: number;
+    'uint64'?: number;
+    'float32'?: number;
+    'float64'?: number;
 }
 /**
  * Domain of array
- * @export
- * @interface Domain
  */
 export interface Domain {
-    /**
-     * 
-     * @type {Datatype}
-     * @memberof Domain
-     */
-    type: Datatype;
-    /**
-     * 
-     * @type {Layout}
-     * @memberof Domain
-     */
-    tileOrder: Layout;
-    /**
-     * 
-     * @type {Layout}
-     * @memberof Domain
-     */
-    cellOrder: Layout;
+    'type': Datatype;
+    'tileOrder': Layout;
+    'cellOrder': Layout;
     /**
      * Array of dimensions
-     * @type {Array<Dimension>}
-     * @memberof Domain
      */
-    dimensions: Array<Dimension>;
+    'dimensions': Array<Dimension>;
 }
+
+
 /**
  * Domain object for an array of each type
- * @export
- * @interface DomainArray
  */
 export interface DomainArray {
-    /**
-     * 
-     * @type {Array<number>}
-     * @memberof DomainArray
-     */
-    int8?: Array<number>;
-    /**
-     * 
-     * @type {Array<number>}
-     * @memberof DomainArray
-     */
-    uint8?: Array<number>;
-    /**
-     * 
-     * @type {Array<number>}
-     * @memberof DomainArray
-     */
-    int16?: Array<number>;
-    /**
-     * 
-     * @type {Array<number>}
-     * @memberof DomainArray
-     */
-    uint16?: Array<number>;
-    /**
-     * 
-     * @type {Array<number>}
-     * @memberof DomainArray
-     */
-    int32?: Array<number>;
-    /**
-     * 
-     * @type {Array<number>}
-     * @memberof DomainArray
-     */
-    uint32?: Array<number>;
-    /**
-     * 
-     * @type {Array<number>}
-     * @memberof DomainArray
-     */
-    int64?: Array<number>;
-    /**
-     * 
-     * @type {Array<number>}
-     * @memberof DomainArray
-     */
-    uint64?: Array<number>;
-    /**
-     * 
-     * @type {Array<number>}
-     * @memberof DomainArray
-     */
-    float32?: Array<number>;
-    /**
-     * 
-     * @type {Array<number>}
-     * @memberof DomainArray
-     */
-    float64?: Array<number>;
+    'int8'?: Array<number>;
+    'uint8'?: Array<number>;
+    'int16'?: Array<number>;
+    'uint16'?: Array<number>;
+    'int32'?: Array<number>;
+    'uint32'?: Array<number>;
+    'int64'?: Array<number>;
+    'uint64'?: Array<number>;
+    'float32'?: Array<number>;
+    'float64'?: Array<number>;
 }
 /**
  * Uploaded file name and information
- * @export
- * @interface FileUploaded
  */
 export interface FileUploaded {
     /**
      * output location of the TileDB File
-     * @type {string}
-     * @memberof FileUploaded
      */
-    output_uri?: string;
+    'output_uri'?: string;
     /**
      * name of the file uploaded
-     * @type {string}
-     * @memberof FileUploaded
      */
-    file_name?: string;
+    'file_name'?: string;
     /**
      * The asset id of the created Group
-     * @type {string}
-     * @memberof FileUploaded
      */
-    asset_id: string;
+    'asset_id': string;
     /**
      * unique ID of the uploaded file
-     * @type {string}
-     * @memberof FileUploaded
      */
-    id: string;
+    'id': string;
 }
 /**
  * Filter
- * @export
- * @interface Filter
  */
 export interface Filter {
-    /**
-     * 
-     * @type {FilterType}
-     * @memberof Filter
-     */
-    type: FilterType;
-    /**
-     * 
-     * @type {FloatScaleConfig}
-     * @memberof Filter
-     */
-    floatScaleConfig?: FloatScaleConfig;
-    /**
-     * 
-     * @type {FilterData}
-     * @memberof Filter
-     */
-    data?: FilterData;
+    'type': FilterType;
+    'floatScaleConfig'?: FloatScaleConfig;
+    'data'?: FilterData;
 }
+
+
 /**
  * Filter data
- * @export
- * @interface FilterData
  */
 export interface FilterData {
-    /**
-     * 
-     * @type {string}
-     * @memberof FilterData
-     */
-    text?: string;
-    /**
-     * 
-     * @type {Array<number>}
-     * @memberof FilterData
-     */
-    bytes?: Array<number>;
-    /**
-     * 
-     * @type {number}
-     * @memberof FilterData
-     */
-    int8?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof FilterData
-     */
-    uint8?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof FilterData
-     */
-    int16?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof FilterData
-     */
-    uint16?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof FilterData
-     */
-    int32?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof FilterData
-     */
-    uint32?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof FilterData
-     */
-    int64?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof FilterData
-     */
-    uint64?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof FilterData
-     */
-    float32?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof FilterData
-     */
-    float64?: number;
+    'text'?: string;
+    'bytes'?: Array<number>;
+    'int8'?: number;
+    'uint8'?: number;
+    'int16'?: number;
+    'uint16'?: number;
+    'int32'?: number;
+    'uint32'?: number;
+    'int64'?: number;
+    'uint64'?: number;
+    'float32'?: number;
+    'float64'?: number;
 }
 /**
  * One or more filters to apply
- * @export
- * @interface FilterPipeline
  */
 export interface FilterPipeline {
-    /**
-     * 
-     * @type {Array<Filter>}
-     * @memberof FilterPipeline
-     */
-    filters?: Array<Filter>;
+    'filters'?: Array<Filter>;
 }
 /**
  * TileDB filter types
- * @export
- * @enum {string}
  */
-export enum FilterType {
-    None = 'FILTER_NONE',
-    Gzip = 'FILTER_GZIP',
-    Zstd = 'FILTER_ZSTD',
-    Lz4 = 'FILTER_LZ4',
-    Rle = 'FILTER_RLE',
-    Bzip2 = 'FILTER_BZIP2',
-    DoubleDelta = 'FILTER_DOUBLE_DELTA',
-    BitWidthReduction = 'FILTER_BIT_WIDTH_REDUCTION',
-    Bitshuffle = 'FILTER_BITSHUFFLE',
-    Byteshuffle = 'FILTER_BYTESHUFFLE',
-    PositiveDelta = 'FILTER_POSITIVE_DELTA',
-    ScaleFloat = 'FILTER_SCALE_FLOAT',
-    Webp = 'FILTER_WEBP',
-    ChecksumMd5 = 'FILTER_CHECKSUM_MD5',
-    ChecksumSha256 = 'FILTER_CHECKSUM_SHA256',
-    Dictionary = 'FILTER_DICTIONARY'
-}
+
+export const FilterType = {
+    FilterNone: 'FILTER_NONE',
+    FilterGzip: 'FILTER_GZIP',
+    FilterZstd: 'FILTER_ZSTD',
+    FilterLz4: 'FILTER_LZ4',
+    FilterRle: 'FILTER_RLE',
+    FilterBzip2: 'FILTER_BZIP2',
+    FilterDoubleDelta: 'FILTER_DOUBLE_DELTA',
+    FilterBitWidthReduction: 'FILTER_BIT_WIDTH_REDUCTION',
+    FilterBitshuffle: 'FILTER_BITSHUFFLE',
+    FilterByteshuffle: 'FILTER_BYTESHUFFLE',
+    FilterPositiveDelta: 'FILTER_POSITIVE_DELTA',
+    FilterScaleFloat: 'FILTER_SCALE_FLOAT',
+    FilterWebp: 'FILTER_WEBP',
+    FilterChecksumMd5: 'FILTER_CHECKSUM_MD5',
+    FilterChecksumSha256: 'FILTER_CHECKSUM_SHA256',
+    FilterDictionary: 'FILTER_DICTIONARY'
+} as const;
+
+export type FilterType = typeof FilterType[keyof typeof FilterType];
+
 
 /**
  * FloatScaleConfig
- * @export
- * @interface FloatScaleConfig
  */
 export interface FloatScaleConfig {
-    /**
-     * 
-     * @type {number}
-     * @memberof FloatScaleConfig
-     */
-    scale?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof FloatScaleConfig
-     */
-    offset?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof FloatScaleConfig
-     */
-    byteWidth?: number;
+    'scale'?: number;
+    'offset'?: number;
+    'byteWidth'?: number;
 }
 /**
  * Tile/cell index for fragment
- * @export
- * @interface FragmentIndex
  */
 export interface FragmentIndex {
     /**
      * Tile index
-     * @type {number}
-     * @memberof FragmentIndex
      */
-    tileIdx?: number;
+    'tileIdx'?: number;
     /**
      * Cell index
-     * @type {number}
-     * @memberof FragmentIndex
      */
-    cellIdx?: number;
+    'cellIdx'?: number;
 }
 /**
  * Metadata of a fragment
- * @export
- * @interface FragmentMetadata
  */
 export interface FragmentMetadata {
     /**
      * The size of each attribute file
-     * @type {Array<number>}
-     * @memberof FragmentMetadata
      */
-    fileSizes?: Array<number>;
+    'fileSizes'?: Array<number>;
     /**
      * The size of each var attribute file
-     * @type {Array<number>}
-     * @memberof FragmentMetadata
      */
-    fileVarSizes?: Array<number>;
+    'fileVarSizes'?: Array<number>;
     /**
      * The size of each validity attribute file
-     * @type {Array<number>}
-     * @memberof FragmentMetadata
      */
-    fileValiditySizes?: Array<number>;
+    'fileValiditySizes'?: Array<number>;
     /**
      * The uri of the fragment this metadata belongs to
-     * @type {string}
-     * @memberof FragmentMetadata
      */
-    fragmentUri?: string;
+    'fragmentUri'?: string;
     /**
      * True if the fragment has timestamps
-     * @type {boolean}
-     * @memberof FragmentMetadata
      */
-    hasTimestamps?: boolean;
+    'hasTimestamps'?: boolean;
     /**
      * True if the fragment has delete metadata
-     * @type {boolean}
-     * @memberof FragmentMetadata
      */
-    hasDeleteMeta?: boolean;
+    'hasDeleteMeta'?: boolean;
     /**
      * The number of sparse tiles
-     * @type {number}
-     * @memberof FragmentMetadata
      */
-    sparseTileNum?: number;
+    'sparseTileNum'?: number;
     /**
      * Used to track the tile index base between global order writes
-     * @type {number}
-     * @memberof FragmentMetadata
      */
-    tileIndexBase?: number;
+    'tileIndexBase'?: number;
     /**
      * Tile offsets in their attribute files
-     * @type {Array<Array<number>>}
-     * @memberof FragmentMetadata
      */
-    tileOffsets?: Array<Array<number>>;
+    'tileOffsets'?: Array<Array<number>>;
     /**
      * Variable tile offsets in their attribute files
-     * @type {Array<Array<number>>}
-     * @memberof FragmentMetadata
      */
-    tileVarOffsets?: Array<Array<number>>;
+    'tileVarOffsets'?: Array<Array<number>>;
     /**
      * The sizes of the uncompressed variable tiles
-     * @type {Array<Array<number>>}
-     * @memberof FragmentMetadata
      */
-    tileVarSizes?: Array<Array<number>>;
+    'tileVarSizes'?: Array<Array<number>>;
     /**
      * Validity tile offests in their attribute files
-     * @type {Array<Array<number>>}
-     * @memberof FragmentMetadata
      */
-    tileValidityOffsets?: Array<Array<number>>;
+    'tileValidityOffsets'?: Array<Array<number>>;
     /**
      * tile min buffers
-     * @type {Array<Array<number>>}
-     * @memberof FragmentMetadata
      */
-    tileMinBuffer?: Array<Array<number>>;
+    'tileMinBuffer'?: Array<Array<number>>;
     /**
      * tile min buffers for var length data
-     * @type {Array<Array<number>>}
-     * @memberof FragmentMetadata
      */
-    tileMinVarBuffer?: Array<Array<number>>;
+    'tileMinVarBuffer'?: Array<Array<number>>;
     /**
      * tile max buffers
-     * @type {Array<Array<number>>}
-     * @memberof FragmentMetadata
      */
-    tileMaxBuffer?: Array<Array<number>>;
+    'tileMaxBuffer'?: Array<Array<number>>;
     /**
      * tile max buffers for var length data
-     * @type {Array<Array<number>>}
-     * @memberof FragmentMetadata
      */
-    tileMaxVarBuffer?: Array<Array<number>>;
+    'tileMaxVarBuffer'?: Array<Array<number>>;
     /**
      * tile sum values
-     * @type {Array<Array<number>>}
-     * @memberof FragmentMetadata
      */
-    tileSums?: Array<Array<number>>;
+    'tileSums'?: Array<Array<number>>;
     /**
      * tile null count values
-     * @type {Array<Array<number>>}
-     * @memberof FragmentMetadata
      */
-    tileNullCounts?: Array<Array<number>>;
+    'tileNullCounts'?: Array<Array<number>>;
     /**
      * fragment min values
-     * @type {Array<Array<number>>}
-     * @memberof FragmentMetadata
      */
-    fragmentMins?: Array<Array<number>>;
+    'fragmentMins'?: Array<Array<number>>;
     /**
      * fragment max values
-     * @type {Array<Array<number>>}
-     * @memberof FragmentMetadata
      */
-    fragmentMaxs?: Array<Array<number>>;
+    'fragmentMaxs'?: Array<Array<number>>;
     /**
      * fragment sum values
-     * @type {Array<number>}
-     * @memberof FragmentMetadata
      */
-    fragmentSums?: Array<number>;
+    'fragmentSums'?: Array<number>;
     /**
      * fragment null count values
-     * @type {Array<number>}
-     * @memberof FragmentMetadata
      */
-    fragmentNullCounts?: Array<number>;
+    'fragmentNullCounts'?: Array<number>;
     /**
      * the format version of this metadata
-     * @type {number}
-     * @memberof FragmentMetadata
      */
-    version?: number;
+    'version'?: number;
     /**
      * A pair of timestamps for fragment
-     * @type {Array<number>}
-     * @memberof FragmentMetadata
      */
-    timestampRange?: Array<number>;
+    'timestampRange'?: Array<number>;
     /**
      * The number of cells in the last tile
-     * @type {number}
-     * @memberof FragmentMetadata
      */
-    lastTileCellNum?: number;
-    /**
-     * 
-     * @type {NonEmptyDomainList}
-     * @memberof FragmentMetadata
-     */
-    nonEmptyDomain?: NonEmptyDomainList;
+    'lastTileCellNum'?: number;
+    'nonEmptyDomain'?: NonEmptyDomainList;
     /**
      * The RTree for the MBRs serialized as a blob
-     * @type {any}
-     * @memberof FragmentMetadata
      */
-    rtree?: any;
+    'rtree'?: File;
     /**
      * if the fragment metadata footer appears in a consolidated file
-     * @type {boolean}
-     * @memberof FragmentMetadata
      */
-    hasConsolidatedFooter?: boolean;
-    /**
-     * 
-     * @type {GenericTileOffsets}
-     * @memberof FragmentMetadata
-     */
-    gtOffsets?: GenericTileOffsets;
+    'hasConsolidatedFooter'?: boolean;
+    'gtOffsets'?: GenericTileOffsets;
 }
 /**
  * Credential information to access Google Cloud. using well knows key/secret pair to access storage.
- * @export
- * @interface GCPInteroperabilityCredential
  */
 export interface GCPInteroperabilityCredential {
     /**
      * The ID of the access key
-     * @type {string}
-     * @memberof GCPInteroperabilityCredential
      */
-    access_key_id?: string;
+    'access_key_id'?: string;
     /**
      * The access key\'s secret. Never returned in responses.
-     * @type {string}
-     * @memberof GCPInteroperabilityCredential
      */
-    secret_access_key?: string;
+    'secret_access_key'?: string;
 }
 /**
  * The key to a Google Cloud Platform service account.
- * @export
- * @interface GCPServiceAccountKey
  */
 export interface GCPServiceAccountKey {
     /**
      * The ID of the service account (i.e., its email address).  This is ignored when uploading key information, and is only provided by the server when downloading metadata about an existing key. 
-     * @type {string}
-     * @memberof GCPServiceAccountKey
      */
-    account_id?: string;
+    'account_id'?: string;
     /**
      * The ID of the particular key. This identifies it among other keys issued for this service account.  This is ignored when uploading key information, and is only provided by the server when downloading metadata about an existing key. 
-     * @type {string}
-     * @memberof GCPServiceAccountKey
      */
-    key_id?: string;
+    'key_id'?: string;
     /**
      * The full file provided by Google Cloud. This is usually in the form of a JSON document, but TileDB Cloud treats it as opaque (except to attempt to extract the service account ID and the key ID). 
-     * @type {string}
-     * @memberof GCPServiceAccountKey
      */
-    key_text?: string;
+    'key_text'?: string;
 }
 /**
  * Array directory (for reads)
- * @export
- * @interface GenericTileOffsets
  */
 export interface GenericTileOffsets {
     /**
      * RTree serialized as a blob
-     * @type {number}
-     * @memberof GenericTileOffsets
      */
-    rtree?: number;
+    'rtree'?: number;
     /**
      * tile offsets
-     * @type {Array<number>}
-     * @memberof GenericTileOffsets
      */
-    tileOffsets?: Array<number>;
+    'tileOffsets'?: Array<number>;
     /**
      * variable tile offsets
-     * @type {Array<number>}
-     * @memberof GenericTileOffsets
      */
-    tileVarOffsets?: Array<number>;
+    'tileVarOffsets'?: Array<number>;
     /**
      * sizes of the uncompressed variable tiles offsets
-     * @type {Array<number>}
-     * @memberof GenericTileOffsets
      */
-    tileVarSizes?: Array<number>;
+    'tileVarSizes'?: Array<number>;
     /**
      * tile validity offsets
-     * @type {Array<number>}
-     * @memberof GenericTileOffsets
      */
-    tileValidityOffsets?: Array<number>;
+    'tileValidityOffsets'?: Array<number>;
     /**
      * min tile offsets
-     * @type {Array<number>}
-     * @memberof GenericTileOffsets
      */
-    tileMinOffsets?: Array<number>;
+    'tileMinOffsets'?: Array<number>;
     /**
      * max tile offsets
-     * @type {Array<number>}
-     * @memberof GenericTileOffsets
      */
-    tileMaxOffsets?: Array<number>;
+    'tileMaxOffsets'?: Array<number>;
     /**
      * tile sum offsets
-     * @type {Array<number>}
-     * @memberof GenericTileOffsets
      */
-    tileSumOffsets?: Array<number>;
+    'tileSumOffsets'?: Array<number>;
     /**
      * null count offsets
-     * @type {Array<number>}
-     * @memberof GenericTileOffsets
      */
-    tileNullCountOffsets?: Array<number>;
+    'tileNullCountOffsets'?: Array<number>;
     /**
      * fragment min/max/sum/nullcount offsets
-     * @type {number}
-     * @memberof GenericTileOffsets
      */
-    fragmentMinMaxSumNullCountOffset?: number;
+    'fragmentMinMaxSumNullCountOffset'?: number;
     /**
      * processed conditions offsets
-     * @type {number}
-     * @memberof GenericTileOffsets
      */
-    processedConditionsOffsets?: number;
+    'processedConditionsOffsets'?: number;
 }
 /**
  * Event type of Group activity
- * @export
- * @enum {string}
  */
-export enum GroupActivityEventType {
-    Create = 'create',
-    Update = 'update',
-    Delete = 'delete',
-    Register = 'register',
-    Deregister = 'deregister',
-    GroupMemberAdd = 'group_member_add',
-    GroupMemberGet = 'group_member_get',
-    GroupMemberRemove = 'group_member_remove',
-    GroupMetadataGet = 'group_metadata_get',
-    GroupMetadataUpdate = 'group_metadata_update',
-    GroupMetadataDelete = 'group_metadata_delete',
-    GroupMetadataSerialize = 'group_metadata_serialize',
-    GroupMetadataDeserialize = 'group_metadata_deserialize',
-    GroupMetadataConsolidate = 'group_metadata_consolidate',
-    GroupMetadataVacuum = 'group_metadata_vacuum',
-    ConfigSet = 'config_set',
-    ConfigGet = 'config_get'
-}
+
+export const GroupActivityEventType = {
+    Create: 'create',
+    Update: 'update',
+    Delete: 'delete',
+    Register: 'register',
+    Deregister: 'deregister',
+    GroupMemberAdd: 'group_member_add',
+    GroupMemberGet: 'group_member_get',
+    GroupMemberRemove: 'group_member_remove',
+    GroupMetadataGet: 'group_metadata_get',
+    GroupMetadataUpdate: 'group_metadata_update',
+    GroupMetadataDelete: 'group_metadata_delete',
+    GroupMetadataSerialize: 'group_metadata_serialize',
+    GroupMetadataDeserialize: 'group_metadata_deserialize',
+    GroupMetadataConsolidate: 'group_metadata_consolidate',
+    GroupMetadataVacuum: 'group_metadata_vacuum',
+    ConfigSet: 'config_set',
+    ConfigGet: 'config_get'
+} as const;
+
+export type GroupActivityEventType = typeof GroupActivityEventType[keyof typeof GroupActivityEventType];
+
 
 /**
  * Object containing activity logs of a group and its content (arrays and subgroups) along with pagination metadata
- * @export
- * @interface GroupActivityResponse
  */
 export interface GroupActivityResponse {
     /**
      * Array of activity logs, including both group and array activities
-     * @type {Array<AssetActivityLog>}
-     * @memberof GroupActivityResponse
      */
-    activity_logs?: Array<AssetActivityLog>;
-    /**
-     * 
-     * @type {PaginationMetadata}
-     * @memberof GroupActivityResponse
-     */
-    pagination_metadata?: PaginationMetadata;
+    'activity_logs'?: Array<AssetActivityLog>;
+    'pagination_metadata'?: PaginationMetadata;
 }
 /**
  * Object containing activity of an asset of a group
- * @export
- * @interface GroupContentActivity
  */
 export interface GroupContentActivity {
-    /**
-     * 
-     * @type {AssetActivityLogAsset}
-     * @memberof GroupContentActivity
-     */
-    asset?: AssetActivityLogAsset;
-    /**
-     * 
-     * @type {ArrayActivityLog}
-     * @memberof GroupContentActivity
-     */
-    activity_log?: ArrayActivityLog;
+    'asset'?: AssetActivityLogAsset;
+    'activity_log'?: ArrayActivityLog;
 }
 /**
  * Object containing activity logs of group content along with the pagination metadata
- * @export
- * @interface GroupContentActivityResponse
  */
 export interface GroupContentActivityResponse {
     /**
      * Activity of a group\'s content
-     * @type {Array<GroupContentActivity>}
-     * @memberof GroupContentActivityResponse
      */
-    activity?: Array<GroupContentActivity>;
-    /**
-     * 
-     * @type {PaginationMetadata}
-     * @memberof GroupContentActivityResponse
-     */
-    pagination_metadata?: PaginationMetadata;
+    'activity'?: Array<GroupContentActivity>;
+    'pagination_metadata'?: PaginationMetadata;
 }
 /**
  * Updates the contents group
- * @export
- * @interface GroupContentsChangesRequest
  */
 export interface GroupContentsChangesRequest {
-    /**
-     * 
-     * @type {TileDBConfig}
-     * @memberof GroupContentsChangesRequest
-     */
-    config?: TileDBConfig;
-    /**
-     * 
-     * @type {GroupContentsChangesRequestGroupChanges}
-     * @memberof GroupContentsChangesRequest
-     */
-    group_changes?: GroupContentsChangesRequestGroupChanges;
+    'config'?: TileDBConfig;
+    'group_changes'?: GroupContentsChangesRequestGroupChanges;
 }
-/**
- * 
- * @export
- * @interface GroupContentsChangesRequestGroupChanges
- */
 export interface GroupContentsChangesRequestGroupChanges {
     /**
      * optional series of members to remove
-     * @type {Array<string>}
-     * @memberof GroupContentsChangesRequestGroupChanges
      */
-    members_to_remove?: Array<string>;
+    'members_to_remove'?: Array<string>;
     /**
      * optional series of members to add
-     * @type {Array<GroupMember>}
-     * @memberof GroupContentsChangesRequestGroupChanges
      */
-    members_to_add?: Array<GroupMember>;
+    'members_to_add'?: Array<GroupMember>;
 }
 /**
  * Request the contents of a group
- * @export
- * @interface GroupContentsRetrievalRequest
  */
 export interface GroupContentsRetrievalRequest {
-    /**
-     * 
-     * @type {TileDBConfig}
-     * @memberof GroupContentsRetrievalRequest
-     */
-    config?: TileDBConfig;
+    'config'?: TileDBConfig;
 }
 /**
  * Object including a page of members of a group and pagination metadata
- * @export
- * @interface GroupContentsRetrievalResponse
  */
 export interface GroupContentsRetrievalResponse {
     /**
      * Groups members
-     * @type {Array<GroupMember>}
-     * @memberof GroupContentsRetrievalResponse
      */
-    members?: Array<GroupMember>;
-    /**
-     * 
-     * @type {Metadata}
-     * @memberof GroupContentsRetrievalResponse
-     */
-    metadata?: Metadata;
+    'members'?: Array<GroupMember>;
+    'metadata'?: Metadata;
 }
 /**
  * information for creating a new group with the passed configuration
- * @export
- * @interface GroupCreationRequest
  */
 export interface GroupCreationRequest {
-    /**
-     * 
-     * @type {TileDBConfig}
-     * @memberof GroupCreationRequest
-     */
-    config?: TileDBConfig;
-    /**
-     * 
-     * @type {GroupCreationRequestGroupDetails}
-     * @memberof GroupCreationRequest
-     */
-    group_details: GroupCreationRequestGroupDetails;
+    'config'?: TileDBConfig;
+    'group_details': GroupCreationRequestGroupDetails;
 }
 /**
  * Initial attributes for the creation of a group.
- * @export
- * @interface GroupCreationRequestGroupDetails
  */
 export interface GroupCreationRequestGroupDetails {
     /**
      * A human readable description of the contents of the group.
-     * @type {string}
-     * @memberof GroupCreationRequestGroupDetails
      */
-    description?: string;
+    'description'?: string;
     /**
      * The name of the group. If must be unique within the group.
-     * @type {string}
-     * @memberof GroupCreationRequestGroupDetails
      */
-    name?: string;
+    'name'?: string;
     /**
      * uri of group.
-     * @type {string}
-     * @memberof GroupCreationRequestGroupDetails
      */
-    uri?: string;
+    'uri'?: string;
     /**
      * logo (base64 encoded) for the group. Optional
-     * @type {string}
-     * @memberof GroupCreationRequestGroupDetails
      */
-    logo?: string;
+    'logo'?: string;
     /**
      * optional tags for groups.
-     * @type {Array<string>}
-     * @memberof GroupCreationRequestGroupDetails
      */
-    tags?: Array<string>;
+    'tags'?: Array<string>;
     /**
      * License identifier from SPDX License List or Custom.
-     * @type {string}
-     * @memberof GroupCreationRequestGroupDetails
      */
-    license_id?: string;
+    'license_id'?: string;
     /**
      * License text
-     * @type {string}
-     * @memberof GroupCreationRequestGroupDetails
      */
-    license_text?: string;
+    'license_text'?: string;
 }
 /**
  * Information of the created group
- * @export
- * @interface GroupCreationResponse
  */
 export interface GroupCreationResponse {
     /**
      * The UUID of the created Group
-     * @type {string}
-     * @memberof GroupCreationResponse
      */
-    id?: string;
+    'id'?: string;
     /**
      * The asset id of the created Group
-     * @type {string}
-     * @memberof GroupCreationResponse
      */
-    asset_id?: string;
+    'asset_id'?: string;
     /**
      * The name of the created Group
-     * @type {string}
-     * @memberof GroupCreationResponse
      */
-    name?: string;
+    'name'?: string;
     /**
      * TileDB URI for access
-     * @type {string}
-     * @memberof GroupCreationResponse
      */
-    tiledb_uri?: string;
+    'tiledb_uri'?: string;
 }
 /**
  * A groups member, array or another groups, to add or remove from an existing group.
- * @export
- * @interface GroupMember
  */
 export interface GroupMember {
     /**
      * The name of the member
-     * @type {string}
-     * @memberof GroupMember
      */
-    name?: string;
+    'name'?: string;
     /**
      * The uri of the member
-     * @type {string}
-     * @memberof GroupMember
      */
-    uri?: string;
-    /**
-     * 
-     * @type {GroupMemberType}
-     * @memberof GroupMember
-     */
-    type?: GroupMemberType;
+    'uri'?: string;
+    'type'?: GroupMemberType;
 }
+
+
 /**
  * Specific file types of group members
- * @export
- * @enum {string}
  */
-export enum GroupMemberAssetType {
-    Group = 'group',
-    Array = 'array',
-    Notebook = 'notebook',
-    Dashboard = 'dashboard',
-    UserDefinedFunction = 'user_defined_function',
-    MlModel = 'ml_model',
-    File = 'file',
-    Bioimg = 'bioimg',
-    Soma = 'soma',
-    Vcf = 'vcf',
-    Pointcloud = 'pointcloud',
-    Raster = 'raster',
-    Geometry = 'geometry',
-    VectorSearch = 'vector_search'
-}
+
+export const GroupMemberAssetType = {
+    Group: 'group',
+    Array: 'array',
+    Notebook: 'notebook',
+    Dashboard: 'dashboard',
+    UserDefinedFunction: 'user_defined_function',
+    MlModel: 'ml_model',
+    File: 'file',
+    Bioimg: 'bioimg',
+    Soma: 'soma',
+    Vcf: 'vcf',
+    Pointcloud: 'pointcloud',
+    Raster: 'raster',
+    Geometry: 'geometry',
+    VectorSearch: 'vector_search'
+} as const;
+
+export type GroupMemberAssetType = typeof GroupMemberAssetType[keyof typeof GroupMemberAssetType];
+
 
 /**
  * File types that can be included in groups
- * @export
- * @enum {string}
  */
-export enum GroupMemberType {
-    Group = 'GROUP',
-    Array = 'ARRAY'
-}
+
+export const GroupMemberType = {
+    Group: 'GROUP',
+    Array: 'ARRAY'
+} as const;
+
+export type GroupMemberType = typeof GroupMemberType[keyof typeof GroupMemberType];
+
 
 /**
  * Retrieves the metadata of a group
- * @export
- * @interface GroupMetadataRetrievalRequest
  */
 export interface GroupMetadataRetrievalRequest {
-    /**
-     * 
-     * @type {TileDBConfig}
-     * @memberof GroupMetadataRetrievalRequest
-     */
-    config?: TileDBConfig;
+    'config'?: TileDBConfig;
 }
 /**
  * Updates the metadata of a group
- * @export
- * @interface GroupMetadataUpdateRequest
  */
 export interface GroupMetadataUpdateRequest {
-    /**
-     * 
-     * @type {TileDBConfig}
-     * @memberof GroupMetadataUpdateRequest
-     */
-    config?: TileDBConfig;
-    /**
-     * 
-     * @type {Metadata}
-     * @memberof GroupMetadataUpdateRequest
-     */
-    metadata: Metadata;
+    'config'?: TileDBConfig;
+    'metadata': Metadata;
 }
 /**
  * information for creating a new group with the passed configuration
- * @export
- * @interface GroupRegistrationRequest
  */
 export interface GroupRegistrationRequest {
-    /**
-     * 
-     * @type {TileDBConfig}
-     * @memberof GroupRegistrationRequest
-     */
-    config?: TileDBConfig;
-    /**
-     * 
-     * @type {GroupRegistrationRequestGroupDetails}
-     * @memberof GroupRegistrationRequest
-     */
-    group_details: GroupRegistrationRequestGroupDetails;
+    'config'?: TileDBConfig;
+    'group_details': GroupRegistrationRequestGroupDetails;
 }
 /**
  * Initial attributes for the creation of a group.
- * @export
- * @interface GroupRegistrationRequestGroupDetails
  */
 export interface GroupRegistrationRequestGroupDetails {
     /**
      * A human readable description of the contents of the group.
-     * @type {string}
-     * @memberof GroupRegistrationRequestGroupDetails
      */
-    description?: string;
+    'description'?: string;
     /**
      * The name of the group. If must be unique within the group.
-     * @type {string}
-     * @memberof GroupRegistrationRequestGroupDetails
      */
-    name?: string;
+    'name'?: string;
     /**
      * The unique name or id of the parent of the group. If empty, then the new group will be a top level group.
-     * @type {string}
-     * @memberof GroupRegistrationRequestGroupDetails
      */
-    parent?: string;
+    'parent'?: string;
     /**
      * uri of group.
-     * @type {string}
-     * @memberof GroupRegistrationRequestGroupDetails
      */
-    uri?: string;
+    'uri'?: string;
     /**
      * logo (base64 encoded) for the group. Optional
-     * @type {string}
-     * @memberof GroupRegistrationRequestGroupDetails
      */
-    logo?: string;
+    'logo'?: string;
     /**
      * optional tags for groups.
-     * @type {Array<string>}
-     * @memberof GroupRegistrationRequestGroupDetails
      */
-    tags?: Array<string>;
+    'tags'?: Array<string>;
     /**
      * License identifier from SPDX License List or Custom.
-     * @type {string}
-     * @memberof GroupRegistrationRequestGroupDetails
      */
-    license_id?: string;
+    'license_id'?: string;
     /**
      * License text
-     * @type {string}
-     * @memberof GroupRegistrationRequestGroupDetails
      */
-    license_text?: string;
+    'license_text'?: string;
     /**
      * region of the group
-     * @type {string}
-     * @memberof GroupRegistrationRequestGroupDetails
      */
-    region?: string;
+    'region'?: string;
     /**
      * the name of the access credentials to use. if unset, the default credentials will be used.
-     * @type {string}
-     * @memberof GroupRegistrationRequestGroupDetails
      */
-    access_credentials_name?: string;
+    'access_credentials_name'?: string;
 }
 /**
  * Information of the created group
- * @export
- * @interface GroupRegistrationResponse
  */
 export interface GroupRegistrationResponse {
     /**
      * The UUID of the created Group
-     * @type {string}
-     * @memberof GroupRegistrationResponse
      */
-    id?: string;
+    'id'?: string;
     /**
      * The asset id of the created Group
-     * @type {string}
-     * @memberof GroupRegistrationResponse
      */
-    asset_id?: string;
+    'asset_id'?: string;
     /**
      * The name of the created Group
-     * @type {string}
-     * @memberof GroupRegistrationResponse
      */
-    name?: string;
+    'name'?: string;
     /**
      * TileDB URI for access
-     * @type {string}
-     * @memberof GroupRegistrationResponse
      */
-    tiledb_uri?: string;
+    'tiledb_uri'?: string;
 }
 /**
  * Layout of array
- * @export
- * @enum {string}
  */
-export enum Layout {
-    RowMajor = 'row-major',
-    ColMajor = 'col-major',
-    GlobalOrder = 'global-order',
-    Unordered = 'unordered'
-}
+
+export const Layout = {
+    RowMajor: 'row-major',
+    ColMajor: 'col-major',
+    GlobalOrder: 'global-order',
+    Unordered: 'unordered'
+} as const;
+
+export type Layout = typeof Layout[keyof typeof Layout];
+
 
 /**
  * Stats struct
- * @export
- * @interface MapFloat64
  */
 export interface MapFloat64 {
-    /**
-     * 
-     * @type {Array<MapFloat64Entries>}
-     * @memberof MapFloat64
-     */
-    entries?: Array<MapFloat64Entries>;
+    'entries'?: Array<MapFloat64EntriesInner>;
 }
-/**
- * 
- * @export
- * @interface MapFloat64Entries
- */
-export interface MapFloat64Entries {
-    /**
-     * 
-     * @type {string}
-     * @memberof MapFloat64Entries
-     */
-    key?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof MapFloat64Entries
-     */
-    value?: number;
+export interface MapFloat64EntriesInner {
+    'key'?: string;
+    'value'?: number;
 }
 /**
  * Stats struct
- * @export
- * @interface MapUInt64
  */
 export interface MapUInt64 {
-    /**
-     * 
-     * @type {Array<MapUInt64Entries>}
-     * @memberof MapUInt64
-     */
-    entries?: Array<MapUInt64Entries>;
+    'entries'?: Array<MapUInt64EntriesInner>;
 }
-/**
- * 
- * @export
- * @interface MapUInt64Entries
- */
-export interface MapUInt64Entries {
-    /**
-     * 
-     * @type {string}
-     * @memberof MapUInt64Entries
-     */
-    key?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof MapUInt64Entries
-     */
-    value?: number;
+export interface MapUInt64EntriesInner {
+    'key'?: string;
+    'value'?: number;
 }
 /**
  * user\'s TileDB metadata
- * @export
- * @interface Metadata
  */
 export interface Metadata {
     /**
      * List of metadata entries
-     * @type {Array<MetadataEntry>}
-     * @memberof Metadata
      */
-    entries?: Array<MetadataEntry>;
+    'entries'?: Array<MetadataEntry>;
 }
 /**
  * key/value pair representing a group metadata map entry
- * @export
- * @interface MetadataEntry
  */
 export interface MetadataEntry {
-    /**
-     * 
-     * @type {string}
-     * @memberof MetadataEntry
-     */
-    key?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof MetadataEntry
-     */
-    type?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof MetadataEntry
-     */
-    valueNum?: number;
-    /**
-     * 
-     * @type {object}
-     * @memberof MetadataEntry
-     */
-    value?: object;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof MetadataEntry
-     */
-    del?: boolean;
+    'key'?: string;
+    'type'?: string;
+    'valueNum'?: number;
+    'value'?: object;
+    'del'?: boolean;
 }
 /**
  * Represents an open array
- * @export
- * @interface ModelArray
  */
 export interface ModelArray {
-    /**
-     * 
-     * @type {Querytype}
-     * @memberof ModelArray
-     */
-    queryType: Querytype;
+    'queryType': Querytype;
     /**
      * Array uri
-     * @type {string}
-     * @memberof ModelArray
      */
-    uri: string;
+    'uri': string;
     /**
      * Ending timestamp (epoch milliseconds) array is opened at
-     * @type {number}
-     * @memberof ModelArray
      */
-    endTimestamp?: number;
+    'endTimestamp'?: number;
     /**
      * Starting timestamp (epoch milliseconds) array is opened at
-     * @type {number}
-     * @memberof ModelArray
      */
-    startTimestamp?: number;
-    /**
-     * 
-     * @type {ArraySchema}
-     * @memberof ModelArray
-     */
-    arraySchemaLatest?: ArraySchema;
-    /**
-     * 
-     * @type {ArraySchemaMap}
-     * @memberof ModelArray
-     */
-    arraySchemasAll?: ArraySchemaMap;
-    /**
-     * 
-     * @type {ArrayMetadata}
-     * @memberof ModelArray
-     */
-    arrayMetadata?: ArrayMetadata;
-    /**
-     * 
-     * @type {NonEmptyDomainList}
-     * @memberof ModelArray
-     */
-    nonEmptyDomain?: NonEmptyDomainList;
-    /**
-     * 
-     * @type {ArrayDirectory}
-     * @memberof ModelArray
-     */
-    arrayDirectory?: ArrayDirectory;
+    'startTimestamp'?: number;
+    'arraySchemaLatest'?: ArraySchema;
+    'arraySchemasAll'?: ArraySchemaMap;
+    'arrayMetadata'?: ArrayMetadata;
+    'nonEmptyDomain'?: NonEmptyDomainList;
+    'arrayDirectory'?: ArrayDirectory;
     /**
      * metadata for all fragments (for reads)
-     * @type {Array<FragmentMetadata>}
-     * @memberof ModelArray
      */
-    fragmentMetadataAll?: Array<FragmentMetadata>;
+    'fragmentMetadataAll'?: Array<FragmentMetadata>;
     /**
      * The ending timestamp that the array was last opened at
-     * @type {number}
-     * @memberof ModelArray
      */
-    openedAtEndTimestamp?: number;
+    'openedAtEndTimestamp'?: number;
 }
-/**
- * 
- * @export
- * @interface ModelError
- */
+
+
 export interface ModelError {
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelError
-     */
-    code?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelError
-     */
-    message?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelError
-     */
-    request_id?: string;
+    'code'?: number;
+    'message'?: string;
+    'request_id'?: string;
 }
 /**
  * object representing a non-empty domain
- * @export
- * @interface NonEmptyDomain
  */
 export interface NonEmptyDomain {
-    /**
-     * 
-     * @type {DomainArray}
-     * @memberof NonEmptyDomain
-     */
-    nonEmptyDomain: DomainArray;
+    'nonEmptyDomain': DomainArray;
     /**
      * Is non-empty domain really empty?
-     * @type {boolean}
-     * @memberof NonEmptyDomain
      */
-    isEmpty: boolean;
+    'isEmpty': boolean;
     /**
      * Number of elements in DomainArray for var length
-     * @type {Array<number>}
-     * @memberof NonEmptyDomain
      */
-    sizes?: Array<number>;
+    'sizes'?: Array<number>;
 }
 /**
  * object containing non empty domains
- * @export
- * @interface NonEmptyDomainList
  */
 export interface NonEmptyDomainList {
     /**
      * Array\'s non empty domain
-     * @type {Array<NonEmptyDomain>}
-     * @memberof NonEmptyDomainList
      */
-    nonEmptyDomains?: Array<NonEmptyDomain>;
+    'nonEmptyDomains'?: Array<NonEmptyDomain>;
 }
 /**
  * Uploaded notebook name and information
- * @export
- * @interface NotebookUploaded
  */
 export interface NotebookUploaded {
     /**
      * output location of the TileDB Notebook
-     * @type {string}
-     * @memberof NotebookUploaded
      */
-    output_uri?: string;
+    'output_uri'?: string;
     /**
      * name of the notebook uploaded
-     * @type {string}
-     * @memberof NotebookUploaded
      */
-    name?: string;
+    'name'?: string;
     /**
      * The asset id of the created Group
-     * @type {string}
-     * @memberof NotebookUploaded
      */
-    asset_id: string;
+    'asset_id': string;
     /**
      * unique ID of the uploaded notebook
-     * @type {string}
-     * @memberof NotebookUploaded
      */
-    id: string;
+    'id': string;
 }
-/**
- * 
- * @export
- * @interface PaginationMetadata
- */
 export interface PaginationMetadata {
     /**
      * pagination offset. Use it to skip the first ((page - 1) * per_page) items
-     * @type {number}
-     * @memberof PaginationMetadata
      */
-    page?: number;
+    'page'?: number;
     /**
      * pagination limit (page size)
-     * @type {number}
-     * @memberof PaginationMetadata
      */
-    per_page?: number;
+    'per_page'?: number;
     /**
      * number of total pages with current limit
-     * @type {number}
-     * @memberof PaginationMetadata
      */
-    total_pages?: number;
+    'total_pages'?: number;
     /**
      * number of total available items
-     * @type {number}
-     * @memberof PaginationMetadata
      */
-    total_items?: number;
+    'total_items'?: number;
 }
-/**
- * 
- * @export
- * @interface Query
- */
 export interface Query {
-    /**
-     * 
-     * @type {Querytype}
-     * @memberof Query
-     */
-    type: Querytype;
-    /**
-     * 
-     * @type {Layout}
-     * @memberof Query
-     */
-    layout: Layout;
-    /**
-     * 
-     * @type {Querystatus}
-     * @memberof Query
-     */
-    status: Querystatus;
+    'type': Querytype;
+    'layout': Layout;
+    'status': Querystatus;
     /**
      * List of attribute buffer headers
-     * @type {Array<AttributeBufferHeader>}
-     * @memberof Query
      */
-    attributeBufferHeaders: Array<AttributeBufferHeader>;
-    /**
-     * 
-     * @type {Writer}
-     * @memberof Query
-     */
-    writer?: Writer;
-    /**
-     * 
-     * @type {QueryReader}
-     * @memberof Query
-     */
-    reader?: QueryReader;
-    /**
-     * 
-     * @type {QueryReader}
-     * @memberof Query
-     */
-    denseReader?: QueryReader;
-    /**
-     * 
-     * @type {ReaderIndex}
-     * @memberof Query
-     */
-    readerIndex?: ReaderIndex;
-    /**
-     * 
-     * @type {ModelArray}
-     * @memberof Query
-     */
-    array: ModelArray;
+    'attributeBufferHeaders': Array<AttributeBufferHeader>;
+    'writer'?: Writer;
+    'reader'?: QueryReader;
+    'denseReader'?: QueryReader;
+    'readerIndex'?: ReaderIndex;
+    'array': ModelArray;
     /**
      * Total number of bytes in fixed size attribute buffers.
-     * @type {number}
-     * @memberof Query
      */
-    totalFixedLengthBufferBytes: number;
+    'totalFixedLengthBufferBytes': number;
     /**
      * Total number of bytes in variable size attribute buffers.
-     * @type {number}
-     * @memberof Query
      */
-    totalVarLenBufferBytes: number;
+    'totalVarLenBufferBytes': number;
     /**
      * Total number of bytes in validity buffers
-     * @type {number}
-     * @memberof Query
      */
-    totalValidityBufferBytes?: number;
+    'totalValidityBufferBytes'?: number;
 }
+
+
 /**
  * Read struct (can\'t be called reader due to class name conflict)
- * @export
- * @interface QueryReader
  */
 export interface QueryReader {
-    /**
-     * 
-     * @type {Layout}
-     * @memberof QueryReader
-     */
-    layout?: Layout;
-    /**
-     * 
-     * @type {Subarray}
-     * @memberof QueryReader
-     */
-    subarray?: Subarray;
-    /**
-     * 
-     * @type {ReadState}
-     * @memberof QueryReader
-     */
-    readState?: ReadState;
+    'layout'?: Layout;
+    'subarray'?: Subarray;
+    'readState'?: ReadState;
 }
+
+
 /**
  * Status of query
- * @export
- * @enum {string}
  */
-export enum Querystatus {
-    Failed = 'FAILED',
-    Completed = 'COMPLETED',
-    Inprogress = 'INPROGRESS',
-    Incomplete = 'INCOMPLETE',
-    Uninitialized = 'UNINITIALIZED'
-}
+
+export const Querystatus = {
+    Failed: 'FAILED',
+    Completed: 'COMPLETED',
+    Inprogress: 'INPROGRESS',
+    Incomplete: 'INCOMPLETE',
+    Uninitialized: 'UNINITIALIZED'
+} as const;
+
+export type Querystatus = typeof Querystatus[keyof typeof Querystatus];
+
 
 /**
  * Type of query
- * @export
- * @enum {string}
  */
-export enum Querytype {
-    Read = 'READ',
-    Write = 'WRITE'
-}
+
+export const Querytype = {
+    Read: 'READ',
+    Write: 'WRITE'
+} as const;
+
+export type Querytype = typeof Querytype[keyof typeof Querytype];
+
 
 /**
  * state for reads
- * @export
- * @interface ReadState
  */
 export interface ReadState {
     /**
      * True if the reader has been initialized.
-     * @type {boolean}
-     * @memberof ReadState
      */
-    initialized?: boolean;
+    'initialized'?: boolean;
     /**
      * True if the query produced results that could not fit in some buffer.
-     * @type {boolean}
-     * @memberof ReadState
      */
-    overflowed?: boolean;
+    'overflowed'?: boolean;
     /**
      * True if the current subarray partition is unsplittable.
-     * @type {boolean}
-     * @memberof ReadState
      */
-    unsplittable?: boolean;
-    /**
-     * 
-     * @type {SubarrayPartitioner}
-     * @memberof ReadState
-     */
-    subarrayPartitioner?: SubarrayPartitioner;
+    'unsplittable'?: boolean;
+    'subarrayPartitioner'?: SubarrayPartitioner;
 }
 /**
  * State of reader
- * @export
- * @interface ReadStateIndex
  */
 export interface ReadStateIndex {
     /**
      * Is the reader done adding result tiles.
-     * @type {boolean}
-     * @memberof ReadStateIndex
      */
-    doneAddingResultTiles?: boolean;
+    'doneAddingResultTiles'?: boolean;
     /**
      * Tile/cell index for each fragments.
-     * @type {Array<FragmentIndex>}
-     * @memberof ReadStateIndex
      */
-    fragTileIdx?: Array<FragmentIndex>;
+    'fragTileIdx'?: Array<FragmentIndex>;
     /**
      * Result cell slab.
-     * @type {Array<ResultCellSlab>}
-     * @memberof ReadStateIndex
      */
-    resultCellSlab?: Array<ResultCellSlab>;
+    'resultCellSlab'?: Array<ResultCellSlab>;
 }
 /**
  * Contains data needed for continuation of incomplete sparse reads with index readers
- * @export
- * @interface ReaderIndex
  */
 export interface ReaderIndex {
-    /**
-     * 
-     * @type {Layout}
-     * @memberof ReaderIndex
-     */
-    layout?: Layout;
-    /**
-     * 
-     * @type {Subarray}
-     * @memberof ReaderIndex
-     */
-    subarray?: Subarray;
-    /**
-     * 
-     * @type {ReadStateIndex}
-     * @memberof ReaderIndex
-     */
-    readState?: ReadStateIndex;
-    /**
-     * 
-     * @type {Stats}
-     * @memberof ReaderIndex
-     */
-    stats?: Stats;
-    /**
-     * 
-     * @type {Condition}
-     * @memberof ReaderIndex
-     */
-    condition?: Condition;
+    'layout'?: Layout;
+    'subarray'?: Subarray;
+    'readState'?: ReadStateIndex;
+    'stats'?: Stats;
+    'condition'?: Condition;
 }
+
+
 /**
  * Result cell slab
- * @export
- * @interface ResultCellSlab
  */
 export interface ResultCellSlab {
     /**
      * Fragment index
-     * @type {number}
-     * @memberof ResultCellSlab
      */
-    fragIdx?: number;
+    'fragIdx'?: number;
     /**
      * Tile index
-     * @type {number}
-     * @memberof ResultCellSlab
      */
-    tileIdx?: number;
+    'tileIdx'?: number;
     /**
      * Start of the cell slab
-     * @type {number}
-     * @memberof ResultCellSlab
      */
-    start?: number;
+    'start'?: number;
     /**
      * length of the cell slab
-     * @type {number}
-     * @memberof ResultCellSlab
      */
-    length?: number;
+    'length'?: number;
 }
 /**
  * Stats struct
- * @export
- * @interface Stats
  */
 export interface Stats {
-    /**
-     * 
-     * @type {MapFloat64}
-     * @memberof Stats
-     */
-    timers?: MapFloat64;
-    /**
-     * 
-     * @type {MapUInt64}
-     * @memberof Stats
-     */
-    counters?: MapUInt64;
+    'timers'?: MapFloat64;
+    'counters'?: MapUInt64;
 }
 /**
  * A Subarray
- * @export
- * @interface Subarray
  */
 export interface Subarray {
-    /**
-     * 
-     * @type {Layout}
-     * @memberof Subarray
-     */
-    layout?: Layout;
-    /**
-     * 
-     * @type {Stats}
-     * @memberof Subarray
-     */
-    stats?: Stats;
+    'layout'?: Layout;
+    'stats'?: Stats;
     /**
      * List of 1D ranges, one per dimension
-     * @type {Array<SubarrayRanges>}
-     * @memberof Subarray
      */
-    ranges?: Array<SubarrayRanges>;
-    /**
-     * 
-     * @type {Array<number>}
-     * @memberof Subarray
-     */
-    relevantFragments?: Array<number>;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof Subarray
-     */
-    coalesceRanges?: boolean;
+    'ranges'?: Array<SubarrayRanges>;
+    'relevantFragments'?: Array<number>;
+    'coalesceRanges'?: boolean;
 }
+
+
 /**
  * The subarray partitioner
- * @export
- * @interface SubarrayPartitioner
  */
 export interface SubarrayPartitioner {
-    /**
-     * 
-     * @type {Subarray}
-     * @memberof SubarrayPartitioner
-     */
-    subarray?: Subarray;
+    'subarray'?: Subarray;
     /**
      * Result size budget (in bytes) for all attributes.
-     * @type {Array<AttributeBufferSize>}
-     * @memberof SubarrayPartitioner
      */
-    budget?: Array<AttributeBufferSize>;
-    /**
-     * 
-     * @type {SubarrayPartitionerCurrent}
-     * @memberof SubarrayPartitioner
-     */
-    current?: SubarrayPartitionerCurrent;
-    /**
-     * 
-     * @type {SubarrayPartitionerState}
-     * @memberof SubarrayPartitioner
-     */
-    state?: SubarrayPartitionerState;
+    'budget'?: Array<AttributeBufferSize>;
+    'current'?: SubarrayPartitionerCurrent;
+    'state'?: SubarrayPartitionerState;
     /**
      * The memory budget for the fixed-sized attributes and the offsets of the var-sized attributes
-     * @type {number}
-     * @memberof SubarrayPartitioner
      */
-    memoryBudget?: number;
+    'memoryBudget'?: number;
     /**
      * The memory budget for the var-sized attributes
-     * @type {number}
-     * @memberof SubarrayPartitioner
      */
-    memoryBudgetVar?: number;
+    'memoryBudgetVar'?: number;
 }
 /**
  * The current partition info
- * @export
- * @interface SubarrayPartitionerCurrent
  */
 export interface SubarrayPartitionerCurrent {
-    /**
-     * 
-     * @type {Subarray}
-     * @memberof SubarrayPartitionerCurrent
-     */
-    subarray?: Subarray;
+    'subarray'?: Subarray;
     /**
      * PartitionInfo start
-     * @type {number}
-     * @memberof SubarrayPartitionerCurrent
      */
-    start?: number;
+    'start'?: number;
     /**
      * PartitionInfo end
-     * @type {number}
-     * @memberof SubarrayPartitionerCurrent
      */
-    end?: number;
+    'end'?: number;
     /**
      * PartitionInfo splitMultiRange
-     * @type {boolean}
-     * @memberof SubarrayPartitionerCurrent
      */
-    splitMultiRange?: boolean;
+    'splitMultiRange'?: boolean;
 }
 /**
  * The state information for the remaining partitions to be produced
- * @export
- * @interface SubarrayPartitionerState
  */
 export interface SubarrayPartitionerState {
     /**
      * State start
-     * @type {number}
-     * @memberof SubarrayPartitionerState
      */
-    start?: number;
+    'start'?: number;
     /**
      * State end
-     * @type {number}
-     * @memberof SubarrayPartitionerState
      */
-    end?: number;
+    'end'?: number;
     /**
      * State singleRange
-     * @type {Array<Subarray>}
-     * @memberof SubarrayPartitionerState
      */
-    singleRange?: Array<Subarray>;
+    'singleRange'?: Array<Subarray>;
     /**
      * State multiRange
-     * @type {Array<Subarray>}
-     * @memberof SubarrayPartitionerState
      */
-    multiRange?: Array<Subarray>;
+    'multiRange'?: Array<Subarray>;
 }
 /**
  * A set of 1D ranges for a subarray
- * @export
- * @interface SubarrayRanges
  */
 export interface SubarrayRanges {
-    /**
-     * 
-     * @type {Datatype}
-     * @memberof SubarrayRanges
-     */
-    type?: Datatype;
+    'type'?: Datatype;
     /**
      * True if the range is the default range
-     * @type {boolean}
-     * @memberof SubarrayRanges
      */
-    hasDefaultRange?: boolean;
+    'hasDefaultRange'?: boolean;
     /**
      * The bytes of the ranges
-     * @type {Array<number>}
-     * @memberof SubarrayRanges
      */
-    buffer?: Array<number>;
+    'buffer'?: Array<number>;
     /**
      * The list of sizes per range
-     * @type {Array<number>}
-     * @memberof SubarrayRanges
      */
-    bufferSizes?: Array<number>;
+    'bufferSizes'?: Array<number>;
     /**
      * The list of start sizes per range
-     * @type {Array<number>}
-     * @memberof SubarrayRanges
      */
-    bufferStartSizes?: Array<number>;
+    'bufferStartSizes'?: Array<number>;
 }
+
+
 /**
  * TileDB config used for interaction with the embedded library
- * @export
- * @interface TileDBConfig
  */
 export interface TileDBConfig {
-    /**
-     * 
-     * @type {Array<TileDBConfigEntries>}
-     * @memberof TileDBConfig
-     */
-    entries?: Array<TileDBConfigEntries>;
+    'entries'?: Array<TileDBConfigEntriesInner>;
 }
-/**
- * 
- * @export
- * @interface TileDBConfigEntries
- */
-export interface TileDBConfigEntries {
-    /**
-     * 
-     * @type {string}
-     * @memberof TileDBConfigEntries
-     */
-    key?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof TileDBConfigEntries
-     */
-    value?: string;
+export interface TileDBConfigEntriesInner {
+    'key'?: string;
+    'value'?: string;
 }
 /**
  * the timestamped filtered array metadata URIs, after removing the ones that need to be vacuumed and those that do not fall within
- * @export
- * @interface TimestampedURI
  */
 export interface TimestampedURI {
     /**
      * the uri
-     * @type {string}
-     * @memberof TimestampedURI
      */
-    uri?: string;
+    'uri'?: string;
     /**
      * start of timestamp
-     * @type {number}
-     * @memberof TimestampedURI
      */
-    timestampStart?: number;
+    'timestampStart'?: number;
     /**
      * end of timestamp
-     * @type {number}
-     * @memberof TimestampedURI
      */
-    timestampEnd?: number;
+    'timestampEnd'?: number;
 }
-/**
- * 
- * @export
- * @interface Writer
- */
 export interface Writer {
-    /**
-     * 
-     * @type {boolean}
-     * @memberof Writer
-     */
-    checkCoordDups?: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof Writer
-     */
-    checkCoordOOB?: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof Writer
-     */
-    dedupCoords?: boolean;
-    /**
-     * 
-     * @type {Subarray}
-     * @memberof Writer
-     */
-    subarrayRanges?: Subarray;
-    /**
-     * 
-     * @type {DomainArray}
-     * @memberof Writer
-     */
-    subarray?: DomainArray;
+    'checkCoordDups'?: boolean;
+    'checkCoordOOB'?: boolean;
+    'dedupCoords'?: boolean;
+    'subarrayRanges'?: Subarray;
+    'subarray'?: DomainArray;
 }
 
 
@@ -3130,12 +1796,12 @@ export const ArrayApiAxiosParamCreator = function (configuration?: Configuration
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
-
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
             if (start !== undefined) {
                 localVarQueryParameter['start'] = start;
@@ -3216,12 +1882,12 @@ export const ArrayApiAxiosParamCreator = function (configuration?: Configuration
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
-
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
             if (contentType !== undefined && contentType !== null) {
                 localVarHeaderParameter['Content-Type'] = String(contentType);
@@ -3376,7 +2042,6 @@ export class ArrayApi extends BaseAPI {
 }
 
 
-
 /**
  * FilesApi - axios parameter creator
  * @export
@@ -3390,7 +2055,7 @@ export const FilesApiAxiosParamCreator = function (configuration?: Configuration
          * @param {string} array asset ID or hierarchical path of array that is url-encoded
          * @param {string} contentType Content Type of input
          * @param {number} filesize size of the file to upload in bytes
-         * @param {any} file file to upload
+         * @param {File} file file to upload
          * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
          * @param {string} [name] name of the TileDB array to create, if missing {array} is used
          * @param {string} [filename] original file name
@@ -3398,7 +2063,7 @@ export const FilesApiAxiosParamCreator = function (configuration?: Configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        handleUploadFile: async (workspace: string, teamspace: string, array: string, contentType: string, filesize: number, file: any, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, name?: string, filename?: string, mimetype?: string, options: any = {}): Promise<RequestArgs> => {
+        handleUploadFile: async (workspace: string, teamspace: string, array: string, contentType: string, filesize: number, file: File, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, name?: string, filename?: string, mimetype?: string, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'workspace' is not null or undefined
             assertParamExists('handleUploadFile', 'workspace', workspace)
             // verify required parameter 'teamspace' is not null or undefined
@@ -3426,12 +2091,12 @@ export const FilesApiAxiosParamCreator = function (configuration?: Configuration
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
-
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
             if (name !== undefined) {
                 localVarQueryParameter['name'] = name;
@@ -3492,7 +2157,7 @@ export const FilesApiFp = function(configuration?: Configuration) {
          * @param {string} array asset ID or hierarchical path of array that is url-encoded
          * @param {string} contentType Content Type of input
          * @param {number} filesize size of the file to upload in bytes
-         * @param {any} file file to upload
+         * @param {File} file file to upload
          * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
          * @param {string} [name] name of the TileDB array to create, if missing {array} is used
          * @param {string} [filename] original file name
@@ -3500,7 +2165,7 @@ export const FilesApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async handleUploadFile(workspace: string, teamspace: string, array: string, contentType: string, filesize: number, file: any, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, name?: string, filename?: string, mimetype?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<FileUploaded>> {
+        async handleUploadFile(workspace: string, teamspace: string, array: string, contentType: string, filesize: number, file: File, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, name?: string, filename?: string, mimetype?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<FileUploaded>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.handleUploadFile(workspace, teamspace, array, contentType, filesize, file, xTILEDBCLOUDACCESSCREDENTIALSNAME, name, filename, mimetype, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -3521,7 +2186,7 @@ export const FilesApiFactory = function (configuration?: Configuration, basePath
          * @param {string} array asset ID or hierarchical path of array that is url-encoded
          * @param {string} contentType Content Type of input
          * @param {number} filesize size of the file to upload in bytes
-         * @param {any} file file to upload
+         * @param {File} file file to upload
          * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
          * @param {string} [name] name of the TileDB array to create, if missing {array} is used
          * @param {string} [filename] original file name
@@ -3529,7 +2194,7 @@ export const FilesApiFactory = function (configuration?: Configuration, basePath
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        handleUploadFile(workspace: string, teamspace: string, array: string, contentType: string, filesize: number, file: any, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, name?: string, filename?: string, mimetype?: string, options?: any): AxiosPromise<FileUploaded> {
+        handleUploadFile(workspace: string, teamspace: string, array: string, contentType: string, filesize: number, file: File, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, name?: string, filename?: string, mimetype?: string, options?: any): AxiosPromise<FileUploaded> {
             return localVarFp.handleUploadFile(workspace, teamspace, array, contentType, filesize, file, xTILEDBCLOUDACCESSCREDENTIALSNAME, name, filename, mimetype, options).then((request) => request(axios, basePath));
         },
     };
@@ -3549,7 +2214,7 @@ export class FilesApi extends BaseAPI {
      * @param {string} array asset ID or hierarchical path of array that is url-encoded
      * @param {string} contentType Content Type of input
      * @param {number} filesize size of the file to upload in bytes
-     * @param {any} file file to upload
+     * @param {File} file file to upload
      * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
      * @param {string} [name] name of the TileDB array to create, if missing {array} is used
      * @param {string} [filename] original file name
@@ -3558,11 +2223,10 @@ export class FilesApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof FilesApi
      */
-    public handleUploadFile(workspace: string, teamspace: string, array: string, contentType: string, filesize: number, file: any, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, name?: string, filename?: string, mimetype?: string, options?: any) {
+    public handleUploadFile(workspace: string, teamspace: string, array: string, contentType: string, filesize: number, file: File, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, name?: string, filename?: string, mimetype?: string, options?: any) {
         return FilesApiFp(this.configuration).handleUploadFile(workspace, teamspace, array, contentType, filesize, file, xTILEDBCLOUDACCESSCREDENTIALSNAME, name, filename, mimetype, options).then((request) => request(this.axios, this.basePath));
     }
 }
-
 
 
 /**
@@ -3603,12 +2267,12 @@ export const GroupsApiAxiosParamCreator = function (configuration?: Configuratio
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
-
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
             if (xTILEDBCLOUDACCESSCREDENTIALSNAME !== undefined && xTILEDBCLOUDACCESSCREDENTIALSNAME !== null) {
                 localVarHeaderParameter['X-TILEDB-CLOUD-ACCESS-CREDENTIALS-NAME'] = String(xTILEDBCLOUDACCESSCREDENTIALSNAME);
@@ -3663,12 +2327,12 @@ export const GroupsApiAxiosParamCreator = function (configuration?: Configuratio
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
-
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
             if (recursive !== undefined) {
                 localVarQueryParameter['recursive'] = recursive;
@@ -3721,12 +2385,12 @@ export const GroupsApiAxiosParamCreator = function (configuration?: Configuratio
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
-
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
             if (recursive !== undefined) {
                 localVarQueryParameter['recursive'] = recursive;
@@ -3785,12 +2449,12 @@ export const GroupsApiAxiosParamCreator = function (configuration?: Configuratio
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
-
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
             if (start !== undefined) {
                 localVarQueryParameter['start'] = start;
@@ -3855,12 +2519,12 @@ export const GroupsApiAxiosParamCreator = function (configuration?: Configuratio
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
-
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
             if (page !== undefined) {
                 localVarQueryParameter['page'] = page;
@@ -3916,12 +2580,12 @@ export const GroupsApiAxiosParamCreator = function (configuration?: Configuratio
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
-
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
 
     
@@ -3972,12 +2636,12 @@ export const GroupsApiAxiosParamCreator = function (configuration?: Configuratio
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
-
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
             if (xTILEDBCLOUDACCESSCREDENTIALSNAME !== undefined && xTILEDBCLOUDACCESSCREDENTIALSNAME !== null) {
                 localVarHeaderParameter['X-TILEDB-CLOUD-ACCESS-CREDENTIALS-NAME'] = String(xTILEDBCLOUDACCESSCREDENTIALSNAME);
@@ -4030,12 +2694,12 @@ export const GroupsApiAxiosParamCreator = function (configuration?: Configuratio
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
-
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
             if (xTILEDBCLOUDACCESSCREDENTIALSNAME !== undefined && xTILEDBCLOUDACCESSCREDENTIALSNAME !== null) {
                 localVarHeaderParameter['X-TILEDB-CLOUD-ACCESS-CREDENTIALS-NAME'] = String(xTILEDBCLOUDACCESSCREDENTIALSNAME);
@@ -4091,12 +2755,12 @@ export const GroupsApiAxiosParamCreator = function (configuration?: Configuratio
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
-
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
             if (xTILEDBCLOUDACCESSCREDENTIALSNAME !== undefined && xTILEDBCLOUDACCESSCREDENTIALSNAME !== null) {
                 localVarHeaderParameter['X-TILEDB-CLOUD-ACCESS-CREDENTIALS-NAME'] = String(xTILEDBCLOUDACCESSCREDENTIALSNAME);
@@ -4152,12 +2816,12 @@ export const GroupsApiAxiosParamCreator = function (configuration?: Configuratio
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
-
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
             if (xTILEDBCLOUDACCESSCREDENTIALSNAME !== undefined && xTILEDBCLOUDACCESSCREDENTIALSNAME !== null) {
                 localVarHeaderParameter['X-TILEDB-CLOUD-ACCESS-CREDENTIALS-NAME'] = String(xTILEDBCLOUDACCESSCREDENTIALSNAME);
@@ -4212,12 +2876,12 @@ export const GroupsApiAxiosParamCreator = function (configuration?: Configuratio
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
-
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
 
     
@@ -4725,7 +3389,6 @@ export class GroupsApi extends BaseAPI {
 }
 
 
-
 /**
  * NotebooksApi - axios parameter creator
  * @export
@@ -4738,13 +3401,13 @@ export const NotebooksApiAxiosParamCreator = function (configuration?: Configura
          * @param {string} teamspace the teamspace the array belongs to
          * @param {string} array asset ID or hierarchical path of array that is url-encoded
          * @param {number} filesize size of the notebook to upload in bytes
-         * @param {any} notebook notebook to upload
+         * @param {File} notebook notebook to upload
          * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
          * @param {string} [name] name of the TileDB array to create, if missing {array} is used
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        handleUploadNotebook: async (workspace: string, teamspace: string, array: string, filesize: number, notebook: any, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, name?: string, options: any = {}): Promise<RequestArgs> => {
+        handleUploadNotebook: async (workspace: string, teamspace: string, array: string, filesize: number, notebook: File, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, name?: string, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'workspace' is not null or undefined
             assertParamExists('handleUploadNotebook', 'workspace', workspace)
             // verify required parameter 'teamspace' is not null or undefined
@@ -4770,12 +3433,12 @@ export const NotebooksApiAxiosParamCreator = function (configuration?: Configura
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
-
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
             if (name !== undefined) {
                 localVarQueryParameter['name'] = name;
@@ -4823,13 +3486,13 @@ export const NotebooksApiFp = function(configuration?: Configuration) {
          * @param {string} teamspace the teamspace the array belongs to
          * @param {string} array asset ID or hierarchical path of array that is url-encoded
          * @param {number} filesize size of the notebook to upload in bytes
-         * @param {any} notebook notebook to upload
+         * @param {File} notebook notebook to upload
          * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
          * @param {string} [name] name of the TileDB array to create, if missing {array} is used
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async handleUploadNotebook(workspace: string, teamspace: string, array: string, filesize: number, notebook: any, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, name?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<NotebookUploaded>> {
+        async handleUploadNotebook(workspace: string, teamspace: string, array: string, filesize: number, notebook: File, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, name?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<NotebookUploaded>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.handleUploadNotebook(workspace, teamspace, array, filesize, notebook, xTILEDBCLOUDACCESSCREDENTIALSNAME, name, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -4849,13 +3512,13 @@ export const NotebooksApiFactory = function (configuration?: Configuration, base
          * @param {string} teamspace the teamspace the array belongs to
          * @param {string} array asset ID or hierarchical path of array that is url-encoded
          * @param {number} filesize size of the notebook to upload in bytes
-         * @param {any} notebook notebook to upload
+         * @param {File} notebook notebook to upload
          * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
          * @param {string} [name] name of the TileDB array to create, if missing {array} is used
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        handleUploadNotebook(workspace: string, teamspace: string, array: string, filesize: number, notebook: any, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, name?: string, options?: any): AxiosPromise<NotebookUploaded> {
+        handleUploadNotebook(workspace: string, teamspace: string, array: string, filesize: number, notebook: File, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, name?: string, options?: any): AxiosPromise<NotebookUploaded> {
             return localVarFp.handleUploadNotebook(workspace, teamspace, array, filesize, notebook, xTILEDBCLOUDACCESSCREDENTIALSNAME, name, options).then((request) => request(axios, basePath));
         },
     };
@@ -4874,18 +3537,17 @@ export class NotebooksApi extends BaseAPI {
      * @param {string} teamspace the teamspace the array belongs to
      * @param {string} array asset ID or hierarchical path of array that is url-encoded
      * @param {number} filesize size of the notebook to upload in bytes
-     * @param {any} notebook notebook to upload
+     * @param {File} notebook notebook to upload
      * @param {string} [xTILEDBCLOUDACCESSCREDENTIALSNAME] Optional registered access credentials to use for creation
      * @param {string} [name] name of the TileDB array to create, if missing {array} is used
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof NotebooksApi
      */
-    public handleUploadNotebook(workspace: string, teamspace: string, array: string, filesize: number, notebook: any, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, name?: string, options?: any) {
+    public handleUploadNotebook(workspace: string, teamspace: string, array: string, filesize: number, notebook: File, xTILEDBCLOUDACCESSCREDENTIALSNAME?: string, name?: string, options?: any) {
         return NotebooksApiFp(this.configuration).handleUploadNotebook(workspace, teamspace, array, filesize, notebook, xTILEDBCLOUDACCESSCREDENTIALSNAME, name, options).then((request) => request(this.axios, this.basePath));
     }
 }
-
 
 
 /**
@@ -4927,12 +3589,12 @@ export const OrganizationApiAxiosParamCreator = function (configuration?: Config
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
-
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
             if (provider !== undefined) {
                 localVarQueryParameter['provider'] = provider;
@@ -4998,12 +3660,12 @@ export const OrganizationApiAxiosParamCreator = function (configuration?: Config
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
-
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
 
     
@@ -5050,12 +3712,12 @@ export const OrganizationApiAxiosParamCreator = function (configuration?: Config
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
-
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
 
     
@@ -5102,12 +3764,12 @@ export const OrganizationApiAxiosParamCreator = function (configuration?: Config
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
-
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
             if (provider !== undefined) {
                 localVarQueryParameter['provider'] = provider;
@@ -5173,12 +3835,12 @@ export const OrganizationApiAxiosParamCreator = function (configuration?: Config
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
-
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
 
     
@@ -5434,7 +4096,6 @@ export class OrganizationApi extends BaseAPI {
 }
 
 
-
 /**
  * QueryApi - axios parameter creator
  * @export
@@ -5483,12 +4144,12 @@ export const QueryApiAxiosParamCreator = function (configuration?: Configuration
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
-
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
             if (type !== undefined) {
                 localVarQueryParameter['type'] = type;
@@ -5552,7 +4213,7 @@ export const QueryApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async submitQuery(workspace: string, teamspace: string, array: string, type: string, contentType: string, query: Query, xPayer?: string, openAt?: number, readAll?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
+        async submitQuery(workspace: string, teamspace: string, array: string, type: string, contentType: string, query: Query, xPayer?: string, openAt?: number, readAll?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<File>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.submitQuery(workspace, teamspace, array, type, contentType, query, xPayer, openAt, readAll, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -5580,7 +4241,7 @@ export const QueryApiFactory = function (configuration?: Configuration, basePath
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        submitQuery(workspace: string, teamspace: string, array: string, type: string, contentType: string, query: Query, xPayer?: string, openAt?: number, readAll?: string, options?: any): AxiosPromise<any> {
+        submitQuery(workspace: string, teamspace: string, array: string, type: string, contentType: string, query: Query, xPayer?: string, openAt?: number, readAll?: string, options?: any): AxiosPromise<File> {
             return localVarFp.submitQuery(workspace, teamspace, array, type, contentType, query, xPayer, openAt, readAll, options).then((request) => request(axios, basePath));
         },
     };
@@ -5612,7 +4273,6 @@ export class QueryApi extends BaseAPI {
         return QueryApiFp(this.configuration).submitQuery(workspace, teamspace, array, type, contentType, query, xPayer, openAt, readAll, options).then((request) => request(this.axios, this.basePath));
     }
 }
-
 
 
 /**
@@ -5654,12 +4314,12 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
-
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
             if (provider !== undefined) {
                 localVarQueryParameter['provider'] = provider;
@@ -5725,12 +4385,12 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
-
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
 
     
@@ -5777,12 +4437,12 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
-
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
 
     
@@ -5829,12 +4489,12 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
-
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
             if (provider !== undefined) {
                 localVarQueryParameter['provider'] = provider;
@@ -5900,12 +4560,12 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
-
             // authentication BasicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-TILEDB-REST-API-KEY", configuration)
 
 
     
@@ -6159,5 +4819,4 @@ export class UserApi extends BaseAPI {
         return UserApiFp(this.configuration).updateCredential(workspace, teamspace, name, accessCredential, options).then((request) => request(this.axios, this.basePath));
     }
 }
-
 

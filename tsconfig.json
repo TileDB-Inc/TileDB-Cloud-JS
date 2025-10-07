@@ -1,21 +1,19 @@
 {
-    "compilerOptions": {
-      "declaration": true,
-      "esModuleInterop":true,
-      "lib": ["es2015", "dom", "WebWorker", "ESNext"],
-      "module": "commonjs",
-      "moduleResolution": "node",
-      "noEmitOnError": true,
-      "noUnusedLocals": true,
-      "outDir": "lib",
-      "rootDir": "src",
-      "resolveJsonModule": true,
-      "skipLibCheck": true,
-      "sourceMap": true,
-      "inlineSources": true,
-      "target": "es2015"
-    },
-    "include": [
-      "./src/"
-    ]
-  }
+  "compilerOptions": {
+    "composite": true,
+    "declaration": true,
+    "esModuleInterop": true,
+    "module": "es2022",
+    "moduleResolution": "node",
+    "noEmitOnError": true,
+    "noUnusedLocals": true,
+    "outDir": "lib",
+    "rootDir": "src",
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "inlineSources": true,
+    "target": "es2022"
+  },
+  "include": ["./src/"]
+}

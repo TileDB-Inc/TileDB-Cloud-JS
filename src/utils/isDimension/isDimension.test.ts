@@ -1,12 +1,13 @@
-import attributesAndDomains from "../../fixtures/attributesAndDomains";
-import isDimension from "./isDimension";
+import attributesAndDomains from '../../fixtures/attributesAndDomains';
+import isDimension from './isDimension';
+import { describe, it, expect } from 'vitest';
 
-describe("isDimension()", () => {
-  it("Should return true if it is a dimension", () => {
+describe('isDimension()', () => {
+  it('Should return true if it is a dimension', () => {
     expect(isDimension(attributesAndDomains[0])).toEqual(true);
   });
 
-  it("Should return false if it is an attribute", () => {
+  it('Should return false if it is an attribute', () => {
     expect(isDimension(attributesAndDomains[1])).toEqual(false);
   });
 });
