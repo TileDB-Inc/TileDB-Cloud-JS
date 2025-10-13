@@ -1,4 +1,5 @@
 import { defineConfig } from 'vite';
+import pkg from './package.json';
 import dts from 'vite-plugin-dts';
 
 export default defineConfig({
@@ -7,7 +8,7 @@ export default defineConfig({
     emptyOutDir: true,
     lib: {
       entry: {
-        'index': 'src/index.ts', 
+        'index': 'src/index.ts',
         'v3/index': 'src/v3/index.ts'
       },
       formats: ['es']
@@ -15,7 +16,7 @@ export default defineConfig({
     minify: true,
     sourcemap: true,
     rollupOptions: {
-      external: ['node:child_process']
+      external: ['node:child_process', ...Object.keys(pkg.dependencies)]
     }
   },
   worker: {
