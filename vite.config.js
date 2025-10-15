@@ -19,7 +19,7 @@ export default defineConfig({
     minify: true,
     sourcemap: true,
     rollupOptions: {
-      external: ['node:child_process', ...Object.keys(pkg.dependencies)]
+      external: Object.keys(pkg.dependencies)
     }
   },
   worker: {
