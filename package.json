@@ -12,14 +12,20 @@
       "import": "./lib/index.js"
     },
     "./v1": {
-      "types": "./lib/v1/index.d.ts"
+      "types": "./lib/v1/index.d.ts",
+      "import": "./lib/v1/index.js"
     },
     "./v2": {
-      "types": "./lib/v2/index.d.ts"
+      "types": "./lib/v2/index.d.ts",
+      "import": "./lib/v2/index.js"
     },
     "./v3": {
       "types": "./lib/v3/index.d.ts",
       "import": "./lib/v3/index.js"
+    },
+    "./v4": {
+      "types": "./lib/v4/index.d.ts",
+      "import": "./lib/v4/index.js"
     }
   },
   "scripts": {
