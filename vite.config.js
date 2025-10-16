@@ -5,6 +5,7 @@ import dts from 'vite-plugin-dts';
 export default defineConfig({
   build: {
     outDir: 'lib',
+    assetsDir: '',
     emptyOutDir: true,
     lib: {
       entry: {
