@@ -103,16 +103,16 @@ export interface ArrayMetadataEntriesInner {
  * ArraySchema during creation or retrieval
  */
 export interface ArraySchema {
-    'arrayType'?: ArrayType;
-    'attributes'?: Array<Attribute>;
-    'capacity'?: number;
-    'cellOrder'?: Layout;
-    'coordsFilterPipeline'?: FilterPipeline;
-    'domain'?: Domain;
-    'offsetFilterPipeline'?: FilterPipeline;
-    'tileOrder'?: Layout;
+    'arrayType': ArrayType;
+    'attributes': Array<Attribute>;
+    'capacity': number;
+    'cellOrder': Layout;
+    'coordsFilterPipeline': FilterPipeline;
+    'domain': Domain;
+    'offsetFilterPipeline': FilterPipeline;
+    'tileOrder': Layout;
     'uri'?: string;
-    'version'?: Array<number>;
+    'version': Array<number>;
     'allowsDuplicates'?: boolean;
     'validityFilterPipeline'?: FilterPipeline;
     'name'?: string;
@@ -144,10 +144,10 @@ export type ArrayType = typeof ArrayType[keyof typeof ArrayType];
  * Attribute of array
  */
 export interface Attribute {
-    'cellValNum'?: number;
-    'name'?: string;
-    'type'?: Datatype;
-    'filterPipeline'?: FilterPipeline;
+    'cellValNum': number;
+    'name': string;
+    'type': Datatype;
+    'filterPipeline': FilterPipeline;
     'fillValue'?: Array<number>;
     'nullable'?: boolean;
     'fillValueValidity'?: boolean;
@@ -190,9 +190,9 @@ export interface AttributeBufferHeader {
     'originalValidityLenBufferSizeInBytes'?: number;
 }
 export interface AttributeBufferSize {
-    'attribute'?: string;
-    'offsetBytes'?: number;
-    'dataBytes'?: number;
+    'attribute': string;
+    'offsetBytes': number;
+    'dataBytes': number;
     'validityBytes'?: number;
 }
 export interface BufferedChunk {
@@ -286,9 +286,9 @@ export interface Delete {
  */
 export interface Dimension {
     'name'?: string;
-    'type'?: Datatype;
-    'domain'?: DomainArray;
-    'nullTileExtent'?: boolean;
+    'type': Datatype;
+    'domain': DomainArray;
+    'nullTileExtent': boolean;
     'tileExtent'?: DimensionTileExtent;
     'filterPipeline'?: FilterPipeline;
 }
@@ -324,10 +324,10 @@ export interface DimensionTileExtent {
  * Domain of array
  */
 export interface Domain {
-    'cellOrder'?: Layout;
-    'dimensions'?: Array<Dimension>;
-    'tileOrder'?: Layout;
-    'type'?: Datatype;
+    'cellOrder': Layout;
+    'dimensions': Array<Dimension>;
+    'tileOrder': Layout;
+    'type': Datatype;
 }
 
 
@@ -361,7 +361,7 @@ export interface Enumeration {
 
 
 export interface Filter {
-    'type'?: FilterType;
+    'type': FilterType;
     'data'?: FilterData;
     'floatScaleConfig'?: FloatScaleConfig;
     'webpConfig'?: WebpConfig;
