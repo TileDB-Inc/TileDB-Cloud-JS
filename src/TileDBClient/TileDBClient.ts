@@ -62,13 +62,14 @@ class TileDBClient {
     params: Omit<
       ConfigurationParameters,
       'username' | 'password'
-    > = defaultConfig
+    > = defaultConfig,
+    axiosInstance?: AxiosInstance
   ) {
     const config = {
       ...defaultConfig,
       ...params
     };
-    this.axios = axios.create();
+    this.axios = axiosInstance ?? axios.create();
 
     this.config = new Configuration({
       ...config,
