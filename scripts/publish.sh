@@ -10,12 +10,12 @@ echo "Updating package.json with version $LATEST_GIT_TAG"
 if [[ $LATEST_GIT_TAG == *"beta"* ]];
 then
 echo "Publishing beta version $LATEST_GIT_TAG to npm";
-yarn publish --new-version $LATEST_GIT_TAG --no-git-tag-version --no-commit-hooks --access public --tag beta
+npm publish --access public --tag beta
 elif [[ $LATEST_GIT_TAG == *"alpha"* ]];
 then
 echo "Publishing alpha version $LATEST_GIT_TAG to npm";
-yarn publish --new-version $LATEST_GIT_TAG --no-git-tag-version --no-commit-hooks --access public --tag alpha
+npm publish --access public --tag alpha
 else
 echo "Publishing new version $LATEST_GIT_TAG to npm";
-yarn publish --new-version $LATEST_GIT_TAG --no-git-tag-version --no-commit-hooks --access public
+npm publish --access public
 fi
