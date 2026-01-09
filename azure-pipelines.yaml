@@ -24,6 +24,10 @@ jobs:
       - script: npm run test
         displayName: Run node and browser tests
       - script: |
+          if [[ -z "${NPM_TOKEN}" ]]; then
+            echo "NPM_TOKEN is not set. Exiting."
+            exit 1
+          fi
           echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
         displayName: Write npm token to npmrc
         env:
