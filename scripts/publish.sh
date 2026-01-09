@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+if [[ -z "${NODE_AUTH_TOKEN}" ]]; then
+    echo "NODE_AUTH_TOKEN is not set. Exiting."
+    exit 1
+fi
+
 LATEST_GIT_TAG=$(git describe --tags --abbrev=0)
 # Git tag is in the form v1.0.0, remove the prepending "v" to get just the version
 LATEST_GIT_TAG="${LATEST_GIT_TAG:1}"
