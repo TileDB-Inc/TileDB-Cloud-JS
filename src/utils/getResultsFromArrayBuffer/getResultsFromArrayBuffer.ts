@@ -77,6 +77,53 @@ const stringDecoderMap: Partial<Record<Datatype, string>> = {
 };
 
 /**
+ * Fast path for processing var-length string attributes.
+ * Decodes sub-buffers directly instead of decode→split→group→join.
+ * 
+ * @param arrayBuffer The main array buffer containing all data
+ * @param dataStart Starting byte offset of the string data
+ * @param dataLength Length of the string data in bytes
+ * @param byteOffsets Array of byte offsets for each string
+ * @param encoding Character encoding to use for decoding
+ * @param validityBuffer Optional buffer containing validity bytes for nullable strings
+ * @param ignoreNullables Whether to skip nullable processing
+ * @returns Array of strings (possibly with nulls if nullable)
+ */
+function processVarLengthStrings(
+  arrayBuffer: ArrayBuffer,
+  dataStart: number,
+  dataLength: number,
+  byteOffsets: bigint[],
+  encoding: string,
+  validityBuffer?: DataView,
+  ignoreNullables?: boolean
+): Result {
+  const decoder = new TextDecoder(encoding);
+  const numStrings = byteOffsets.length;
+  const strings: string[] = new Array(numStrings);
+
+  for (let i = 0; i < numStrings; i++) {
+    const start = Number(byteOffsets[i]);
+    const end = i + 1 < numStrings ? Number(byteOffsets[i + 1]) : dataLength;
+    strings[i] = decoder.decode(
+      new Uint8Array(arrayBuffer, dataStart + start, end - start)
+    );
+  }
+
+  // Apply nullability if needed
+  if (validityBuffer && !ignoreNullables) {
+    const nullablesTypedArray = bufferToInt8(validityBuffer);
+    const nullablesArray: number[] = new Array(nullablesTypedArray.length);
+    for (let i = 0; i < nullablesTypedArray.length; i++) {
+      nullablesArray[i] = nullablesTypedArray[i];
+    }
+    return setNullables(strings, nullablesArray);
+  }
+
+  return strings;
+}
+
+/**
  * Convert an ArrayBuffer to a map of attributes with their results
  * @param arrayBuffer The slice ArrayBuffer that contains the results
  * @param attributes
@@ -186,37 +233,23 @@ export const getResultsFromArrayBuffer = async (
     ) {
       const encoding =
         stringDecoderMap[selectedAttributeSchema.type] || 'utf-8';
-      const decoder = new TextDecoder(encoding);
-      const numStrings = byteOffsets.length;
-      const strings: string[] = new Array(numStrings);
-
-      for (let i = 0; i < numStrings; i++) {
-        const start = Number(byteOffsets[i]);
-        const end =
-          i + 1 < numStrings ? Number(byteOffsets[i + 1]) : dataLength;
-        strings[i] = decoder.decode(
-          new Uint8Array(arrayBuffer.buffer, dataStart + start, end - start)
-        );
-      }
-
-      let result: Result = strings;
-
-      if (isNullable && !options.ignoreNullables) {
-        const nullablesTypedArray = bufferToInt8(
-          new DataView(
+      const validityBuffer = isNullable
+        ? new DataView(
             arrayBuffer.buffer,
             arrayBuffer.byteOffset + byteOffset + validityOffset,
             totalNumberOfBytesOfAttribute - validityOffset
           )
-        );
-        const nullablesArray: number[] = new Array(nullablesTypedArray.length);
-        for (let i = 0; i < nullablesTypedArray.length; i++) {
-          nullablesArray[i] = nullablesTypedArray[i];
-        }
-        result = setNullables(strings, nullablesArray);
-      }
+        : undefined;
+      data[attribute.name] = processVarLengthStrings(
+        arrayBuffer.buffer,
+        dataStart,
+        dataLength,
+        byteOffsets,
+        encoding,
+        validityBuffer,
+        options.ignoreNullables
+      );
 
-      data[attribute.name] = result;
       byteOffset += totalNumberOfBytesOfAttribute;
       continue;
     }
