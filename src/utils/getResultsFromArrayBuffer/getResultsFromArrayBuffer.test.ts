@@ -769,4 +769,418 @@ describe('getResultsFromArrayBuffer() - Performance Tests', () => {
       30000
     );
   });
+
+  describe('Big data var-length attributes performance (100K scale)', () => {
+    it(
+      'Should handle 100K var-length nullable strings efficiently',
+      async () => {
+        const numStrings = 100000;
+        const encoder = new TextEncoder();
+
+        // Generate strings with varying lengths (5-50 chars)
+        const strings: string[] = new Array(numStrings);
+        for (let i = 0; i < numStrings; i++) {
+          const len = 5 + (i % 46); // lengths from 5 to 50
+          strings[i] = `s${i}_${'a'.repeat(len)}`;
+        }
+
+        // Encode all strings and compute byte offsets
+        const encodedStrings = strings.map(s => encoder.encode(s));
+        const offsets = new BigUint64Array(numStrings);
+        let totalStringBytes = 0;
+        for (let i = 0; i < numStrings; i++) {
+          offsets[i] = BigInt(totalStringBytes);
+          totalStringBytes += encodedStrings[i].length;
+        }
+
+        const offsetsBytes = numStrings * 8;
+        const validityBytes = numStrings;
+        const totalBytes = offsetsBytes + totalStringBytes + validityBytes;
+
+        const buffer = new ArrayBuffer(totalBytes);
+
+        // Write offsets
+        new BigUint64Array(buffer, 0, numStrings).set(offsets);
+
+        // Write string data
+        const stringDataView = new Uint8Array(buffer, offsetsBytes, totalStringBytes);
+        let writePos = 0;
+        for (let i = 0; i < numStrings; i++) {
+          stringDataView.set(encodedStrings[i], writePos);
+          writePos += encodedStrings[i].length;
+        }
+
+        // Write validity — 15% null
+        const validityView = new Uint8Array(
+          buffer,
+          offsetsBytes + totalStringBytes,
+          validityBytes
+        );
+        for (let i = 0; i < numStrings; i++) {
+          validityView[i] = i % 7 === 0 ? 0 : 1;
+        }
+
+        const bufferHeaders = [
+          {
+            name: 'labels',
+            fixedLenBufferSizeInBytes: offsetsBytes,
+            varLenBufferSizeInBytes: totalStringBytes,
+            validityLenBufferSizeInBytes: validityBytes,
+            originalFixedLenBufferSizeInBytes: offsetsBytes,
+            originalVarLenBufferSizeInBytes: totalStringBytes,
+            originalValidityLenBufferSizeInBytes: validityBytes
+          }
+        ];
+
+        const schema = [
+          {
+            cellValNum: 4294967295,
+            name: 'labels',
+            type: Datatype.StringUtf8,
+            filterPipeline: {},
+            fillValue: [0],
+            nullable: true,
+            fillValueValidity: false
+          }
+        ];
+
+        const startTime = performance.now();
+        const results = await getResultsFromArrayBuffer(
+          new DataView(buffer),
+          bufferHeaders,
+          schema
+        );
+        const endTime = performance.now();
+
+        const labels = results.labels as Array<string | null>;
+        expect(labels.length).toBe(numStrings);
+
+        // Verify a sample of non-null values
+        expect(labels[1]).toBe(strings[1]);
+        expect(labels[10]).toBe(strings[10]);
+        expect(labels[99999]).toBe(strings[99999]);
+
+        // Verify nulls are applied correctly
+        expect(labels[0]).toBeNull();
+        expect(labels[7]).toBeNull();
+        expect(labels[14]).toBeNull();
+        expect(labels[1]).not.toBeNull();
+
+        const elapsedTime = endTime - startTime;
+        console.log(
+          `Big data var-length strings (${numStrings} strings, ~${(totalStringBytes / numStrings).toFixed(0)} avg bytes, 15% null): ${elapsedTime.toFixed(2)}ms`
+        );
+
+        expect(elapsedTime).toBeLessThan(5000);
+      },
+      30000
+    );
+
+    it(
+      'Should handle 100K var-length numeric arrays with variable sizes efficiently',
+      async () => {
+        const numArrays = 100000;
+
+        // Pre-calculate total values so we can allocate upfront
+        const arraySizes = new Array(numArrays);
+        let totalValues = 0;
+        for (let i = 0; i < numArrays; i++) {
+          // Varying sizes: 1 to 20 elements per cell
+          arraySizes[i] = 1 + (i % 20);
+          totalValues += arraySizes[i];
+        }
+
+        const offsetsBytes = numArrays * 8;
+        const bytesPerElement = 4; // Int32
+        const valuesBytes = totalValues * bytesPerElement;
+        const validityBytes = numArrays;
+        const totalBytes = offsetsBytes + valuesBytes + validityBytes;
+
+        const buffer = new ArrayBuffer(totalBytes);
+
+        // Write offsets (byte offsets for Int32 values)
+        const offsetView = new BigUint64Array(buffer, 0, numArrays);
+        let byteOffset = 0;
+        for (let i = 0; i < numArrays; i++) {
+          offsetView[i] = BigInt(byteOffset);
+          byteOffset += arraySizes[i] * bytesPerElement;
+        }
+
+        // Write values
+        const valuesView = new Int32Array(buffer, offsetsBytes, totalValues);
+        let valIdx = 0;
+        for (let i = 0; i < numArrays; i++) {
+          for (let j = 0; j < arraySizes[i]; j++) {
+            valuesView[valIdx++] = i * 100 + j;
+          }
+        }
+
+        // Write validity — 10% null
+        const validityView = new Uint8Array(
+          buffer,
+          offsetsBytes + valuesBytes,
+          validityBytes
+        );
+        for (let i = 0; i < numArrays; i++) {
+          validityView[i] = i % 10 === 0 ? 0 : 1;
+        }
+
+        const bufferHeaders = [
+          {
+            name: 'vectors',
+            fixedLenBufferSizeInBytes: offsetsBytes,
+            varLenBufferSizeInBytes: valuesBytes,
+            validityLenBufferSizeInBytes: validityBytes,
+            originalFixedLenBufferSizeInBytes: offsetsBytes,
+            originalVarLenBufferSizeInBytes: valuesBytes,
+            originalValidityLenBufferSizeInBytes: validityBytes
+          }
+        ];
+
+        const schema = [
+          {
+            cellValNum: 4294967295,
+            name: 'vectors',
+            type: Datatype.Int32,
+            filterPipeline: {},
+            fillValue: [0, 0, 0, 128],
+            nullable: true,
+            fillValueValidity: false
+          }
+        ];
+
+        const startTime = performance.now();
+        const results = await getResultsFromArrayBuffer(
+          new DataView(buffer),
+          bufferHeaders,
+          schema
+        );
+        const endTime = performance.now();
+
+        const vectors = results.vectors as Array<number[] | null>;
+        expect(vectors.length).toBe(numArrays);
+
+        // Verify null entries
+        expect(vectors[0]).toBeNull();
+        expect(vectors[10]).toBeNull();
+        expect(vectors[1]).not.toBeNull();
+
+        // Verify a non-null array has the correct length and first value
+        expect(vectors[1]!.length).toBe(arraySizes[1]);
+        expect(vectors[1]![0]).toBe(100);
+
+        const elapsedTime = endTime - startTime;
+        console.log(
+          `Big data var-length Int32 arrays (${numArrays} arrays, ${totalValues} total values, avg ${(totalValues / numArrays).toFixed(1)} per cell): ${elapsedTime.toFixed(2)}ms`
+        );
+
+        expect(elapsedTime).toBeLessThan(10000);
+      },
+      30000
+    );
+
+    it(
+      'Should handle 100K rows with multiple var-length attributes combined',
+      async () => {
+        const numRows = 100000;
+        const encoder = new TextEncoder();
+
+        // --- Dimension: rows (fixed Int32) ---
+        const rowsBytes = numRows * 4;
+
+        // --- Attribute 1: var-length nullable strings ---
+        const strings: string[] = new Array(numRows);
+        for (let i = 0; i < numRows; i++) {
+          strings[i] = `item_${i}_${'z'.repeat(i % 30)}`;
+        }
+        const encodedStrings = strings.map(s => encoder.encode(s));
+        const strOffsets = new BigUint64Array(numRows);
+        let totalStrBytes = 0;
+        for (let i = 0; i < numRows; i++) {
+          strOffsets[i] = BigInt(totalStrBytes);
+          totalStrBytes += encodedStrings[i].length;
+        }
+        const strOffsetsBytes = numRows * 8;
+        const strValidityBytes = numRows;
+
+        // --- Attribute 2: var-length nullable Int32 arrays ---
+        const arraySizes = new Array(numRows);
+        let totalInts = 0;
+        for (let i = 0; i < numRows; i++) {
+          arraySizes[i] = 1 + (i % 10);
+          totalInts += arraySizes[i];
+        }
+        const intOffsetsBytes = numRows * 8;
+        const intBytesPerElement = 4;
+        const intValuesBytes = totalInts * intBytesPerElement;
+        const intValidityBytes = numRows;
+
+        // Compute total buffer: rows + strOffsets + strData + strValidity + intOffsets + intValues + intValidity
+        // Need to ensure BigUint64Array alignment for intOffsets
+        const afterStrValidity = rowsBytes + strOffsetsBytes + totalStrBytes + strValidityBytes;
+        const intOffsetsPadding = (8 - (afterStrValidity % 8)) % 8;
+
+        const totalBytes =
+          rowsBytes +
+          strOffsetsBytes + totalStrBytes + strValidityBytes +
+          intOffsetsPadding +
+          intOffsetsBytes + intValuesBytes + intValidityBytes;
+
+        const buffer = new ArrayBuffer(totalBytes);
+        let pos = 0;
+
+        // Write rows
+        const rowsView = new Int32Array(buffer, pos, numRows);
+        for (let i = 0; i < numRows; i++) rowsView[i] = i;
+        pos += rowsBytes;
+
+        // Write string offsets
+        new BigUint64Array(buffer, pos, numRows).set(strOffsets);
+        pos += strOffsetsBytes;
+
+        // Write string data
+        const strDataView = new Uint8Array(buffer, pos, totalStrBytes);
+        let strWritePos = 0;
+        for (let i = 0; i < numRows; i++) {
+          strDataView.set(encodedStrings[i], strWritePos);
+          strWritePos += encodedStrings[i].length;
+        }
+        pos += totalStrBytes;
+
+        // Write string validity — 20% null
+        const strValidityView = new Uint8Array(buffer, pos, strValidityBytes);
+        for (let i = 0; i < numRows; i++) {
+          strValidityView[i] = i % 5 === 0 ? 0 : 1;
+        }
+        pos += strValidityBytes;
+
+        // Padding for alignment
+        pos += intOffsetsPadding;
+
+        // Write int array offsets (byte offsets)
+        const intOffsetsView = new BigUint64Array(buffer, pos, numRows);
+        let intByteOff = 0;
+        for (let i = 0; i < numRows; i++) {
+          intOffsetsView[i] = BigInt(intByteOff);
+          intByteOff += arraySizes[i] * intBytesPerElement;
+        }
+        pos += intOffsetsBytes;
+
+        // Write int values
+        const intValuesView = new Int32Array(buffer, pos, totalInts);
+        let intIdx = 0;
+        for (let i = 0; i < numRows; i++) {
+          for (let j = 0; j < arraySizes[i]; j++) {
+            intValuesView[intIdx++] = i + j;
+          }
+        }
+        pos += intValuesBytes;
+
+        // Write int validity — 25% null
+        const intValidityView = new Uint8Array(buffer, pos, intValidityBytes);
+        for (let i = 0; i < numRows; i++) {
+          intValidityView[i] = i % 4 === 0 ? 0 : 1;
+        }
+
+        const bufferHeaders = [
+          {
+            name: 'rows',
+            fixedLenBufferSizeInBytes: rowsBytes,
+            varLenBufferSizeInBytes: 0,
+            validityLenBufferSizeInBytes: 0,
+            originalFixedLenBufferSizeInBytes: rowsBytes,
+            originalVarLenBufferSizeInBytes: 0,
+            originalValidityLenBufferSizeInBytes: 0
+          },
+          {
+            name: 'labels',
+            fixedLenBufferSizeInBytes: strOffsetsBytes,
+            varLenBufferSizeInBytes: totalStrBytes,
+            validityLenBufferSizeInBytes: strValidityBytes + intOffsetsPadding,
+            originalFixedLenBufferSizeInBytes: strOffsetsBytes,
+            originalVarLenBufferSizeInBytes: totalStrBytes,
+            originalValidityLenBufferSizeInBytes: strValidityBytes + intOffsetsPadding
+          },
+          {
+            name: 'data',
+            fixedLenBufferSizeInBytes: intOffsetsBytes,
+            varLenBufferSizeInBytes: intValuesBytes,
+            validityLenBufferSizeInBytes: intValidityBytes,
+            originalFixedLenBufferSizeInBytes: intOffsetsBytes,
+            originalVarLenBufferSizeInBytes: intValuesBytes,
+            originalValidityLenBufferSizeInBytes: intValidityBytes
+          }
+        ];
+
+        const schema = [
+          {
+            name: 'rows',
+            nullTileExtent: false,
+            type: Datatype.Int32,
+            tileExtent: { int32: 4 },
+            domain: { int32: [] },
+            filterPipeline: {}
+          },
+          {
+            cellValNum: 4294967295,
+            name: 'labels',
+            type: Datatype.StringUtf8,
+            filterPipeline: {},
+            fillValue: [0],
+            nullable: true,
+            fillValueValidity: false
+          },
+          {
+            cellValNum: 4294967295,
+            name: 'data',
+            type: Datatype.Int32,
+            filterPipeline: {},
+            fillValue: [0, 0, 0, 128],
+            nullable: true,
+            fillValueValidity: false
+          }
+        ];
+
+        const startTime = performance.now();
+        const results = await getResultsFromArrayBuffer(
+          new DataView(buffer),
+          bufferHeaders,
+          schema
+        );
+        const endTime = performance.now();
+
+        const rows = results.rows as number[];
+        const labels = results.labels as Array<string | null>;
+        const data = results.data as Array<number[] | null>;
+
+        expect(rows.length).toBe(numRows);
+        expect(labels.length).toBe(numRows);
+        expect(data.length).toBe(numRows);
+
+        // Spot-check rows
+        expect(rows[0]).toBe(0);
+        expect(rows[numRows - 1]).toBe(numRows - 1);
+
+        // Spot-check string nulls (every 5th)
+        expect(labels[0]).toBeNull();
+        expect(labels[5]).toBeNull();
+        expect(labels[1]).toBe(strings[1]);
+
+        // Spot-check int array nulls (every 4th) and values
+        expect(data[0]).toBeNull();
+        expect(data[4]).toBeNull();
+        expect(data[1]).not.toBeNull();
+        expect(data[1]!.length).toBe(arraySizes[1]);
+        expect(data[1]![0]).toBe(1);
+
+        const elapsedTime = endTime - startTime;
+        console.log(
+          `Big data multi-attribute (${numRows} rows: fixed dim + var-len strings + var-len Int32[], 20%/25% null): ${elapsedTime.toFixed(2)}ms`
+        );
+
+        expect(elapsedTime).toBeLessThan(10000);
+      },
+      30000
+    );
+  });
 });
