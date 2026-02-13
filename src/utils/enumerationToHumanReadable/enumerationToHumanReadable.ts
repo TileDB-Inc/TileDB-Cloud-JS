@@ -31,7 +31,7 @@ const enumerationToHumanReadable = async (enumeration: Enumeration) => {
       Number(o / BigInt(BYTE_PER_ELEMENT))
     );
 
-    const groupedValues = await groupValuesByOffsetBytes(
+    const groupedValues = groupValuesByOffsetBytes(
       convertToArray(values),
       offsetsAsNumbers
     );

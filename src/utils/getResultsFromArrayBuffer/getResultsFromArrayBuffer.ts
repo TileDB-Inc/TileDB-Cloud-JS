@@ -57,6 +57,25 @@ type Result =
 type Results = Record<string, Result>;
 type DataMap = { __offsets?: Record<string, bigint[]> };
 
+const stringTypes: Set<Datatype> = new Set([
+  Datatype.Char,
+  Datatype.StringAscii,
+  Datatype.StringUtf8,
+  Datatype.StringUtf16,
+  Datatype.StringUtf32,
+  Datatype.StringUcs2,
+  Datatype.StringUcs4
+]);
+
+const stringDecoderMap: Partial<Record<Datatype, string>> = {
+  [Datatype.Char]: 'utf-8',
+  [Datatype.StringAscii]: 'ascii',
+  [Datatype.StringUtf8]: 'utf-8',
+  [Datatype.StringUtf16]: 'utf-16',
+  [Datatype.StringUcs2]: 'utf-16',
+  // StringUtf32 and StringUcs4 are not natively supported by TextDecoder
+};
+
 /**
  * Convert an ArrayBuffer to a map of attributes with their results
  * @param arrayBuffer The slice ArrayBuffer that contains the results
@@ -76,9 +95,10 @@ export const getResultsFromArrayBuffer = async (
     data.__offsets = {};
   }
 
-  await attributeBufferHeaders.reduce(async (_byteOffset, attribute) => {
+  let byteOffset = 0;
+
+  for (const attribute of attributeBufferHeaders) {
     const totalNumberOfBytesOfAttribute = getAttributeSizeInBytes(attribute);
-    const byteOffset = await _byteOffset;
 
     if (!totalNumberOfBytesOfAttribute) {
       if (options.returnRawBuffers) {
@@ -87,7 +107,7 @@ export const getResultsFromArrayBuffer = async (
         data[attribute.name] = [];
       }
 
-      return byteOffset;
+      continue;
     }
 
     // If there are validityLenBufferSizeInBytes the attribute is nullable
@@ -105,16 +125,6 @@ export const getResultsFromArrayBuffer = async (
     const validityOffset =
       totalNumberOfBytesOfAttribute -
       (isNullable ? attribute.validityLenBufferSizeInBytes : 0);
-    /**
-     * If attribute is varLengthSized, we ignore the first N bytes (where N = fixedLenBufferSizeInBytes)
-     * These first N bytes contain the offsets of the attribute, which is a uint64 array.
-     */
-
-    /**
-     * If attribute is isNullable we ignore the last N bytes (where N = validityLenBufferSizeInBytes)
-     * These last N bytes contain a uint8 array of zeros and ones, where every zero represents
-     * that in that index the attribute is null.
-     */
 
     /**
      * Offsets are Uint64 numbers, buffer contains byte offsets though,
@@ -131,13 +141,21 @@ export const getResultsFromArrayBuffer = async (
         BigUint64Array.BYTES_PER_ELEMENT
       );
 
-      byteOffsets = Array.from(
-        new BigUint64Array(
-          buffer,
-          offset,
-          attribute.fixedLenBufferSizeInBytes / BigUint64Array.BYTES_PER_ELEMENT
-        )
+      const offsetCount =
+        attribute.fixedLenBufferSizeInBytes /
+        BigUint64Array.BYTES_PER_ELEMENT;
+
+      // Read offsets directly from DataView to avoid materializing a BigInt array
+      // when we only need them as numbers later. Keep bigint array for returnOffsets.
+      const alignedView = new DataView(
+        buffer,
+        offset,
+        attribute.fixedLenBufferSizeInBytes
       );
+      byteOffsets = new Array(offsetCount);
+      for (let i = 0; i < offsetCount; i++) {
+        byteOffsets[i] = alignedView.getBigUint64(i * 8, true);
+      }
 
       if (options.returnOffsets) {
         data.__offsets[attribute.name] = byteOffsets;
@@ -150,28 +168,81 @@ export const getResultsFromArrayBuffer = async (
         arrayBuffer.byteOffset + byteOffset + validityOffset
       );
 
-      return byteOffset + totalNumberOfBytesOfAttribute;
+      byteOffset += totalNumberOfBytesOfAttribute;
+      continue;
+    }
+
+    const dataStart = arrayBuffer.byteOffset + byteOffset + dataOffset;
+    const dataLength = validityOffset - dataOffset;
+
+    // Fast path for var-length string types: decode sub-buffers directly
+    // instead of decode→split→group→join
+    if (
+      isVarLengthSized &&
+      !options.ignoreOffsets &&
+      stringTypes.has(selectedAttributeSchema.type) &&
+      selectedAttributeSchema.type !== Datatype.StringUtf32 &&
+      selectedAttributeSchema.type !== Datatype.StringUcs4
+    ) {
+      const encoding =
+        stringDecoderMap[selectedAttributeSchema.type] || 'utf-8';
+      const decoder = new TextDecoder(encoding);
+      const numStrings = byteOffsets.length;
+      const strings: string[] = new Array(numStrings);
+
+      for (let i = 0; i < numStrings; i++) {
+        const start = Number(byteOffsets[i]);
+        const end =
+          i + 1 < numStrings ? Number(byteOffsets[i + 1]) : dataLength;
+        strings[i] = decoder.decode(
+          new Uint8Array(arrayBuffer.buffer, dataStart + start, end - start)
+        );
+      }
+
+      let result: Result = strings;
+
+      if (isNullable && !options.ignoreNullables) {
+        const nullablesTypedArray = bufferToInt8(
+          new DataView(
+            arrayBuffer.buffer,
+            arrayBuffer.byteOffset + byteOffset + validityOffset,
+            totalNumberOfBytesOfAttribute - validityOffset
+          )
+        );
+        const nullablesArray: number[] = new Array(nullablesTypedArray.length);
+        for (let i = 0; i < nullablesTypedArray.length; i++) {
+          nullablesArray[i] = nullablesTypedArray[i];
+        }
+        result = setNullables(strings, nullablesArray);
+      }
+
+      data[attribute.name] = result;
+      byteOffset += totalNumberOfBytesOfAttribute;
+      continue;
     }
 
     let result: Result = getAttributeResult(
       new DataView(
         arrayBuffer.buffer,
-        arrayBuffer.byteOffset + byteOffset + dataOffset,
-        validityOffset - dataOffset
+        dataStart,
+        dataLength
       ),
       selectedAttributeSchema.type
     );
 
-    let offsets: number[] = [];
     if (isVarLengthSized && !options.ignoreOffsets) {
       const BYTE_PER_ELEMENT = BigInt(
         getByteLengthOfDatatype(selectedAttributeSchema.type)
       );
 
-      // Convert byte offsets to offsets
-      offsets = byteOffsets.map(o => Number(o / BYTE_PER_ELEMENT));
+      // Convert byte offsets to element offsets
+      const offsets: number[] = new Array(byteOffsets.length);
+      for (let i = 0; i < byteOffsets.length; i++) {
+        offsets[i] = Number(byteOffsets[i] / BYTE_PER_ELEMENT);
+      }
+
       const isString = typeof result === 'string';
-      const groupedValues = await groupValuesByOffsetBytes(
+      const groupedValues = groupValuesByOffsetBytes(
         convertToArray(result) as Array<unknown>,
         offsets
       );
@@ -181,11 +252,6 @@ export const getResultsFromArrayBuffer = async (
         ? concatChars(groupedValues as string[][])
         : (groupedValues as number[][] | bigint[][]);
 
-      /**
-       * ParallelJS accepts data that are JSON serializable
-       * thus we have to convert buffer to array of uint8
-       * and after grouping convert the data back to ArrayBuffer.
-       */
       if (selectedAttributeSchema.type === Datatype.Blob) {
         const arrayBuffers = groupedValues.map(
           ints => Uint8Array.from(ints).buffer
@@ -210,7 +276,10 @@ export const getResultsFromArrayBuffer = async (
        * nullablesArray should be an array of zeros and ones (e.g. [0, 1, 1, 0])
        * Every zero represents that in that specific index the attribute is NULL
        */
-      const nullablesArray = Array.from(nullablesTypedArray);
+      const nullablesArray: number[] = new Array(nullablesTypedArray.length);
+      for (let i = 0; i < nullablesTypedArray.length; i++) {
+        nullablesArray[i] = nullablesTypedArray[i];
+      }
 
       // @ts-expect-error: Cannot infer a single T that satisfies all Array<...>
       result = setNullables(result, nullablesArray);
@@ -218,152 +287,8 @@ export const getResultsFromArrayBuffer = async (
 
     data[attribute.name] = result;
 
-    return byteOffset + totalNumberOfBytesOfAttribute;
-  }, Promise.resolve(0));
-
-  // await attributeBufferHeaders
-  //   .reverse()
-  //   .reduce(async (offsetPromise, attribute) => {
-  //     const totalNumberOfBytesOfAttribute = getAttributeSizeInBytes(attribute);
-  //     const offset = await offsetPromise;
-
-  //     if (!totalNumberOfBytesOfAttribute) {
-  //       if (options.returnRawBuffers) {
-  //         data[attribute.name] = new ArrayBuffer(0);
-  //       } else {
-  //         data[attribute.name] = [];
-  //       }
-
-  //       return offset;
-  //     }
-
-  //     // If there are validityLenBufferSizeInBytes the attribute is nullable
-  //     const isNullable = !!attribute.validityLenBufferSizeInBytes;
-  //     // If there are varLenBufferSizeInBytes the attribute is varLengthSized
-  //     const isVarLengthSized = !!attribute.varLenBufferSizeInBytes;
-  //     const selectedAttributeSchema = getAttributeSchema(
-  //       attribute.name,
-  //       attributesSchema
-  //     );
-
-  //     const negativeOffset = -1 * offset;
-  //     /**
-  //      * If attribute is varLengthSized, we ignore the first N bytes (where N = fixedLenBufferSizeInBytes)
-  //      * These first N bytes contain the offsets of the attribute, which is a uint64 array.
-  //      */
-  //     const start =
-  //       negativeOffset -
-  //       totalNumberOfBytesOfAttribute +
-  //       (isVarLengthSized ? attribute.fixedLenBufferSizeInBytes : 0);
-  //     /**
-  //      * If attribute is isNullable we ignore the last N bytes (where N = validityLenBufferSizeInBytes)
-  //      * These last N bytes contain a uint8 array of zeros and ones, where every zero represents
-  //      * that in that index the attribute is null.
-  //      */
-  //     const ending =
-  //       negativeOffset -
-  //       (isNullable ? attribute.validityLenBufferSizeInBytes : 0);
-  //     const end = ending ? ending : undefined;
-  //     /**
-  //      * Offsets are Uint64 numbers, buffer contains byte offsets though,
-  //      * e.g. if type of the attribute is an INT32 (4 bytes per number) and the offsets are [0, 3, 4]
-  //      * the buffer contains the offsets * bytes of the element instead of just the offsets [0, 3 * 4, 4 * 4] = [0, 12, 16]
-  //      */
-  //     let byteOffsets: bigint[] = [];
-
-  //     if (isVarLengthSized) {
-  //       const startOfBuffer = negativeOffset - totalNumberOfBytesOfAttribute;
-  //       const offsetsBuffer = arrayBuffer.slice(
-  //         startOfBuffer,
-  //         startOfBuffer + attribute.fixedLenBufferSizeInBytes
-  //       );
-
-  //       byteOffsets = Array.from(
-  //         new BigUint64Array(
-  //           arrayBuffer.buffer,
-  //           arrayBuffer.byteOffset + startOfBuffer,
-  //           attribute.fixedLenBufferSizeInBytes
-  //         )
-  //       );
-  //     }
-
-  //     if (isVarLengthSized && options.returnOffsets) {
-  //       data.__offsets[attribute.name] = byteOffsets;
-  //     }
-
-  //     if (options.returnRawBuffers) {
-  //       data[attribute.name] = arrayBuffer.slice(start, end);
-
-  //       return offset + totalNumberOfBytesOfAttribute;
-  //     }
-
-  //     let result: Result = getAttributeResult(
-  //       arrayBuffer.slice(start, end),
-  //       selectedAttributeSchema.type
-  //     ) as string | number[] | bigint[];
-  //     let offsets: number[] = [];
-  //     if (isVarLengthSized && !options.ignoreOffsets) {
-  //       const BYTE_PER_ELEMENT = getByteLengthOfDatatype(
-  //         selectedAttributeSchema.type
-  //       );
-
-  //       // Convert byte offsets to offsets
-  //       offsets = byteOffsets.map(o => Number(o / BigInt(BYTE_PER_ELEMENT)));
-  //       const isString = typeof result === 'string';
-  //       const groupedValues = await groupValuesByOffsetBytes(
-  //         convertToArray(result),
-  //         offsets
-  //       );
-
-  //       // If it's a string we concat all the characters to create array of strings
-  //       result = isString
-  //         ? concatChars(groupedValues as string[][])
-  //         : (groupedValues as number[][] | bigint[][]);
-
-  //       /**
-  //        * ParallelJS accepts data that are JSON serializable
-  //        * thus we have to convert buffer to array of uint8
-  //        * and after grouping convert the data back to ArrayBuffer.
-  //        */
-  //       if (selectedAttributeSchema.type === Datatype.Blob) {
-  //         const arrayBuffers = groupedValues.map(
-  //           ints => Uint8Array.from(ints).buffer
-  //         );
-  //         result = arrayBuffers;
-  //       }
-  //     }
-
-  //     if (isNullable && !options.ignoreNullables) {
-  //       /**
-  //        * If attribute is Nullable, we get the last N bytes, cast it to uint8 array to get
-  //        * what is null.
-  //        */
-  //       const nullableArrayEnd =
-  //         ending + attribute.validityLenBufferSizeInBytes;
-  //       const nullableArrayBuffer = arrayBuffer.slice(
-  //         ending,
-  //         nullableArrayEnd ? nullableArrayEnd : undefined
-  //       );
-  //       const nullablesTypedArray = bufferToInt8(nullableArrayBuffer);
-  //       /**
-  //        * nullablesArray should be an array of zeros and ones (e.g. [0, 1, 1, 0])
-  //        * Every zero represents that in that specific index the attribute is NULL
-  //        */
-  //       const nullablesArray = Array.from(nullablesTypedArray);
-  //       const values = convertToArray(result) as Array<
-  //         string | bigint | number
-  //       >;
-
-  //       result = (await setNullables(values, nullablesArray)) as
-  //         | number[]
-  //         | string[]
-  //         | bigint[];
-  //     }
-
-  //     data[attribute.name] = result;
-
-  //     return offset + totalNumberOfBytesOfAttribute;
-  //   }, Promise.resolve(0));
+    byteOffset += totalNumberOfBytesOfAttribute;
+  }
 
   return data;
 };

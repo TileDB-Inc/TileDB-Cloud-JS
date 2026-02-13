@@ -1,46 +1,26 @@
-import range from '../range';
-import { Parallel, Serializable } from 'paralleljs';
-
 /**
  * Group values together according to offsets
  * @param vals [1, 2, 3, 4]
  * @param offsets e.g. [0, 3, 4]
- * @returns [[1,2,3], 4]
+ * @returns [[1,2,3], [4]]
  */
 const groupValuesByOffsetBytes = <T>(
   values: Array<T>,
   offsets: number[]
-): Promise<T[][]> => {
+): T[][] => {
   const offsetsLength = offsets.length;
   if (!offsetsLength) {
-    return Promise.resolve([values]);
+    return [values];
   }
-  const offsetIndex = range(0, offsetsLength - 1);
-  const offsetIndexTuple: [number, number][] = offsets.map((off, i) => [
-    off,
-    offsetIndex[i]
-  ]);
 
-  const offsetsP = new Parallel(
-    {
-      env: {
-        values,
-        offsets
-      }
-    },
-    offsetIndexTuple
-  );
+  const result: T[][] = new Array(offsetsLength);
+  for (let i = 0; i < offsetsLength; i++) {
+    const start = offsets[i];
+    const end = i + 1 < offsetsLength ? offsets[i + 1] : values.length;
+    result[i] = values.slice(start, end);
+  }
 
-  return offsetsP
-    .map<Array<T>>(([offset, i]) => {
-      const vals = global.env.values as Array<Serializable<T>>;
-      const globalOffsets = global.env.offsets;
-      const nextOffset = globalOffsets[i + 1];
-      // Note: Array.prototype.slice doesn't accept BigInt
-      const grpoupedValues = vals.slice(offset, nextOffset);
-      return grpoupedValues;
-    })
-    .finally(x => x);
+  return result;
 };
 
 export default groupValuesByOffsetBytes;
