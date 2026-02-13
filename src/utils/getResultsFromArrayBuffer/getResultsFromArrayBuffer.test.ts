@@ -13,6 +13,33 @@ import {
 import { describe, it, expect } from 'vitest';
 import { Datatype } from '../../v3';
 
+/**
+ * Helper to capture memory metrics
+ */
+interface MemoryMetrics {
+  heapUsedMB: number;
+  heapTotalMB: number;
+  externalMB: number;
+  rss: number;
+}
+
+function getMemoryMetrics(): MemoryMetrics {
+  const mem = process.memoryUsage();
+  return {
+    heapUsedMB: mem.heapUsed / 1024 / 1024,
+    heapTotalMB: mem.heapTotal / 1024 / 1024,
+    externalMB: mem.external / 1024 / 1024,
+    rss: mem.rss / 1024 / 1024
+  };
+}
+
+function formatMemoryDelta(before: MemoryMetrics, after: MemoryMetrics): string {
+  const heapDelta = after.heapUsedMB - before.heapUsedMB;
+  const externalDelta = after.externalMB - before.externalMB;
+  const rssDelta = after.rss - before.rss;
+  return `Heap: ${heapDelta >= 0 ? '+' : ''}${heapDelta.toFixed(2)}MB, External: ${externalDelta >= 0 ? '+' : ''}${externalDelta.toFixed(2)}MB, RSS: ${rssDelta >= 0 ? '+' : ''}${rssDelta.toFixed(2)}MB`;
+}
+
 describe('getResultsFromArrayBuffer()', () => {
   it('Should convert a raw ArrayBuffer to a results object with fixed length attributes', async () => {
     const file = path.join(__dirname, '../../fixtures/fixed_buffer.raw');
@@ -107,6 +134,8 @@ describe('getResultsFromArrayBuffer()', () => {
       }
     ];
 
+    const memBefore = getMemoryMetrics();
+    const startTime = performance.now();
     const results = await getResultsFromArrayBuffer(
       arrayBufferOfFixedLengthAttributes,
       attributeBufferHeaders,
@@ -115,8 +144,16 @@ describe('getResultsFromArrayBuffer()', () => {
         returnRawBuffers: true
       }
     );
+    const endTime = performance.now();
+    const memAfter = getMemoryMetrics();
 
     expect(results).toEqual({ cols: new ArrayBuffer(0) });
+
+    const elapsedTime = endTime - startTime;
+    console.log(
+      `returnRawBuffers (${attributeBufferHeaders.length} attributes): ${elapsedTime.toFixed(2)}ms`
+    );
+    console.log(`  Memory: ${formatMemoryDelta(memBefore, memAfter)}`);
   });
 });
 
@@ -178,6 +215,7 @@ describe('getResultsFromArrayBuffer() - Performance Tests', () => {
           }
         ];
 
+        const memBefore = getMemoryMetrics();
         const startTime = performance.now();
         const results = await getResultsFromArrayBuffer(
           new DataView(buffer),
@@ -185,6 +223,7 @@ describe('getResultsFromArrayBuffer() - Performance Tests', () => {
           fixedLenAttributesSchema
         );
         const endTime = performance.now();
+        const memAfter = getMemoryMetrics();
 
         expect(Object.keys(results)).toHaveLength(4);
         expect((results.cols as number[]).length).toBe(numElements);
@@ -196,6 +235,7 @@ describe('getResultsFromArrayBuffer() - Performance Tests', () => {
         console.log(
           `Fixed-length processing (${numElements} elements): ${elapsedTime.toFixed(2)}ms`
         );
+        console.log(`  Memory: ${formatMemoryDelta(memBefore, memAfter)}`);
 
         // Performance assertion - should complete in reasonable time
         expect(elapsedTime).toBeLessThan(5000); // 5 seconds max
@@ -256,6 +296,7 @@ describe('getResultsFromArrayBuffer() - Performance Tests', () => {
           }
         ];
 
+        const memBefore = getMemoryMetrics();
         const startTime = performance.now();
         const results = await getResultsFromArrayBuffer(
           new DataView(buffer),
@@ -264,6 +305,7 @@ describe('getResultsFromArrayBuffer() - Performance Tests', () => {
           { returnRawBuffers: true }
         );
         const endTime = performance.now();
+        const memAfter = getMemoryMetrics();
 
         expect(results.cols).toBeInstanceOf(ArrayBuffer);
         expect((results.cols as ArrayBuffer).byteLength).toBe(
@@ -274,6 +316,7 @@ describe('getResultsFromArrayBuffer() - Performance Tests', () => {
         console.log(
           `returnRawBuffers (${numElements} elements): ${elapsedTime.toFixed(2)}ms`
         );
+        console.log(`  Memory: ${formatMemoryDelta(memBefore, memAfter)}`);
 
         // Raw buffers should be much faster as no conversion happens
         expect(elapsedTime).toBeLessThan(1000); // 1 second max
@@ -352,6 +395,7 @@ describe('getResultsFromArrayBuffer() - Performance Tests', () => {
           }
         ];
 
+        const memBefore = getMemoryMetrics();
         const startTime = performance.now();
         const results = await getResultsFromArrayBuffer(
           new DataView(buffer),
@@ -359,6 +403,7 @@ describe('getResultsFromArrayBuffer() - Performance Tests', () => {
           schema
         );
         const endTime = performance.now();
+        const memAfter = getMemoryMetrics();
 
         expect((results.strings as string[]).length).toBe(numStrings);
         expect((results.strings as string[])[0]).toBe(strings[0]);
@@ -367,6 +412,7 @@ describe('getResultsFromArrayBuffer() - Performance Tests', () => {
         console.log(
           `Var-length strings (${numStrings} strings, avg ${avgStringLength} chars): ${elapsedTime.toFixed(2)}ms`
         );
+        console.log(`  Memory: ${formatMemoryDelta(memBefore, memAfter)}`);
 
         expect(elapsedTime).toBeLessThan(10000); // 10 seconds max
       },
@@ -439,6 +485,7 @@ describe('getResultsFromArrayBuffer() - Performance Tests', () => {
           }
         ];
 
+        const memBefore = getMemoryMetrics();
         const startTime = performance.now();
         const results = await getResultsFromArrayBuffer(
           new DataView(buffer),
@@ -446,6 +493,7 @@ describe('getResultsFromArrayBuffer() - Performance Tests', () => {
           schema
         );
         const endTime = performance.now();
+        const memAfter = getMemoryMetrics();
 
         expect((results.arrays as number[][]).length).toBe(numArrays);
 
@@ -453,6 +501,7 @@ describe('getResultsFromArrayBuffer() - Performance Tests', () => {
         console.log(
           `Var-length numeric arrays (${numArrays} arrays, ${totalValues} total values): ${elapsedTime.toFixed(2)}ms`
         );
+        console.log(`  Memory: ${formatMemoryDelta(memBefore, memAfter)}`);
 
         expect(elapsedTime).toBeLessThan(15000); // 15 seconds max
       },
@@ -504,6 +553,7 @@ describe('getResultsFromArrayBuffer() - Performance Tests', () => {
           }
         ];
 
+        const memBefore = getMemoryMetrics();
         const startTime = performance.now();
         const results = await getResultsFromArrayBuffer(
           new DataView(buffer),
@@ -511,6 +561,7 @@ describe('getResultsFromArrayBuffer() - Performance Tests', () => {
           schema
         );
         const endTime = performance.now();
+        const memAfter = getMemoryMetrics();
 
         expect((results.nullable_data as Array<number | null>).length).toBe(
           numElements
@@ -520,6 +571,7 @@ describe('getResultsFromArrayBuffer() - Performance Tests', () => {
         console.log(
           `Nullable attributes (${numElements} elements, ~20% null): ${elapsedTime.toFixed(2)}ms`
         );
+        console.log(`  Memory: ${formatMemoryDelta(memBefore, memAfter)}`);
 
         expect(elapsedTime).toBeLessThan(5000); // 5 seconds max
       },
@@ -568,6 +620,7 @@ describe('getResultsFromArrayBuffer() - Performance Tests', () => {
           }
         ];
 
+        const memBefore = getMemoryMetrics();
         const startTime = performance.now();
         const results = await getResultsFromArrayBuffer(
           new DataView(buffer),
@@ -576,6 +629,7 @@ describe('getResultsFromArrayBuffer() - Performance Tests', () => {
           { ignoreNullables: true }
         );
         const endTime = performance.now();
+        const memAfter = getMemoryMetrics();
 
         // With ignoreNullables, no nulls should be in result
         expect((results.nullable_data as number[]).every(v => v !== null)).toBe(
@@ -586,6 +640,7 @@ describe('getResultsFromArrayBuffer() - Performance Tests', () => {
         console.log(
           `Nullable ignored (${numElements} elements): ${elapsedTime.toFixed(2)}ms`
         );
+        console.log(`  Memory: ${formatMemoryDelta(memBefore, memAfter)}`);
 
         // Should be faster than processing nullables
         expect(elapsedTime).toBeLessThan(3000); // 3 seconds max
@@ -747,6 +802,7 @@ describe('getResultsFromArrayBuffer() - Performance Tests', () => {
           }
         ];
 
+        const memBefore = getMemoryMetrics();
         const startTime = performance.now();
         const results = await getResultsFromArrayBuffer(
           new DataView(buffer),
@@ -754,6 +810,7 @@ describe('getResultsFromArrayBuffer() - Performance Tests', () => {
           schema
         );
         const endTime = performance.now();
+        const memAfter = getMemoryMetrics();
 
         expect((results.rows as number[]).length).toBe(numRows);
         expect((results.names as string[]).length).toBe(numRows);
@@ -763,6 +820,7 @@ describe('getResultsFromArrayBuffer() - Performance Tests', () => {
         console.log(
           `Mixed workload (${numRows} rows, 3 different attribute types): ${elapsedTime.toFixed(2)}ms`
         );
+        console.log(`  Memory: ${formatMemoryDelta(memBefore, memAfter)}`);
 
         expect(elapsedTime).toBeLessThan(10000); // 10 seconds max
       },
@@ -844,6 +902,7 @@ describe('getResultsFromArrayBuffer() - Performance Tests', () => {
           }
         ];
 
+        const memBefore = getMemoryMetrics();
         const startTime = performance.now();
         const results = await getResultsFromArrayBuffer(
           new DataView(buffer),
@@ -851,6 +910,7 @@ describe('getResultsFromArrayBuffer() - Performance Tests', () => {
           schema
         );
         const endTime = performance.now();
+        const memAfter = getMemoryMetrics();
 
         const labels = results.labels as Array<string | null>;
         expect(labels.length).toBe(numStrings);
@@ -870,6 +930,7 @@ describe('getResultsFromArrayBuffer() - Performance Tests', () => {
         console.log(
           `Big data var-length strings (${numStrings} strings, ~${(totalStringBytes / numStrings).toFixed(0)} avg bytes, 15% null): ${elapsedTime.toFixed(2)}ms`
         );
+        console.log(`  Memory: ${formatMemoryDelta(memBefore, memAfter)}`);
 
         expect(elapsedTime).toBeLessThan(5000);
       },
@@ -949,6 +1010,7 @@ describe('getResultsFromArrayBuffer() - Performance Tests', () => {
           }
         ];
 
+        const memBefore = getMemoryMetrics();
         const startTime = performance.now();
         const results = await getResultsFromArrayBuffer(
           new DataView(buffer),
@@ -956,6 +1018,7 @@ describe('getResultsFromArrayBuffer() - Performance Tests', () => {
           schema
         );
         const endTime = performance.now();
+        const memAfter = getMemoryMetrics();
 
         const vectors = results.vectors as Array<number[] | null>;
         expect(vectors.length).toBe(numArrays);
@@ -973,6 +1036,7 @@ describe('getResultsFromArrayBuffer() - Performance Tests', () => {
         console.log(
           `Big data var-length Int32 arrays (${numArrays} arrays, ${totalValues} total values, avg ${(totalValues / numArrays).toFixed(1)} per cell): ${elapsedTime.toFixed(2)}ms`
         );
+        console.log(`  Memory: ${formatMemoryDelta(memBefore, memAfter)}`);
 
         expect(elapsedTime).toBeLessThan(10000);
       },
@@ -1141,6 +1205,7 @@ describe('getResultsFromArrayBuffer() - Performance Tests', () => {
           }
         ];
 
+        const memBefore = getMemoryMetrics();
         const startTime = performance.now();
         const results = await getResultsFromArrayBuffer(
           new DataView(buffer),
@@ -1148,6 +1213,7 @@ describe('getResultsFromArrayBuffer() - Performance Tests', () => {
           schema
         );
         const endTime = performance.now();
+        const memAfter = getMemoryMetrics();
 
         const rows = results.rows as number[];
         const labels = results.labels as Array<string | null>;
@@ -1177,6 +1243,7 @@ describe('getResultsFromArrayBuffer() - Performance Tests', () => {
         console.log(
           `Big data multi-attribute (${numRows} rows: fixed dim + var-len strings + var-len Int32[], 20%/25% null): ${elapsedTime.toFixed(2)}ms`
         );
+        console.log(`  Memory: ${formatMemoryDelta(memBefore, memAfter)}`);
 
         expect(elapsedTime).toBeLessThan(10000);
       },
