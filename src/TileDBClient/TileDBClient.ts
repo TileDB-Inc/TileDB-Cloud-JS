@@ -509,7 +509,7 @@ class TileDBClient {
       query
     )) {
       notebookContents = notebookContents.concat(
-        (results as NotebookOrFileDimensions).contents
+        (results as unknown as NotebookOrFileDimensions).contents
       );
     }
 
@@ -576,7 +576,7 @@ class TileDBClient {
       query
     )) {
       fileContents = fileContents.concat(
-        (results as NotebookOrFileDimensions).contents
+        (results as unknown as NotebookOrFileDimensions).contents
       );
     }
 

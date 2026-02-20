@@ -1,16 +1,20 @@
 /**
- * Set nullables on an array
+ * Set nullables on an array (mutates in place)
  * @param vals [12, 15, 22, 34, 8]
  * @param nullables [0, 1, 1, 0, 1]
- * @param offsets []
  * @returns [NULL, 15, 22, NULL, 8]
  */
 const setNullables = <T>(
   values: Array<T>,
   nullables: number[]
 ): Array<T | null> => {
-  // We explicitly set as NULL index where nullable array is 0
-  return values.map((val, i) => (nullables[i] ? val : null));
+  const result = values as Array<T | null>;
+  for (let i = 0; i < result.length; i++) {
+    if (!nullables[i]) {
+      result[i] = null;
+    }
+  }
+  return result;
 };
 
 export default setNullables;
